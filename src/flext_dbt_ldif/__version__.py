@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Final
+from flext_core.version import get_version, get_version_info
 
-VERSION: Final[str] = "0.1.0"
+__version__ = get_version("flext-dbt-ldif")
+__version_info__ = get_version_info("flext-dbt-ldif")
