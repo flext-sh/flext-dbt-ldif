@@ -1,0 +1,54 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw LDIF data tables"
+    meta:
+      owner: "data-engineering"
+    tables:
+      - name: ldif_entries
+        description: "Raw LDIF entries from directory exports"
+        columns:
+          - name: dn
+            description: "Distinguished Name - unique identifier for LDAP entry"
+            tests:
+              - not_null
+              - unique
+          - name: object_class
+            description: "Object class attributes for the entry"
+            tests:
+              - not_null
+
+models:
+  - name: stg_ldif_entries
+    description: "Staging model for LDIF entries with basic transformations and quality checks"
+    columns:
+      - name: dn
+        description: "Distinguished Name"
+        tests:
+          - not_null
+          - unique
+      - name: is_valid_dn
+        description: "Boolean flag indicating if DN follows valid LDAP format"
+        tests:
+          - not_null
+      - name: dn_depth
+        description: "Depth level of the DN in directory hierarchy"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      - name: entry_type
+        description: "Categorized type of directory entry"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['user', 'group', 'organizational_unit', 'domain', 'computer', 'other']
+      - name: primary_object_class
+        description: "Primary object class for categorization"
+        tests:
+          - not_null
+      - name: processed_at
+        description: "Timestamp when entry was processed"
+        tests:
+          - not_null
