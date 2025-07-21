@@ -1,0 +1,101 @@
+name: 'dbt_ldif'
+version: '0.1.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'dbt_ldif'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  dbt_ldif:
+    # Config indicated by + and applies to all files under models/
+    +materialized: view
+    staging:
+      +materialized: view
+      +tags: ["staging"]
+    intermediate:
+      +materialized: view  
+      +tags: ["intermediate"]
+    dimensions:
+      +materialized: table
+      +tags: ["dimensions"]
+    facts:
+      +materialized: table
+      +tags: ["facts"]
+    marts:
+      +materialized: table
+      +tags: ["marts", "analytics"]
+
+tests:
+  dbt_ldif:
+    +store_failures: true
+    +severity: error
+
+sources:
+  dbt_ldif:
+    +meta:
+      owner: "analytics-team"
+
+# Variables for the project
+vars:
+  # The `start_date` variable will be accessible in all resources
+  start_date: '2024-01-01'
+  analytics_version: '1.0'
+  
+  # LDIF specific variables
+  ldif_schema: 'raw'
+  staging_schema: '{{ target.schema }}'
+  marts_schema: '{{ target.schema }}_marts'
+  
+  # Database configuration
+  database_name: 'ldif_analytics'
+
+# Documentation
+docs-paths: ["docs"]
+
+# Snapshots configuration
+snapshots:
+  dbt_ldif:
+    +target_schema: snapshots
+
+# Seeds configuration  
+seeds:
+  dbt_ldif:
+    +schema: seeds
+
+# Macros configuration
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_utils']
+  - macro_namespace: codegen
+    search_order: ['codegen']
+
+# Hooks
+on-run-start: 
+  - "{{ log('Starting dbt run for LDIF data processing...', info=true) }}"
+
+on-run-end:
+  - "{{ log('Completed dbt run for LDIF data processing.', info=true) }}"
+
+# dbt project flags
+flags:
+  send_anonymous_usage_stats: false
+  warn_error: false
+  use_colors: true
