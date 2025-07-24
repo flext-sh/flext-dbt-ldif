@@ -16,15 +16,26 @@ import importlib.metadata
 import warnings
 
 # Foundation patterns - ALWAYS from flext-core
-from flext_core import (
-    BaseConfig,
-    BaseConfig as LDIFBaseConfig,  # Configuration base
-    DomainBaseModel,
-    DomainBaseModel as BaseModel,  # Base for LDIF models
-    DomainError as LDIFError,  # LDIF-specific errors
-    ValidationError as ValidationError,  # Validation errors
+# 🚨 ARCHITECTURAL COMPLIANCE: Using DI container
+from flext_dbt_ldif.infrastructure.di_container import (
+    get_base_config,
+    get_domain_entity,
+    get_domain_value_object,
+    get_field,
+    get_service_result,
 )
-from flext_core.domain.shared_types import ServiceResult
+
+ServiceResult = get_service_result()
+DomainEntity = get_domain_entity()
+Field = get_field()
+DomainValueObject = get_domain_value_object()
+BaseConfig = get_base_config()
+
+# Re-export for simplified access
+BaseModel = DomainEntity  # Base for LDIF models
+LDIFBaseConfig = BaseConfig  # Configuration base
+LDIFError = Exception  # LDIF-specific errors
+ValidationError = Exception  # Validation errors
 
 try:
     __version__ = importlib.metadata.version("flext-dbt-ldif")
