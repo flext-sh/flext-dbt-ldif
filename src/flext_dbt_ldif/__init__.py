@@ -15,27 +15,32 @@ import contextlib
 import importlib.metadata
 import warnings
 
-# Foundation patterns - ALWAYS from flext-core
-# 🚨 ARCHITECTURAL COMPLIANCE: Using DI container
-from flext_dbt_ldif.infrastructure.di_container import (
-    get_base_config,
-    get_domain_entity,
-    get_domain_value_object,
-    get_field,
-    get_service_result,
+# Import from flext-core for foundational patterns (standardized)
+from flext_core import (
+    FlextCoreSettings as BaseConfig,
+    FlextEntity as DomainEntity,
+    FlextField as Field,
+    FlextResult,
+    FlextValueObject as BaseModel,
+    FlextValueObject as DomainBaseModel,
+    FlextValueObject as DomainValueObject,
+)
+from flext_ldif import (
+    FlextLdifParser,
+    FlextLdifValidator,
+    FlextLdifWriter,
+    flext_ldif_format_entry,
+    flext_ldif_parse_content,
+    flext_ldif_validate_syntax,
 )
 
-ServiceResult = get_service_result()
-DomainEntity = get_domain_entity()
-Field = get_field()
-DomainValueObject = get_domain_value_object()
-BaseConfig = get_base_config()
-
-# Re-export for simplified access
-BaseModel = DomainEntity  # Base for LDIF models
-LDIFBaseConfig = BaseConfig  # Configuration base
-LDIFError = Exception  # LDIF-specific errors
-ValidationError = Exception  # Validation errors
+# Import from flext-meltano for DBT integration
+# MIGRATED: Singer SDK imports centralized via flext-meltano
+from flext_meltano.dbt import (
+    FlextMeltanoDbtManager,
+    FlextMeltanoDbtProject,
+    FlextMeltanoDbtRunner,
+)
 
 try:
     __version__ = importlib.metadata.version("flext-dbt-ldif")
@@ -63,38 +68,17 @@ def _show_deprecation_warning(old_import: str, new_import: str) -> None:
         stacklevel=3,
     )
 
-
-# ================================
-# SIMPLIFIED PUBLIC API EXPORTS
-# ================================
-
-# Re-export commonly used imports from flext-core are now imported at top
-
-# DBT LDIF Analytics exports - conditional imports (modules being developed)
-try:
     from flext_dbt_ldif.analytics import (
         ChangeTracker,
         LDIFAnalyzer,
         LDIFInsights,
     )
-except ImportError:
-    # Analytics modules not yet implemented - part of programmatic dbt project generation
-    pass
-
-# DBT Model Generation exports - conditional imports (modules being developed)
-try:
     from flext_dbt_ldif.models import (
         AnalyticsModel,
         DimensionModel,
         ModelGenerator,
     )
-except ImportError:
-    # Model generation modules not yet implemented - part of programmatic dbt project generation
-    pass
 
-# ================================
-# PUBLIC API EXPORTS
-# ================================
 
 __all__ = [
     "AnalyticsModel",  # from flext_dbt_ldif import AnalyticsModel
@@ -105,6 +89,7 @@ __all__ = [
     "DimensionModel",  # from flext_dbt_ldif import DimensionModel
     # Deprecation utilities
     "FlextDbtLdifDeprecationWarning",
+    "FlextResult",  # from flext_dbt_ldif import FlextResult
     # LDIF Analytics (simplified access)
     "LDIFAnalyzer",  # from flext_dbt_ldif import LDIFAnalyzer
     # Core Patterns (from flext-core)
@@ -113,7 +98,6 @@ __all__ = [
     "LDIFInsights",  # from flext_dbt_ldif import LDIFInsights
     # DBT Model Generation (simplified access)
     "ModelGenerator",  # from flext_dbt_ldif import ModelGenerator
-    "ServiceResult",  # from flext_dbt_ldif import ServiceResult
     "ValidationError",  # from flext_dbt_ldif import ValidationError
     # Version
     "__version__",

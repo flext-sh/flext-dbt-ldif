@@ -1,375 +1,149 @@
 # ============================================================================
-# FLEXT PYTHON PROJECT STANDARD .gitignore TEMPLATE
-# Python 3.13 | Poetry | Testing | Development Tools
+# FLEXT-DBT-LDIF - dbt LDIF Analytics .gitignore  
+# dbt 1.7+ | LDIF | Python 3.13 | Data Analytics
 # ============================================================================
 
 # ============================================================================
-# PYTHON BUILD AND RUNTIME ARTIFACTS
+# JUNK FILES - NEVER COMMIT THESE
 # ============================================================================
 
-# Python cache and compiled files
-__pycache__/
-*.py[cod]
-*$py.class
-*.pyc
-*.pyo
-*.pyd
-*.so
+# Archive and backup directories  
+archive/
+archives/
+backup/
+backups/
+.backup/
+*_backup/
+*_backup_*/
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-pip-wheel-metadata/
-*.dist-info/
+# AI-generated files and reports
+*_REPORT*.md
+*_ANALYSIS*.md
+*_SUMMARY*.md  
+*_FINDINGS*.md
+CLAUDE*.md
+CONFIG_MIGRATION*.md
+DEVELOPMENT_STANDARDS*.md
+DUPLICATION_REPORT*.md
+LINT_CORRECTIONS*.md
+*.ai.md
+*.ai.txt
 
-# PyInstaller
-*.manifest
-*.spec
+# Backup files with timestamps
+*_20250*.bak
+*_202507*.bak
+*_202506*.bak
+*.md_20250*
+README_20250*.bak
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# ============================================================================
-# TESTING AND COVERAGE
-# ============================================================================
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-.coverage_html/
-junit.xml
-coverage.json
-.benchmarks/
-
-# ============================================================================
-# DEVELOPMENT TOOLS AND CACHE
-# ============================================================================
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Ruff
-.ruff_cache/
-
-# Bandit
-.bandit
-
-# pylint
-.pylint.d/
-
-# ============================================================================
-# VIRTUAL ENVIRONMENTS AND DEPENDENCIES
-# ============================================================================
-
-# virtualenv
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Poetry - keep lock file for reproducible builds
-# poetry.lock  # KEEP THIS FILE COMMENTED OUT
-
-# Pipenv
-Pipfile.lock.bak
-
-# PDM
-.pdm.toml
-.pdm-python
-.pdm-build/
-
-# ============================================================================
-# IDEs AND EDITORS
-# ============================================================================
-
-# VSCode
-.vscode/
-*.code-workspace
-
-# PyCharm
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
-*.swp
-*.swo
-*~
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# ============================================================================
-# SYSTEM FILES
-# ============================================================================
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
-
-# Linux
-*~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
-
-# ============================================================================
-# DOCUMENTATION AND REPORTS
-# ============================================================================
-
-# Sphinx documentation
-docs/_build/
-docs/build/
-.buildinfo
-
-# MkDocs
-site/
-
-# Reports
-reports/
-*.report
-*.json.report
-
-# ============================================================================
-# LOGS AND TEMPORARY FILES
-# ============================================================================
-
-# Logs
-*.log
-logs/
-log/
-
-# Temporary files
-*.tmp
-*.temp
+# Generic backup patterns
 *.bak
 *.backup
-*.swp
-*.swo
-.tmp/
-tmp/
+*.orig
+*.syntax_backup  
+*.broken
+*.tmp.bak
+*_temp.py
+*_temp.md
 
-# ============================================================================
-# DATABASE AND DATA FILES
-# ============================================================================
-
-# SQLite
-*.db
-*.sqlite
-*.sqlite3
-*.db3
-
-# Data files
-*.csv.bak
-*.json.bak
-*.xml.bak
-data/
-*.data
-
-# ============================================================================
-# SINGER/MELTANO SPECIFIC
-# ============================================================================
-
-# Meltano
-.meltano/
-.secrets/
-catalog.json
-tap_done
-target_done
-state.json
-output/
-
-# DBT
-target/
-dbt_packages/
-logs/
-
-# ============================================================================
-# DOCKER AND CONTAINERS
-# ============================================================================
-
-# Docker
-.dockerignore.bak
-docker-compose.override.yml
-
-# ============================================================================
-# CONFIGURATION AND SECRETS
-# ============================================================================
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-.envrc
-
-# Secrets and credentials
-.secrets
-*.key
-*.pem
-*.crt
-*.csr
-*_key
-*_secret
-.credentials
-secrets/
-
-# Configuration backups
-*.conf.bak
-*.config.bak
-*.toml.bak
-
-# ============================================================================
-# PROJECT SPECIFIC - FORBID ANTI-PATTERNS
-# ============================================================================
-
-# Archive directory (for moved junk files)
-archive/
-
-# Reports directory (for metrics, coverage, etc.)
-reports/
-
-# Old requirements.txt (use pyproject.toml)
-
-# Manual fix scripts - FORBIDDEN
+# Fix scripts and validation files
 fix_*.py
 *_fix.py
 *_validation.py
 validate_*.py
+investigate_*.py
+temp_*.py
+debug_*.py
 
-# AI-generated reports and migration files - FORBIDDEN
-*_REPORT.md
-*_REPORT_*.md
-CONFIG_MIGRATION*.md
-FLEXT_*_MIGRATION*.md
-DEVELOPMENT_STANDARDS.md
-FLEXT_*_PATTERNS.md
-LOGGING_MIGRATION.md
-STRICT_COMPLIANCE.md
-LEVEL1_*.md
-DUPLICATION_REPORT.md
-
-# ============================================================================
-# MISCELLANEOUS
-# ============================================================================
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# PEP 582
-__pypackages__/
-
-# Celery
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# Custom additions
-*.local
-*.user 
+# Tool reports and analysis
+*_analysis.txt
+*_report.txt
+*_output.txt
+analysis_temp/
+report_*/
+reports/
+reports_*/
+temp_test_*/
 
 # ============================================================================
-# AI ASSISTANT FILES
-# ============================================================================
-CLAUDE.md
-CLAUDE.local.md
-.claude/
-.cursor/
-
-# ============================================================================
-# ALWAYS INCLUDE EXCEPTIONS
+# DBT ARTIFACTS
 # ============================================================================
 
-# Important: Force include critical files
+# dbt specific
+target/
+dbt_packages/
+logs/
+dbt.log
+profiles.yml.bak
+
+# dbt compilation artifacts
+**/.user.yml
+profiles/profiles.yml.backup
+
+# ============================================================================
+# PYTHON ARTIFACTS
+# ============================================================================
+
+# Python artifacts (for dbt-core)
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Development tools
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Testing and coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# LDIF specific
+*.ldif.bak
+
+# Logs and temporary files
+*.log
+*.tmp
+temp/
+tmp/
+
+# Data files
+data/
+output/
+*.csv.bak
+*.json.bak
+
+# Security
+*.key
+*.pem
+*.crt
+credentials.json
+
+# Force include critical files
+!dbt_project.yml
 !pyproject.toml
 !Makefile
 !README.md
-!.pre-commit-config.yaml
-!.env.example
+!profiles.yml.template

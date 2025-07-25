@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "flext-dbt-ldif"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT dbt LDIF Analytics - Advanced LDAP Data Analytics and Transformations"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
@@ -28,7 +28,15 @@ classifiers = [
     "Typing :: Typed",
     "Topic :: Database",
 ]
-dependencies = ["click (>=8.2.1)", "rich (>=14.0.0)", "flext-core"]
+dependencies = [
+    "flext-core @ file:///home/marlonsc/flext/flext-core",
+    "flext-meltano @ file:///home/marlonsc/flext/flext-meltano",
+    "flext-ldif @ file:///home/marlonsc/flext/flext-ldif",
+    "flext-observability @ file:///home/marlonsc/flext/flext-observability",
+    "pydantic>=2.11.7",
+    "click>=8.2.1",
+    "rich>=14.0.0",
+]
 [[project.authors]]
 name = "FLEXT Team"
 email = "team@flext.sh"
@@ -67,6 +75,7 @@ extend-exclude = [
     "dist",
     "htmlcov",
 ]
+extend = "../.ruff-shared.toml"
 
 [tool.mypy]
 python_version = "3.13"
