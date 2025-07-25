@@ -11,11 +11,11 @@ from flext_dbt_ldif.infrastructure.di_container import (
     get_service_result,
 )
 
-ServiceResult = get_service_result()
+FlextResult = get_service_result()
 DomainEntity = get_domain_entity()
 Field = get_field()
-DomainValueObject = get_domain_value_object()
+FlextValueObject = get_domain_value_object()
 BaseConfig = get_base_config()
 
-__version__ = get_version()
-__version_info__ = get_version_info()
+__version__ = "0.7.0"
+__version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())

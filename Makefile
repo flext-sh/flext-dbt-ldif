@@ -3,13 +3,12 @@
 # Advanced dbt project for LDIF analytics with programmatically generated models
 # Python 3.13 + dbt Core + PostgreSQL + Advanced Analytics + Zero Tolerance Quality Gates
 
-.PHONY: help check validate test lint type-check security format format-check fix
+.PHONY: help info diagnose check validate test lint type-check security format format-check fix
 .PHONY: install dev-install setup pre-commit build clean
 .PHONY: coverage coverage-html test-unit test-integration test-dbt
 .PHONY: deps-update deps-audit deps-tree deps-outdated
-.PHONY: dbt-run dbt-test dbt-compile dbt-debug dbt-docs dbt-seed dbt-snapshot
-.PHONY: dbt-run-dev dbt-run-prod dbt-freshness dbt-deps dbt-clean
-.PHONY: generate-models update-schemas analytics-run
+.PHONY: dbt-compile dbt-run dbt-test dbt-docs dbt-debug dbt-seed dbt-snapshot dbt-deps dbt-clean
+.PHONY: ldif-models-test ldif-transformations ldif-validate
 
 # ============================================================================
 # 🎯 HELP & INFORMATION
@@ -25,6 +24,38 @@ help: ## Show this help message
 	@echo "🧪 90%+ test coverage with sophisticated analytics patterns"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\\033[36m%-20s\\033[0m %s\\n", $$1, $$2}'
+
+
+info: ## Mostrar informações do projeto
+	@echo "📊 Informações do Projeto"
+	@echo "======================"
+	@echo "Nome: flext-dbt-ldif"
+	@echo "Título: FLEXT DBT LDIF"
+	@echo "Tipo: dbt-project"
+	@echo "Versão: $(shell poetry version -s 2>/dev/null || echo "0.7.0")"
+	@echo "Python: $(shell python3.13 --version 2>/dev/null || echo "Não encontrado")"
+	@echo "Poetry: $(shell poetry --version 2>/dev/null || echo "Não instalado")"
+	@echo "Venv: $(shell poetry env info --path 2>/dev/null || echo "Não ativado")"
+	@echo "Diretório: $(CURDIR)"
+	@echo "Git Branch: $(shell git branch --show-current 2>/dev/null || echo "Não é repo git")"
+	@echo "Git Status: $(shell git status --porcelain 2>/dev/null | wc -l | xargs echo) arquivos alterados"
+
+diagnose: ## Executar diagnósticos completos
+	@echo "🔍 Executando diagnósticos para flext-dbt-ldif..."
+	@echo "Informações do Sistema:"
+	@echo "OS: $(shell uname -s)"
+	@echo "Arquitetura: $(shell uname -m)"
+	@echo "Python: $(shell python3.13 --version 2>/dev/null || echo "Não encontrado")"
+	@echo "Poetry: $(shell poetry --version 2>/dev/null || echo "Não instalado")"
+	@echo ""
+	@echo "Estrutura do Projeto:"
+	@ls -la
+	@echo ""
+	@echo "Configuração Poetry:"
+	@poetry config --list 2>/dev/null || echo "Poetry não configurado"
+	@echo ""
+	@echo "Status das Dependências:"
+	@poetry show --outdated 2>/dev/null || echo "Nenhuma dependência desatualizada"
 
 # ============================================================================
 # 🎯 CORE QUALITY GATES - ZERO TOLERANCE
@@ -92,22 +123,6 @@ test-dbt: dbt-deps dbt-compile ## Run dbt data tests
 	@poetry run dbt test --profiles-dir profiles/ --target dev
 	@echo "✅ DBT data tests complete"
 
-test-models: dbt-deps dbt-compile ## Test specific dbt models
-	@echo "🧪 Testing dbt models..."
-	@poetry run dbt test --models staging --profiles-dir profiles/ --target dev
-	@poetry run dbt test --models marts --profiles-dir profiles/ --target dev
-	@echo "✅ DBT model tests complete"
-
-test-analytics: dbt-deps dbt-compile ## Test advanced analytics models
-	@echo "🧪 Testing advanced analytics models..."
-	@poetry run dbt test --models analytics_ldif_insights --profiles-dir profiles/ --target dev
-	@echo "✅ Analytics model tests complete"
-
-test-macros: dbt-deps ## Test custom dbt macros
-	@echo "🧪 Testing dbt macros..."
-	@poetry run dbt test --models test_macros --profiles-dir profiles/ --target dev
-	@echo "✅ Macro tests complete"
-
 coverage: ## Generate detailed coverage report
 	@echo "📊 Generating coverage report..."
 	@poetry run pytest tests/ --cov=src/flext_dbt_ldif --cov-report=term-missing --cov-report=html
@@ -166,20 +181,15 @@ dbt-run: dbt-deps dbt-compile ## Run dbt models
 	@poetry run dbt run --profiles-dir profiles/ --target dev
 	@echo "✅ DBT models executed"
 
-dbt-run-dev: dbt-deps ## Run dbt models in development
-	@echo "🚀 Running dbt models (development)..."
-	@poetry run dbt run --profiles-dir profiles/ --target dev --full-refresh
-	@echo "✅ DBT development run complete"
-
-dbt-run-prod: dbt-deps dbt-test ## Run dbt models in production
-	@echo "🚀 Running dbt models (production)..."
-	@poetry run dbt run --profiles-dir profiles/ --target prod
-	@echo "✅ DBT production run complete"
-
 dbt-test: dbt-compile ## Run dbt tests
 	@echo "🧪 Running dbt tests..."
 	@poetry run dbt test --profiles-dir profiles/ --target dev
 	@echo "✅ DBT tests complete"
+
+dbt-docs: dbt-compile ## Generate dbt documentation
+	@echo "📚 Generating dbt documentation..."
+	@poetry run dbt docs generate --profiles-dir profiles/ --target dev
+	@echo "✅ DBT documentation generated"
 
 dbt-seed: dbt-deps ## Load dbt seed data
 	@echo "🌱 Loading dbt seed data..."
@@ -191,25 +201,54 @@ dbt-snapshot: dbt-deps ## Run dbt snapshots
 	@poetry run dbt snapshot --profiles-dir profiles/ --target dev
 	@echo "✅ DBT snapshots complete"
 
-dbt-docs: dbt-compile ## Generate dbt documentation
-	@echo "📚 Generating dbt documentation..."
-	@poetry run dbt docs generate --profiles-dir profiles/ --target dev
-	@echo "✅ DBT documentation generated"
-
-dbt-docs-serve: dbt-docs ## Serve dbt documentation
-	@echo "📚 Serving dbt documentation..."
-	@poetry run dbt docs serve --profiles-dir profiles/ --port 8080
-
-dbt-freshness: dbt-deps ## Check source data freshness
-	@echo "🔄 Checking source data freshness..."
-	@poetry run dbt source freshness --profiles-dir profiles/ --target dev
-	@echo "✅ Source freshness check complete"
-
 dbt-clean: ## Clean dbt artifacts
 	@echo "🧹 Cleaning dbt artifacts..."
 	@poetry run dbt clean --profiles-dir profiles/
 	@rm -rf logs/dbt.log
 	@echo "✅ DBT artifacts cleaned"
+
+# ============================================================================
+# 🔧 LDIF SPECIFIC OPERATIONS
+# ============================================================================
+
+ldif-models-test: dbt-deps dbt-compile ## Test LDIF-specific models
+	@echo "🧪 Testing LDIF models..."
+	@poetry run dbt test --models staging --profiles-dir profiles/ --target dev
+	@poetry run dbt test --models marts --profiles-dir profiles/ --target dev
+	@poetry run python scripts/validate_ldif_models.py
+	@echo "✅ LDIF models tests complete"
+
+ldif-transformations: dbt-run ## Run LDIF transformation pipeline
+	@echo "🔄 Running LDIF transformations..."
+	@poetry run dbt run --models analytics_ldif_insights --profiles-dir profiles/ --target dev
+	@poetry run python scripts/execute_ldif_transformations.py
+	@echo "✅ LDIF transformations complete"
+
+ldif-validate: dbt-compile ## Validate LDIF data integrity
+	@echo "✅ Validating LDIF data integrity..."
+	@poetry run python scripts/validate_ldif_integrity.py
+	@poetry run dbt test --models tests.ldif_compliance --profiles-dir profiles/ --target dev
+	@echo "✅ LDIF validation complete"
+
+ldif-schema-analysis: ## Analyze LDIF schema patterns
+	@echo "📋 Analyzing LDIF schema patterns..."
+	@poetry run python scripts/analyze_ldif_schema.py
+	@echo "✅ LDIF schema analysis complete"
+
+ldif-change-tracking: dbt-run ## Track LDIF changes over time
+	@echo "📊 Running LDIF change tracking..."
+	@poetry run dbt run --models fact_ldif_changes --profiles-dir profiles/ --target dev
+	@echo "✅ LDIF change tracking complete"
+
+ldif-impact-analysis: dbt-run ## Analyze impact of LDIF changes
+	@echo "⚡ Running LDIF impact analysis..."
+	@poetry run python scripts/impact_analysis.py
+	@echo "✅ LDIF impact analysis complete"
+
+ldif-compliance-check: dbt-test ## Check LDIF compliance
+	@echo "✅ Running LDIF compliance checks..."
+	@poetry run dbt test --models tests.ldif_compliance --profiles-dir profiles/ --target dev
+	@echo "✅ LDIF compliance check complete"
 
 # ============================================================================
 # 🎯 PROGRAMMATIC MODEL GENERATION
@@ -264,59 +303,6 @@ analytics-insights: analytics-run analytics-anomaly-detection analytics-risk-ass
 	@echo "✅ All advanced analytics complete"
 
 # ============================================================================
-# 🔍 DATA QUALITY & VALIDATION
-# ============================================================================
-
-validate-staging: dbt-compile ## Validate staging models
-	@echo "🔍 Validating staging models..."
-	@poetry run dbt test --models staging --profiles-dir profiles/ --target dev
-	@echo "✅ Staging validation complete"
-
-validate-marts: dbt-compile ## Validate marts models
-	@echo "🔍 Validating marts models..."
-	@poetry run dbt test --models marts --profiles-dir profiles/ --target dev
-	@echo "✅ Marts validation complete"
-
-validate-sources: dbt-deps ## Validate source data
-	@echo "🔍 Validating source data..."
-	@poetry run dbt test --models source:raw --profiles-dir profiles/ --target dev
-	@echo "✅ Source validation complete"
-
-data-quality-report: dbt-run ## Generate comprehensive data quality report
-	@echo "📊 Generating data quality report..."
-	@poetry run python scripts/generate_quality_report.py
-	@echo "✅ Data quality report generated"
-
-data-lineage-report: dbt-docs ## Generate data lineage report
-	@echo "🔗 Generating data lineage report..."
-	@poetry run python scripts/generate_lineage_report.py
-	@echo "✅ Data lineage report generated"
-
-# ============================================================================
-# 🔧 LDIF SPECIFIC OPERATIONS
-# ============================================================================
-
-ldif-schema-analysis: ## Analyze LDIF schema patterns
-	@echo "📋 Analyzing LDIF schema patterns..."
-	@poetry run python scripts/analyze_ldif_schema.py
-	@echo "✅ LDIF schema analysis complete"
-
-ldif-change-tracking: dbt-run ## Track LDIF changes over time
-	@echo "📊 Running LDIF change tracking..."
-	@poetry run dbt run --models fact_ldif_changes --profiles-dir profiles/ --target dev
-	@echo "✅ LDIF change tracking complete"
-
-ldif-impact-analysis: dbt-run ## Analyze impact of LDIF changes
-	@echo "⚡ Running LDIF impact analysis..."
-	@poetry run python scripts/impact_analysis.py
-	@echo "✅ LDIF impact analysis complete"
-
-ldif-compliance-check: dbt-test ## Check LDIF compliance
-	@echo "✅ Running LDIF compliance checks..."
-	@poetry run dbt test --models tests.ldif_compliance --profiles-dir profiles/ --target dev
-	@echo "✅ LDIF compliance check complete"
-
-# ============================================================================
 # 📦 BUILD & DISTRIBUTION
 # ============================================================================
 
@@ -324,26 +310,6 @@ build: clean generate-models dbt-compile ## Build dbt project
 	@echo "🔨 Building dbt project..."
 	@poetry build
 	@echo "✅ Build complete - packages in dist/"
-
-package: build ## Create deployment package
-	@echo "📦 Creating deployment package..."
-	@tar -czf dist/flext-dbt-ldif-deployment.tar.gz \
-		models/ \
-		macros/ \
-		tests/ \
-		seeds/ \
-		analysis/ \
-		snapshots/ \
-		target/ \
-		src/ \
-		dbt_project.yml \
-		profiles/ \
-		README.md
-	@echo "✅ Deployment package created: dist/flext-dbt-ldif-deployment.tar.gz"
-
-# ============================================================================
-# 🧹 CLEANUP
-# ============================================================================
 
 clean: ## Remove all artifacts
 	@echo "🧹 Cleaning up..."
@@ -385,14 +351,15 @@ deps-outdated: ## Show outdated dependencies
 	@echo "📋 Outdated dependencies:"
 	@poetry show --outdated
 
-dbt-packages-update: ## Update dbt packages
-	@echo "📦 Updating dbt packages..."
-	@poetry run dbt deps --upgrade --profiles-dir profiles/
-	@echo "✅ DBT packages updated"
-
 # ============================================================================
 # 🔧 ENVIRONMENT CONFIGURATION
 # ============================================================================
+
+# Project information
+PROJECT_NAME := flext-dbt-ldif
+PROJECT_TYPE := meltano-plugin
+PROJECT_VERSION := $(shell poetry version -s)
+PROJECT_DESCRIPTION := FLEXT DBT LDIF - LDIF Data Interchange Analytics
 
 # Python settings
 PYTHON := python3.13
@@ -447,15 +414,6 @@ export POETRY_CACHE_DIR := $(HOME)/.cache/pypoetry
 export MYPY_CACHE_DIR := .mypy_cache
 export RUFF_CACHE_DIR := .ruff_cache
 
-# ============================================================================
-# 📝 PROJECT METADATA
-# ============================================================================
-
-# Project information
-PROJECT_NAME := flext-dbt-ldif
-PROJECT_VERSION := $(shell poetry version -s)
-PROJECT_DESCRIPTION := FLEXT DBT LDIF - LDIF Data Interchange Analytics
-
 .DEFAULT_GOAL := help
 
 # ============================================================================
@@ -484,54 +442,3 @@ workspace-info: ## Show workspace integration info
 	@echo "🔗 Dependencies: flext-core, dbt-core, dbt-utils, dbt-codegen"
 	@echo "📦 Provides: Advanced LDIF analytics and insights"
 	@echo "🎯 Standards: Programmatic model generation with advanced analytics"
-
-# ============================================================================
-# 🚀 PRODUCTION DEPLOYMENT
-# ============================================================================
-
-deploy-staging: validate generate-models dbt-run ## Deploy to staging environment
-	@echo "🚀 Deploying to staging..."
-	@poetry run dbt run --profiles-dir profiles/ --target staging
-	@poetry run dbt test --profiles-dir profiles/ --target staging
-	@echo "✅ Staging deployment complete"
-
-deploy-prod: validate generate-models dbt-test ## Deploy to production environment
-	@echo "🚀 Deploying to production..."
-	@poetry run dbt run --profiles-dir profiles/ --target prod
-	@poetry run dbt test --profiles-dir profiles/ --target prod
-	@poetry run dbt docs generate --profiles-dir profiles/ --target prod
-	@echo "✅ Production deployment complete"
-
-rollback-staging: ## Rollback staging deployment
-	@echo "🔄 Rolling back staging deployment..."
-	@poetry run python scripts/rollback_deployment.py --target staging
-	@echo "✅ Staging rollback complete"
-
-rollback-prod: ## Rollback production deployment
-	@echo "🔄 Rolling back production deployment..."
-	@poetry run python scripts/rollback_deployment.py --target prod
-	@echo "✅ Production rollback complete"
-
-# ============================================================================
-# 🔬 ADVANCED FEATURES
-# ============================================================================
-
-model-performance-analysis: ## Analyze model performance
-	@echo "⚡ Analyzing model performance..."
-	@poetry run python scripts/analyze_model_performance.py
-	@echo "✅ Model performance analysis complete"
-
-optimize-models: ## Optimize model performance
-	@echo "⚡ Optimizing model performance..."
-	@poetry run python scripts/optimize_models.py
-	@echo "✅ Model optimization complete"
-
-generate-insights-report: analytics-insights ## Generate comprehensive insights report
-	@echo "📊 Generating comprehensive insights report..."
-	@poetry run python scripts/generate_insights_report.py
-	@echo "✅ Insights report generated"
-
-monitor-data-drift: ## Monitor data drift patterns
-	@echo "📊 Monitoring data drift patterns..."
-	@poetry run python scripts/monitor_data_drift.py
-	@echo "✅ Data drift monitoring complete"
