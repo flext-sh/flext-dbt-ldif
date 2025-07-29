@@ -35,15 +35,6 @@ from flext_ldif import (
     flext_ldif_write,
 )
 
-# Create compatibility aliases for old API names
-FlextLdifParser = FlextLdifAPI
-FlextLdifValidator = FlextLdifAPI
-FlextLdifWriter = FlextLdifAPI
-flext_ldif_format_entry = flext_ldif_write
-flext_ldif_parse_content = flext_ldif_parse
-flext_ldif_validate_syntax = flext_ldif_validate
-
-
 # Import real DBT APIs from flext-meltano (no fallbacks)
 from flext_meltano.dbt import (
     FlextMeltanoDbtManager,
@@ -51,6 +42,19 @@ from flext_meltano.dbt import (
     FlextMeltanoDbtRunner,
 )
 
+# Import from core module - using available classes
+from flext_dbt_ldif.core import (
+    DBTModelGenerator,
+    LDIFAnalytics,
+)
+
+# Create compatibility aliases for old API names
+FlextLdifParser = FlextLdifAPI
+FlextLdifValidator = FlextLdifAPI
+FlextLdifWriter = FlextLdifAPI
+flext_ldif_format_entry = flext_ldif_write
+flext_ldif_parse_content = flext_ldif_parse
+flext_ldif_validate_syntax = flext_ldif_validate
 
 try:
     __version__ = importlib.metadata.version("flext-dbt-ldif")
@@ -79,40 +83,34 @@ def _show_deprecation_warning(old_import: str, new_import: str) -> None:
     )
 
 
-try:
-    from flext_dbt_ldif.analytics import (  # type: ignore[import-not-found]
-        ChangeTracker,
-        LDIFAnalyzer,
-        LDIFInsights,
-    )
-except ImportError:
-
-    class ChangeTracker:  # type: ignore[no-redef]
-        """Stub class for ChangeTracker when flext_dbt_ldif.analytics is not available."""
-
-    class LDIFAnalyzer:  # type: ignore[no-redef]
-        """Stub class for LDIFAnalyzer when flext_dbt_ldif.analytics is not available."""
-
-    class LDIFInsights:  # type: ignore[no-redef]
-        """Stub class for LDIFInsights when flext_dbt_ldif.analytics is not available."""
+# Note: analytics and models modules are planned for future implementation
+# Using core functionality from flext-dbt-ldif for now
 
 
-try:
-    from flext_dbt_ldif.models import (  # type: ignore[import-not-found]
-        AnalyticsModel,
-        DimensionModel,
-        ModelGenerator,
-    )
-except ImportError:
+# Create placeholder classes that will be implemented when analytics/models modules are created
+class ChangeTracker:
+    """Placeholder for future analytics change tracking functionality."""
 
-    class AnalyticsModel:  # type: ignore[no-redef]
-        """Stub class for AnalyticsModel when flext_dbt_ldif.models is not available."""
 
-    class DimensionModel:  # type: ignore[no-redef]
-        """Stub class for DimensionModel when flext_dbt_ldif.models is not available."""
+class LDIFAnalyzer:
+    """Placeholder for future LDIF analysis functionality."""
 
-    class ModelGenerator:  # type: ignore[no-redef]
-        """Stub class for ModelGenerator when flext_dbt_ldif.models is not available."""
+
+class LDIFInsights:
+    """Placeholder for future LDIF insights functionality."""
+
+
+class AnalyticsModel:
+    """Placeholder for future analytics model functionality."""
+
+
+class DimensionModel:
+    """Placeholder for future dimension model functionality."""
+
+
+class ModelGenerator:
+    """Placeholder for future model generation functionality."""
+
 
 
 __all__ = [
