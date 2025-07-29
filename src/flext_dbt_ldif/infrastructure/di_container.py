@@ -12,8 +12,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Any
-
 # 🚨 ARCHITECTURAL COMPLIANCE: Use ONLY official flext-core FlextContainer
 from flext_core import FlextContainer, get_logger
 
@@ -52,7 +50,7 @@ def configure_flext_dbt_ldif_dependencies() -> None:
         logger.exception(f"Failed to configure FLEXT_DBT_LDIF dependencies: {e}")
 
 
-def get_flext_dbt_ldif_service(service_name: str) -> Any:
+def get_flext_dbt_ldif_service(service_name: str) -> object:
     """Get flext_dbt_ldif service from container.
 
     Args:
@@ -65,7 +63,7 @@ def get_flext_dbt_ldif_service(service_name: str) -> Any:
     container = get_flext_dbt_ldif_container()
     result = container.get(service_name)
 
-    if result.success:
+    if result.is_success:
         return result.data
 
     logger.warning(f"FLEXT_DBT_LDIF service '{service_name}' not found: {result.error}")
