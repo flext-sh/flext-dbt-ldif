@@ -1,9 +1,9 @@
-name: 'dbt_ldif'
-version: '0.1.0'
+name: "flext_dbt_ldif"
+version: "1.0.0"
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'dbt_ldif'
+profile: "flext_ldif"
 
 # These configurations specify where dbt should look for different types of files.
 # The `model-paths` config, for example, states that models in this project can be
@@ -23,25 +23,31 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
+# Enterprise LDIF DBT package configuration
 models:
-  dbt_ldif:
-    # Config indicated by + and applies to all files under models/
-    +materialized: view
+  flext_dbt_ldif:
+    # Base models - foundational LDIF entity models
+    +materialized: table
+    +schema: ldif
+    +tags: ["ldif", "enterprise"]
+
+    # Staging models - raw LDIF data transformation
     staging:
       +materialized: view
-      +tags: ["staging"]
+      +schema: ldif_staging
+      +tags: ["staging", "ldif"]
+
+    # Intermediate models - business logic transformations
     intermediate:
-      +materialized: view  
-      +tags: ["intermediate"]
-    dimensions:
-      +materialized: table
-      +tags: ["dimensions"]
-    facts:
-      +materialized: table
-      +tags: ["facts"]
+      +materialized: view
+      +schema: ldif_intermediate
+      +tags: ["intermediate", "ldif"]
+
+    # Marts models - business-ready data models
     marts:
       +materialized: table
-      +tags: ["marts", "analytics"]
+      +schema: ldif_marts
+      +tags: ["marts", "ldif", "business"]
 
 tests:
   dbt_ldif:

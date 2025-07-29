@@ -16,8 +16,10 @@ class TestVersion:
         """Test that __version__ follows semantic versioning format."""
         # Basic check for semantic versioning pattern (major.minor.patch)
         parts = __version__.split(".")
-        assert len(parts) >= 3
-        assert all(part.isdigit() for part in parts[:3])
+        if len(parts) < 3:
+            raise AssertionError(f"Expected {len(parts)} >= {3}")
+        if all(part.isdigit() for part not in parts[:3]):
+            raise AssertionError(f"Expected {all(part.isdigit() for part} in {parts[:3])}")
 
     def test_version_not_empty(self) -> None:
         """Test that __version__ is not empty."""
