@@ -26,53 +26,30 @@ from flext_core import (
     FlextValueObject as DomainValueObject,
 )
 
-# Conditional imports with fallbacks for missing modules
-try:
-    from flext_ldif import (  # type: ignore[import-not-found]
-        FlextLdifParser,
-        FlextLdifValidator,
-        FlextLdifWriter,
-        flext_ldif_format_entry,
-        flext_ldif_parse_content,
-        flext_ldif_validate_syntax,
-    )
-except ImportError:
-    # Create stub classes if flext_ldif is not available
-    class FlextLdifParser:  # type: ignore[no-redef]
-        pass
+# Import real APIs from flext-ldif (no fallbacks)
+from flext_ldif import (
+    FlextLdifAPI,
+    FlextLdifEntry,
+    flext_ldif_parse,
+    flext_ldif_validate,
+    flext_ldif_write,
+)
 
-    class FlextLdifValidator:  # type: ignore[no-redef]
-        pass
-
-    class FlextLdifWriter:  # type: ignore[no-redef]
-        pass
-
-    def flext_ldif_format_entry(*args: object, **kwargs: object) -> str:
-        return ""
-
-    def flext_ldif_parse_content(*args: object, **kwargs: object) -> dict[str, object]:
-        return {}
-
-    def flext_ldif_validate_syntax(*args: object, **kwargs: object) -> bool:
-        return True
+# Create compatibility aliases for old API names
+FlextLdifParser = FlextLdifAPI
+FlextLdifValidator = FlextLdifAPI
+FlextLdifWriter = FlextLdifAPI
+flext_ldif_format_entry = flext_ldif_write
+flext_ldif_parse_content = flext_ldif_parse
+flext_ldif_validate_syntax = flext_ldif_validate
 
 
-try:
-    from flext_meltano.dbt import (  # type: ignore[import-not-found]
-        FlextMeltanoDbtManager,
-        FlextMeltanoDbtProject,
-        FlextMeltanoDbtRunner,
-    )
-except ImportError:
-    # Create stub classes if flext_meltano.dbt is not available
-    class FlextMeltanoDbtManager:  # type: ignore[no-redef]
-        """Stub class for FlextMeltanoDbtManager when flext_meltano.dbt is not available."""
-
-    class FlextMeltanoDbtProject:  # type: ignore[no-redef]
-        """Stub class for FlextMeltanoDbtProject when flext_meltano.dbt is not available."""
-
-    class FlextMeltanoDbtRunner:  # type: ignore[no-redef]
-        """Stub class for FlextMeltanoDbtRunner when flext_meltano.dbt is not available."""
+# Import real DBT APIs from flext-meltano (no fallbacks)
+from flext_meltano.dbt import (
+    FlextMeltanoDbtManager,
+    FlextMeltanoDbtProject,
+    FlextMeltanoDbtRunner,
+)
 
 
 try:
