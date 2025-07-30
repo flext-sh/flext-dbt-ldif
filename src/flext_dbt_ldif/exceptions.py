@@ -62,7 +62,7 @@ class FlextDbtLdifValidationError(FlextValidationError):
         **kwargs: object,
     ) -> None:
         """Initialize LDIF DBT validation error with context."""
-        validation_details = {}
+        validation_details: dict[str, object] = {}
         if field is not None:
             validation_details["field"] = field
         if value is not None:
