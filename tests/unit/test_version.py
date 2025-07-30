@@ -18,8 +18,9 @@ class TestVersion:
         parts = __version__.split(".")
         if len(parts) < 3:
             raise AssertionError(f"Expected {len(parts)} >= {3}")
-        if all(part.isdigit() for part not in parts[:3]):
-            raise AssertionError(f"Expected {all(part.isdigit() for part} in {parts[:3])}")
+        if not all(part.isdigit() for part in parts[:3]):
+            non_digits = [part for part in parts[:3] if not part.isdigit()]
+            raise AssertionError(f"Expected all parts to be digits, found non-digits: {non_digits}")
 
     def test_version_not_empty(self) -> None:
         """Test that __version__ is not empty."""
