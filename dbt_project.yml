@@ -15,8 +15,8 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
+target-path: "target" # directory which will store compiled SQL files
+clean-targets: # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
@@ -62,16 +62,16 @@ sources:
 # Variables for the project
 vars:
   # The `start_date` variable will be accessible in all resources
-  start_date: '2024-01-01'
-  analytics_version: '1.0'
-  
+  start_date: "2024-01-01"
+  analytics_version: "1.0"
+
   # LDIF specific variables
-  ldif_schema: 'raw'
-  staging_schema: '{{ target.schema }}'
-  marts_schema: '{{ target.schema }}_marts'
-  
+  ldif_schema: "raw"
+  staging_schema: "{{ target.schema }}"
+  marts_schema: "{{ target.schema }}_marts"
+
   # Database configuration
-  database_name: 'ldif_analytics'
+  database_name: "ldif_analytics"
 
 # Documentation
 docs-paths: ["docs"]
@@ -81,7 +81,7 @@ snapshots:
   dbt_ldif:
     +target_schema: snapshots
 
-# Seeds configuration  
+# Seeds configuration
 seeds:
   dbt_ldif:
     +schema: seeds
@@ -89,12 +89,12 @@ seeds:
 # Macros configuration
 dispatch:
   - macro_namespace: dbt_utils
-    search_order: ['dbt_utils']
+    search_order: ["dbt_utils"]
   - macro_namespace: codegen
-    search_order: ['codegen']
+    search_order: ["codegen"]
 
 # Hooks
-on-run-start: 
+on-run-start:
   - "{{ log('Starting dbt run for LDIF data processing...', info=true) }}"
 
 on-run-end:

@@ -43,7 +43,15 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['user', 'group', 'organizational_unit', 'domain', 'computer', 'other']
+              values:
+                [
+                  "user",
+                  "group",
+                  "organizational_unit",
+                  "domain",
+                  "computer",
+                  "other",
+                ]
       - name: primary_object_class
         description: "Primary object class for categorization"
         tests:

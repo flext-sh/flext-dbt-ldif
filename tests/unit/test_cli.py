@@ -25,7 +25,7 @@ class TestCLI:
             msg = f"Expected {0}, got {result.exit_code}"
             raise AssertionError(msg)
         if "FLEXT dbt LDIF" not in result.output:
-            msg = f"Expected {"FLEXT dbt LDIF"} in {result.output}"
+            msg = f"Expected {'FLEXT dbt LDIF'} in {result.output}"
             raise AssertionError(msg)
         assert "Advanced LDAP Data Analytics" in result.output
 
@@ -53,11 +53,11 @@ class TestCLI:
             msg = f"Expected {0}, got {result.exit_code}"
             raise AssertionError(msg)
         if "FLEXT dbt LDIF" not in result.output:
-            msg = f"Expected {"FLEXT dbt LDIF"} in {result.output}"
+            msg = f"Expected {'FLEXT dbt LDIF'} in {result.output}"
             raise AssertionError(msg)
         assert __version__ in result.output
         if "Programmatic dbt model generation" not in result.output:
-            msg = f"Expected {"Programmatic dbt model generation"} in {result.output}"
+            msg = f"Expected {'Programmatic dbt model generation'} in {result.output}"
             raise AssertionError(msg)
 
     def test_generate_command(self) -> None:
@@ -67,7 +67,7 @@ class TestCLI:
             msg = f"Expected {0}, got {result.exit_code}"
             raise AssertionError(msg)
         if "Model generation functionality coming soon!" not in result.output:
-            msg = f"Expected {"Model generation functionality coming soon!"} in {result.output}"
+            msg = f"Expected {'Model generation functionality coming soon!'} in {result.output}"
             raise AssertionError(msg)
 
     def test_validate_command(self) -> None:
@@ -77,7 +77,7 @@ class TestCLI:
             msg = f"Expected {0}, got {result.exit_code}"
             raise AssertionError(msg)
         if "Model validation functionality coming soon!" not in result.output:
-            msg = f"Expected {"Model validation functionality coming soon!"} in {result.output}"
+            msg = f"Expected {'Model validation functionality coming soon!'} in {result.output}"
             raise AssertionError(msg)
 
     def test_main_keyboard_interrupt(self) -> None:
@@ -89,7 +89,6 @@ class TestCLI:
                 main()
 
             if exc_info.value.code != 1:
-
                 msg = f"Expected {1}, got {exc_info.value.code}"
                 raise AssertionError(msg)
 
@@ -102,7 +101,6 @@ class TestCLI:
                 main()
 
             if exc_info.value.code != 1:
-
                 msg = f"Expected {1}, got {exc_info.value.code}"
                 raise AssertionError(msg)
 
@@ -115,6 +113,5 @@ class TestCLI:
                 main()
 
             if exc_info.value.code != 0:
-
                 msg = f"Expected {0}, got {exc_info.value.code}"
                 raise AssertionError(msg)

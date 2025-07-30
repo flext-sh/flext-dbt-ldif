@@ -3,7 +3,7 @@
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 
-Version 0.7.0 - DBT LDIF Analytics with simplified public API:
+Version 0.9.0 - DBT LDIF Analytics with simplified public API:
 - All common imports available from root: from flext_dbt_ldif import LDIFAnalyzer
 - Built on flext-core foundation for robust LDIF data transformations
 - Deprecation warnings for internal imports
@@ -59,7 +59,7 @@ flext_ldif_validate_syntax = flext_ldif_validate
 try:
     __version__ = importlib.metadata.version("flext-dbt-ldif")
 except importlib.metadata.PackageNotFoundError:
-    __version__ = "0.7.0"
+    __version__ = "0.9.0"
 
 __version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
 
