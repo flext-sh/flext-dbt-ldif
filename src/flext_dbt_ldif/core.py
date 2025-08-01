@@ -15,15 +15,17 @@ logger = get_logger(__name__)
 class DBTModelGenerator:
     """Generates dbt models programmatically for LDIF analytics."""
 
-    def __init__(self, project_dir: Path) -> None:
+    def __init__(self, project_dir: Path | None = None) -> None:
         """Initialize the model generator.
 
         Args:
-            project_dir: Path to the dbt project directory
+            project_dir: Path to the dbt project directory (defaults to current)
 
         """
-        self.project_dir = project_dir
-        self.models_dir = project_dir / "models"
+        from pathlib import Path
+
+        self.project_dir = project_dir if project_dir is not None else Path.cwd()
+        self.models_dir = self.project_dir / "models"
 
     def generate_staging_models(self) -> list[dict[str, Any]]:
         """Generate staging layer models for LDIF data.
