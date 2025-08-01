@@ -27,7 +27,7 @@ class DBTModelGenerator:
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
 
-    def generate_staging_models(self) -> list[dict[str, Any]]:
+    def generate_staging_models(self) -> list[dict[str, object]]:
         """Generate staging layer models for LDIF data.
 
         Returns:
@@ -56,7 +56,7 @@ class DBTModelGenerator:
             },
         ]
 
-    def generate_analytics_models(self) -> list[dict[str, Any]]:
+    def generate_analytics_models(self) -> list[dict[str, object]]:
         """Generate analytics layer models.
 
         Returns:
@@ -86,7 +86,7 @@ class LDIFAnalytics:
     """LDIF-specific analytics functionality."""
 
     @staticmethod
-    def analyze_entry_patterns(ldif_data: list[dict[str, Any]]) -> dict[str, Any]:
+    def analyze_entry_patterns(ldif_data: list[dict[str, object]]) -> dict[str, object]:
         """Analyze patterns in LDIF entries.
 
         Args:
@@ -107,7 +107,7 @@ class LDIFAnalytics:
         }
 
     @staticmethod
-    def generate_quality_metrics(entries: list[dict[str, Any]]) -> dict[str, float]:
+    def generate_quality_metrics(entries: list[dict[str, object]]) -> dict[str, float]:
         """Generate data quality metrics for LDIF entries.
 
         Args:
