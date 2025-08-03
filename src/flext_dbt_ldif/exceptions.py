@@ -1,9 +1,10 @@
 """LDIF DBT exception hierarchy using flext-core patterns.
 
-Copyright (c) 2025 FLEXT Contributors
+Domain-specific exceptions for LDIF DBT operations inheriting from flext-core.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 
-Domain-specific exceptions for LDIF DBT operations inheriting from flext-core.
 """
 
 from __future__ import annotations

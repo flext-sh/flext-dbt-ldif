@@ -1,16 +1,22 @@
-"""Unit tests for core functionality."""
+"""Unit tests for core functionality.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
+"""
 
 from __future__ import annotations
 
+from pathlib import LDIFAnalytics, Path
 from typing import TYPE_CHECKING
 
-from flext_dbt_ldif.core import DBTModelGenerator, LDIFAnalytics
+from flext_dbt_ldif.core import DBTModel, DBTModelGenerator
+
+if TYPE_CHECKING:
+    from pathlib import PathGenerator
 
 # Constants
 EXPECTED_BULK_SIZE = 2
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class TestDBTModelGenerator:
