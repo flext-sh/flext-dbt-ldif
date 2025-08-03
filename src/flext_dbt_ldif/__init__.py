@@ -1,12 +1,13 @@
 """FLEXT DBT LDIF - LDIF Data Analytics and Transformations with simplified imports.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Version 0.9.0 - DBT LDIF Analytics with simplified public API:
 - All common imports available from root: from flext_dbt_ldif import LDIFAnalyzer
 - Built on flext-core foundation for robust LDIF data transformations
 - Deprecation warnings for internal imports
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
