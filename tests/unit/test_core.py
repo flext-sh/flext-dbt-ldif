@@ -8,12 +8,8 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import LDIFAnalytics, Path
-from typing import TYPE_CHECKING
 
-from flext_dbt_ldif.core import DBTModel, DBTModelGenerator
-
-if TYPE_CHECKING:
-    from pathlib import PathGenerator
+from flext_dbt_ldif.core import DBTModelGenerator
 
 # Constants
 EXPECTED_BULK_SIZE = 2
