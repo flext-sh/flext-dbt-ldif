@@ -113,7 +113,7 @@ class ModelGenerator:
     """Placeholder for future model generation functionality."""
 
 
-__all__ = [
+__all__: list[str] = [
     "AnalyticsModel",  # from flext_dbt_ldif import AnalyticsModel
     "BaseModel",  # from flext_dbt_ldif import BaseModel
     # Change Tracking (simplified access)
