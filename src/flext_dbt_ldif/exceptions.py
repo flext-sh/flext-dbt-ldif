@@ -176,7 +176,7 @@ class FlextDbtLdifTestError(FlextDbtLdifError):
         super().__init__(f"LDIF DBT test: {message}", model_name=model_name, **context)
 
 
-__all__ = [
+__all__: list[str] = [
     "FlextDbtLdifConfigurationError",
     "FlextDbtLdifError",
     "FlextDbtLdifModelError",
