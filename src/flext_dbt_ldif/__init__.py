@@ -12,37 +12,23 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import contextlib
 import importlib.metadata
 import warnings
 
 # Import from flext-core for foundational patterns (standardized)
 from flext_core import (
-    FlextBaseSettings as BaseConfig,
-    FlextEntity as DomainEntity,
-    FlextFields as Field,
     FlextResult,
-    FlextValueObject as BaseModel,
-    FlextValueObject as DomainBaseModel,
-    FlextValueObject as DomainValueObject,
 )
 
 # Import real APIs from flext-ldif (no fallbacks)
 from flext_ldif import (
     FlextLdifAPI,
-    FlextLdifEntry,
     flext_ldif_parse,
     flext_ldif_validate,
     flext_ldif_write,
 )
 
 # Import real DBT APIs from flext-meltano (no fallbacks)
-from flext_meltano.dbt import (
-    FlextMeltanoDbtManager,
-    FlextMeltanoDbtProject,
-    FlextMeltanoDbtRunner,
-)
-
 # Import from core module - using available classes
 from flext_dbt_ldif.core import (
     DBTModelGenerator,
@@ -118,11 +104,13 @@ __all__: list[str] = [
     "BaseModel",  # from flext_dbt_ldif import BaseModel
     # Change Tracking (simplified access)
     "ChangeTracker",  # from flext_dbt_ldif import ChangeTracker
+    "DBTModelGenerator",
     # Dimension Modeling (simplified access)
     "DimensionModel",  # from flext_dbt_ldif import DimensionModel
     # Deprecation utilities
     "FlextDbtLdifDeprecationWarning",
     "FlextResult",  # from flext_dbt_ldif import FlextResult
+    "LDIFAnalytics",
     # LDIF Analytics (simplified access)
     "LDIFAnalyzer",  # from flext_dbt_ldif import LDIFAnalyzer
     # Core Patterns (from flext-core)
