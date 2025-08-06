@@ -60,6 +60,7 @@ def validate() -> None:
 
 
 def main() -> NoReturn:
+    """Main CLI entry point for flext-dbt-ldif."""
     try:
         cli()
     except KeyboardInterrupt:
