@@ -1,6 +1,7 @@
-"""LDIF DBT exception hierarchy using flext-core patterns.
+"""LDIF DBT Exception Hierarchy.
 
-Domain-specific exceptions for LDIF DBT operations inheriting from flext-core.
+Exception hierarchy following FLEXT patterns using factory pattern from flext-core.
+Eliminates code duplication by using create_module_exception_classes() factory.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,171 +10,129 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core.exceptions import (
-    FlextConfigurationError,
-    FlextError,
-    FlextProcessingError,
-    FlextValidationError,
-)
+from flext_core import FlextError
 
 
+# Base LDIF DBT error hierarchy using standard inheritance
 class FlextDbtLdifError(FlextError):
-    """Base exception for LDIF DBT operations."""
-
-    def __init__(
-        self,
-        message: str = "LDIF DBT error",
-        model_name: str | None = None,
-        **kwargs: object,
-    ) -> None:
-        """Initialize LDIF DBT error with context."""
-        context = kwargs.copy()
-        if model_name is not None:
-            context["model_name"] = model_name
-
-        super().__init__(message, error_code="LDIF_DBT_ERROR", context=context)
+    """Base exception for all LDIF DBT operations."""
 
 
-class FlextDbtLdifConfigurationError(FlextConfigurationError):
-    """LDIF DBT configuration errors."""
-
-    def __init__(
-        self,
-        message: str = "LDIF DBT configuration error",
-        config_key: str | None = None,
-        **kwargs: object,
-    ) -> None:
-        """Initialize LDIF DBT configuration error with context."""
-        context = kwargs.copy()
-        if config_key is not None:
-            context["config_key"] = config_key
-
-        super().__init__(f"LDIF DBT config: {message}", **context)
+class FlextDbtLdifValidationError(FlextDbtLdifError):
+    """Raised when LDIF data validation fails."""
 
 
-class FlextDbtLdifValidationError(FlextValidationError):
-    """LDIF DBT validation errors."""
-
-    def __init__(
-        self,
-        message: str = "LDIF DBT validation failed",
-        field: str | None = None,
-        value: object = None,
-        model_name: str | None = None,
-        **kwargs: object,
-    ) -> None:
-        """Initialize LDIF DBT validation error with context."""
-        validation_details: dict[str, object] = {}
-        if field is not None:
-            validation_details["field"] = field
-        if value is not None:
-            validation_details["value"] = str(value)[:100]  # Truncate long values
-
-        context = kwargs.copy()
-        if model_name is not None:
-            context["model_name"] = model_name
-
-        super().__init__(
-            f"LDIF DBT validation: {message}",
-            validation_details=validation_details,
-            context=context,
-        )
+class FlextDbtLdifConfigurationError(FlextDbtLdifError):
+    """Raised when configuration is invalid or missing."""
 
 
-class FlextDbtLdifProcessingError(FlextProcessingError):
-    """LDIF DBT processing errors."""
-
-    def __init__(
-        self,
-        message: str = "LDIF DBT processing failed",
-        model_name: str | None = None,
-        stage: str | None = None,
-        **kwargs: object,
-    ) -> None:
-        """Initialize LDIF DBT processing error with context."""
-        context = kwargs.copy()
-        if model_name is not None:
-            context["model_name"] = model_name
-        if stage is not None:
-            context["stage"] = stage
-
-        super().__init__(f"LDIF DBT processing: {message}", **context)
+class FlextDbtLdifConnectionError(FlextDbtLdifError):
+    """Raised when database connection fails."""
 
 
-class FlextDbtLdifParseError(FlextProcessingError):
-    """LDIF DBT parsing errors."""
+class FlextDbtLdifProcessingError(FlextDbtLdifError):
+    """Raised when LDIF processing operations fail."""
+
+
+class FlextDbtLdifAuthenticationError(FlextDbtLdifError):
+    """Raised when authentication to LDAP/database fails."""
+
+
+class FlextDbtLdifTimeoutError(FlextDbtLdifError):
+    """Raised when operations timeout."""
+
+
+# Domain-specific exceptions for LDIF DBT business logic
+class FlextDbtLdifParseError(FlextDbtLdifProcessingError):
+    """LDIF DBT parsing errors with LDIF parse context."""
 
     def __init__(
         self,
         message: str = "LDIF DBT parsing failed",
+        *,
         line_number: int | None = None,
         entry_dn: str | None = None,
+        error_code: str | None = None,
         **kwargs: object,
     ) -> None:
-        """Initialize LDIF DBT parsing error with context."""
-        context = kwargs.copy()
+        """Initialize LDIF DBT parsing error with parse context."""
+        context = dict(kwargs)
+        context["operation"] = "ldif_parsing"
         if line_number is not None:
             context["line_number"] = line_number
         if entry_dn is not None:
             context["entry_dn"] = entry_dn
 
-        super().__init__(f"LDIF DBT parse: {message}", **context)
+        super().__init__(message, error_code=error_code, context=context)
 
 
-class FlextDbtLdifModelError(FlextDbtLdifError):
-    """LDIF DBT model-specific errors."""
+class FlextDbtLdifModelError(FlextDbtLdifProcessingError):
+    """LDIF DBT model-specific errors with dbt model context."""
 
     def __init__(
         self,
         message: str = "LDIF DBT model error",
+        *,
         model_name: str | None = None,
         model_type: str | None = None,
+        error_code: str | None = None,
         **kwargs: object,
     ) -> None:
-        """Initialize LDIF DBT model error with context."""
-        context = kwargs.copy()
+        """Initialize LDIF DBT model error with dbt context."""
+        context = dict(kwargs)
+        context["operation"] = "dbt_model_processing"
+        if model_name is not None:
+            context["model_name"] = model_name
         if model_type is not None:
             context["model_type"] = model_type
 
-        super().__init__(f"LDIF DBT model: {message}", model_name=model_name, **context)
+        super().__init__(message, error_code=error_code, context=context)
 
 
-class FlextDbtLdifTransformationError(FlextProcessingError):
-    """LDIF DBT transformation errors."""
+class FlextDbtLdifTransformationError(FlextDbtLdifProcessingError):
+    """LDIF DBT transformation errors with transformation context."""
 
     def __init__(
         self,
         message: str = "LDIF DBT transformation failed",
+        *,
         transformation_type: str | None = None,
         model_name: str | None = None,
+        error_code: str | None = None,
         **kwargs: object,
     ) -> None:
-        """Initialize LDIF DBT transformation error with context."""
-        context = kwargs.copy()
+        """Initialize LDIF DBT transformation error with transformation context."""
+        context = dict(kwargs)
+        context["operation"] = "ldif_transformation"
         if transformation_type is not None:
             context["transformation_type"] = transformation_type
         if model_name is not None:
             context["model_name"] = model_name
 
-        super().__init__(f"LDIF DBT transformation: {message}", **context)
+        super().__init__(message, error_code=error_code, context=context)
 
 
-class FlextDbtLdifTestError(FlextDbtLdifError):
-    """LDIF DBT test errors."""
+class FlextDbtLdifTestError(FlextDbtLdifValidationError):
+    """LDIF DBT test errors with test validation context."""
 
     def __init__(
         self,
         message: str = "LDIF DBT test failed",
+        *,
         test_name: str | None = None,
         model_name: str | None = None,
+        error_code: str | None = None,
         **kwargs: object,
     ) -> None:
-        """Initialize LDIF DBT test error with context."""
-        context = kwargs.copy()
+        """Initialize LDIF DBT test error with test context."""
+        context = dict(kwargs)
+        context["operation"] = "dbt_test_validation"
         if test_name is not None:
             context["test_name"] = test_name
+        if model_name is not None:
+            context["model_name"] = model_name
 
-        super().__init__(f"LDIF DBT test: {message}", model_name=model_name, **context)
+        super().__init__(message, error_code=error_code, context=context)
 
 
 __all__: list[str] = [
