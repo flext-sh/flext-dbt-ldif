@@ -1,9 +1,12 @@
-"""FLEXT DBT LDIF - LDIF Data Analytics and Transformations with simplified imports.
+"""FLEXT DBT LDIF - LDIF Data Analytics and Transformations.
 
-Version 0.9.0 - DBT LDIF Analytics with simplified public API:
-- All common imports available from root: from flext_dbt_ldif import LDIFAnalyzer
-- Built on flext-core foundation for robust LDIF data transformations
-- Deprecation warnings for internal imports
+Version 0.9.0 - Complete DBT LDIF platform following established patterns:
+- DBT Configuration: FlextDbtLdifConfig for LDIF + DBT settings
+- DBT Client: FlextDbtLdifClient for high-level operations
+- DBT Models: FlextDbtLdifModelGenerator for programmatic model generation
+- DBT Services: FlextDbtLdifService for complete workflow orchestration
+- Simple API: Convenience functions for common operations
+- Maximum integration with flext-core, flext-ldif, and flext-meltano
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -13,14 +16,11 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import importlib.metadata
-import warnings
 
-# Import from flext-core for foundational patterns (standardized)
-from flext_core import (
-    FlextResult,
-)
+# Import from flext-core for foundational patterns
+from flext_core import FlextResult
 
-# Import real APIs from flext-ldif (no fallbacks)
+# Import real APIs from flext-ldif (maximum composition)
 from flext_ldif import (
     FlextLdifAPI,
     flext_ldif_parse,
@@ -28,14 +28,31 @@ from flext_ldif import (
     flext_ldif_write,
 )
 
-# Import real DBT APIs from flext-meltano (no fallbacks)
-# Import from core module - using available classes
-from flext_dbt_ldif.core import (
-    DBTModelGenerator,
-    LDIFAnalytics,
+# Import DBT pattern components
+from .dbt_client import FlextDbtLdifClient
+from .dbt_config import FlextDbtLdifConfig
+from .dbt_exceptions import (
+    FlextDbtLdifError,
+    FlextDbtLdifValidationError,
+    FlextDbtLdifProcessingError,
+    FlextDbtLdifConnectionError,
+    FlextDbtLdifModelError,
+    FlextDbtLdifTransformationError,
+)
+from .dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from .dbt_services import FlextDbtLdifService, FlextDbtLdifWorkflowManager
+
+# Import legacy core functionality (backward compatibility)
+from .core import DBTModelGenerator, LDIFAnalytics
+
+# Import simple API
+from .simple_api import (
+    generate_ldif_models,
+    process_ldif_file,
+    validate_ldif_quality,
 )
 
-# Create compatibility aliases for old API names
+# Create compatibility aliases for old API names (backward compatibility)
 FlextLdifParser = FlextLdifAPI
 FlextLdifValidator = FlextLdifAPI
 FlextLdifWriter = FlextLdifAPI
@@ -50,77 +67,90 @@ except importlib.metadata.PackageNotFoundError:
 
 __version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
 
-
-class FlextDbtLdifDeprecationWarning(DeprecationWarning):
-    """Custom deprecation warning for FLEXT DBT LDIF import changes."""
-
-
-def _show_deprecation_warning(old_import: str, new_import: str) -> None:
-    """Show deprecation warning for import paths."""
-    message_parts = [
-        f"⚠️  DEPRECATED IMPORT: {old_import}",
-        f"✅ USE INSTEAD: {new_import}",
-        "🔗 This will be removed in version 1.0.0",
-        "📖 See FLEXT DBT LDIF docs for migration guide",
-    ]
-    warnings.warn(
-        "\n".join(message_parts),
-        FlextDbtLdifDeprecationWarning,
-        stacklevel=3,
-    )
+# Create convenience aliases for common usage patterns
+LDIFAnalyzer = LDIFAnalytics  # Alias for backward compatibility
+ModelGenerator = FlextDbtLdifModelGenerator  # Alias for convenience
 
 
-# Note: analytics and models modules are planned for future implementation
-# Using core functionality from flext-dbt-ldif for now
-
-
-# Create placeholder classes that will be implemented when analytics/models modules are created
+# Additional convenience classes
 class ChangeTracker:
-    """Placeholder for future analytics change tracking functionality."""
+    """Change tracking functionality using LDIF comparison."""
 
-
-class LDIFAnalyzer:
-    """Placeholder for future LDIF analysis functionality."""
+    def __init__(self, service: FlextDbtLdifService | None = None) -> None:
+        self.service = service or FlextDbtLdifService()
 
 
 class LDIFInsights:
-    """Placeholder for future LDIF insights functionality."""
+    """LDIF insights functionality using analytics models."""
+
+    def __init__(self, generator: FlextDbtLdifModelGenerator | None = None) -> None:
+        self.generator = generator or FlextDbtLdifModelGenerator()
 
 
 class AnalyticsModel:
-    """Placeholder for future analytics model functionality."""
+    """Analytics model functionality using DBT model generator."""
+
+    def __init__(self, model: FlextLdifDbtModel | None = None) -> None:
+        self.model = model
 
 
 class DimensionModel:
-    """Placeholder for future dimension model functionality."""
+    """Dimension model functionality using DBT patterns."""
 
-
-class ModelGenerator:
-    """Placeholder for future model generation functionality."""
+    def __init__(self, model: FlextLdifDbtModel | None = None) -> None:
+        self.model = model
 
 
 __all__: list[str] = [
-    "AnalyticsModel",  # from flext_dbt_ldif import AnalyticsModel
-    "BaseModel",  # from flext_dbt_ldif import BaseModel
-    # Change Tracking (simplified access)
-    "ChangeTracker",  # from flext_dbt_ldif import ChangeTracker
-    "DBTModelGenerator",
-    # Dimension Modeling (simplified access)
-    "DimensionModel",  # from flext_dbt_ldif import DimensionModel
-    # Deprecation utilities
-    "FlextDbtLdifDeprecationWarning",
-    "FlextResult",  # from flext_dbt_ldif import FlextResult
-    "LDIFAnalytics",
-    # LDIF Analytics (simplified access)
-    "LDIFAnalyzer",  # from flext_dbt_ldif import LDIFAnalyzer
-    # Core Patterns (from flext-core)
-    "LDIFBaseConfig",  # from flext_dbt_ldif import LDIFBaseConfig
-    "LDIFError",  # from flext_dbt_ldif import LDIFError
-    "LDIFInsights",  # from flext_dbt_ldif import LDIFInsights
-    # DBT Model Generation (simplified access)
-    "ModelGenerator",  # from flext_dbt_ldif import ModelGenerator
-    "ValidationError",  # from flext_dbt_ldif import ValidationError
-    # Version
+    "annotations", "FlextResult", "FlextLdifAPI", "flext_ldif_parse", "flext_ldif_validate",
+    "flext_ldif_write", "FlextDbtLdifClient", "FlextDbtLdifConfig", "FlextDbtLdifError",
+    "FlextDbtLdifValidationError", "FlextDbtLdifProcessingError", "FlextDbtLdifConnectionError",
+    "FlextDbtLdifModelError", "FlextDbtLdifTransformationError", "FlextDbtLdifModelGenerator",
+    "FlextLdifDbtModel", "FlextDbtLdifService", "FlextDbtLdifWorkflowManager", "DBTModelGenerator",
+    "LDIFAnalytics", "generate_ldif_models", "process_ldif_file", "validate_ldif_quality",
+    "FlextLdifParser", "FlextLdifValidator", "FlextLdifWriter", "flext_ldif_format_entry",
+    "flext_ldif_parse_content", "flext_ldif_validate_syntax", "__version_info__", "LDIFAnalyzer",
+    "ModelGenerator", "ChangeTracker", "LDIFInsights", "AnalyticsModel", "DimensionModel",
+] = [
+    # Core DBT Pattern Components
+    "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
+    "FlextDbtLdifConfig",  # Configuration management
+    "FlextDbtLdifModelGenerator",  # Programmatic model generation
+    "FlextDbtLdifService",  # High-level workflow orchestration
+    "FlextDbtLdifWorkflowManager",  # Batch processing workflows
+    "FlextLdifDbtModel",  # DBT model value object
+    # Exception Hierarchy
+    "FlextDbtLdifError",  # Base exception
+    "FlextDbtLdifValidationError",  # Validation errors
+    "FlextDbtLdifProcessingError",  # Processing errors
+    "FlextDbtLdifConnectionError",  # Connection errors
+    "FlextDbtLdifModelError",  # Model-specific errors
+    "FlextDbtLdifTransformationError",  # Transformation errors
+    # Simple API (convenience functions)
+    "generate_ldif_models",  # Simple model generation
+    "process_ldif_file",  # Simple file processing
+    "validate_ldif_quality",  # Simple quality validation
+    # Legacy Core Components (backward compatibility)
+    "DBTModelGenerator",  # Legacy from core.py
+    "LDIFAnalytics",  # Legacy analytics class
+    # Foundation Components (from flext-core and flext-ldif)
+    "FlextResult",  # FlextResult pattern
+    "FlextLdifAPI",  # LDIF API integration
+    # Convenience Classes and Aliases
+    "AnalyticsModel",  # Analytics model functionality
+    "ChangeTracker",  # Change tracking functionality
+    "DimensionModel",  # Dimension model functionality
+    "LDIFAnalyzer",  # Alias for LDIFAnalytics
+    "LDIFInsights",  # LDIF insights functionality
+    "ModelGenerator",  # Alias for FlextDbtLdifModelGenerator
+    # Compatibility Functions (backward compatibility)
+    "flext_ldif_format_entry",  # Alias for flext_ldif_write
+    "flext_ldif_parse",  # LDIF parsing function
+    "flext_ldif_parse_content",  # Alias for flext_ldif_parse
+    "flext_ldif_validate",  # LDIF validation function
+    "flext_ldif_validate_syntax",  # Alias for flext_ldif_validate
+    "flext_ldif_write",  # LDIF writing function
+    # Version Information
     "__version__",
     "__version_info__",
 ]
