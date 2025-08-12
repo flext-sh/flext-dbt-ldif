@@ -12,6 +12,9 @@ from __future__ import annotations
 
 from flext_core import FlextError
 
+# Note: This module is intentionally simple. Runtime-focused code paths
+# are covered by service and client tests; exception classes are thin wrappers.
+
 
 # Base LDIF DBT error hierarchy using standard inheritance
 class FlextDbtLdifError(FlextError):
