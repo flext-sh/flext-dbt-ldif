@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 
 from flext_dbt_ldif.core import DBTModelGenerator, LDIFAnalytics
 
-if TYPE_CHECKING:  # ruff: noqa: TCH001
+if TYPE_CHECKING:
     from pathlib import Path
 
 # Constants
@@ -61,7 +61,7 @@ class TestDBTModelGenerator:
         assert analytics_model is not None
         if analytics_model["materialization"] != "table":
             raise AssertionError(
-                f"Expected table, got {analytics_model['materialization']}"
+                f"Expected table, got {analytics_model['materialization']}",
             )
         if "features" not in analytics_model:
             raise AssertionError(f"Expected features in {analytics_model}")
@@ -98,7 +98,7 @@ class TestLDIFAnalytics:
         data = result.data or {}
         if data.get("total_entries") != EXPECTED_BULK_SIZE:
             raise AssertionError(
-                f"Expected {EXPECTED_BULK_SIZE}, got {data.get('total_entries')}"
+                f"Expected {EXPECTED_BULK_SIZE}, got {data.get('total_entries')}",
             )
         if "unique_object_classes" not in data:
             msg: str = "Expected unique_object_classes in result"
@@ -123,7 +123,7 @@ class TestLDIFAnalytics:
     def test_generate_quality_metrics_with_data(self) -> None:
         """Test quality metrics with sample data."""
         sample_entries: list[dict[str, object]] = [
-            {"dn": "test", "objectClass": ["top"]}
+            {"dn": "test", "objectClass": ["top"]},
         ]
         analytics = LDIFAnalytics()
         result = analytics.generate_quality_metrics(sample_entries)

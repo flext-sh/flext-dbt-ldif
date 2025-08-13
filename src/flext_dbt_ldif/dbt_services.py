@@ -121,7 +121,8 @@ class FlextDbtLdifService:
             # Step 3: Run transformations if requested
             if run_transformations:
                 transform_result = self.client.transform_with_dbt(
-                    entries if isinstance(entries, list) else [], model_names,
+                    entries if isinstance(entries, list) else [],
+                    model_names,
                 )
                 if not transform_result.success:
                     return FlextResult.fail(
@@ -457,7 +458,8 @@ class FlextDbtLdifService:
         return 0.0
 
     def _generate_lineage_info(
-        self, models: list[FlextLdifDbtModel],
+        self,
+        models: list[FlextLdifDbtModel],
     ) -> dict[str, object]:
         """Generate data lineage information for models."""
         return {

@@ -1,3 +1,12 @@
+"""Test DBT models functionality.
+
+This module tests the DBT models functionality of flext-dbt-ldif.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -10,6 +19,7 @@ if TYPE_CHECKING:
 
 
 def test_write_models_and_sql_generation(tmp_path: Path) -> None:
+    """Test writing models and generating SQL."""
     gen = FlextDbtLdifModelGenerator(FlextDbtLdifConfig(), project_dir=tmp_path)
 
     # Create a simple staging model and analytics models
@@ -42,6 +52,7 @@ def test_write_models_and_sql_generation(tmp_path: Path) -> None:
 
 
 def test_generate_analytics_models() -> None:
+    """Test generating analytics models."""
     gen = FlextDbtLdifModelGenerator(FlextDbtLdifConfig())
     res = gen.generate_analytics_models([])
     assert res.success

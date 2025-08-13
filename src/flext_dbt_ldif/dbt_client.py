@@ -16,7 +16,7 @@ from flext_core import FlextResult, get_logger
 from flext_ldif import FlextLdifAPI
 from flext_meltano import create_dbt_hub
 
-from .dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
 if TYPE_CHECKING:
     from flext_ldif.entities import FlextLdifEntry  # type: ignore[import-untyped]
