@@ -36,7 +36,7 @@ from flext_dbt_ldif.dbt_exceptions import (
     FlextDbtLdifModelError,
     FlextDbtLdifTransformationError,
 )
-from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from flext_dbt_ldif.models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
 from flext_dbt_ldif.dbt_services import (
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
