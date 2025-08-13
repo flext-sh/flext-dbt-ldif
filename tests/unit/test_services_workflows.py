@@ -28,13 +28,17 @@ def svc(tmp_path: Path) -> FlextDbtLdifService:
 
 
 def test_run_complete_workflow_all(
-    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    svc: FlextDbtLdifService,
+    tmp_path: Path,
 ) -> None:
     """Test complete workflow with all entities."""
     entries: list[object] = [object(), object()]
 
     monkeypatch.setattr(
-        svc.client, "parse_ldif_file", lambda fp: FlextResult.ok(entries),
+        svc.client,
+        "parse_ldif_file",
+        lambda fp: FlextResult.ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
@@ -42,7 +46,9 @@ def test_run_complete_workflow_all(
         lambda e: FlextResult.ok({"quality_score": 0.9}),
     )
     monkeypatch.setattr(
-        svc.client, "transform_with_dbt", lambda e, m: FlextResult.ok({"ran": True}),
+        svc.client,
+        "transform_with_dbt",
+        lambda e, m: FlextResult.ok({"ran": True}),
     )
 
     # Model generator behavior
@@ -81,12 +87,16 @@ def test_run_complete_workflow_all(
 
 
 def test_run_data_quality_assessment(
-    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    svc: FlextDbtLdifService,
+    tmp_path: Path,
 ) -> None:
     """Test data quality assessment."""
     entries: list[object] = [object()]
     monkeypatch.setattr(
-        svc.client, "parse_ldif_file", lambda fp: FlextResult.ok(entries),
+        svc.client,
+        "parse_ldif_file",
+        lambda fp: FlextResult.ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
@@ -115,7 +125,8 @@ def test_run_data_quality_assessment(
 
 
 def test_generate_model_documentation(
-    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService,
+    monkeypatch: pytest.MonkeyPatch,
+    svc: FlextDbtLdifService,
 ) -> None:
     """Test model documentation generation."""
     monkeypatch.setattr(
