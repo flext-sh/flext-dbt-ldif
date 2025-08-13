@@ -1,3 +1,12 @@
+"""Test DBT client functionality.
+
+This module tests the DBT client functionality of flext-dbt-ldif.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
@@ -14,20 +23,31 @@ if TYPE_CHECKING:
 
 @pytest.fixture
 def client() -> FlextDbtLdifClient:
+    """Create a test client."""
     return FlextDbtLdifClient(FlextDbtLdifConfig())
 
 
-def test_parse_ldif_file_ok(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, client: FlextDbtLdifClient) -> None:
+def test_parse_ldif_file_ok(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, client: FlextDbtLdifClient,
+) -> None:
+    """Test parsing LDIF file."""
+
     def _parse_file(_self: Any, _path: Path) -> FlextResult[list[object]]:
         return FlextResult.ok([])
 
-    monkeypatch.setattr(client, "_ldif_api", type("X", (), {"parse_file": _parse_file})())
+    monkeypatch.setattr(
+        client, "_ldif_api", type("X", (), {"parse_file": _parse_file})(),
+    )
     result = client.parse_ldif_file(tmp_path / "dummy.ldif")
     assert result.success
     assert isinstance(result.data, list)
 
 
-def test_validate_ldif_data_ok(monkeypatch: pytest.MonkeyPatch, client: FlextDbtLdifClient) -> None:
+def test_validate_ldif_data_ok(
+    monkeypatch: pytest.MonkeyPatch, client: FlextDbtLdifClient,
+) -> None:
+    """Test validating LDIF data."""
+
     def _validate(_self: Any, _entries: list[object]) -> FlextResult[dict[str, object]]:
         return FlextResult.ok({})
 
@@ -44,8 +64,14 @@ def test_validate_ldif_data_ok(monkeypatch: pytest.MonkeyPatch, client: FlextDbt
     assert data.get("validation_status") == "passed"
 
 
-def test_transform_with_dbt_ok(monkeypatch: pytest.MonkeyPatch, client: FlextDbtLdifClient) -> None:
-    def _prep(_self: FlextDbtLdifClient, _entries: list[object]) -> FlextResult[dict[str, object]]:
+def test_transform_with_dbt_ok(
+    monkeypatch: pytest.MonkeyPatch, client: FlextDbtLdifClient,
+) -> None:
+    """Test transforming with DBT."""
+
+    def _prep(
+        _self: FlextDbtLdifClient, _entries: list[object],
+    ) -> FlextResult[dict[str, object]]:
         return FlextResult.ok({"prepared": True})
 
     monkeypatch.setattr(FlextDbtLdifClient, "_prepare_ldif_data_for_dbt", _prep)
@@ -57,14 +83,24 @@ def test_transform_with_dbt_ok(monkeypatch: pytest.MonkeyPatch, client: FlextDbt
     assert isinstance(result.data, dict)
 
 
-def test_run_full_pipeline_ok(monkeypatch: pytest.MonkeyPatch, client: FlextDbtLdifClient, tmp_path: Path) -> None:
-    def _parse(_self: FlextDbtLdifClient, _file: Path | str | None = None) -> FlextResult[list[object]]:
+def test_run_full_pipeline_ok(
+    monkeypatch: pytest.MonkeyPatch, client: FlextDbtLdifClient, tmp_path: Path,
+) -> None:
+    """Test running full pipeline."""
+
+    def _parse(
+        _self: FlextDbtLdifClient, _file: Path | str | None = None,
+    ) -> FlextResult[list[object]]:
         return FlextResult.ok([])
 
-    def _validate(_self: FlextDbtLdifClient, _entries: list[object]) -> FlextResult[dict[str, object]]:
+    def _validate(
+        _self: FlextDbtLdifClient, _entries: list[object],
+    ) -> FlextResult[dict[str, object]]:
         return FlextResult.ok({"quality_score": 0.9})
 
-    def _transform(_self: FlextDbtLdifClient, _entries: list[object], _models: list[str] | None) -> FlextResult[dict[str, object]]:
+    def _transform(
+        _self: FlextDbtLdifClient, _entries: list[object], _models: list[str] | None,
+    ) -> FlextResult[dict[str, object]]:
         return FlextResult.ok({"ran": True})
 
     monkeypatch.setattr(FlextDbtLdifClient, "parse_ldif_file", _parse)

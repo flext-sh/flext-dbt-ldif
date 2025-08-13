@@ -1,3 +1,12 @@
+"""Test exceptions functionality.
+
+This module tests the exceptions functionality of flext-dbt-ldif.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
+"""
+
 from __future__ import annotations
 
 from flext_dbt_ldif.dbt_exceptions import (
@@ -13,12 +22,14 @@ from flext_dbt_ldif.dbt_exceptions import (
 
 
 def test_exception_hierarchy() -> None:
+    """Test exception hierarchy."""
     assert issubclass(FlextDbtLdifValidationError, FlextDbtLdifError)
     assert issubclass(FlextDbtLdifProcessingError, FlextDbtLdifError)
     assert issubclass(FlextDbtLdifConfigurationError, FlextDbtLdifError)
 
 
 def test_exception_instances() -> None:
+    """Test exception instances."""
     e1 = FlextDbtLdifParseError("msg", line_number=10, entry_dn="cn=x")
     assert isinstance(e1, FlextDbtLdifProcessingError)
 

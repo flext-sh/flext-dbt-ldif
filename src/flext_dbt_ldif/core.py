@@ -104,7 +104,7 @@ class LDIFAnalytics:
         """Initialize analytics with flext-ldif API."""
         self._ldif_api = FlextLdifAPI()
 
-    def _convert_dict_to_entries(
+    def _convert_dict_to_entries(  # noqa: PLR0912
         self,
         ldif_data: list[dict[str, object]],
     ) -> list[FlextLdifEntry]:

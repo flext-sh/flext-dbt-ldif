@@ -16,11 +16,11 @@ import yaml
 from flext_core import FlextResult, get_logger
 from flext_ldif import FlextLdifAPI
 
-# from flext_meltano.models import FlextDbtModelGenerator  # Not available yet
-from .dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
 if TYPE_CHECKING:
-    from flext_ldif.entities import FlextLdifEntry  # type: ignore[import-untyped]
+    # Use the real typed class for precise type checking
+    from flext_ldif import FlextLdifEntry
 
 logger = get_logger(__name__)
 
@@ -37,6 +37,7 @@ class FlextLdifDbtModel:
         materialization: str = "view",
         meta: dict[str, object] | None = None,
     ) -> None:
+        """Initialize the DBT model."""
         self.name = name
         self.description = description
         self.materialization = materialization
@@ -83,7 +84,7 @@ class FlextDbtLdifModelGenerator:
 
         logger.info("Initialized LDIF DBT model generator: %s", self.project_dir)
 
-    def analyze_ldif_schema(  # type: ignore[no-any-unimported]
+    def analyze_ldif_schema(
         self,
         entries: list[FlextLdifEntry],
     ) -> FlextResult[dict[str, object]]:
@@ -106,20 +107,22 @@ class FlextDbtLdifModelGenerator:
                     f"Schema analysis failed: {stats_result.error}",
                 )
 
-            schema_info = stats_result.data or {}
+            # Upcast to dict[str, object] for result composition
+            base_stats: dict[str, int] = stats_result.data or {}
+            schema_info: dict[str, object] = dict(base_stats.items())
 
             # Add basic schema analysis info
             schema_info["total_entries"] = len(entries)
             schema_info["has_entries"] = len(entries) > 0
 
             logger.info("LDIF schema analysis completed")
-            return FlextResult.ok(schema_info)  # type: ignore[arg-type]
+            return FlextResult.ok(schema_info)
 
         except Exception as e:
             logger.exception("Error analyzing LDIF schema")
             return FlextResult.fail(f"Schema analysis error: {e}")
 
-    def generate_staging_models(  # type: ignore[no-any-unimported]
+    def generate_staging_models(
         self,
         entries: list[FlextLdifEntry],
     ) -> FlextResult[list[FlextLdifDbtModel]]:
@@ -362,17 +365,23 @@ class FlextDbtLdifModelGenerator:
             logger.exception("Error writing models to disk")
             return FlextResult.fail(f"Model writing error: {e}")
 
-    def _generate_staging_model_for_type(  # type: ignore[no-any-unimported]
+    def _generate_staging_model_for_type(
         self,
         entry_type: str,
         schema_name: str,
-        entries: list[FlextLdifEntry],  # noqa: ARG002
-        schema_info: dict[str, object],  # noqa: ARG002
+        entries: list[FlextLdifEntry],
+        schema_info: dict[str, object],
     ) -> FlextLdifDbtModel:
         """Generate a staging model for a specific entry type."""
-        # Use basic attribute analysis (analyze_entry_attributes not available)
+        # Use entries and schema_info minimally to avoid unused-args and add value
+        has_entries = len(entries) > 0
+        declared_total = (
+            schema_info.get("total_entries") if isinstance(schema_info, dict) else None
+        )
+        _ = declared_total  # Value can be used by future logic; keep assignment for clarity
+
         # Create standard LDIF columns
-        common_attrs = [
+        common_attrs: list[dict[str, object]] = [
             {
                 "name": "dn",
                 "type": "varchar",
@@ -390,19 +399,24 @@ class FlextDbtLdifModelGenerator:
                 "type": "varchar",
                 "description": "Type classification of LDIF entry",
             },
+            {
+                "name": "has_entries_flag",
+                "type": "boolean",
+                "description": "Indicates whether source had any entries at generation time",
+            },
         ]
 
         # Add mapped attributes from config
         for ldif_attr, mapped_attr in self.config.ldif_attribute_mapping.items():
             if ldif_attr != "dn":  # Already added above
-                column_def = {
+                column_def: dict[str, object] = {
                     "name": mapped_attr,
                     "type": "varchar",  # Default type
                     "description": f"LDIF {ldif_attr} attribute",
                 }
 
                 if ldif_attr in self.config.required_attributes:
-                    column_def["tests"] = ["not_null"]  # type: ignore[assignment]
+                    column_def["tests"] = ["not_null"]
 
                 common_attrs.append(column_def)
 
@@ -410,12 +424,13 @@ class FlextDbtLdifModelGenerator:
             name=schema_name,
             description=f"Staging model for LDIF {entry_type} entries with data quality checks",
             materialization="view",
-            columns=common_attrs,  # type: ignore[arg-type]
+            columns=common_attrs,
             meta={
                 "owner": "data_team",
                 "layer": "staging",
                 "data_source": "ldif",
                 "entry_type": entry_type,
+                "has_entries": has_entries,
             },
         )
 

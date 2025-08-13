@@ -26,7 +26,7 @@ class TestVersion:
         if not all(part.isdigit() for part in parts[:3]):
             non_digits = [part for part in parts[:3] if not part.isdigit()]
             raise AssertionError(
-                f"Expected all parts to be digits, found non-digits: {non_digits}"
+                f"Expected all parts to be digits, found non-digits: {non_digits}",
             )
 
     def test_version_not_empty(self) -> None:
