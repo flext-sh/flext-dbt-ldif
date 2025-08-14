@@ -19,7 +19,8 @@ from flext_meltano import create_dbt_hub
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
 if TYPE_CHECKING:
-    from flext_ldif.entities import FlextLdifEntry  # type: ignore[import-untyped]
+    # Import only for type checking to avoid runtime dependency cycles
+    from flext_ldif import FlextLdifEntry
     from flext_meltano import FlextDbtHub
 
 logger = get_logger(__name__)
@@ -57,7 +58,7 @@ class FlextDbtLdifClient:
             self._dbt_hub = create_dbt_hub()
         return self._dbt_hub
 
-    def parse_ldif_file(  # type: ignore[no-any-unimported]
+    def parse_ldif_file(
         self,
         file_path: Path | str | None = None,
     ) -> FlextResult[list[FlextLdifEntry]]:
@@ -96,7 +97,7 @@ class FlextDbtLdifClient:
                 f"LDIF parsing error: {e}",
             )
 
-    def validate_ldif_data(  # type: ignore[no-any-unimported]
+    def validate_ldif_data(
         self,
         entries: list[FlextLdifEntry],
     ) -> FlextResult[dict[str, object]]:
@@ -156,7 +157,7 @@ class FlextDbtLdifClient:
                 f"LDIF validation error: {e}",
             )
 
-    def transform_with_dbt(  # type: ignore[no-any-unimported]
+    def transform_with_dbt(
         self,
         entries: list[FlextLdifEntry],
         model_names: list[str] | None = None,
@@ -262,7 +263,7 @@ class FlextDbtLdifClient:
         logger.info("Full LDIF-to-DBT pipeline completed successfully")
         return FlextResult.ok(pipeline_results)  # type: ignore[arg-type]
 
-    def _prepare_ldif_data_for_dbt(  # type: ignore[no-any-unimported]
+    def _prepare_ldif_data_for_dbt(
         self,
         entries: list[FlextLdifEntry],
     ) -> FlextResult[dict[str, object]]:
@@ -307,7 +308,13 @@ class FlextDbtLdifClient:
 
                         # Convert entry to dict format
                         if hasattr(entry, "dn") and hasattr(entry, "attributes"):
-                            entry_dict = {"dn": entry.dn, **entry.attributes}
+                            # Convert LDIF entry to a plain dict for DBT mapping
+                            entry_dict: dict[str, object] = {"dn": getattr(entry, "dn")}
+                            # flext-ldif exposes attributes mapping via entry.attributes.attributes
+                            attrs = getattr(getattr(entry, "attributes"), "attributes", {})
+                            if isinstance(attrs, dict):
+                                for k, v in attrs.items():
+                                    entry_dict[str(k)] = v  # preserve original values
                             mapped_entry = self._map_entry_attributes(entry_dict)
                             prepared_data[schema_name].append(mapped_entry)
 
