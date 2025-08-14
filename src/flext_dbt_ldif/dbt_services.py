@@ -19,7 +19,7 @@ from .dbt_config import FlextDbtLdifConfig
 from .dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
 
 if TYPE_CHECKING:
-    from flext_ldif.entities import FlextLdifEntry  # type: ignore[import-untyped]
+    from flext_ldif import FlextLdifEntry
 
 logger = get_logger(__name__)
 
@@ -186,7 +186,7 @@ class FlextDbtLdifService:
             logger.exception("Error in parse and validate")
             return FlextResult.fail(f"Parse/validation error: {e}")
 
-    def generate_and_write_models(  # type: ignore[no-any-unimported]
+    def generate_and_write_models(
         self,
         entries: list[FlextLdifEntry],
         *,
@@ -330,7 +330,7 @@ class FlextDbtLdifService:
             logger.exception("Error in data quality assessment")
             return FlextResult.fail(f"Quality assessment error: {e}")
 
-    def generate_model_documentation(  # type: ignore[no-any-unimported]
+    def generate_model_documentation(
         self,
         entries: list[FlextLdifEntry],
     ) -> FlextResult[dict[str, object]]:
