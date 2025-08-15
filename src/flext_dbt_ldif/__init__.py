@@ -1,17 +1,4 @@
-"""FLEXT DBT LDIF - LDIF Data Analytics and Transformations.
-
-Version 0.9.0 - Complete DBT LDIF platform following established patterns:
-- DBT Configuration: FlextDbtLdifConfig for LDIF + DBT settings
-- DBT Client: FlextDbtLdifClient for high-level operations
-- DBT Models: FlextDbtLdifModelGenerator for programmatic model generation
-- DBT Services: FlextDbtLdifService for complete workflow orchestration
-- Simple API: Convenience functions for common operations
-- Maximum integration with flext-core, flext-ldif, and flext-meltano
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
-"""
+"""LDIF Data Analytics and Transformations for DBT."""
 
 from __future__ import annotations
 
