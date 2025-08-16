@@ -309,9 +309,9 @@ class FlextDbtLdifClient:
                         # Convert entry to dict format
                         if hasattr(entry, "dn") and hasattr(entry, "attributes"):
                             # Convert LDIF entry to a plain dict for DBT mapping
-                            entry_dict: dict[str, object] = {"dn": getattr(entry, "dn")}
+                            entry_dict: dict[str, object] = {"dn": entry.dn}
                             # flext-ldif exposes attributes mapping via entry.attributes.attributes
-                            attrs = getattr(getattr(entry, "attributes"), "attributes", {})
+                            attrs = getattr(entry.attributes, "attributes", {})
                             if isinstance(attrs, dict):
                                 for k, v in attrs.items():
                                     entry_dict[str(k)] = v  # preserve original values
