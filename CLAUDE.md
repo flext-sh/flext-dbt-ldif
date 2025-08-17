@@ -20,9 +20,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 ├── src/flext_dbt_ldif/           # Python package for programmatic features
+│   ├── __init__.py               # Package initialization and exports
 │   ├── core.py                   # DBTModelGenerator and LDIFAnalytics classes
 │   ├── cli.py                    # Command-line interface
-│   └── infrastructure/           # DI container and infrastructure code
+│   ├── dbt_client.py             # dbt client integration
+│   ├── dbt_config.py             # dbt configuration management
+│   ├── dbt_exceptions.py         # Custom exceptions for dbt operations
+│   ├── dbt_models.py             # dbt model definitions and metadata
+│   ├── dbt_services.py           # dbt service layer implementations
+│   ├── simple_api.py             # Simplified API for common operations
+│   └── models.py                 # Model abstractions and utilities
 ├── models/                       # dbt models (programmatically generated)
 │   └── staging/                  # Staging layer with schema.yml
 ├── profiles/                     # dbt profiles for PostgreSQL connection
@@ -34,10 +41,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Key Components
 
-1. **DBTModelGenerator**: Programmatically generates dbt models for LDIF analytics
-2. **LDIFAnalytics**: Provides advanced analytics capabilities including pattern analysis and quality metrics
-3. **dbt Models**: Layered architecture with staging, intermediate, and marts
-4. **Quality Gates**: Comprehensive linting, type checking, security scanning, and testing
+1. **DBTModelGenerator** (`core.py`): Programmatically generates dbt models for LDIF analytics
+2. **LDIFAnalytics** (`core.py`): Advanced analytics using flext-ldif infrastructure (eliminates code duplication)
+3. **dbt Client Integration** (`dbt_client.py`): dbt command execution and integration
+4. **dbt Configuration** (`dbt_config.py`): Configuration management for dbt operations
+5. **dbt Services** (`dbt_services.py`): Service layer for dbt model management
+6. **Simple API** (`simple_api.py`): Simplified interface for common LDIF analytics operations
+7. **CLI Interface** (`cli.py`): Command-line interface for project operations
+8. **Quality Gates**: Comprehensive linting, type checking, security scanning, and testing
 
 ## Development Commands
 
@@ -58,11 +69,16 @@ make dbt-run          # Execute dbt models
 make dbt-test         # Run dbt data tests
 make dbt-docs         # Generate dbt documentation
 make dbt-debug        # Debug dbt configuration
+make dbt-seed         # Load seed data
+make dbt-snapshot     # Run snapshots
+make dbt-clean        # Clean dbt artifacts
 
 # LDIF-specific operations
-make ldif-models-test      # Test LDIF-specific staging and marts models
-make ldif-transformations  # Run LDIF transformation pipeline
-make ldif-validate        # Validate LDIF data integrity
+make ldif-validate    # Validate LDIF data integrity (runs data quality tests)
+make ldif-staging     # Run LDIF staging models
+make ldif-marts       # Run LDIF marts models
+make ldif-analytics   # Run LDIF analytics models
+make generate-models  # Generate dbt models programmatically
 ```
 
 ### Python Development
@@ -84,9 +100,9 @@ make coverage-html    # Generate HTML coverage report
 ### Programmatic Model Generation
 
 ```bash
-make generate-models     # Generate dbt models programmatically
-make update-schemas      # Update model schemas
-make validate-generated  # Validate generated models
+make generate-models     # Generate dbt models programmatically (calls Python module)
+# Note: Additional generation commands are handled via Python CLI
+poetry run python -m flext_dbt_ldif.generate_models  # Direct model generation
 ```
 
 ### Setup and Installation
@@ -94,7 +110,38 @@ make validate-generated  # Validate generated models
 ```bash
 make setup           # Complete development setup
 make install         # Install Poetry dependencies
-make dev-install     # Development environment setup with pre-commit
+```
+
+### Additional Development Commands
+
+```bash
+# Build and packaging
+make build           # Build package (runs dbt-compile first)
+make docs            # Build all documentation
+make docs-serve      # Serve documentation locally
+
+# Dependency management
+make deps-update     # Update all dependencies (Poetry + dbt)
+make deps-audit      # Security audit dependencies
+
+# Maintenance
+make clean           # Clean build artifacts and cache
+make clean-all       # Deep clean including virtual environment
+make reset           # Complete project reset (clean-all + setup)
+
+# Diagnostics
+make diagnose        # Show environment diagnostics
+make doctor          # Full health check (diagnose + check)
+
+# Useful aliases
+make t               # Alias for test
+make l               # Alias for lint
+make f               # Alias for format
+make tc              # Alias for type-check
+make v               # Alias for validate
+make dr              # Alias for dbt-run
+make dt              # Alias for dbt-test
+make dc              # Alias for dbt-compile
 ```
 
 ## Configuration

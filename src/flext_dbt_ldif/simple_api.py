@@ -28,13 +28,13 @@ def process_ldif_file(
     """Simple function to process an LDIF file with DBT.
 
     Args:
-        ldif_file: Path to LDIF file
-        project_dir: DBT project directory (optional)
-        generate_models: Whether to generate DBT models
-        run_transformations: Whether to run transformations
+      ldif_file: Path to LDIF file
+      project_dir: DBT project directory (optional)
+      generate_models: Whether to generate DBT models
+      run_transformations: Whether to run transformations
 
     Returns:
-        FlextResult containing processing results
+      FlextResult containing processing results
 
     """
     logger.info("Processing LDIF file with simple API: %s", ldif_file)
@@ -43,9 +43,9 @@ def process_ldif_file(
     service = FlextDbtLdifService(project_dir=proj_path)
 
     return service.run_complete_workflow(
-        ldif_file=ldif_file,
-        generate_models=generate_models,
-        run_transformations=run_transformations,
+      ldif_file=ldif_file,
+      generate_models=generate_models,
+      run_transformations=run_transformations,
     )
 
 
@@ -55,10 +55,10 @@ def validate_ldif_quality(
     """Simple function to validate LDIF data quality.
 
     Args:
-        ldif_file: Path to LDIF file
+      ldif_file: Path to LDIF file
 
     Returns:
-        FlextResult containing quality assessment
+      FlextResult containing quality assessment
 
     """
     logger.info("Validating LDIF quality with simple API: %s", ldif_file)
@@ -76,12 +76,12 @@ def generate_ldif_models(
     """Simple function to generate DBT models from LDIF.
 
     Args:
-        ldif_file: Path to LDIF file
-        project_dir: DBT project directory (optional)
-        overwrite: Whether to overwrite existing models
+      ldif_file: Path to LDIF file
+      project_dir: DBT project directory (optional)
+      overwrite: Whether to overwrite existing models
 
     Returns:
-        FlextResult containing model generation results
+      FlextResult containing model generation results
 
     """
     logger.info("Generating LDIF models with simple API: %s", ldif_file)
@@ -92,12 +92,12 @@ def generate_ldif_models(
     # Parse file first
     parse_result = service.parse_and_validate_ldif(ldif_file)
     if not parse_result.success:
-        return parse_result
+      return parse_result
 
     parse_data = parse_result.data or {}
     entries = parse_data.get("entries", [])
     if not isinstance(entries, list):
-        return FlextResult.fail("Invalid entries data format")
+      return FlextResult.fail("Invalid entries data format")
     return service.generate_and_write_models(entries, overwrite=overwrite)
 
 

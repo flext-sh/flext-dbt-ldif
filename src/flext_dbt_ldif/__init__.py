@@ -62,32 +62,32 @@ class ChangeTracker:
     """Change tracking functionality using LDIF comparison."""
 
     def __init__(self, service: FlextDbtLdifService | None = None) -> None:
-        """Initialize change tracker."""
-        self.service = service or FlextDbtLdifService()
+      """Initialize change tracker."""
+      self.service = service or FlextDbtLdifService()
 
 
 class LDIFInsights:
     """LDIF insights functionality using analytics models."""
 
     def __init__(self, generator: FlextDbtLdifModelGenerator | None = None) -> None:
-        """Initialize LDIF insights."""
-        self.generator = generator or FlextDbtLdifModelGenerator()
+      """Initialize LDIF insights."""
+      self.generator = generator or FlextDbtLdifModelGenerator()
 
 
 class AnalyticsModel:
     """Analytics model functionality using DBT model generator."""
 
     def __init__(self, model: FlextLdifDbtModel | None = None) -> None:
-        """Initialize analytics model."""
-        self.model = model
+      """Initialize analytics model."""
+      self.model = model
 
 
 class DimensionModel:
     """Dimension model functionality using DBT patterns."""
 
     def __init__(self, model: FlextLdifDbtModel | None = None) -> None:
-        """Initialize dimension model."""
-        self.model = model
+      """Initialize dimension model."""
+      self.model = model
 
 
 __all__: list[str] = [
