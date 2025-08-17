@@ -36,14 +36,14 @@ def test_parse_and_validate_ldif_ok(
 ) -> None:
     """Test parsing and validating LDIF."""
     monkeypatch.setattr(
-      service.client,
-      "parse_ldif_file",
-      lambda _ldif_file: FlextResult.ok([]),  # type: ignore[no-any-return]
+        service.client,
+        "parse_ldif_file",
+        lambda _ldif_file: FlextResult.ok([]),  # type: ignore[no-any-return]
     )
     monkeypatch.setattr(
-      service.client,
-      "validate_ldif_data",
-      lambda _entries: FlextResult.ok({"quality_score": 0.91}),  # type: ignore[no-any-return]
+        service.client,
+        "validate_ldif_data",
+        lambda _entries: FlextResult.ok({"quality_score": 0.91}),  # type: ignore[no-any-return]
     )
 
     result = service.parse_and_validate_ldif(tmp_path / "x.ldif")
@@ -59,17 +59,17 @@ def test_generate_and_write_models_ok(
     """Test generating and writing models."""
 
     def _gen_stg(_entries: list[object]) -> FlextResult[list[Any]]:
-      return FlextResult.ok([cast("Any", object())])
+        return FlextResult.ok([cast("Any", object())])
 
     def _gen_an(_models: list[Any]) -> FlextResult[list[Any]]:
-      return FlextResult.ok([cast("Any", object())])
+        return FlextResult.ok([cast("Any", object())])
 
     def _write(
-      _models: list[Any],
-      *,
-      overwrite: bool = False,
+        _models: list[Any],
+        *,
+        _overwrite: bool = False,
     ) -> FlextResult[dict[str, object]]:
-      return FlextResult.ok({"written_files": ["f.sql", "f.yml"], "output_dir": "."})
+        return FlextResult.ok({"written_files": ["f.sql", "f.yml"], "output_dir": "."})
 
     monkeypatch.setattr(service.model_generator, "generate_staging_models", _gen_stg)
     monkeypatch.setattr(service.model_generator, "generate_analytics_models", _gen_an)
@@ -84,14 +84,14 @@ def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     """Test simple API helpers."""
 
     def _run(
-      _self: FlextDbtLdifService,
-      _ldif_file: Path | str,
-      *,
-      generate_models: bool = True,
-      run_transformations: bool = False,
-      model_names: list[str] | None = None,
+        _self: FlextDbtLdifService,
+        _ldif_file: Path | str,
+        *,
+        _generate_models: bool = True,
+        _run_transformations: bool = False,
+        _model_names: list[str] | None = None,
     ) -> FlextResult[dict[str, object]]:
-      return FlextResult.ok({"ok": True})
+        return FlextResult.ok({"ok": True})
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
 
@@ -99,31 +99,31 @@ def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
 
     # Patch validation path to avoid real file read
     def _run_quality(
-      _self: FlextDbtLdifService,
-      _ldif_file: Path | str,
+        _self: FlextDbtLdifService,
+        _ldif_file: Path | str,
     ) -> FlextResult[dict[str, object]]:
-      return FlextResult.ok({"ok": True})
+        return FlextResult.ok({"ok": True})
 
     monkeypatch.setattr(
-      FlextDbtLdifService,
-      "run_data_quality_assessment",
-      _run_quality,
+        FlextDbtLdifService,
+        "run_data_quality_assessment",
+        _run_quality,
     )
     assert validate_ldif_quality(tmp_path / "f.ldif").success
 
     def _parse_val(
-      _self: FlextDbtLdifService,
-      _ldif_file: Path | str,
+        _self: FlextDbtLdifService,
+        _ldif_file: Path | str,
     ) -> FlextResult[dict[str, object]]:
-      return FlextResult.ok({"entries": []})
+        return FlextResult.ok({"entries": []})
 
     def _gen_models(
-      _self: FlextDbtLdifService,
-      _entries: list[object],
-      *,
-      overwrite: bool = False,
+        _self: FlextDbtLdifService,
+        _entries: list[object],
+        *,
+        _overwrite: bool = False,
     ) -> FlextResult[dict[str, object]]:
-      return FlextResult.ok({"total_models": 0})
+        return FlextResult.ok({"total_models": 0})
 
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)
     monkeypatch.setattr(FlextDbtLdifService, "generate_and_write_models", _gen_models)

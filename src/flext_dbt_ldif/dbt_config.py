@@ -41,20 +41,20 @@ class FlextDbtLdifConfig(FlextSettings):
 
     # LDIF-specific DBT Settings
     ldif_schema_mapping: ClassVar[dict[str, str]] = {
-      "persons": "stg_persons",
-      "groups": "stg_groups",
-      "org_units": "stg_org_units",
-      "domains": "stg_domains",
+        "persons": "stg_persons",
+        "groups": "stg_groups",
+        "org_units": "stg_org_units",
+        "domains": "stg_domains",
     }
 
     ldif_attribute_mapping: ClassVar[dict[str, str]] = {
-      "cn": "common_name",
-      "uid": "user_id",
-      "mail": "email",
-      "memberOf": "member_of",
-      "objectClass": "object_class",
-      "ou": "organizational_unit",
-      "dc": "domain_component",
+        "cn": "common_name",
+        "uid": "user_id",
+        "mail": "email",
+        "memberOf": "member_of",
+        "objectClass": "object_class",
+        "ou": "organizational_unit",
+        "dc": "domain_component",
     }
 
     # Data Quality Settings
@@ -65,54 +65,54 @@ class FlextDbtLdifConfig(FlextSettings):
 
     # LDIF Entry Type Mapping
     entry_type_mapping: ClassVar[dict[str, str]] = {
-      "person": "persons",
-      "organizationalPerson": "persons",
-      "inetOrgPerson": "persons",
-      "user": "persons",
-      "group": "groups",
-      "groupOfNames": "groups",
-      "groupOfUniqueNames": "groups",
-      "organizationalUnit": "org_units",
-      "organization": "org_units",
-      "domain": "domains",
-      "dcObject": "domains",
+        "person": "persons",
+        "organizationalPerson": "persons",
+        "inetOrgPerson": "persons",
+        "user": "persons",
+        "group": "groups",
+        "groupOfNames": "groups",
+        "groupOfUniqueNames": "groups",
+        "organizationalUnit": "org_units",
+        "organization": "org_units",
+        "domain": "domains",
+        "dcObject": "domains",
     }
 
     def get_ldif_config(self) -> FlextLdifConfig:
-      """Get LDIF configuration for flext-ldif integration."""
-      return FlextLdifConfig(
-          max_entries=20000,
-          max_entry_size=self.ldif_max_file_size,
-          strict_validation=self.ldif_validate_syntax,
-          input_encoding=self.ldif_encoding,
-          output_encoding=self.ldif_encoding,
-      )
+        """Get LDIF configuration for flext-ldif integration."""
+        return FlextLdifConfig(
+            max_entries=20000,
+            max_entry_size=self.ldif_max_file_size,
+            strict_validation=self.ldif_validate_syntax,
+            input_encoding=self.ldif_encoding,
+            output_encoding=self.ldif_encoding,
+        )
 
     def get_meltano_config(self) -> FlextMeltanoConfig:
-      """Get Meltano configuration for flext-meltano integration."""
-      return FlextMeltanoConfig(
-          project_root=self.dbt_project_dir,
-          environment="dev",
-          dbt_project_dir=self.dbt_project_dir,
-          dbt_profiles_dir=self.dbt_profiles_dir,
-      )
+        """Get Meltano configuration for flext-meltano integration."""
+        return FlextMeltanoConfig(
+            project_root=self.dbt_project_dir,
+            environment="dev",
+            dbt_project_dir=self.dbt_project_dir,
+            dbt_profiles_dir=self.dbt_profiles_dir,
+        )
 
     def get_ldif_quality_config(self) -> dict[str, object]:
-      """Get data quality configuration for LDIF validation."""
-      return {
-          "min_quality_threshold": self.min_quality_threshold,
-          "required_attributes": self.required_attributes,
-          "validate_dns": self.validate_dns,
-          "max_dn_depth": self.max_dn_depth,
-      }
+        """Get data quality configuration for LDIF validation."""
+        return {
+            "min_quality_threshold": self.min_quality_threshold,
+            "required_attributes": self.required_attributes,
+            "validate_dns": self.validate_dns,
+            "max_dn_depth": self.max_dn_depth,
+        }
 
     def get_entry_type_for_object_class(self, object_class: str) -> str | None:
-      """Get entry type mapping for a given object class."""
-      return self.entry_type_mapping.get(object_class.lower())
+        """Get entry type mapping for a given object class."""
+        return self.entry_type_mapping.get(object_class.lower())
 
     def get_schema_for_entry_type(self, entry_type: str) -> str | None:
-      """Get DBT schema name for a given entry type."""
-      return self.ldif_schema_mapping.get(entry_type)
+        """Get DBT schema name for a given entry type."""
+        return self.ldif_schema_mapping.get(entry_type)
 
 
 __all__: list[str] = [
