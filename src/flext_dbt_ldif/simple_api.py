@@ -43,9 +43,9 @@ def process_ldif_file(
     service = FlextDbtLdifService(project_dir=proj_path)
 
     return service.run_complete_workflow(
-      ldif_file=ldif_file,
-      generate_models=generate_models,
-      run_transformations=run_transformations,
+        ldif_file=ldif_file,
+        generate_models=generate_models,
+        run_transformations=run_transformations,
     )
 
 
@@ -92,12 +92,12 @@ def generate_ldif_models(
     # Parse file first
     parse_result = service.parse_and_validate_ldif(ldif_file)
     if not parse_result.success:
-      return parse_result
+        return parse_result
 
     parse_data = parse_result.data or {}
     entries = parse_data.get("entries", [])
     if not isinstance(entries, list):
-      return FlextResult.fail("Invalid entries data format")
+        return FlextResult.fail("Invalid entries data format")
     return service.generate_and_write_models(entries, overwrite=overwrite)
 
 
