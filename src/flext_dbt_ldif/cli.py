@@ -45,7 +45,7 @@ def info() -> None:
 def generate() -> None:
     """Generate dbt models from LDIF schema definitions."""
     console.print(
-        "[bold yellow]Model generation functionality coming soon![/bold yellow]",
+      "[bold yellow]Model generation functionality coming soon![/bold yellow]",
     )
     console.print("This will generate dbt models programmatically.")
 
@@ -54,7 +54,7 @@ def generate() -> None:
 def validate() -> None:
     """Validate dbt models and configurations."""
     console.print(
-        "[bold yellow]Model validation functionality coming soon![/bold yellow]",
+      "[bold yellow]Model validation functionality coming soon![/bold yellow]",
     )
     console.print("This will validate generated dbt models.")
 
@@ -62,13 +62,13 @@ def validate() -> None:
 def main() -> NoReturn:
     """Main CLI entry point for flext-dbt-ldif."""
     try:
-        cli()
+      cli()
     except KeyboardInterrupt:
-        console.print("\n[bold red]Interrupted by user[/bold red]")
-        sys.exit(1)
+      console.print("\n[bold red]Interrupted by user[/bold red]")
+      sys.exit(1)
     except (OSError, RuntimeError, ValueError) as e:
-        console.print(f"[bold red]Error: {e}[/bold red]")
-        sys.exit(1)
+      console.print(f"[bold red]Error: {e}[/bold red]")
+      sys.exit(1)
     sys.exit(0)
 
 
