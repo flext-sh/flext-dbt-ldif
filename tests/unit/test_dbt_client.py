@@ -119,7 +119,7 @@ def test_run_full_pipeline_ok(
     monkeypatch.setattr(FlextDbtLdifClient, "validate_ldif_data", _validate)
     monkeypatch.setattr(FlextDbtLdifClient, "transform_with_dbt", _transform)
 
-    result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])  # type: ignore[list-item]
+    result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
     assert result.success
     data = result.data or {}
     assert data.get("pipeline_status") == "completed"

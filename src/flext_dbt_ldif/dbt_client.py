@@ -19,7 +19,6 @@ from flext_meltano.dbt_hub import FlextDbtHub
 
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
-# Import only for type checking to avoid runtime dependency cycles
 logger = get_logger(__name__)
 
 
@@ -187,7 +186,7 @@ class FlextDbtLdifClient:
                 return FlextResult.fail(
                     f"DBT transformation failed: {result.error}",
                 )
-            return result  # type: ignore[return-value]
+            return result
         except Exception as e:
             logger.exception("Unexpected error during DBT transformation")
             return FlextResult.fail(
@@ -230,7 +229,7 @@ class FlextDbtLdifClient:
             "pipeline_status": "completed",
         }
         logger.info("Full LDIF-to-DBT pipeline completed successfully")
-        return FlextResult.ok(pipeline_results)  # type: ignore[arg-type]
+        return FlextResult.ok(pipeline_results)
 
     def _prepare_ldif_data_for_dbt(
         self,
