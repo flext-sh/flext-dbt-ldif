@@ -76,7 +76,7 @@ def test_run_complete_workflow_all(
         generate_models=True,
         run_transformations=True,
         model_names=["m1"],
-    )  # type: ignore[list-item]
+    )
     assert result.success
     data = result.data or {}
     # Allow completed pipeline via workflow_status key

@@ -38,12 +38,12 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch.setattr(
         service.client,
         "parse_ldif_file",
-        lambda _ldif_file: FlextResult.ok([]),  # type: ignore[no-any-return]
+        lambda _ldif_file: FlextResult.ok([]),
     )
     monkeypatch.setattr(
         service.client,
         "validate_ldif_data",
-        lambda _entries: FlextResult.ok({"quality_score": 0.91}),  # type: ignore[no-any-return]
+        lambda _entries: FlextResult.ok({"quality_score": 0.91}),
     )
 
     result = service.parse_and_validate_ldif(tmp_path / "x.ldif")
