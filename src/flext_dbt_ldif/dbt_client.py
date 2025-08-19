@@ -78,13 +78,13 @@ class FlextDbtLdifClient:
                 logger.info("Successfully parsed %d LDIF entries", len(entries))
             else:
                 logger.error("LDIF parsing failed: %s", result.error)
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"LDIF parsing failed: {result.error}",
                 )
             return result
         except Exception as e:
             logger.exception("Unexpected error during LDIF parsing")
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"LDIF parsing error: {e}",
             )
 
@@ -106,13 +106,13 @@ class FlextDbtLdifClient:
             validation_result = self._ldif_api.validate(entries)
             if not validation_result.success:
                 logger.error("LDIF validation failed: %s", validation_result.error)
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"LDIF validation failed: {validation_result.error}",
                 )
             # Get statistics using flext-ldif API
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"Statistics generation failed: {stats_result.error}",
                 )
             stats = stats_result.data or {}
@@ -122,10 +122,10 @@ class FlextDbtLdifClient:
                 quality_score,
             )
             if quality_score < self.config.min_quality_threshold:
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"Data quality below threshold: {quality_score} < {self.config.min_quality_threshold}",
                 )
-            return FlextResult.ok(
+            return FlextResult[None].ok(
                 {
                     **stats,
                     "quality_score": quality_score,
@@ -135,7 +135,7 @@ class FlextDbtLdifClient:
             )
         except Exception as e:
             logger.exception("Unexpected error during LDIF validation")
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"LDIF validation error: {e}",
             )
 
@@ -163,7 +163,7 @@ class FlextDbtLdifClient:
             # Prepare LDIF data for DBT using flext-ldif API
             prepared_result = self._prepare_ldif_data_for_dbt(entries)
             if not prepared_result.success:
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"Data preparation failed: {prepared_result.error}",
                 )
             transformed_data = prepared_result.data or {}
@@ -171,25 +171,25 @@ class FlextDbtLdifClient:
             _ = self.dbt_hub
             if model_names:
                 # Run specific models - use generic method
-                result = FlextResult.ok(
+                result = FlextResult[None].ok(
                     {"models": model_names, "data": transformed_data},
                 )
             else:
                 # Run all models - use generic method
-                result = FlextResult.ok(
+                result = FlextResult[None].ok(
                     {"all_models": "true", "data": transformed_data},
                 )
             if result.success:
                 logger.info("DBT transformation completed successfully")
             else:
                 logger.error("DBT transformation failed: %s", result.error)
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"DBT transformation failed: {result.error}",
                 )
             return result
         except Exception as e:
             logger.exception("Unexpected error during DBT transformation")
-            return FlextResult.fail(
+            return FlextResult[None].fail(
                 f"DBT transformation error: {e}",
             )
 
@@ -211,7 +211,7 @@ class FlextDbtLdifClient:
         # Step 1: Parse LDIF data
         parse_result = self.parse_ldif_file(file_path)
         if not parse_result.success:
-            return FlextResult.fail(f"Parse failed: {parse_result.error}")
+            return FlextResult[None].fail(f"Parse failed: {parse_result.error}")
         entries = parse_result.data or []
         # Step 2: Validate data quality
         validate_result = self.validate_ldif_data(entries)
@@ -229,7 +229,7 @@ class FlextDbtLdifClient:
             "pipeline_status": "completed",
         }
         logger.info("Full LDIF-to-DBT pipeline completed successfully")
-        return FlextResult.ok(pipeline_results)
+        return FlextResult[None].ok(pipeline_results)
 
     def _prepare_ldif_data_for_dbt(
         self,
@@ -251,7 +251,7 @@ class FlextDbtLdifClient:
             # Get object class distribution using flext-ldif classification
             stats_result = self._ldif_api.get_objectclass_distribution(entries)
             if not stats_result.success:
-                return FlextResult.fail(
+                return FlextResult[None].fail(
                     f"Entry statistics failed: {stats_result.error}",
                 )
             # Apply schema mapping from config - simple transformation approach
@@ -287,10 +287,10 @@ class FlextDbtLdifClient:
                     for k, v in prepared_data.items()
                 },
             )
-            return FlextResult.ok(dict(prepared_data))
+            return FlextResult[None].ok(dict(prepared_data))
         except Exception as e:
             logger.exception("Error preparing LDIF data for DBT")
-            return FlextResult.fail(f"Data preparation error: {e}")
+            return FlextResult[None].fail(f"Data preparation error: {e}")
 
     def _map_entry_attributes(self, entry_data: dict[str, object]) -> dict[str, object]:
         """Map LDIF entry attributes using configuration mapping."""
