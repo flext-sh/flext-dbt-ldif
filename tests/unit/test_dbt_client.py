@@ -32,7 +32,7 @@ def test_parse_ldif_file_ok(
     """Test parsing LDIF file."""
 
     def _parse_file(_self: object, _path: Path) -> FlextResult[list[object]]:
-        return FlextResult.ok([])
+        return FlextResult[None].ok([])
 
     monkeypatch.setattr(
         client,
@@ -53,10 +53,10 @@ def test_validate_ldif_data_ok(
     def _validate(
         _self: object, _entries: list[object]
     ) -> FlextResult[dict[str, object]]:
-        return FlextResult.ok({})
+        return FlextResult[None].ok({})
 
     def _stats(_self: object, _entries: list[object]) -> FlextResult[dict[str, object]]:
-        return FlextResult.ok({"quality_score": 0.95})
+        return FlextResult[None].ok({"quality_score": 0.95})
 
     api = type("API", (), {"validate": _validate, "get_entry_statistics": _stats})()
     monkeypatch.setattr(client, "_ldif_api", api)
@@ -78,7 +78,7 @@ def test_transform_with_dbt_ok(
         _self: FlextDbtLdifClient,
         _entries: list[object],
     ) -> FlextResult[dict[str, object]]:
-        return FlextResult.ok({"prepared": True})
+        return FlextResult[None].ok({"prepared": True})
 
     monkeypatch.setattr(FlextDbtLdifClient, "_prepare_ldif_data_for_dbt", _prep)
     # Preload hub to avoid real initialization
@@ -100,20 +100,20 @@ def test_run_full_pipeline_ok(
         _self: FlextDbtLdifClient,
         _file: Path | str | None = None,
     ) -> FlextResult[list[object]]:
-        return FlextResult.ok([])
+        return FlextResult[None].ok([])
 
     def _validate(
         _self: FlextDbtLdifClient,
         _entries: list[object],
     ) -> FlextResult[dict[str, object]]:
-        return FlextResult.ok({"quality_score": 0.9})
+        return FlextResult[None].ok({"quality_score": 0.9})
 
     def _transform(
         _self: FlextDbtLdifClient,
         _entries: list[object],
         _models: list[str] | None,
     ) -> FlextResult[dict[str, object]]:
-        return FlextResult.ok({"ran": True})
+        return FlextResult[None].ok({"ran": True})
 
     monkeypatch.setattr(FlextDbtLdifClient, "parse_ldif_file", _parse)
     monkeypatch.setattr(FlextDbtLdifClient, "validate_ldif_data", _validate)

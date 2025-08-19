@@ -97,7 +97,7 @@ def generate_ldif_models(
     parse_data = parse_result.data or {}
     entries = parse_data.get("entries", [])
     if not isinstance(entries, list):
-        return FlextResult.fail("Invalid entries data format")
+        return FlextResult[None].fail("Invalid entries data format")
     return service.generate_and_write_models(entries, overwrite=overwrite)
 
 
