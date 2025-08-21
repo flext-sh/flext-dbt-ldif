@@ -326,7 +326,9 @@ class LDIFAnalytics:
             # Use flext-ldif API for all statistics
             stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
             if not stats_result.success:
-                return FlextResult[None].fail(f"dbt statistics failed: {stats_result.error}")
+                return FlextResult[None].fail(
+                    f"dbt statistics failed: {stats_result.error}"
+                )
 
             return FlextResult[None].ok(stats_result.data or {})
 
