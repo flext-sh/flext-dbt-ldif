@@ -69,7 +69,9 @@ def test_generate_and_write_models_ok(
         *,
         _overwrite: bool = False,
     ) -> FlextResult[dict[str, object]]:
-        return FlextResult[None].ok({"written_files": ["f.sql", "f.yml"], "output_dir": "."})
+        return FlextResult[None].ok(
+            {"written_files": ["f.sql", "f.yml"], "output_dir": "."}
+        )
 
     monkeypatch.setattr(service.model_generator, "generate_staging_models", _gen_stg)
     monkeypatch.setattr(service.model_generator, "generate_analytics_models", _gen_an)
