@@ -13,7 +13,7 @@ from typing import ClassVar
 
 from flext_core import FlextSettings, get_logger
 from flext_ldif import FlextLdifConfig
-from flext_meltano.meltano_config import FlextMeltanoConfig
+from flext_meltano.config import FlextMeltanoConfig
 
 logger = get_logger(__name__)
 
