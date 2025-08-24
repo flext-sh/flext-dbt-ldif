@@ -100,7 +100,7 @@ class LDIFAnalytics:
         """Initialize analytics with flext-ldif API."""
         self._ldif_api = FlextLdifAPI()
 
-    def _convert_dict_to_entries(  # noqa: PLR0912
+    def _convert_dict_to_entries(
         self,
         ldif_data: list[dict[str, object]],
     ) -> list[FlextLdifEntry]:
@@ -191,7 +191,7 @@ class LDIFAnalytics:
             # Use flext-ldif API for statistics - NO local logic
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult[None].fail(
+                return FlextResult[dict[str, object]].fail(
                     f"Statistics generation failed: {stats_result.error}",
                 )
 
@@ -221,7 +221,7 @@ class LDIFAnalytics:
             )
             risk_assessment = risk_result.data if risk_result.success else "unknown"
 
-            return FlextResult[None].ok(
+            return FlextResult[dict[str, object]].ok(
                 {
                     "total_entries": stats.get("total_entries", 0),
                     "persons": stats.get("person_entries", 0),
@@ -237,7 +237,7 @@ class LDIFAnalytics:
 
         except Exception as e:
             logger.exception("Entry pattern analysis failed")
-            return FlextResult[None].fail(f"Analysis failed: {e}")
+            return FlextResult[dict[str, object]].fail(f"Analysis failed: {e}")
 
     def generate_quality_metrics(
         self,
@@ -253,7 +253,7 @@ class LDIFAnalytics:
 
         """
         if not entries:
-            return FlextResult[None].ok(
+            return FlextResult[dict[str, float]].ok(
                 {
                     "completeness": 0.0,
                     "validity": 0.0,
@@ -294,7 +294,7 @@ class LDIFAnalytics:
                         stats.get("valid", 0) / stats.get("total", 1)
                     ) * 100.0
 
-            return FlextResult[None].ok(
+            return FlextResult[dict[str, float]].ok(
                 {
                     "completeness": round(completeness, 2),
                     "validity": round(validity, 2),
@@ -304,7 +304,7 @@ class LDIFAnalytics:
 
         except Exception as e:
             logger.exception("Quality metrics generation failed")
-            return FlextResult[None].fail(f"Quality metrics failed: {e}")
+            return FlextResult[dict[str, float]].fail(f"Quality metrics failed: {e}")
 
     def get_statistics_for_dbt(
         self,
@@ -326,12 +326,12 @@ class LDIFAnalytics:
             # Use flext-ldif API for all statistics
             stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
             if not stats_result.success:
-                return FlextResult[None].fail(
+                return FlextResult[Mapping[str, object]].fail(
                     f"dbt statistics failed: {stats_result.error}"
                 )
 
-            return FlextResult[None].ok(stats_result.data or {})
+            return FlextResult[Mapping[str, object]].ok(stats_result.data or {})
 
         except Exception as e:
             logger.exception("dbt statistics generation failed")
-            return FlextResult[None].fail(f"dbt statistics error: {e}")
+            return FlextResult[Mapping[str, object]].fail(f"dbt statistics error: {e}")

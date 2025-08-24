@@ -97,7 +97,7 @@ class FlextDbtLdifModelGenerator:
             # Use flext-ldif API for entry statistics (analyze_schema not available)
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult[None].fail(
+                return FlextResult[dict[str, object]].fail(
                     f"Schema analysis failed: {stats_result.error}",
                 )
             # Upcast to dict[str, object] for result composition
@@ -107,10 +107,10 @@ class FlextDbtLdifModelGenerator:
             schema_info["total_entries"] = len(entries)
             schema_info["has_entries"] = len(entries) > 0
             logger.info("LDIF schema analysis completed")
-            return FlextResult[None].ok(schema_info)
+            return FlextResult[dict[str, object]].ok(schema_info)
         except Exception as e:
             logger.exception("Error analyzing LDIF schema")
-            return FlextResult[None].fail(f"Schema analysis error: {e}")
+            return FlextResult[dict[str, object]].fail(f"Schema analysis error: {e}")
 
     def generate_staging_models(
         self,
@@ -129,7 +129,7 @@ class FlextDbtLdifModelGenerator:
             # Analyze schema first
             schema_result = self.analyze_ldif_schema(entries)
             if not schema_result.success:
-                return FlextResult[None].fail(
+                return FlextResult[list[FlextLdifDbtModel]].fail(
                     f"Schema analysis failed: {schema_result.error}",
                 )
             schema_info = schema_result.data or {}
@@ -150,10 +150,10 @@ class FlextDbtLdifModelGenerator:
                 )
                 models.append(model)
             logger.info("Generated %d staging models", len(models))
-            return FlextResult[None].ok(models)
+            return FlextResult[list[FlextLdifDbtModel]].ok(models)
         except Exception as e:
             logger.exception("Error generating staging models")
-            return FlextResult[None].fail(f"Staging model generation error: {e}")
+            return FlextResult[list[FlextLdifDbtModel]].fail(f"Staging model generation error: {e}")
 
     def generate_analytics_models(
         self,
@@ -279,10 +279,10 @@ class FlextDbtLdifModelGenerator:
             )
             analytics_models.append(hierarchy_model)
             logger.info("Generated %d analytics models", len(analytics_models))
-            return FlextResult[None].ok(analytics_models)
+            return FlextResult[list[FlextLdifDbtModel]].ok(analytics_models)
         except Exception as e:
             logger.exception("Error generating analytics models")
-            return FlextResult[None].fail(f"Analytics model generation error: {e}")
+            return FlextResult[list[FlextLdifDbtModel]].fail(f"Analytics model generation error: {e}")
 
     def write_models_to_disk(
         self,
@@ -321,7 +321,7 @@ class FlextDbtLdifModelGenerator:
                 yaml_file.write_text(yaml_content)
                 written_files.append(str(yaml_file))
             logger.info("Successfully wrote %d files", len(written_files))
-            return FlextResult[None].ok(
+            return FlextResult[dict[str, object]].ok(
                 {
                     "written_files": written_files,
                     "models_count": len(models),
@@ -330,7 +330,7 @@ class FlextDbtLdifModelGenerator:
             )
         except Exception as e:
             logger.exception("Error writing models to disk")
-            return FlextResult[None].fail(f"Model writing error: {e}")
+            return FlextResult[dict[str, object]].fail(f"Model writing error: {e}")
 
     def _generate_staging_model_for_type(
         self,
@@ -438,7 +438,7 @@ class FlextDbtLdifModelGenerator:
         )
         # Build SQL from static template with whitelisted tokens
         return (
-            "-- Staging model for LDIF data\n"  # noqa: S608 - static template generation; no user input
+            "-- Staging model for LDIF data\n"
             "-- Generated automatically by flext-dbt-ldif\n\n"
             "{{ config(materialized='" + materialized + "') }}\n\n"
             "with source_data as (\n"
@@ -470,7 +470,7 @@ class FlextDbtLdifModelGenerator:
         )
         if "insights" in model.name:
             return (
-                "-- Analytics insights model for LDIF data\n"  # noqa: S608 - static template generation; no user input
+                "-- Analytics insights model for LDIF data\n"
                 "-- Generated automatically by flext-dbt-ldif\n\n"
                 "{{ config(materialized='" + materialized + "') }}\n\n"
                 "with entry_stats as (\n"
@@ -501,7 +501,7 @@ class FlextDbtLdifModelGenerator:
                 "select * from entry_stats\n"
             )
         return (
-            "-- Analytics hierarchy model for LDIF data\n"  # noqa: S608 - static template generation; no user input
+            "-- Analytics hierarchy model for LDIF data\n"
             "-- Generated automatically by flext-dbt-ldif\n\n"
             "{{ config(materialized='" + materialized + "') }}\n\n"
             "with dn_hierarchy as (\n"
