@@ -17,7 +17,7 @@ from flext_core import FlextExceptions
 
 
 # Base LDIF DBT error hierarchy using standard inheritance
-class FlextDbtLdifError(FlextExceptions.Error):
+class FlextDbtLdifError(FlextExceptions):
     """Base exception for all LDIF DBT operations."""
 
 
