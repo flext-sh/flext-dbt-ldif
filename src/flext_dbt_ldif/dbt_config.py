@@ -11,14 +11,14 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextSettings, get_logger
+from flext_core import FlextConfig, get_logger
 from flext_ldif import FlextLdifConfig
 from flext_meltano.config import FlextMeltanoConfig
 
 logger = get_logger(__name__)
 
 
-class FlextDbtLdifConfig(FlextSettings):
+class FlextDbtLdifConfig(FlextConfig):
     """Configuration for DBT LDIF transformations.
 
     Combines LDIF processing settings with DBT execution configuration.
