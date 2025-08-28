@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, cast
+from typing import cast, object
 
 import pytest
 from flext_core import FlextResult
@@ -82,7 +82,7 @@ def test_transform_with_dbt_ok(
 
     monkeypatch.setattr(FlextDbtLdifClient, "_prepare_ldif_data_for_dbt", _prep)
     # Preload hub to avoid real initialization
-    client._dbt_hub = cast("Any", object())
+    client._dbt_hub = cast("object", object())
 
     result = client.transform_with_dbt(cast("list[object]", []), ["m1", "m2"])
     assert result.success
