@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, cast
+from typing import cast, object
 
 import pytest
 from flext_core import FlextResult
@@ -58,20 +58,21 @@ def test_generate_and_write_models_ok(
 ) -> None:
     """Test generating and writing models."""
 
-    def _gen_stg(_entries: list[object]) -> FlextResult[list[Any]]:
-        return FlextResult[None].ok([cast("Any", object())])
+    def _gen_stg(_entries: list[object]) -> FlextResult[list[object]]:
+        return FlextResult[None].ok([cast("object", object())])
 
-    def _gen_an(_models: list[Any]) -> FlextResult[list[Any]]:
-        return FlextResult[None].ok([cast("Any", object())])
+    def _gen_an(_models: list[object]) -> FlextResult[list[object]]:
+        return FlextResult[None].ok([cast("object", object())])
 
     def _write(
-        _models: list[Any],
+        _models: list[object],
         *,
         _overwrite: bool = False,
     ) -> FlextResult[dict[str, object]]:
-        return FlextResult[None].ok(
-            {"written_files": ["f.sql", "f.yml"], "output_dir": "."}
-        )
+        return FlextResult[None].ok({
+            "written_files": ["f.sql", "f.yml"],
+            "output_dir": ".",
+        })
 
     monkeypatch.setattr(service.model_generator, "generate_staging_models", _gen_stg)
     monkeypatch.setattr(service.model_generator, "generate_analytics_models", _gen_an)

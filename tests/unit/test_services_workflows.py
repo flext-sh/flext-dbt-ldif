@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, cast
+from typing import cast, object
 
 import pytest
 from flext_core import FlextResult
@@ -53,14 +53,14 @@ def test_run_complete_workflow_all(
         svc.model_generator,
         "generate_staging_models",
         lambda _e: FlextResult[None].ok(
-            [cast("Any", FlextLdifDbtModel("stg_persons", "d", []))],
+            [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_analytics_models",
         lambda _m: FlextResult[None].ok(
-            [cast("Any", FlextLdifDbtModel("analytics_ldif_insights", "d", []))],
+            [cast("object", FlextLdifDbtModel("analytics_ldif_insights", "d", []))],
         ),
     )
     monkeypatch.setattr(
@@ -111,7 +111,7 @@ def test_run_data_quality_assessment(
         svc.model_generator,
         "generate_staging_models",
         lambda _e: FlextResult[None].ok(
-            [cast("Any", FlextLdifDbtModel("stg_persons", "d", []))],
+            [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
 
@@ -135,7 +135,7 @@ def test_generate_model_documentation(
         svc.model_generator,
         "generate_staging_models",
         lambda _e: FlextResult[None].ok(
-            [cast("Any", FlextLdifDbtModel("stg_persons", "d", []))],
+            [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
 
