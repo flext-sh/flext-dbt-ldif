@@ -11,11 +11,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 
 from .dbt_services import FlextDbtLdifService
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 def process_ldif_file(

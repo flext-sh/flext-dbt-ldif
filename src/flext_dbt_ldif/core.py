@@ -12,10 +12,10 @@ from __future__ import annotations
 from collections.abc import Mapping
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 from flext_ldif import FlextLdifAPI, FlextLdifEntry, FlextLdifFactory
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 # Constants for magic number elimination
 HIGH_VALIDITY_THRESHOLD = 0.95
 MEDIUM_VALIDITY_THRESHOLD = 0.8
