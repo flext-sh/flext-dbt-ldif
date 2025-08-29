@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 from flext_ldif import FlextLdifAPI
 from flext_ldif.models import FlextLdifEntry
 from flext_meltano import create_dbt_hub
@@ -19,7 +19,7 @@ from flext_meltano.dbt_hub import FlextDbtHub
 
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class FlextDbtLdifClient:
@@ -211,7 +211,9 @@ class FlextDbtLdifClient:
         # Step 1: Parse LDIF data
         parse_result = self.parse_ldif_file(file_path)
         if not parse_result.success:
-            return FlextResult[dict[str, object]].fail(f"Parse failed: {parse_result.error}")
+            return FlextResult[dict[str, object]].fail(
+                f"Parse failed: {parse_result.error}"
+            )
         entries = parse_result.value or []
         # Step 2: Validate data quality
         validate_result = self.validate_ldif_data(entries)

@@ -11,14 +11,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 from flext_ldif.models import FlextLdifEntry
 
 from .dbt_client import FlextDbtLdifClient
 from .dbt_config import FlextDbtLdifConfig
 from .dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 # Quality assessment thresholds
 HIGH_QUALITY_THRESHOLD = 90.0
 MEDIUM_QUALITY_THRESHOLD = 70.0
@@ -160,7 +160,9 @@ class FlextDbtLdifService:
             # Parse LDIF file
             parse_result = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(f"Parse failed: {parse_result.error}")
+                return FlextResult[dict[str, object]].fail(
+                    f"Parse failed: {parse_result.error}"
+                )
 
             entries = parse_result.value or []
 
@@ -268,7 +270,9 @@ class FlextDbtLdifService:
             # Parse LDIF
             parse_result = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(f"Parse failed: {parse_result.error}")
+                return FlextResult[dict[str, object]].fail(
+                    f"Parse failed: {parse_result.error}"
+                )
 
             entries = parse_result.value or []
 
@@ -390,7 +394,9 @@ class FlextDbtLdifService:
 
         except Exception as e:
             logger.exception("Error generating model documentation")
-            return FlextResult[dict[str, object]].fail(f"Documentation generation error: {e}")
+            return FlextResult[dict[str, object]].fail(
+                f"Documentation generation error: {e}"
+            )
 
     def _assess_risk_level(self, quality_score: float) -> str:
         """Assess risk level based on quality score."""

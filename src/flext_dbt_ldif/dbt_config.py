@@ -11,11 +11,11 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextConfig, get_logger
+from flext_core import FlextConfig, FlextLogger
 from flext_ldif import FlextLdifConfig
 from flext_meltano.config import FlextMeltanoConfig
 
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class FlextDbtLdifConfig(FlextConfig):

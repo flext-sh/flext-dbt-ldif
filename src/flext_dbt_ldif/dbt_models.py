@@ -12,14 +12,14 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
-from flext_core import FlextResult, get_logger
+from flext_core import FlextLogger, FlextResult
 from flext_ldif import FlextLdifAPI
 from flext_ldif.models import FlextLdifEntry
 
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
 # Use the real typed class for precise type checking
-logger = get_logger(__name__)
+logger = FlextLogger(__name__)
 
 
 class FlextLdifDbtModel:
@@ -153,7 +153,9 @@ class FlextDbtLdifModelGenerator:
             return FlextResult[list[FlextLdifDbtModel]].ok(models)
         except Exception as e:
             logger.exception("Error generating staging models")
-            return FlextResult[list[FlextLdifDbtModel]].fail(f"Staging model generation error: {e}")
+            return FlextResult[list[FlextLdifDbtModel]].fail(
+                f"Staging model generation error: {e}"
+            )
 
     def generate_analytics_models(
         self,
@@ -282,7 +284,9 @@ class FlextDbtLdifModelGenerator:
             return FlextResult[list[FlextLdifDbtModel]].ok(analytics_models)
         except Exception as e:
             logger.exception("Error generating analytics models")
-            return FlextResult[list[FlextLdifDbtModel]].fail(f"Analytics model generation error: {e}")
+            return FlextResult[list[FlextLdifDbtModel]].fail(
+                f"Analytics model generation error: {e}"
+            )
 
     def write_models_to_disk(
         self,
