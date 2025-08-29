@@ -72,7 +72,7 @@ class TestLDIFAnalytics:
         analytics = LDIFAnalytics()
         result = analytics.analyze_entry_patterns([])
         assert result.success
-        data = result.data or {}
+        data = result.value or {}
         if data.get("total_entries") != 0:
             raise AssertionError(f"Expected 0, got {data.get('total_entries')}")
 
@@ -92,7 +92,7 @@ class TestLDIFAnalytics:
         analytics = LDIFAnalytics()
         result = analytics.analyze_entry_patterns(sample_data)
         assert result.success
-        data = result.data or {}
+        data = result.value or {}
         if data.get("total_entries") != EXPECTED_BULK_SIZE:
             raise AssertionError(
                 f"Expected {EXPECTED_BULK_SIZE}, got {data.get('total_entries')}",
@@ -110,7 +110,7 @@ class TestLDIFAnalytics:
         analytics = LDIFAnalytics()
         result = analytics.generate_quality_metrics([])
         assert result.success
-        data = result.data or {}
+        data = result.value or {}
         if data.get("completeness") != 0.0:
             raise AssertionError(f"Expected 0.0, got {data.get('completeness')}")
         assert data.get("validity") == 0.0
@@ -125,7 +125,7 @@ class TestLDIFAnalytics:
         analytics = LDIFAnalytics()
         result = analytics.generate_quality_metrics(sample_entries)
         assert result.success
-        data = result.data or {}
+        data = result.value or {}
         if "completeness" not in data:
             msg: str = "Expected completeness in result"
             raise AssertionError(msg)

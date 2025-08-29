@@ -41,7 +41,7 @@ def test_parse_ldif_file_ok(
     )
     result = client.parse_ldif_file(tmp_path / "dummy.ldif")
     assert result.success
-    assert isinstance(result.data, list)
+    assert isinstance(result.value, list)
 
 
 def test_validate_ldif_data_ok(
@@ -63,7 +63,7 @@ def test_validate_ldif_data_ok(
 
     result = client.validate_ldif_data(cast("list[object]", []))
     assert result.success
-    data = result.data or {}
+    data = result.value or {}
     assert data.get("quality_score") == 0.95
     assert data.get("validation_status") == "passed"
 
@@ -86,7 +86,7 @@ def test_transform_with_dbt_ok(
 
     result = client.transform_with_dbt(cast("list[object]", []), ["m1", "m2"])
     assert result.success
-    assert isinstance(result.data, dict)
+    assert isinstance(result.value, dict)
 
 
 def test_run_full_pipeline_ok(
@@ -121,5 +121,5 @@ def test_run_full_pipeline_ok(
 
     result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
     assert result.success
-    data = result.data or {}
+    data = result.value or {}
     assert data.get("pipeline_status") == "completed"

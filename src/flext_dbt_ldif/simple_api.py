@@ -94,7 +94,7 @@ def generate_ldif_models(
     if not parse_result.success:
         return parse_result
 
-    parse_data = parse_result.data or {}
+    parse_data = parse_result.value or {}
     entries = parse_data.get("entries", [])
     if not isinstance(entries, list):
         return FlextResult[dict[str, object]].fail("Invalid entries data format")

@@ -94,7 +94,7 @@ class FlextDbtLdifService:
                     f"LDIF parsing/validation failed: {parse_result.error}",
                 )
 
-            parse_data = parse_result.data or {}
+            parse_data = parse_result.value or {}
             entries = parse_data.get("entries", [])
             workflow_results["parse_validation"] = parse_data
             if isinstance(workflow_results["steps_completed"], list):
@@ -110,7 +110,7 @@ class FlextDbtLdifService:
                         f"Model generation failed: {model_result.error}",
                     )
 
-                workflow_results["model_generation"] = model_result.data or {}
+                workflow_results["model_generation"] = model_result.value or {}
                 if isinstance(workflow_results["steps_completed"], list):
                     workflow_results["steps_completed"].append("model_generation")
 
@@ -125,7 +125,7 @@ class FlextDbtLdifService:
                         f"DBT transformation failed: {transform_result.error}",
                     )
 
-                workflow_results["transformations"] = transform_result.data or {}
+                workflow_results["transformations"] = transform_result.value or {}
                 if isinstance(workflow_results["steps_completed"], list):
                     workflow_results["steps_completed"].append("transformations")
 
@@ -162,7 +162,7 @@ class FlextDbtLdifService:
             if not parse_result.success:
                 return FlextResult[dict[str, object]].fail(f"Parse failed: {parse_result.error}")
 
-            entries = parse_result.data or []
+            entries = parse_result.value or []
 
             # Validate entries
             validation_result = self.client.validate_ldif_data(entries)
@@ -173,7 +173,7 @@ class FlextDbtLdifService:
                 {
                     "entries": entries,
                     "entry_count": len(entries),
-                    "validation_metrics": validation_result.data,
+                    "validation_metrics": validation_result.value,
                     "status": "validated",
                 },
             )
@@ -208,7 +208,7 @@ class FlextDbtLdifService:
                     f"Staging generation failed: {staging_result.error}",
                 )
 
-            staging_models = staging_result.data or []
+            staging_models = staging_result.value or []
 
             # Generate analytics models
             analytics_result = self.model_generator.generate_analytics_models(
@@ -219,7 +219,7 @@ class FlextDbtLdifService:
                     f"Analytics generation failed: {analytics_result.error}",
                 )
 
-            analytics_models = analytics_result.data or []
+            analytics_models = analytics_result.value or []
 
             # Combine all models
             all_models = staging_models + analytics_models
@@ -232,7 +232,7 @@ class FlextDbtLdifService:
             if not write_result.success:
                 return write_result
 
-            write_info = write_result.data or {}
+            write_info = write_result.value or {}
 
             return FlextResult[dict[str, object]].ok(
                 {
@@ -270,19 +270,19 @@ class FlextDbtLdifService:
             if not parse_result.success:
                 return FlextResult[dict[str, object]].fail(f"Parse failed: {parse_result.error}")
 
-            entries = parse_result.data or []
+            entries = parse_result.value or []
 
             # Run validation
             validation_result = self.client.validate_ldif_data(entries)
             validation_metrics = (
-                validation_result.data if validation_result.success else {}
+                validation_result.value if validation_result.success else {}
             )
             if validation_metrics is None:
                 validation_metrics = {}
 
             # Analyze schema using model generator
             schema_result = self.model_generator.analyze_ldif_schema(entries)
-            schema_info = schema_result.data if schema_result.success else {}
+            schema_info = schema_result.value if schema_result.success else {}
             if schema_info is None:
                 schema_info = {}
 
@@ -347,7 +347,7 @@ class FlextDbtLdifService:
             if not schema_result.success:
                 return schema_result
 
-            schema_info = schema_result.data or {}
+            schema_info = schema_result.value or {}
 
             # Generate models for analysis
             staging_result = self.model_generator.generate_staging_models(entries)
@@ -356,7 +356,7 @@ class FlextDbtLdifService:
                     f"Staging model generation failed: {staging_result.error}",
                 )
 
-            staging_models = staging_result.data or []
+            staging_models = staging_result.value or []
 
             # Create documentation structure
             documentation = {
@@ -529,7 +529,7 @@ class FlextDbtLdifWorkflowManager:
 
                 batch_result = self._process_file_batch(batch)
                 batch_results.append(
-                    batch_result.data
+                    batch_result.value
                     if batch_result.success
                     else {"error": batch_result.error},
                 )
@@ -576,7 +576,7 @@ class FlextDbtLdifWorkflowManager:
                         {
                             "file": str(file_path),
                             "status": "success" if result.success else "failed",
-                            "data": result.data if result.success else None,
+                            "data": result.value if result.success else None,
                             "error": str(result.error) if not result.success else None,
                         },
                     )

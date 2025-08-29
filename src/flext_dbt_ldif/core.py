@@ -156,8 +156,8 @@ class LDIFAnalytics:
                     changetype=changetype_str,
                 )
 
-                if entry_result.success and entry_result.data:
-                    entries.append(entry_result.data)
+                if entry_result.success and entry_result.value:
+                    entries.append(entry_result.value)
                 else:
                     logger.warning("Failed to create entry: %s", entry_result.error)
 
@@ -195,7 +195,7 @@ class LDIFAnalytics:
                     f"Statistics generation failed: {stats_result.error}",
                 )
 
-            stats = stats_result.data or {}
+            stats = stats_result.value or {}
 
             # Get object class distribution using flext-ldif filtering
             object_classes: dict[str, int] = {}
@@ -207,8 +207,8 @@ class LDIFAnalytics:
             # Use flext-ldif hierarchical sorting for depth analysis
             sorted_result = self._ldif_api.sort_hierarchically(entries)
             dn_depth_distribution: dict[str, int] = {}
-            if sorted_result.success and sorted_result.data:
-                for entry in sorted_result.data:
+            if sorted_result.success and sorted_result.value:
+                for entry in sorted_result.value:
                     depth = entry.dn.get_depth()
                     depth_key = f"depth_{depth}"
                     dn_depth_distribution[depth_key] = (
@@ -219,7 +219,7 @@ class LDIFAnalytics:
             risk_result = self._ldif_api.analyze_entry_patterns(
                 entries,
             )
-            risk_assessment = risk_result.data if risk_result.success else "unknown"
+            risk_assessment = risk_result.value if risk_result.success else "unknown"
 
             return FlextResult[dict[str, object]].ok(
                 {
@@ -269,7 +269,7 @@ class LDIFAnalytics:
             converted_entries = len(ldif_entries)
 
             # Use flext-ldif validation - NO local validation logic
-            valid_entries = len(self._ldif_api.filter_valid(ldif_entries).data or [])
+            valid_entries = len(self._ldif_api.filter_valid(ldif_entries).value or [])
 
             # Calculate metrics based on flext-ldif operations
             completeness = (
@@ -286,8 +286,8 @@ class LDIFAnalytics:
             # Consistency check using flext-ldif entry statistics
             stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
             consistency = 100.0  # Default high consistency
-            if stats_result.success and stats_result.data:
-                stats = stats_result.data
+            if stats_result.success and stats_result.value:
+                stats = stats_result.value
                 # Check consistency based on valid vs total ratio
                 if stats.get("total", 0) > 0:
                     consistency = (
@@ -330,7 +330,7 @@ class LDIFAnalytics:
                     f"dbt statistics failed: {stats_result.error}"
                 )
 
-            return FlextResult[Mapping[str, object]].ok(stats_result.data or {})
+            return FlextResult[Mapping[str, object]].ok(stats_result.value or {})
 
         except Exception as e:
             logger.exception("dbt statistics generation failed")
