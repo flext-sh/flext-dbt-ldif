@@ -101,7 +101,7 @@ class FlextDbtLdifModelGenerator:
                     f"Schema analysis failed: {stats_result.error}",
                 )
             # Upcast to dict[str, object] for result composition
-            base_stats: dict[str, int] = stats_result.data or {}
+            base_stats: dict[str, int] = stats_result.value or {}
             schema_info: dict[str, object] = dict(base_stats.items())
             # Add basic schema analysis info
             schema_info["total_entries"] = len(entries)
@@ -132,7 +132,7 @@ class FlextDbtLdifModelGenerator:
                 return FlextResult[list[FlextLdifDbtModel]].fail(
                     f"Schema analysis failed: {schema_result.error}",
                 )
-            schema_info = schema_result.data or {}
+            schema_info = schema_result.value or {}
             # Use available flext-ldif API methods (group_entries_by_type not available)
             # Create basic grouping by using available methods
             grouped_entries = {"ldif_entries": entries}  # Basic grouping fallback

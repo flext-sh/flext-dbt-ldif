@@ -48,7 +48,7 @@ def test_parse_and_validate_ldif_ok(
 
     result = service.parse_and_validate_ldif(tmp_path / "x.ldif")
     assert result.success
-    data = result.data or {}
+    data = result.value or {}
     assert data.get("status") == "validated"
 
 
@@ -80,7 +80,7 @@ def test_generate_and_write_models_ok(
 
     result = service.generate_and_write_models(cast("list[object]", []))
     assert result.success
-    assert isinstance(result.data, dict)
+    assert isinstance(result.value, dict)
 
 
 def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

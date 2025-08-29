@@ -78,7 +78,7 @@ def test_run_complete_workflow_all(
         model_names=["m1"],
     )
     assert result.success
-    data = result.data or {}
+    data = result.value or {}
     # Allow completed pipeline via workflow_status key
     assert data.get("workflow_status") == "completed"
 
@@ -117,7 +117,7 @@ def test_run_data_quality_assessment(
 
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
     assert result.success
-    summary = (result.data or {}).get("quality_summary", {})
+    summary = (result.value or {}).get("quality_summary", {})
     assert isinstance(summary, dict)
 
 
@@ -141,5 +141,5 @@ def test_generate_model_documentation(
 
     result = svc.generate_model_documentation([])
     assert result.success
-    doc = result.data or {}
+    doc = result.value or {}
     assert "project_info" in doc

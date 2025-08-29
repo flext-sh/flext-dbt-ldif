@@ -74,7 +74,7 @@ class FlextDbtLdifClient:
             # Use flext-ldif API for parsing
             result = self._ldif_api.parse_file(ldif_path)
             if result.success:
-                entries = result.data or []
+                entries = result.value or []
                 logger.info("Successfully parsed %d LDIF entries", len(entries))
             else:
                 logger.error("LDIF parsing failed: %s", result.error)
@@ -115,7 +115,7 @@ class FlextDbtLdifClient:
                 return FlextResult[dict[str, object]].fail(
                     f"Statistics generation failed: {stats_result.error}",
                 )
-            stats = stats_result.data or {}
+            stats = stats_result.value or {}
             quality_score = stats.get("quality_score", 0.0)
             logger.info(
                 "LDIF data validation completed: quality_score=%.2f",
@@ -166,7 +166,7 @@ class FlextDbtLdifClient:
                 return FlextResult[dict[str, object]].fail(
                     f"Data preparation failed: {prepared_result.error}",
                 )
-            transformed_data = prepared_result.data or {}
+            transformed_data = prepared_result.value or {}
             # Use flext-meltano DBT hub for execution
             _ = self.dbt_hub
             if model_names:
@@ -212,7 +212,7 @@ class FlextDbtLdifClient:
         parse_result = self.parse_ldif_file(file_path)
         if not parse_result.success:
             return FlextResult[dict[str, object]].fail(f"Parse failed: {parse_result.error}")
-        entries = parse_result.data or []
+        entries = parse_result.value or []
         # Step 2: Validate data quality
         validate_result = self.validate_ldif_data(entries)
         if not validate_result.success:
@@ -224,8 +224,8 @@ class FlextDbtLdifClient:
         # Combine results
         pipeline_results = {
             "parsed_entries": len(entries),
-            "validation_metrics": validate_result.data,
-            "transformation_results": transform_result.data,
+            "validation_metrics": validate_result.value,
+            "transformation_results": transform_result.value,
             "pipeline_status": "completed",
         }
         logger.info("Full LDIF-to-DBT pipeline completed successfully")
