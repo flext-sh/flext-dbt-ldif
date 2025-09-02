@@ -19,7 +19,7 @@ from flext_dbt_ldif import (
     FlextDbtLdifModelGenerator,
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
-    FlextLdifAPI,
+    FlextLDIFAPI,
     FlextResult,
     LDIFAnalyzer,
     LDIFInsights,
@@ -50,5 +50,5 @@ def test_api_imports() -> None:
     assert callable(flext_ldif_write)
     # Types are exposed
     assert FlextResult is not None
-    assert FlextLdifAPI is not None
+    assert FlextLDIFAPI is not None
     assert ModelGenerator is not None

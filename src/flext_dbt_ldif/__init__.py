@@ -7,7 +7,7 @@ import importlib.metadata
 from flext_core import FlextResult
 
 from flext_ldif import (
-    FlextLdifAPI,
+    FlextLDIFAPI,
     flext_ldif_parse,
     flext_ldif_validate,
     flext_ldif_write,
@@ -23,7 +23,7 @@ from flext_dbt_ldif.dbt_exceptions import (
     FlextDbtLdifModelError,
     FlextDbtLdifTransformationError,
 )
-from flext_dbt_ldif.models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from flext_dbt_ldif.models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 from flext_dbt_ldif.dbt_services import (
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
@@ -38,9 +38,9 @@ from flext_dbt_ldif.simple_api import (
 )
 
 # Create compatibility aliases for old API names (backward compatibility)
-FlextLdifParser = FlextLdifAPI
-FlextLdifValidator = FlextLdifAPI
-FlextLdifWriter = FlextLdifAPI
+FlextLDIFParser = FlextLDIFAPI
+FlextLDIFValidator = FlextLDIFAPI
+FlextLDIFWriter = FlextLDIFAPI
 flext_ldif_format_entry = flext_ldif_write
 flext_ldif_parse_content = flext_ldif_parse
 flext_ldif_validate_syntax = flext_ldif_validate
@@ -77,7 +77,7 @@ class LDIFInsights:
 class AnalyticsModel:
     """Analytics model functionality using DBT model generator."""
 
-    def __init__(self, model: FlextLdifDbtModel | None = None) -> None:
+    def __init__(self, model: FlextLDIFDbtModel | None = None) -> None:
         """Initialize analytics model."""
         self.model = model
 
@@ -85,7 +85,7 @@ class AnalyticsModel:
 class DimensionModel:
     """Dimension model functionality using DBT patterns."""
 
-    def __init__(self, model: FlextLdifDbtModel | None = None) -> None:
+    def __init__(self, model: FlextLDIFDbtModel | None = None) -> None:
         """Initialize dimension model."""
         self.model = model
 
@@ -97,7 +97,7 @@ __all__: list[str] = [
     "FlextDbtLdifModelGenerator",  # Programmatic model generation
     "FlextDbtLdifService",  # High-level workflow orchestration
     "FlextDbtLdifWorkflowManager",  # Batch processing workflows
-    "FlextLdifDbtModel",  # DBT model value object
+    "FlextLDIFDbtModel",  # DBT model value object
     # Exception Hierarchy
     "FlextDbtLdifError",  # Base exception
     "FlextDbtLdifValidationError",  # Validation errors
@@ -114,7 +114,7 @@ __all__: list[str] = [
     "LDIFAnalytics",  # Legacy analytics class
     # Foundation Components (from flext-core and flext-ldif)
     "FlextResult",  # FlextResult pattern
-    "FlextLdifAPI",  # LDIF API integration
+    "FlextLDIFAPI",  # LDIF API integration
     # Convenience Classes and Aliases
     "AnalyticsModel",  # Analytics model functionality
     "ChangeTracker",  # Change tracking functionality
