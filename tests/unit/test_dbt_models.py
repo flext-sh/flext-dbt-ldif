@@ -14,7 +14,7 @@ from pathlib import Path
 from flext_dbt_ldif import (
     FlextDbtLdifConfig,
     FlextDbtLdifModelGenerator,
-    FlextLdifDbtModel,
+    FlextLDIFDbtModel,
 )
 
 
@@ -22,19 +22,19 @@ def test_write_models_and_sql_generation(tmp_path: Path) -> None:
     """Test writing models and generating SQL."""
     gen = FlextDbtLdifModelGenerator(FlextDbtLdifConfig(), project_dir=tmp_path)
     # Create a simple staging model and analytics models
-    stg = FlextLdifDbtModel(
+    stg = FlextLDIFDbtModel(
         name="stg_persons",
         description="staging",
         columns=[{"name": "dn"}, {"name": "object_class"}],
         materialization="view",
     )
-    an_insights = FlextLdifDbtModel(
+    an_insights = FlextLDIFDbtModel(
         name="analytics_ldif_insights",
         description="insights",
         columns=[{"name": "analysis_date"}],
         materialization="table",
     )
-    an_hier = FlextLdifDbtModel(
+    an_hier = FlextLDIFDbtModel(
         name="analytics_ldif_hierarchy",
         description="hier",
         columns=[{"name": "dn_path"}],

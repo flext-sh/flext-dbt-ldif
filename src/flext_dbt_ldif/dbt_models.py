@@ -13,8 +13,8 @@ from pathlib import Path
 
 import yaml
 from flext_core import FlextLogger, FlextResult
-from flext_ldif import FlextLdifAPI
-from flext_ldif.models import FlextLdifEntry
+from flext_ldif import FlextLDIFAPI
+from flext_ldif.models import FlextLDIFEntry
 
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
@@ -22,7 +22,7 @@ from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 logger = FlextLogger(__name__)
 
 
-class FlextLdifDbtModel:
+class FlextLDIFDbtModel:
     """Value object representing a DBT model for LDIF data."""
 
     def __init__(
@@ -76,13 +76,13 @@ class FlextDbtLdifModelGenerator:
         self.config = config or FlextDbtLdifConfig()
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
-        self._ldif_api = FlextLdifAPI()
+        self._ldif_api = FlextLDIFAPI()
         # self._dbt_generator = FlextDbtModelGenerator()  # Not available yet
         logger.info("Initialized LDIF DBT model generator: %s", self.project_dir)
 
     def analyze_ldif_schema(
         self,
-        entries: list[FlextLdifEntry],
+        entries: list[FlextLDIFEntry],
     ) -> FlextResult[dict[str, object]]:
         """Analyze LDIF entries to determine schema structure.
 
@@ -114,8 +114,8 @@ class FlextDbtLdifModelGenerator:
 
     def generate_staging_models(
         self,
-        entries: list[FlextLdifEntry],
-    ) -> FlextResult[list[FlextLdifDbtModel]]:
+        entries: list[FlextLDIFEntry],
+    ) -> FlextResult[list[FlextLDIFDbtModel]]:
         """Generate staging layer DBT models for LDIF data.
 
         Args:
@@ -129,7 +129,7 @@ class FlextDbtLdifModelGenerator:
             # Analyze schema first
             schema_result = self.analyze_ldif_schema(entries)
             if not schema_result.success:
-                return FlextResult[list[FlextLdifDbtModel]].fail(
+                return FlextResult[list[FlextLDIFDbtModel]].fail(
                     f"Schema analysis failed: {schema_result.error}",
                 )
             schema_info = schema_result.value or {}
@@ -150,17 +150,17 @@ class FlextDbtLdifModelGenerator:
                 )
                 models.append(model)
             logger.info("Generated %d staging models", len(models))
-            return FlextResult[list[FlextLdifDbtModel]].ok(models)
+            return FlextResult[list[FlextLDIFDbtModel]].ok(models)
         except Exception as e:
             logger.exception("Error generating staging models")
-            return FlextResult[list[FlextLdifDbtModel]].fail(
+            return FlextResult[list[FlextLDIFDbtModel]].fail(
                 f"Staging model generation error: {e}"
             )
 
     def generate_analytics_models(
         self,
-        staging_models: list[FlextLdifDbtModel],
-    ) -> FlextResult[list[FlextLdifDbtModel]]:
+        staging_models: list[FlextLDIFDbtModel],
+    ) -> FlextResult[list[FlextLDIFDbtModel]]:
         """Generate analytics layer DBT models.
 
         Args:
@@ -176,7 +176,7 @@ class FlextDbtLdifModelGenerator:
             )
             analytics_models = []
             # Generate LDIF insights model
-            insights_model = FlextLdifDbtModel(
+            insights_model = FlextLDIFDbtModel(
                 name="analytics_ldif_insights",
                 description="Advanced analytics for LDIF data with statistical insights",
                 materialization="table",
@@ -229,7 +229,7 @@ class FlextDbtLdifModelGenerator:
             )
             analytics_models.append(insights_model)
             # Generate hierarchy analysis model
-            hierarchy_model = FlextLdifDbtModel(
+            hierarchy_model = FlextLDIFDbtModel(
                 name="analytics_ldif_hierarchy",
                 description="Hierarchical analysis of LDIF DN structures",
                 materialization="table",
@@ -281,16 +281,16 @@ class FlextDbtLdifModelGenerator:
             )
             analytics_models.append(hierarchy_model)
             logger.info("Generated %d analytics models", len(analytics_models))
-            return FlextResult[list[FlextLdifDbtModel]].ok(analytics_models)
+            return FlextResult[list[FlextLDIFDbtModel]].ok(analytics_models)
         except Exception as e:
             logger.exception("Error generating analytics models")
-            return FlextResult[list[FlextLdifDbtModel]].fail(
+            return FlextResult[list[FlextLDIFDbtModel]].fail(
                 f"Analytics model generation error: {e}"
             )
 
     def write_models_to_disk(
         self,
-        models: list[FlextLdifDbtModel],
+        models: list[FlextLDIFDbtModel],
         *,
         overwrite: bool = False,
     ) -> FlextResult[dict[str, object]]:
@@ -340,9 +340,9 @@ class FlextDbtLdifModelGenerator:
         self,
         entry_type: str,
         schema_name: str,
-        entries: list[FlextLdifEntry],
+        entries: list[FlextLDIFEntry],
         schema_info: dict[str, object],
-    ) -> FlextLdifDbtModel:
+    ) -> FlextLDIFDbtModel:
         """Generate a staging model for a specific entry type."""
         # Use entries and schema_info minimally to avoid unused-args and add value
         has_entries = len(entries) > 0
@@ -386,7 +386,7 @@ class FlextDbtLdifModelGenerator:
                 if ldif_attr in self.config.required_attributes:
                     column_def["tests"] = ["not_null"]
                 common_attrs.append(column_def)
-        return FlextLdifDbtModel(
+        return FlextLDIFDbtModel(
             name=schema_name,
             description=f"Staging model for LDIF {entry_type} entries with data quality checks",
             materialization="view",
@@ -415,7 +415,7 @@ class FlextDbtLdifModelGenerator:
             return "text"
         return "varchar"
 
-    def _generate_sql_for_model(self, model: FlextLdifDbtModel) -> str:
+    def _generate_sql_for_model(self, model: FlextLDIFDbtModel) -> str:
         """Generate SQL content for DBT model using flext-meltano patterns."""
         if model.name.startswith("stg_"):
             return self._generate_staging_sql(model)
@@ -423,7 +423,7 @@ class FlextDbtLdifModelGenerator:
             return self._generate_analytics_sql(model)
         return self._generate_generic_sql(model)
 
-    def _generate_staging_sql(self, model: FlextLdifDbtModel) -> str:
+    def _generate_staging_sql(self, model: FlextLDIFDbtModel) -> str:
         """Generate SQL for staging model."""
         # Extract column names safely from dict structure
         columns = []
@@ -463,7 +463,7 @@ class FlextDbtLdifModelGenerator:
             "select * from validated_data\n"
         )
 
-    def _generate_analytics_sql(self, model: FlextLdifDbtModel) -> str:
+    def _generate_analytics_sql(self, model: FlextLDIFDbtModel) -> str:
         """Generate SQL for analytics model."""
         # Validate and safely render materialization (whitelist)
         allowed_materializations = {"view", "table", "ephemeral", "incremental"}
@@ -534,7 +534,7 @@ class FlextDbtLdifModelGenerator:
             "select * from dn_hierarchy\n"
         )
 
-    def _generate_generic_sql(self, model: FlextLdifDbtModel) -> str:
+    def _generate_generic_sql(self, model: FlextLDIFDbtModel) -> str:
         """Generate generic SQL template."""
         allowed_materializations = {"view", "table", "ephemeral", "incremental"}
         materialized = (
@@ -559,5 +559,5 @@ class FlextDbtLdifModelGenerator:
 
 __all__: list[str] = [
     "FlextDbtLdifModelGenerator",
-    "FlextLdifDbtModel",
+    "FlextLDIFDbtModel",
 ]

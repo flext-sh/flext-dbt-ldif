@@ -12,11 +12,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult
-from flext_ldif.models import FlextLdifEntry
+from flext_ldif.models import FlextLDIFEntry
 
 from .dbt_client import FlextDbtLdifClient
 from .dbt_config import FlextDbtLdifConfig
-from .dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from .dbt_models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 
 logger = FlextLogger(__name__)
 # Quality assessment thresholds
@@ -186,7 +186,7 @@ class FlextDbtLdifService:
 
     def generate_and_write_models(
         self,
-        entries: list[FlextLdifEntry],
+        entries: list[FlextLDIFEntry],
         *,
         overwrite: bool = False,
     ) -> FlextResult[dict[str, object]]:
@@ -332,7 +332,7 @@ class FlextDbtLdifService:
 
     def generate_model_documentation(
         self,
-        entries: list[FlextLdifEntry],
+        entries: list[FlextLDIFEntry],
     ) -> FlextResult[dict[str, object]]:
         """Generate documentation for DBT models based on LDIF analysis.
 
@@ -461,7 +461,7 @@ class FlextDbtLdifService:
 
     def _generate_lineage_info(
         self,
-        models: list[FlextLdifDbtModel],
+        models: list[FlextLDIFDbtModel],
     ) -> dict[str, object]:
         """Generate data lineage information for models."""
         return {

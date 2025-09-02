@@ -13,7 +13,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult
-from flext_ldif import FlextLdifAPI, FlextLdifEntry, FlextLdifFactory
+from flext_ldif import FlextLDIFAPI, FlextLDIFEntry, FlextLDIFFactory
 
 logger = FlextLogger(__name__)
 # Constants for magic number elimination
@@ -93,27 +93,27 @@ class LDIFAnalytics:
     """LDIF-specific analytics functionality using flext-ldif infrastructure.
 
     This class eliminates code duplication by delegating ALL analytics operations
-    to the FlextLdifAPI, maintaining business rule compliance.
+    to the FlextLDIFAPI, maintaining business rule compliance.
     """
 
     def __init__(self) -> None:
         """Initialize analytics with flext-ldif API."""
-        self._ldif_api = FlextLdifAPI()
+        self._ldif_api = FlextLDIFAPI()
 
     def _convert_dict_to_entries(
         self,
         ldif_data: list[dict[str, object]],
-    ) -> list[FlextLdifEntry]:
-        """Convert dictionary data to FlextLdifEntry objects using flext-ldif factory.
+    ) -> list[FlextLDIFEntry]:
+        """Convert dictionary data to FlextLDIFEntry objects using flext-ldif factory.
 
         Args:
             ldif_data: List of LDIF entry dictionaries
 
         Returns:
-            List of valid FlextLdifEntry objects
+            List of valid FlextLDIFEntry objects
 
         """
-        entries: list[FlextLdifEntry] = []
+        entries: list[FlextLDIFEntry] = []
         for data in ldif_data:
             try:
                 # Extract required data from dict with proper type checking
@@ -150,7 +150,7 @@ class LDIFAnalytics:
                     changetype_str = changetype
 
                 # Use flext-ldif factory for entry creation
-                entry_result = FlextLdifFactory.create_entry(
+                entry_result = FlextLDIFFactory.create_entry(
                     dn=dn,
                     attributes=formatted_attrs,
                     changetype=changetype_str,
@@ -185,7 +185,7 @@ class LDIFAnalytics:
         )
 
         try:
-            # Convert dict entries to FlextLdifEntry objects for proper analysis
+            # Convert dict entries to FlextLDIFEntry objects for proper analysis
             entries = self._convert_dict_to_entries(ldif_data)
 
             # Use flext-ldif API for statistics - NO local logic
@@ -262,7 +262,7 @@ class LDIFAnalytics:
             )
 
         try:
-            # Convert to FlextLdifEntry objects using helper method
+            # Convert to FlextLDIFEntry objects using helper method
             ldif_entries = self._convert_dict_to_entries(entries)
 
             total_entries = len(entries)
@@ -320,7 +320,7 @@ class LDIFAnalytics:
 
         """
         try:
-            # Convert to FlextLdifEntry objects using helper method
+            # Convert to FlextLDIFEntry objects using helper method
             ldif_entries = self._convert_dict_to_entries(entries)
 
             # Use flext-ldif API for all statistics
