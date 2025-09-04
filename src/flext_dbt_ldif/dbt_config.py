@@ -9,9 +9,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import Any, ClassVar
 
-from flext_core import FlextConfig, FlextLogger
+from flext_core import FlextConfig, FlextLogger, FlextResult
 from flext_ldif import FlextLDIFConfig
 from flext_meltano.config import FlextMeltanoConfig
 
@@ -95,7 +95,78 @@ class FlextDbtLdifConfig(FlextConfig):
             environment="dev",
             dbt_project_dir=self.dbt_project_dir,
             dbt_profiles_dir=self.dbt_profiles_dir,
+            dbt_target=self.dbt_target,
+            dbt_threads=self.dbt_threads,
+            log_level=self.dbt_log_level,
         )
+
+    def validate_config(self) -> FlextResult[bool]:
+        """Validate configuration using flext-core patterns.
+        
+        Returns:
+            FlextResult indicating whether configuration is valid
+        """
+        try:
+            errors: list[str] = []
+            
+            # Validate LDIF settings
+            if self.ldif_max_file_size <= 0:
+                errors.append("ldif_max_file_size must be positive")
+            
+            if self.max_dn_depth <= 0:
+                errors.append("max_dn_depth must be positive")
+                
+            if not (0.0 <= self.min_quality_threshold <= 1.0):
+                errors.append("min_quality_threshold must be between 0.0 and 1.0")
+            
+            # Validate DBT settings  
+            if self.dbt_threads <= 0:
+                errors.append("dbt_threads must be positive")
+                
+            if self.dbt_log_level not in ["debug", "info", "warn", "error"]:
+                errors.append("dbt_log_level must be debug, info, warn, or error")
+            
+            # Validate required attributes
+            if not self.required_attributes:
+                errors.append("required_attributes cannot be empty")
+                
+            if errors:
+                error_msg = "; ".join(errors)
+                logger.error("Configuration validation failed: %s", error_msg)
+                return FlextResult[bool].fail(f"Configuration validation failed: {error_msg}")
+                
+            logger.info("Configuration validation passed")
+            return FlextResult[bool].ok(True)
+            
+        except Exception as e:
+            logger.exception("Error during configuration validation")
+            return FlextResult[bool].fail(f"Configuration validation error: {e}")
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert configuration to dictionary for serialization."""
+        return {
+            # LDIF settings
+            "ldif_file_path": self.ldif_file_path,
+            "ldif_encoding": self.ldif_encoding,
+            "ldif_max_file_size": self.ldif_max_file_size,
+            "ldif_validate_syntax": self.ldif_validate_syntax,
+            "ldif_validate_schemas": self.ldif_validate_schemas,
+            # DBT settings
+            "dbt_project_dir": self.dbt_project_dir,
+            "dbt_profiles_dir": self.dbt_profiles_dir,
+            "dbt_target": self.dbt_target,
+            "dbt_threads": self.dbt_threads,
+            "dbt_log_level": self.dbt_log_level,
+            # Quality settings
+            "min_quality_threshold": self.min_quality_threshold,
+            "validate_dns": self.validate_dns,
+            "max_dn_depth": self.max_dn_depth,
+            # Mappings (as read-only)
+            "ldif_schema_mapping": dict(self.ldif_schema_mapping),
+            "ldif_attribute_mapping": dict(self.ldif_attribute_mapping),
+            "entry_type_mapping": dict(self.entry_type_mapping),
+            "required_attributes": list(self.required_attributes),
+        }
 
     def get_ldif_quality_config(self) -> dict[str, object]:
         """Get data quality configuration for LDIF validation."""

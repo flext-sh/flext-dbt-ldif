@@ -17,7 +17,14 @@ from flext_ldif.models import FlextLDIFEntry
 from flext_meltano import create_dbt_hub
 from flext_meltano.dbt_hub import FlextDbtHub
 
-from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from .dbt_config import FlextDbtLdifConfig
+from .dbt_exceptions import (
+    FlextDbtLdifConfigurationError,
+    FlextDbtLdifModelError,
+    FlextDbtLdifProcessingError,
+    FlextDbtLdifTransformationError,
+    FlextDbtLdifValidationError,
+)
 
 logger = FlextLogger(__name__)
 
@@ -41,16 +48,31 @@ class FlextDbtLdifClient:
 
         """
         self.config = config or FlextDbtLdifConfig()
+        
+        # Validate configuration using flext-core patterns
+        validation_result = self.config.validate_config()
+        if not validation_result.success:
+            raise FlextDbtLdifConfigurationError(
+                f"Configuration validation failed: {validation_result.error}"
+            )
+        
         self._ldif_api = FlextLDIFAPI()
         self._dbt_hub: FlextDbtHub | None = None
-        logger.info("Initialized DBT LDIF client with config: %s", self.config)
+        logger.info("Initialized DBT LDIF client with validated config")
 
     @property
     def dbt_hub(self) -> FlextDbtHub:
-        """Get or create DBT hub instance."""
+        """Get or create DBT hub instance using flext-meltano patterns."""
         if self._dbt_hub is None:
-            self.config.get_meltano_config()
-            self._dbt_hub = create_dbt_hub()
+            try:
+                meltano_config = self.config.get_meltano_config()
+                self._dbt_hub = create_dbt_hub(config=meltano_config)
+                logger.info("Created DBT hub with flext-meltano configuration")
+            except Exception as e:
+                logger.exception("Failed to create DBT hub")
+                raise FlextDbtLdifConfigurationError(
+                    f"DBT hub initialization failed: {e}"
+                ) from e
         return self._dbt_hub
 
     def parse_ldif_file(
@@ -70,23 +92,37 @@ class FlextDbtLdifClient:
             ldif_path = (
                 Path(file_path) if file_path else Path(self.config.ldif_file_path)
             )
+            
+            if not ldif_path.exists():
+                raise FlextDbtLdifProcessingError(
+                    f"LDIF file not found: {ldif_path}",
+                    error_code="FILE_NOT_FOUND",
+                )
+            
             logger.info("Parsing LDIF file: %s", ldif_path)
+            
             # Use flext-ldif API for parsing
             result = self._ldif_api.parse_file(ldif_path)
             if result.success:
                 entries = result.value or []
                 logger.info("Successfully parsed %d LDIF entries", len(entries))
+                return result
             else:
                 logger.error("LDIF parsing failed: %s", result.error)
-                return FlextResult[list[FlextLDIFEntry]].fail(
+                raise FlextDbtLdifProcessingError(
                     f"LDIF parsing failed: {result.error}",
+                    error_code="PARSE_FAILED",
                 )
-            return result
+                
+        except FlextDbtLdifProcessingError:
+            # Re-raise our custom exceptions
+            raise
         except Exception as e:
             logger.exception("Unexpected error during LDIF parsing")
-            return FlextResult[list[FlextLDIFEntry]].fail(
+            raise FlextDbtLdifProcessingError(
                 f"LDIF parsing error: {e}",
-            )
+                error_code="UNEXPECTED_ERROR",
+            ) from e
 
     def validate_ldif_data(
         self,
@@ -102,29 +138,38 @@ class FlextDbtLdifClient:
         """
         try:
             logger.info("Validating %d LDIF entries for data quality", len(entries))
+            
             # Use flext-ldif API for validation
             validation_result = self._ldif_api.validate(entries)
             if not validation_result.success:
                 logger.error("LDIF validation failed: %s", validation_result.error)
-                return FlextResult[dict[str, object]].fail(
+                raise FlextDbtLdifValidationError(
                     f"LDIF validation failed: {validation_result.error}",
+                    error_code="VALIDATION_FAILED",
                 )
+                
             # Get statistics using flext-ldif API
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult[dict[str, object]].fail(
+                raise FlextDbtLdifValidationError(
                     f"Statistics generation failed: {stats_result.error}",
+                    error_code="STATS_FAILED",
                 )
+                
             stats = stats_result.value or {}
             quality_score = stats.get("quality_score", 0.0)
+            
             logger.info(
                 "LDIF data validation completed: quality_score=%.2f",
                 quality_score,
             )
+            
             if quality_score < self.config.min_quality_threshold:
-                return FlextResult[dict[str, object]].fail(
+                raise FlextDbtLdifValidationError(
                     f"Data quality below threshold: {quality_score} < {self.config.min_quality_threshold}",
+                    error_code="QUALITY_THRESHOLD_NOT_MET",
                 )
+                
             return FlextResult[dict[str, object]].ok(
                 {
                     **stats,
@@ -133,18 +178,23 @@ class FlextDbtLdifClient:
                     "threshold": self.config.min_quality_threshold,
                 },
             )
+            
+        except FlextDbtLdifValidationError:
+            # Re-raise validation errors
+            raise
         except Exception as e:
             logger.exception("Unexpected error during LDIF validation")
-            return FlextResult[dict[str, object]].fail(
+            raise FlextDbtLdifValidationError(
                 f"LDIF validation error: {e}",
-            )
+                error_code="UNEXPECTED_ERROR",
+            ) from e
 
     def transform_with_dbt(
         self,
         entries: list[FlextLDIFEntry],
         model_names: list[str] | None = None,
     ) -> FlextResult[dict[str, object]]:
-        """Transform LDIF data using DBT models.
+        """Transform LDIF data using DBT models via flext-meltano.
 
         Args:
             entries: LDIF entries to transform
@@ -160,38 +210,73 @@ class FlextDbtLdifClient:
                 len(entries),
                 model_names,
             )
+            
             # Prepare LDIF data for DBT using flext-ldif API
             prepared_result = self._prepare_ldif_data_for_dbt(entries)
             if not prepared_result.success:
-                return FlextResult[dict[str, object]].fail(
-                    f"Data preparation failed: {prepared_result.error}",
+                raise FlextDbtLdifProcessingError(
+                    f"Data preparation failed: {prepared_result.error}"
                 )
-            transformed_data = prepared_result.value or {}
+            
+            prepared_data = prepared_result.value or {}
+            
             # Use flext-meltano DBT hub for execution
-            _ = self.dbt_hub
-            if model_names:
-                # Run specific models - use generic method
-                result = FlextResult[None].ok(
-                    {"models": model_names, "data": transformed_data},
-                )
-            else:
-                # Run all models - use generic method
-                result = FlextResult[None].ok(
-                    {"all_models": "true", "data": transformed_data},
-                )
-            if result.success:
+            dbt_hub = self.dbt_hub
+            
+            try:
+                if model_names:
+                    # Run specific models using flext-meltano
+                    logger.info("Running specific DBT models: %s", model_names)
+                    run_result = dbt_hub.run_models(
+                        models=model_names,
+                        target=self.config.dbt_target,
+                        profiles_dir=self.config.dbt_profiles_dir,
+                    )
+                else:
+                    # Run all models using flext-meltano
+                    logger.info("Running all DBT models")
+                    run_result = dbt_hub.run_all(
+                        target=self.config.dbt_target,
+                        profiles_dir=self.config.dbt_profiles_dir,
+                    )
+                    
+                if not run_result.success:
+                    raise FlextDbtLdifTransformationError(
+                        f"DBT execution failed: {run_result.error}",
+                        transformation_type="dbt_run",
+                    )
+                    
+                # Get transformation metrics
+                transformation_results = {
+                    "prepared_data_schemas": list(prepared_data.keys()),
+                    "prepared_entries_count": sum(
+                        len(v) if isinstance(v, list) else 1 
+                        for v in prepared_data.values()
+                    ),
+                    "models_executed": model_names or ["all"],
+                    "dbt_result": run_result.value,
+                    "transformation_status": "completed",
+                }
+                
                 logger.info("DBT transformation completed successfully")
-            else:
-                logger.error("DBT transformation failed: %s", result.error)
-                return FlextResult[dict[str, object]].fail(
-                    f"DBT transformation failed: {result.error}",
-                )
-            return result
+                return FlextResult[dict[str, object]].ok(transformation_results)
+                
+            except Exception as dbt_error:
+                logger.exception("DBT execution failed")
+                raise FlextDbtLdifTransformationError(
+                    f"DBT execution error: {dbt_error}",
+                    transformation_type="dbt_execution",
+                ) from dbt_error
+                
+        except FlextDbtLdifTransformationError:
+            # Re-raise transformation errors
+            raise
         except Exception as e:
             logger.exception("Unexpected error during DBT transformation")
-            return FlextResult[dict[str, object]].fail(
+            raise FlextDbtLdifTransformationError(
                 f"DBT transformation error: {e}",
-            )
+                transformation_type="general",
+            ) from e
 
     def run_full_pipeline(
         self,
@@ -208,30 +293,38 @@ class FlextDbtLdifClient:
 
         """
         logger.info("Starting full LDIF-to-DBT pipeline")
-        # Step 1: Parse LDIF data
-        parse_result = self.parse_ldif_file(file_path)
-        if not parse_result.success:
-            return FlextResult[dict[str, object]].fail(
-                f"Parse failed: {parse_result.error}"
-            )
-        entries = parse_result.value or []
-        # Step 2: Validate data quality
-        validate_result = self.validate_ldif_data(entries)
-        if not validate_result.success:
-            return validate_result
-        # Step 3: Transform with DBT
-        transform_result = self.transform_with_dbt(entries, model_names)
-        if not transform_result.success:
-            return transform_result
-        # Combine results
-        pipeline_results = {
-            "parsed_entries": len(entries),
-            "validation_metrics": validate_result.value,
-            "transformation_results": transform_result.value,
-            "pipeline_status": "completed",
-        }
-        logger.info("Full LDIF-to-DBT pipeline completed successfully")
-        return FlextResult[dict[str, object]].ok(pipeline_results)
+        
+        try:
+            # Step 1: Parse LDIF data
+            entries = self.parse_ldif_file(file_path)
+            
+            # Step 2: Validate data quality
+            validation_metrics = self.validate_ldif_data(entries)
+            
+            # Step 3: Transform with DBT
+            transformation_results = self.transform_with_dbt(entries, model_names)
+            
+            # Combine results
+            pipeline_results = {
+                "parsed_entries": len(entries),
+                "validation_metrics": validation_metrics,
+                "transformation_results": transformation_results,
+                "pipeline_status": "completed",
+            }
+            
+            logger.info("Full LDIF-to-DBT pipeline completed successfully")
+            return FlextResult[dict[str, object]].ok(pipeline_results)
+            
+        except (
+            FlextDbtLdifProcessingError,
+            FlextDbtLdifValidationError,
+            FlextDbtLdifTransformationError,
+        ) as e:
+            logger.error("Pipeline failed: %s", e)
+            return FlextResult[dict[str, object]].fail(str(e))
+        except Exception as e:
+            logger.exception("Unexpected error in pipeline")
+            return FlextResult[dict[str, object]].fail(f"Pipeline error: {e}")
 
     def _prepare_ldif_data_for_dbt(
         self,
