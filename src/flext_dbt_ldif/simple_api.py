@@ -13,6 +13,12 @@ from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult
 
+from .dbt_exceptions import (
+    FlextDbtLdifError,
+    FlextDbtLdifModelError,
+    FlextDbtLdifProcessingError,
+    FlextDbtLdifValidationError,
+)
 from .dbt_services import FlextDbtLdifService
 
 logger = FlextLogger(__name__)
@@ -25,7 +31,7 @@ def process_ldif_file(
     generate_models: bool = True,
     run_transformations: bool = False,
 ) -> FlextResult[dict[str, object]]:
-    """Simple function to process an LDIF file with DBT.
+    """Simple function to process an LDIF file with DBT using flext-core patterns.
 
     Args:
       ldif_file: Path to LDIF file
@@ -39,14 +45,21 @@ def process_ldif_file(
     """
     logger.info("Processing LDIF file with simple API: %s", ldif_file)
 
-    proj_path = Path(project_dir) if project_dir else None
-    service = FlextDbtLdifService(project_dir=proj_path)
+    try:
+        proj_path = Path(project_dir) if project_dir else None
+        service = FlextDbtLdifService(project_dir=proj_path)
 
-    return service.run_complete_workflow(
-        ldif_file=ldif_file,
-        generate_models=generate_models,
-        run_transformations=run_transformations,
-    )
+        return service.run_complete_workflow(
+            ldif_file=ldif_file,
+            generate_models=generate_models,
+            run_transformations=run_transformations,
+        )
+    except FlextDbtLdifError as e:
+        logger.error("LDIF processing failed: %s", e)
+        return FlextResult[dict[str, object]].fail(f"Processing failed: {e}")
+    except Exception as e:
+        logger.exception("Unexpected error in simple API")
+        return FlextResult[dict[str, object]].fail(f"Unexpected error: {e}")
 
 
 def validate_ldif_quality(
@@ -73,7 +86,7 @@ def generate_ldif_models(
     *,
     overwrite: bool = False,
 ) -> FlextResult[dict[str, object]]:
-    """Simple function to generate DBT models from LDIF.
+    """Simple function to generate DBT models from LDIF using flext-core patterns.
 
     Args:
       ldif_file: Path to LDIF file
@@ -86,19 +99,31 @@ def generate_ldif_models(
     """
     logger.info("Generating LDIF models with simple API: %s", ldif_file)
 
-    proj_path = Path(project_dir) if project_dir else None
-    service = FlextDbtLdifService(project_dir=proj_path)
+    try:
+        proj_path = Path(project_dir) if project_dir else None
+        service = FlextDbtLdifService(project_dir=proj_path)
 
-    # Parse file first
-    parse_result = service.parse_and_validate_ldif(ldif_file)
-    if not parse_result.success:
-        return parse_result
-
-    parse_data = parse_result.value or {}
-    entries = parse_data.get("entries", [])
-    if not isinstance(entries, list):
-        return FlextResult[dict[str, object]].fail("Invalid entries data format")
-    return service.generate_and_write_models(entries, overwrite=overwrite)
+        # Parse file first - this now raises exceptions
+        parse_data = service.parse_and_validate_ldif(ldif_file)
+        entries = parse_data.get("entries", [])
+        
+        if not isinstance(entries, list):
+            return FlextResult[dict[str, object]].fail("Invalid entries data format")
+            
+        # Generate models - this now raises exceptions  
+        model_data = service.generate_and_write_models(entries, overwrite=overwrite)
+        return FlextResult[dict[str, object]].ok(model_data)
+        
+    except (
+        FlextDbtLdifProcessingError,
+        FlextDbtLdifValidationError,
+        FlextDbtLdifModelError,
+    ) as e:
+        logger.error("Model generation failed: %s", e)
+        return FlextResult[dict[str, object]].fail(f"Model generation failed: {e}")
+    except Exception as e:
+        logger.exception("Unexpected error in model generation")
+        return FlextResult[dict[str, object]].fail(f"Unexpected error: {e}")
 
 
 __all__: list[str] = [
