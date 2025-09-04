@@ -16,6 +16,12 @@ from flext_ldif.models import FlextLDIFEntry
 
 from .dbt_client import FlextDbtLdifClient
 from .dbt_config import FlextDbtLdifConfig
+from .dbt_exceptions import (
+    FlextDbtLdifError,
+    FlextDbtLdifModelError,
+    FlextDbtLdifProcessingError,
+    FlextDbtLdifValidationError,
+)
 from .dbt_models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 
 logger = FlextLogger(__name__)
@@ -47,11 +53,21 @@ class FlextDbtLdifService:
         self.config = config or FlextDbtLdifConfig()
         self.project_dir = project_dir or Path.cwd()
 
-        # Initialize components with maximum composition
-        self.client = FlextDbtLdifClient(self.config)
-        self.model_generator = FlextDbtLdifModelGenerator(self.config, self.project_dir)
+        # Validate configuration using flext-core patterns
+        validation_result = self.config.validate_config()
+        if not validation_result.success:
+            raise FlextDbtLdifError(
+                f"Service configuration validation failed: {validation_result.error}"
+            )
 
-        logger.info("Initialized DBT LDIF service: %s", self.project_dir)
+        # Initialize components with maximum composition
+        try:
+            self.client = FlextDbtLdifClient(self.config)
+            self.model_generator = FlextDbtLdifModelGenerator(self.config, self.project_dir)
+            logger.info("Initialized DBT LDIF service: %s", self.project_dir)
+        except Exception as e:
+            logger.exception("Failed to initialize service components")
+            raise FlextDbtLdifError(f"Service initialization failed: {e}") from e
 
     def run_complete_workflow(
         self,
@@ -61,7 +77,7 @@ class FlextDbtLdifService:
         run_transformations: bool = True,
         model_names: list[str] | None = None,
     ) -> FlextResult[dict[str, object]]:
-        """Run complete LDIF-to-DBT workflow.
+        """Run complete LDIF-to-DBT workflow using flext-core patterns.
 
         Args:
             ldif_file: Path to LDIF file
@@ -88,13 +104,7 @@ class FlextDbtLdifService:
 
         try:
             # Step 1: Parse and validate LDIF
-            parse_result = self.parse_and_validate_ldif(ldif_file)
-            if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(
-                    f"LDIF parsing/validation failed: {parse_result.error}",
-                )
-
-            parse_data = parse_result.value or {}
+            parse_data = self.parse_and_validate_ldif(ldif_file)
             entries = parse_data.get("entries", [])
             workflow_results["parse_validation"] = parse_data
             if isinstance(workflow_results["steps_completed"], list):
@@ -102,30 +112,20 @@ class FlextDbtLdifService:
 
             # Step 2: Generate models if requested
             if generate_models:
-                model_result = self.generate_and_write_models(
+                model_data = self.generate_and_write_models(
                     entries if isinstance(entries, list) else [],
                 )
-                if not model_result.success:
-                    return FlextResult[dict[str, object]].fail(
-                        f"Model generation failed: {model_result.error}",
-                    )
-
-                workflow_results["model_generation"] = model_result.value or {}
+                workflow_results["model_generation"] = model_data
                 if isinstance(workflow_results["steps_completed"], list):
                     workflow_results["steps_completed"].append("model_generation")
 
             # Step 3: Run transformations if requested
             if run_transformations:
-                transform_result = self.client.transform_with_dbt(
+                transformation_data = self.client.transform_with_dbt(
                     entries if isinstance(entries, list) else [],
                     model_names,
                 )
-                if not transform_result.success:
-                    return FlextResult[dict[str, object]].fail(
-                        f"DBT transformation failed: {transform_result.error}",
-                    )
-
-                workflow_results["transformations"] = transform_result.value or {}
+                workflow_results["transformations"] = transformation_data
                 if isinstance(workflow_results["steps_completed"], list):
                     workflow_results["steps_completed"].append("transformations")
 
@@ -133,123 +133,118 @@ class FlextDbtLdifService:
             logger.info("Complete LDIF-to-DBT workflow finished successfully")
             return FlextResult[dict[str, object]].ok(workflow_results)
 
+        except (
+            FlextDbtLdifProcessingError,
+            FlextDbtLdifValidationError,
+            FlextDbtLdifModelError,
+        ) as e:
+            logger.error("Workflow failed with domain error: %s", e)
+            workflow_results["workflow_status"] = "failed"
+            workflow_results["error"] = str(e)
+            return FlextResult[dict[str, object]].fail(f"Workflow failed: {e}")
         except Exception as e:
             logger.exception("Unexpected error in complete workflow")
             workflow_results["workflow_status"] = "failed"
             workflow_results["error"] = str(e)
-            return FlextResult[dict[str, object]].fail(
-                f"Complete workflow error: {e}",
-            )
+            return FlextResult[dict[str, object]].fail(f"Workflow error: {e}")
 
     def parse_and_validate_ldif(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[dict[str, object]]:
-        """Parse and validate LDIF file.
+    ) -> dict[str, object]:
+        """Parse and validate LDIF file using flext-core patterns.
 
         Args:
             ldif_file: Path to LDIF file
 
         Returns:
-            FlextResult containing parsing and validation results
+            Dictionary containing parsing and validation results
+
+        Raises:
+            FlextDbtLdifProcessingError: If parsing fails
+            FlextDbtLdifValidationError: If validation fails
 
         """
         logger.info("Parsing and validating LDIF file: %s", ldif_file)
 
         try:
-            # Parse LDIF file
-            parse_result = self.client.parse_ldif_file(ldif_file)
-            if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(
-                    f"Parse failed: {parse_result.error}"
-                )
+            # Parse LDIF file - this will raise exceptions on failure
+            entries = self.client.parse_ldif_file(ldif_file)
 
-            entries = parse_result.value or []
+            # Validate entries - this will raise exceptions on failure  
+            validation_metrics = self.client.validate_ldif_data(entries)
 
-            # Validate entries
-            validation_result = self.client.validate_ldif_data(entries)
-            if not validation_result.success:
-                return validation_result
+            return {
+                "entries": entries,
+                "entry_count": len(entries),
+                "validation_metrics": validation_metrics,
+                "status": "validated",
+            }
 
-            return FlextResult[dict[str, object]].ok(
-                {
-                    "entries": entries,
-                    "entry_count": len(entries),
-                    "validation_metrics": validation_result.value,
-                    "status": "validated",
-                },
-            )
-
+        except (FlextDbtLdifProcessingError, FlextDbtLdifValidationError):
+            # Re-raise domain exceptions
+            raise
         except Exception as e:
-            logger.exception("Error in parse and validate")
-            return FlextResult[dict[str, object]].fail(f"Parse/validation error: {e}")
+            logger.exception("Unexpected error in parse and validate")
+            raise FlextDbtLdifProcessingError(
+                f"Parse/validation error: {e}",
+                error_code="UNEXPECTED_ERROR",
+            ) from e
 
     def generate_and_write_models(
         self,
         entries: list[FlextLDIFEntry],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
-        """Generate and write DBT models for LDIF entries.
+    ) -> dict[str, object]:
+        """Generate and write DBT models for LDIF entries using flext-core patterns.
 
         Args:
             entries: List of LDIF entries
             overwrite: Whether to overwrite existing models
 
         Returns:
-            FlextResult containing model generation results
+            Dictionary containing model generation results
+
+        Raises:
+            FlextDbtLdifModelError: If model generation fails
 
         """
         logger.info("Generating and writing DBT models for %d entries", len(entries))
 
         try:
             # Generate staging models
-            staging_result = self.model_generator.generate_staging_models(entries)
-            if not staging_result.success:
-                return FlextResult[dict[str, object]].fail(
-                    f"Staging generation failed: {staging_result.error}",
-                )
-
-            staging_models = staging_result.value or []
+            staging_models = self.model_generator.generate_staging_models(entries)
 
             # Generate analytics models
-            analytics_result = self.model_generator.generate_analytics_models(
+            analytics_models = self.model_generator.generate_analytics_models(
                 staging_models,
             )
-            if not analytics_result.success:
-                return FlextResult[dict[str, object]].fail(
-                    f"Analytics generation failed: {analytics_result.error}",
-                )
-
-            analytics_models = analytics_result.value or []
 
             # Combine all models
             all_models = staging_models + analytics_models
 
             # Write models to disk
-            write_result = self.model_generator.write_models_to_disk(
+            write_info = self.model_generator.write_models_to_disk(
                 all_models,
                 overwrite=overwrite,
             )
-            if not write_result.success:
-                return write_result
 
-            write_info = write_result.value or {}
-
-            return FlextResult[dict[str, object]].ok(
-                {
-                    "staging_models": len(staging_models),
-                    "analytics_models": len(analytics_models),
-                    "total_models": len(all_models),
-                    "files_written": write_info.get("written_files", []),
-                    "output_dir": write_info.get("output_dir"),
-                    "status": "generated",
-                },
-            )
+            return {
+                "staging_models": len(staging_models),
+                "analytics_models": len(analytics_models),
+                "total_models": len(all_models),
+                "files_written": write_info.get("written_files", []),
+                "output_dir": write_info.get("output_dir"),
+                "status": "generated",
+            }
 
         except Exception as e:
             logger.exception("Error in generate and write models")
-            return FlextResult[dict[str, object]].fail(f"Model generation error: {e}")
+            raise FlextDbtLdifModelError(
+                f"Model generation error: {e}",
+                error_code="MODEL_GENERATION_FAILED",
+            ) from e
 
     def run_data_quality_assessment(
         self,
