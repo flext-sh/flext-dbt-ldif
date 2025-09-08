@@ -1,6 +1,8 @@
-"""LDIF Data Analytics and Transformations for DBT."""
+"""LDIF Data Analytics and Transformations for DBT.
 
-from __future__ import annotations
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 import importlib.metadata
 
@@ -90,7 +92,7 @@ class DimensionModel:
         self.model = model
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     # Core DBT Pattern Components
     "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
     "FlextDbtLdifConfig",  # Configuration management

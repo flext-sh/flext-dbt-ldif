@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif.models import FlextLDIFEntry
 
 from .dbt_client import FlextDbtLdifClient
@@ -59,8 +59,8 @@ class FlextDbtLdifService:
         *,
         generate_models: bool = True,
         run_transformations: bool = True,
-        model_names: list[str] | None = None,
-    ) -> FlextResult[dict[str, object]]:
+        model_names: FlextTypes.Core.StringList | None = None,
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Run complete LDIF-to-DBT workflow.
 
         Args:
@@ -80,7 +80,7 @@ class FlextDbtLdifService:
             run_transformations,
         )
 
-        workflow_results: dict[str, object] = {
+        workflow_results: FlextTypes.Core.Dict = {
             "ldif_file": str(ldif_file),
             "workflow_status": "started",
             "steps_completed": [],
@@ -90,7 +90,7 @@ class FlextDbtLdifService:
             # Step 1: Parse and validate LDIF
             parse_result = self.parse_and_validate_ldif(ldif_file)
             if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"LDIF parsing/validation failed: {parse_result.error}",
                 )
 
@@ -106,7 +106,7 @@ class FlextDbtLdifService:
                     entries if isinstance(entries, list) else [],
                 )
                 if not model_result.success:
-                    return FlextResult[dict[str, object]].fail(
+                    return FlextResult[FlextTypes.Core.Dict].fail(
                         f"Model generation failed: {model_result.error}",
                     )
 
@@ -121,7 +121,7 @@ class FlextDbtLdifService:
                     model_names,
                 )
                 if not transform_result.success:
-                    return FlextResult[dict[str, object]].fail(
+                    return FlextResult[FlextTypes.Core.Dict].fail(
                         f"DBT transformation failed: {transform_result.error}",
                     )
 
@@ -131,20 +131,20 @@ class FlextDbtLdifService:
 
             workflow_results["workflow_status"] = "completed"
             logger.info("Complete LDIF-to-DBT workflow finished successfully")
-            return FlextResult[dict[str, object]].ok(workflow_results)
+            return FlextResult[FlextTypes.Core.Dict].ok(workflow_results)
 
         except Exception as e:
             logger.exception("Unexpected error in complete workflow")
             workflow_results["workflow_status"] = "failed"
             workflow_results["error"] = str(e)
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"Complete workflow error: {e}",
             )
 
     def parse_and_validate_ldif(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Parse and validate LDIF file.
 
         Args:
@@ -160,7 +160,7 @@ class FlextDbtLdifService:
             # Parse LDIF file
             parse_result = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Parse failed: {parse_result.error}"
                 )
 
@@ -171,7 +171,7 @@ class FlextDbtLdifService:
             if not validation_result.success:
                 return validation_result
 
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "entries": entries,
                     "entry_count": len(entries),
@@ -182,14 +182,16 @@ class FlextDbtLdifService:
 
         except Exception as e:
             logger.exception("Error in parse and validate")
-            return FlextResult[dict[str, object]].fail(f"Parse/validation error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Parse/validation error: {e}"
+            )
 
     def generate_and_write_models(
         self,
         entries: list[FlextLDIFEntry],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate and write DBT models for LDIF entries.
 
         Args:
@@ -206,7 +208,7 @@ class FlextDbtLdifService:
             # Generate staging models
             staging_result = self.model_generator.generate_staging_models(entries)
             if not staging_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Staging generation failed: {staging_result.error}",
                 )
 
@@ -217,7 +219,7 @@ class FlextDbtLdifService:
                 staging_models,
             )
             if not analytics_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Analytics generation failed: {analytics_result.error}",
                 )
 
@@ -236,7 +238,7 @@ class FlextDbtLdifService:
 
             write_info = write_result.value or {}
 
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "staging_models": len(staging_models),
                     "analytics_models": len(analytics_models),
@@ -249,12 +251,14 @@ class FlextDbtLdifService:
 
         except Exception as e:
             logger.exception("Error in generate and write models")
-            return FlextResult[dict[str, object]].fail(f"Model generation error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Model generation error: {e}"
+            )
 
     def run_data_quality_assessment(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Run comprehensive data quality assessment on LDIF file.
 
         Args:
@@ -270,7 +274,7 @@ class FlextDbtLdifService:
             # Parse LDIF
             parse_result = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Parse failed: {parse_result.error}"
                 )
 
@@ -324,16 +328,18 @@ class FlextDbtLdifService:
             }
 
             logger.info("Data quality assessment completed")
-            return FlextResult[dict[str, object]].ok(dict(quality_assessment))
+            return FlextResult[FlextTypes.Core.Dict].ok(dict(quality_assessment))
 
         except Exception as e:
             logger.exception("Error in data quality assessment")
-            return FlextResult[dict[str, object]].fail(f"Quality assessment error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Quality assessment error: {e}"
+            )
 
     def generate_model_documentation(
         self,
         entries: list[FlextLDIFEntry],
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate documentation for DBT models based on LDIF analysis.
 
         Args:
@@ -356,7 +362,7 @@ class FlextDbtLdifService:
             # Generate models for analysis
             staging_result = self.model_generator.generate_staging_models(entries)
             if not staging_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Staging model generation failed: {staging_result.error}",
                 )
 
@@ -390,11 +396,11 @@ class FlextDbtLdifService:
             }
 
             logger.info("Model documentation generated")
-            return FlextResult[dict[str, object]].ok(documentation)
+            return FlextResult[FlextTypes.Core.Dict].ok(documentation)
 
         except Exception as e:
             logger.exception("Error generating model documentation")
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"Documentation generation error: {e}"
             )
 
@@ -408,9 +414,9 @@ class FlextDbtLdifService:
 
     def _generate_quality_recommendations(
         self,
-        validation_metrics: dict[str, object],
-        schema_info: dict[str, object],
-    ) -> list[str]:
+        validation_metrics: FlextTypes.Core.Dict,
+        schema_info: FlextTypes.Core.Dict,
+    ) -> FlextTypes.Core.StringList:
         """Generate quality improvement recommendations."""
         recommendations = []
 
@@ -462,7 +468,7 @@ class FlextDbtLdifService:
     def _generate_lineage_info(
         self,
         models: list[FlextLDIFDbtModel],
-    ) -> dict[str, object]:
+    ) -> FlextTypes.Core.Dict:
         """Generate data lineage information for models."""
         return {
             "source": "ldif_files",
@@ -505,7 +511,7 @@ class FlextDbtLdifWorkflowManager:
         ldif_files: list[Path | str],
         *,
         batch_size: int = 10,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Process multiple LDIF files in batches.
 
         Args:
@@ -540,7 +546,7 @@ class FlextDbtLdifWorkflowManager:
                     else {"error": batch_result.error},
                 )
 
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "total_files": len(ldif_files),
                     "batch_size": batch_size,
@@ -552,14 +558,16 @@ class FlextDbtLdifWorkflowManager:
 
         except Exception as e:
             logger.exception("Error in batch processing")
-            return FlextResult[dict[str, object]].fail(f"Batch processing error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Batch processing error: {e}"
+            )
 
     def _process_file_batch(
         self,
         file_batch: list[Path | str],
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Process a batch of LDIF files."""
-        batch_results: dict[str, object] = {
+        batch_results: FlextTypes.Core.Dict = {
             "files": [str(f) for f in file_batch],
             "results": [],
             "summary": {"success": 0, "failed": 0},
@@ -600,10 +608,10 @@ class FlextDbtLdifWorkflowManager:
                         },
                     )
 
-        return FlextResult[dict[str, object]].ok(batch_results)
+        return FlextResult[FlextTypes.Core.Dict].ok(batch_results)
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifService",
     "FlextDbtLdifWorkflowManager",
 ]

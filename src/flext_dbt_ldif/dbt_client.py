@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLDIFAPI
 from flext_ldif.models import FlextLDIFEntry
 from flext_meltano import create_dbt_hub
@@ -91,7 +91,7 @@ class FlextDbtLdifClient:
     def validate_ldif_data(
         self,
         entries: list[FlextLDIFEntry],
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Validate LDIF data quality for DBT processing.
 
         Args:
@@ -106,13 +106,13 @@ class FlextDbtLdifClient:
             validation_result = self._ldif_api.validate(entries)
             if not validation_result.success:
                 logger.error("LDIF validation failed: %s", validation_result.error)
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"LDIF validation failed: {validation_result.error}",
                 )
             # Get statistics using flext-ldif API
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Statistics generation failed: {stats_result.error}",
                 )
             stats = stats_result.value or {}
@@ -122,10 +122,10 @@ class FlextDbtLdifClient:
                 quality_score,
             )
             if quality_score < self.config.min_quality_threshold:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Data quality below threshold: {quality_score} < {self.config.min_quality_threshold}",
                 )
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     **stats,
                     "quality_score": quality_score,
@@ -135,15 +135,15 @@ class FlextDbtLdifClient:
             )
         except Exception as e:
             logger.exception("Unexpected error during LDIF validation")
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"LDIF validation error: {e}",
             )
 
     def transform_with_dbt(
         self,
         entries: list[FlextLDIFEntry],
-        model_names: list[str] | None = None,
-    ) -> FlextResult[dict[str, object]]:
+        model_names: FlextTypes.Core.StringList | None = None,
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Transform LDIF data using DBT models.
 
         Args:
@@ -163,7 +163,7 @@ class FlextDbtLdifClient:
             # Prepare LDIF data for DBT using flext-ldif API
             prepared_result = self._prepare_ldif_data_for_dbt(entries)
             if not prepared_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Data preparation failed: {prepared_result.error}",
                 )
             transformed_data = prepared_result.value or {}
@@ -183,21 +183,21 @@ class FlextDbtLdifClient:
                 logger.info("DBT transformation completed successfully")
             else:
                 logger.error("DBT transformation failed: %s", result.error)
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"DBT transformation failed: {result.error}",
                 )
             return result
         except Exception as e:
             logger.exception("Unexpected error during DBT transformation")
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"DBT transformation error: {e}",
             )
 
     def run_full_pipeline(
         self,
         file_path: Path | str | None = None,
-        model_names: list[str] | None = None,
-    ) -> FlextResult[dict[str, object]]:
+        model_names: FlextTypes.Core.StringList | None = None,
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Run complete LDIF to DBT transformation pipeline.
 
         Args:
@@ -211,7 +211,7 @@ class FlextDbtLdifClient:
         # Step 1: Parse LDIF data
         parse_result = self.parse_ldif_file(file_path)
         if not parse_result.success:
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.Core.Dict].fail(
                 f"Parse failed: {parse_result.error}"
             )
         entries = parse_result.value or []
@@ -231,12 +231,12 @@ class FlextDbtLdifClient:
             "pipeline_status": "completed",
         }
         logger.info("Full LDIF-to-DBT pipeline completed successfully")
-        return FlextResult[dict[str, object]].ok(pipeline_results)
+        return FlextResult[FlextTypes.Core.Dict].ok(pipeline_results)
 
     def _prepare_ldif_data_for_dbt(
         self,
         entries: list[FlextLDIFEntry],
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Prepare LDIF entries for DBT processing using flext-ldif API.
 
         Converts LDIF entries to format suitable for DBT models using
@@ -249,11 +249,11 @@ class FlextDbtLdifClient:
 
         """
         try:
-            prepared_data: dict[str, list[dict[str, object]]] = {}
+            prepared_data: dict[str, list[FlextTypes.Core.Dict]] = {}
             # Get object class distribution using flext-ldif classification
             stats_result = self._ldif_api.get_objectclass_distribution(entries)
             if not stats_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Entry statistics failed: {stats_result.error}",
                 )
             # Apply schema mapping from config - simple transformation approach
@@ -274,7 +274,7 @@ class FlextDbtLdifClient:
                         # Convert entry to dict format
                         if hasattr(entry, "dn") and hasattr(entry, "attributes"):
                             # Convert LDIF entry to a plain dict for DBT mapping
-                            entry_dict: dict[str, object] = {"dn": entry.dn}
+                            entry_dict: FlextTypes.Core.Dict = {"dn": entry.dn}
                             # flext-ldif exposes attributes mapping via entry.attributes.attributes
                             attrs = getattr(entry.attributes, "attributes", {})
                             if isinstance(attrs, dict):
@@ -289,12 +289,16 @@ class FlextDbtLdifClient:
                     for k, v in prepared_data.items()
                 },
             )
-            return FlextResult[dict[str, object]].ok(dict(prepared_data))
+            return FlextResult[FlextTypes.Core.Dict].ok(dict(prepared_data))
         except Exception as e:
             logger.exception("Error preparing LDIF data for DBT")
-            return FlextResult[dict[str, object]].fail(f"Data preparation error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"Data preparation error: {e}"
+            )
 
-    def _map_entry_attributes(self, entry_data: dict[str, object]) -> dict[str, object]:
+    def _map_entry_attributes(
+        self, entry_data: FlextTypes.Core.Dict
+    ) -> FlextTypes.Core.Dict:
         """Map LDIF entry attributes using configuration mapping."""
         mapped_attrs = {"dn": entry_data.get("dn")}
         for ldif_attr, dbt_attr in self.config.ldif_attribute_mapping.items():
@@ -311,6 +315,6 @@ class FlextDbtLdifClient:
         return mapped_attrs
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifClient",
 ]

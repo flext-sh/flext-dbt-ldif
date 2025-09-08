@@ -2,12 +2,13 @@
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
 
 from pathlib import Path
+
+from flext_core import FlextTypes
 
 from flext_dbt_ldif import DBTModelGenerator, LDIFAnalytics
 
@@ -78,7 +79,7 @@ class TestLDIFAnalytics:
 
     def test_analyze_entry_patterns_with_data(self) -> None:
         """Test pattern analysis with sample data."""
-        sample_data: list[dict[str, object]] = [
+        sample_data: list[FlextTypes.Core.Dict] = [
             {
                 "dn": "cn=user1,ou=users,dc=example,dc=com",
                 "objectClass": ["inetOrgPerson"],
@@ -119,7 +120,7 @@ class TestLDIFAnalytics:
 
     def test_generate_quality_metrics_with_data(self) -> None:
         """Test quality metrics with sample data."""
-        sample_entries: list[dict[str, object]] = [
+        sample_entries: list[FlextTypes.Core.Dict] = [
             {"dn": "test", "objectClass": ["top"]},
         ]
         analytics = LDIFAnalytics()

@@ -2,9 +2,6 @@
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
-This module eliminates code duplication by using the FLEXT LDIF infrastructure
-implementation from flext-ldif project for ALL analytics functionality.
 """
 
 from __future__ import annotations
@@ -12,7 +9,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLDIFAPI, FlextLDIFEntry, FlextLDIFFactory
 
 logger = FlextLogger(__name__)
@@ -30,11 +27,14 @@ class DBTModelGenerator:
         Args:
             project_dir: Path to the dbt project directory (defaults to current)
 
+        Returns:
+            object: Description of return value.
+
         """
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
 
-    def generate_staging_models(self) -> list[dict[str, object]]:
+    def generate_staging_models(self) -> list[FlextTypes.Core.Dict]:
         """Generate staging layer models for LDIF data.
 
         Returns:
@@ -63,7 +63,7 @@ class DBTModelGenerator:
             },
         ]
 
-    def generate_analytics_models(self) -> list[dict[str, object]]:
+    def generate_analytics_models(self) -> list[FlextTypes.Core.Dict]:
         """Generate analytics layer models.
 
         Returns:
@@ -102,7 +102,7 @@ class LDIFAnalytics:
 
     def _convert_dict_to_entries(
         self,
-        ldif_data: list[dict[str, object]],
+        ldif_data: list[FlextTypes.Core.Dict],
     ) -> list[FlextLDIFEntry]:
         """Convert dictionary data to FlextLDIFEntry objects using flext-ldif factory.
 
@@ -122,9 +122,9 @@ class LDIFAnalytics:
                 changetype = data.get("changetype")
 
                 # Type guard for attributes
-                formatted_attrs: dict[str, list[str]] = {}
+                formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
                 if isinstance(attributes, dict) and attributes:
-                    # Ensure attributes are in the right format (dict[str, list[str]])
+                    # Ensure attributes are in the right format (dict[str, FlextTypes.Core.StringList])
                     for key, value in attributes.items():
                         if isinstance(value, list):
                             formatted_attrs[str(key)] = [str(v) for v in value]
@@ -168,8 +168,8 @@ class LDIFAnalytics:
 
     def analyze_entry_patterns(
         self,
-        ldif_data: list[dict[str, object]],
-    ) -> FlextResult[dict[str, object]]:
+        ldif_data: list[FlextTypes.Core.Dict],
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Analyze patterns in LDIF entries using flext-ldif infrastructure.
 
         Args:
@@ -191,14 +191,14 @@ class LDIFAnalytics:
             # Use flext-ldif API for statistics - NO local logic
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Statistics generation failed: {stats_result.error}",
                 )
 
             stats = stats_result.value or {}
 
             # Get object class distribution using flext-ldif filtering
-            object_classes: dict[str, int] = {}
+            object_classes: FlextTypes.Core.CounterDict = {}
             for entry in entries:
                 # Get object classes from the entry's attributes
                 for obj_class in entry.attributes.get_object_classes():
@@ -206,7 +206,7 @@ class LDIFAnalytics:
 
             # Use flext-ldif hierarchical sorting for depth analysis
             sorted_result = self._ldif_api.sort_hierarchically(entries)
-            dn_depth_distribution: dict[str, int] = {}
+            dn_depth_distribution: FlextTypes.Core.CounterDict = {}
             if sorted_result.success and sorted_result.value:
                 for entry in sorted_result.value:
                     depth = entry.dn.get_depth()
@@ -221,7 +221,7 @@ class LDIFAnalytics:
             )
             risk_assessment = risk_result.value if risk_result.success else "unknown"
 
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "total_entries": stats.get("total_entries", 0),
                     "persons": stats.get("person_entries", 0),
@@ -237,11 +237,11 @@ class LDIFAnalytics:
 
         except Exception as e:
             logger.exception("Entry pattern analysis failed")
-            return FlextResult[dict[str, object]].fail(f"Analysis failed: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(f"Analysis failed: {e}")
 
     def generate_quality_metrics(
         self,
-        entries: list[dict[str, object]],
+        entries: list[FlextTypes.Core.Dict],
     ) -> FlextResult[dict[str, float]]:
         """Generate data quality metrics using flext-ldif validation.
 
@@ -308,7 +308,7 @@ class LDIFAnalytics:
 
     def get_statistics_for_dbt(
         self,
-        entries: list[dict[str, object]],
+        entries: list[FlextTypes.Core.Dict],
     ) -> FlextResult[Mapping[str, object]]:
         """Get statistics formatted for dbt model generation.
 

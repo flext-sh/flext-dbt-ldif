@@ -5,15 +5,11 @@ Eliminates code duplication by using create_module_exception_classes() factory.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
 
-from flext_core import FlextExceptions
-
-# Note: This module is intentionally simple. Runtime-focused code paths
-# are covered by service and client tests; exception classes are thin wrappers.
+from flext_core import FlextExceptions, FlextTypes
 
 
 # Base LDIF DBT error hierarchy using standard inheritance
@@ -138,7 +134,7 @@ class FlextDbtLdifTestError(FlextDbtLdifValidationError):
         super().__init__(message, error_code=error_code, context=context)
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifConfigurationError",
     "FlextDbtLdifError",
     "FlextDbtLdifModelError",

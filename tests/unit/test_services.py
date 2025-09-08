@@ -4,7 +4,6 @@ This module tests the services workflows of flext-dbt-ldif.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
@@ -13,7 +12,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 from flext_dbt_ldif import FlextDbtLdifService, FlextLDIFDbtModel
 
@@ -30,7 +29,7 @@ def test_run_complete_workflow_all(
     tmp_path: Path,
 ) -> None:
     """Test complete workflow with all entities."""
-    entries: list[object] = [object(), object()]
+    entries: FlextTypes.Core.List = [object(), object()]
 
     monkeypatch.setattr(
         svc.client,
@@ -89,7 +88,7 @@ def test_run_data_quality_assessment(
     tmp_path: Path,
 ) -> None:
     """Test data quality assessment."""
-    entries: list[object] = [object()]
+    entries: FlextTypes.Core.List = [object()]
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
