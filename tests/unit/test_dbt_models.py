@@ -4,7 +4,6 @@ This module tests the DBT models functionality of flext-dbt-ldif.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations

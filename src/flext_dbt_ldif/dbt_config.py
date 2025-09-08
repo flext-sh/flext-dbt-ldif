@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextConfig, FlextLogger
+from flext_core import FlextConfig, FlextLogger, FlextTypes
 from flext_ldif import FlextLDIFConfig
 from flext_meltano.config import FlextMeltanoConfig
 
@@ -40,14 +40,14 @@ class FlextDbtLdifConfig(FlextConfig):
     dbt_log_level: str = "info"
 
     # LDIF-specific DBT Settings
-    ldif_schema_mapping: ClassVar[dict[str, str]] = {
+    ldif_schema_mapping: ClassVar[FlextTypes.Core.Headers] = {
         "persons": "stg_persons",
         "groups": "stg_groups",
         "org_units": "stg_org_units",
         "domains": "stg_domains",
     }
 
-    ldif_attribute_mapping: ClassVar[dict[str, str]] = {
+    ldif_attribute_mapping: ClassVar[FlextTypes.Core.Headers] = {
         "cn": "common_name",
         "uid": "user_id",
         "mail": "email",
@@ -59,12 +59,12 @@ class FlextDbtLdifConfig(FlextConfig):
 
     # Data Quality Settings
     min_quality_threshold: float = 0.8
-    required_attributes: ClassVar[list[str]] = ["dn", "objectClass"]
+    required_attributes: ClassVar[FlextTypes.Core.StringList] = ["dn", "objectClass"]
     validate_dns: bool = True
     max_dn_depth: int = 10
 
     # LDIF Entry Type Mapping
-    entry_type_mapping: ClassVar[dict[str, str]] = {
+    entry_type_mapping: ClassVar[FlextTypes.Core.Headers] = {
         "person": "persons",
         "organizationalPerson": "persons",
         "inetOrgPerson": "persons",
@@ -97,7 +97,7 @@ class FlextDbtLdifConfig(FlextConfig):
             dbt_profiles_dir=self.dbt_profiles_dir,
         )
 
-    def get_ldif_quality_config(self) -> dict[str, object]:
+    def get_ldif_quality_config(self) -> FlextTypes.Core.Dict:
         """Get data quality configuration for LDIF validation."""
         return {
             "min_quality_threshold": self.min_quality_threshold,
@@ -115,6 +115,6 @@ class FlextDbtLdifConfig(FlextConfig):
         return self.ldif_schema_mapping.get(entry_type)
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifConfig",
 ]

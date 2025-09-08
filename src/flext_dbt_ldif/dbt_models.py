@@ -12,7 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLDIFAPI
 from flext_ldif.models import FlextLDIFEntry
 
@@ -29,20 +29,20 @@ class FlextLDIFDbtModel:
         self,
         name: str,
         description: str,
-        columns: list[dict[str, object]],
+        columns: list[FlextTypes.Core.Dict],
         *,
         materialization: str = "view",
-        meta: dict[str, object] | None = None,
+        meta: FlextTypes.Core.Dict | None = None,
     ) -> None:
         """Initialize the DBT model."""
         self.name = name
         self.description = description
         self.materialization = materialization
         self.columns = columns
-        self.tests: list[dict[str, object]] = []
+        self.tests: list[FlextTypes.Core.Dict] = []
         self.meta = meta or {}
 
-    def to_yaml_config(self) -> dict[str, object]:
+    def to_yaml_config(self) -> FlextTypes.Core.Dict:
         """Convert to DBT model YAML configuration."""
         return {
             "name": self.name,
@@ -83,7 +83,7 @@ class FlextDbtLdifModelGenerator:
     def analyze_ldif_schema(
         self,
         entries: list[FlextLDIFEntry],
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Analyze LDIF entries to determine schema structure.
 
         Args:
@@ -97,20 +97,20 @@ class FlextDbtLdifModelGenerator:
             # Use flext-ldif API for entry statistics (analyze_schema not available)
             stats_result = self._ldif_api.get_entry_statistics(entries)
             if not stats_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Schema analysis failed: {stats_result.error}",
                 )
-            # Upcast to dict[str, object] for result composition
-            base_stats: dict[str, int] = stats_result.value or {}
-            schema_info: dict[str, object] = dict(base_stats.items())
+            # Upcast to FlextTypes.Core.Dict for result composition
+            base_stats: FlextTypes.Core.CounterDict = stats_result.value or {}
+            schema_info: FlextTypes.Core.Dict = dict(base_stats.items())
             # Add basic schema analysis info
             schema_info["total_entries"] = len(entries)
             schema_info["has_entries"] = len(entries) > 0
             logger.info("LDIF schema analysis completed")
-            return FlextResult[dict[str, object]].ok(schema_info)
+            return FlextResult[FlextTypes.Core.Dict].ok(schema_info)
         except Exception as e:
             logger.exception("Error analyzing LDIF schema")
-            return FlextResult[dict[str, object]].fail(f"Schema analysis error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(f"Schema analysis error: {e}")
 
     def generate_staging_models(
         self,
@@ -293,7 +293,7 @@ class FlextDbtLdifModelGenerator:
         models: list[FlextLDIFDbtModel],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         """Write generated DBT models to disk.
 
         Args:
@@ -325,7 +325,7 @@ class FlextDbtLdifModelGenerator:
                 yaml_file.write_text(yaml_content)
                 written_files.append(str(yaml_file))
             logger.info("Successfully wrote %d files", len(written_files))
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     "written_files": written_files,
                     "models_count": len(models),
@@ -334,14 +334,14 @@ class FlextDbtLdifModelGenerator:
             )
         except Exception as e:
             logger.exception("Error writing models to disk")
-            return FlextResult[dict[str, object]].fail(f"Model writing error: {e}")
+            return FlextResult[FlextTypes.Core.Dict].fail(f"Model writing error: {e}")
 
     def _generate_staging_model_for_type(
         self,
         entry_type: str,
         schema_name: str,
         entries: list[FlextLDIFEntry],
-        schema_info: dict[str, object],
+        schema_info: FlextTypes.Core.Dict,
     ) -> FlextLDIFDbtModel:
         """Generate a staging model for a specific entry type."""
         # Use entries and schema_info minimally to avoid unused-args and add value
@@ -351,7 +351,7 @@ class FlextDbtLdifModelGenerator:
         )
         _ = declared_total  # Value can be used by future logic; keep assignment for clarity
         # Create standard LDIF columns
-        common_attrs: list[dict[str, object]] = [
+        common_attrs: list[FlextTypes.Core.Dict] = [
             {
                 "name": "dn",
                 "type": "varchar",
@@ -378,7 +378,7 @@ class FlextDbtLdifModelGenerator:
         # Add mapped attributes from config
         for ldif_attr, mapped_attr in self.config.ldif_attribute_mapping.items():
             if ldif_attr != "dn":  # Already added above
-                column_def: dict[str, object] = {
+                column_def: FlextTypes.Core.Dict = {
                     "name": mapped_attr,
                     "type": "varchar",  # Default type
                     "description": f"LDIF {ldif_attr} attribute",
@@ -400,7 +400,7 @@ class FlextDbtLdifModelGenerator:
             },
         )
 
-    def _determine_column_type(self, attr_info: dict[str, object]) -> str:
+    def _determine_column_type(self, attr_info: FlextTypes.Core.Dict) -> str:
         """Determine appropriate column type based on attribute analysis."""
         # Simple type inference based on attribute analysis
         max_varchar_length = 255
@@ -550,14 +550,14 @@ class FlextDbtLdifModelGenerator:
             "select 1 as placeholder\n"
         )
 
-    def _generate_basic_yaml(self, yaml_config: dict[str, object]) -> str:
+    def _generate_basic_yaml(self, yaml_config: FlextTypes.Core.Dict) -> str:
         """Generate basic YAML content for DBT model."""
         # Create schema.yml content
         schema_content = {"version": 2, "models": [yaml_config]}
         return yaml.dump(schema_content, default_flow_style=False, indent=2)
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifModelGenerator",
     "FlextLDIFDbtModel",
 ]

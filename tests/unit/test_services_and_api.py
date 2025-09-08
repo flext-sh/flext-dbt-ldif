@@ -4,7 +4,6 @@ This module tests the services and simple API functionality of flext-dbt-ldif.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
@@ -13,7 +12,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 from flext_dbt_ldif import (
     FlextDbtLdifService,
@@ -58,17 +57,17 @@ def test_generate_and_write_models_ok(
 ) -> None:
     """Test generating and writing models."""
 
-    def _gen_stg(_entries: list[object]) -> FlextResult[list[object]]:
+    def _gen_stg(_entries: FlextTypes.Core.List) -> FlextResult[FlextTypes.Core.List]:
         return FlextResult[None].ok([cast("object", object())])
 
-    def _gen_an(_models: list[object]) -> FlextResult[list[object]]:
+    def _gen_an(_models: FlextTypes.Core.List) -> FlextResult[FlextTypes.Core.List]:
         return FlextResult[None].ok([cast("object", object())])
 
     def _write(
-        _models: list[object],
+        _models: FlextTypes.Core.List,
         *,
         _overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok(
             {
                 "written_files": ["f.sql", "f.yml"],
@@ -80,7 +79,7 @@ def test_generate_and_write_models_ok(
     monkeypatch.setattr(service.model_generator, "generate_analytics_models", _gen_an)
     monkeypatch.setattr(service.model_generator, "write_models_to_disk", _write)
 
-    result = service.generate_and_write_models(cast("list[object]", []))
+    result = service.generate_and_write_models(cast("FlextTypes.Core.List", []))
     assert result.success
     assert isinstance(result.value, dict)
 
@@ -94,8 +93,8 @@ def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
         *,
         _generate_models: bool = True,
         _run_transformations: bool = False,
-        _model_names: list[str] | None = None,
-    ) -> FlextResult[dict[str, object]]:
+        _model_names: FlextTypes.Core.StringList | None = None,
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok({"ok": True})
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
@@ -106,7 +105,7 @@ def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     def _run_quality(
         _self: FlextDbtLdifService,
         _ldif_file: Path | str,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok({"ok": True})
 
     monkeypatch.setattr(
@@ -119,15 +118,15 @@ def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     def _parse_val(
         _self: FlextDbtLdifService,
         _ldif_file: Path | str,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok({"entries": []})
 
     def _gen_models(
         _self: FlextDbtLdifService,
-        _entries: list[object],
+        _entries: FlextTypes.Core.List,
         *,
         _overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok({"total_models": 0})
 
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)

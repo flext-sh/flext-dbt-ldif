@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 from .dbt_services import FlextDbtLdifService
 
@@ -24,7 +24,7 @@ def process_ldif_file(
     *,
     generate_models: bool = True,
     run_transformations: bool = False,
-) -> FlextResult[dict[str, object]]:
+) -> FlextResult[FlextTypes.Core.Dict]:
     """Simple function to process an LDIF file with DBT.
 
     Args:
@@ -51,7 +51,7 @@ def process_ldif_file(
 
 def validate_ldif_quality(
     ldif_file: Path | str,
-) -> FlextResult[dict[str, object]]:
+) -> FlextResult[FlextTypes.Core.Dict]:
     """Simple function to validate LDIF data quality.
 
     Args:
@@ -72,7 +72,7 @@ def generate_ldif_models(
     project_dir: Path | str | None = None,
     *,
     overwrite: bool = False,
-) -> FlextResult[dict[str, object]]:
+) -> FlextResult[FlextTypes.Core.Dict]:
     """Simple function to generate DBT models from LDIF.
 
     Args:
@@ -97,11 +97,11 @@ def generate_ldif_models(
     parse_data = parse_result.value or {}
     entries = parse_data.get("entries", [])
     if not isinstance(entries, list):
-        return FlextResult[dict[str, object]].fail("Invalid entries data format")
+        return FlextResult[FlextTypes.Core.Dict].fail("Invalid entries data format")
     return service.generate_and_write_models(entries, overwrite=overwrite)
 
 
-__all__: list[str] = [
+__all__: FlextTypes.Core.StringList = [
     "generate_ldif_models",
     "process_ldif_file",
     "validate_ldif_quality",
