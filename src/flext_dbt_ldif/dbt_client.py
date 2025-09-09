@@ -13,7 +13,7 @@ from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLDIFAPI
-from flext_ldif.models import FlextLDIFEntry
+from flext_ldif.models import FlextLDIFModels
 from flext_meltano import create_dbt_hub
 from flext_meltano.dbt_hub import FlextDbtHub
 
@@ -56,7 +56,7 @@ class FlextDbtLdifClient:
     def parse_ldif_file(
         self,
         file_path: Path | str | None = None,
-    ) -> FlextResult[list[FlextLDIFEntry]]:
+    ) -> FlextResult[list[FlextLDIFModels.Entry]]:
         """Parse LDIF file for DBT processing.
 
         Args:
@@ -78,19 +78,19 @@ class FlextDbtLdifClient:
                 logger.info("Successfully parsed %d LDIF entries", len(entries))
             else:
                 logger.error("LDIF parsing failed: %s", result.error)
-                return FlextResult[list[FlextLDIFEntry]].fail(
+                return FlextResult[list[FlextLDIFModels.Entry]].fail(
                     f"LDIF parsing failed: {result.error}",
                 )
             return result
         except Exception as e:
             logger.exception("Unexpected error during LDIF parsing")
-            return FlextResult[list[FlextLDIFEntry]].fail(
+            return FlextResult[list[FlextLDIFModels.Entry]].fail(
                 f"LDIF parsing error: {e}",
             )
 
     def validate_ldif_data(
         self,
-        entries: list[FlextLDIFEntry],
+        entries: list[FlextLDIFModels.Entry],
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Validate LDIF data quality for DBT processing.
 
@@ -141,7 +141,7 @@ class FlextDbtLdifClient:
 
     def transform_with_dbt(
         self,
-        entries: list[FlextLDIFEntry],
+        entries: list[FlextLDIFModels.Entry],
         model_names: FlextTypes.Core.StringList | None = None,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Transform LDIF data using DBT models.
@@ -235,7 +235,7 @@ class FlextDbtLdifClient:
 
     def _prepare_ldif_data_for_dbt(
         self,
-        entries: list[FlextLDIFEntry],
+        entries: list[FlextLDIFModels.Entry],
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Prepare LDIF entries for DBT processing using flext-ldif API.
 

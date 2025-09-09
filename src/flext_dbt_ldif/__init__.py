@@ -6,13 +6,12 @@ SPDX-License-Identifier: MIT
 
 import importlib.metadata
 
-from flext_core import FlextResult
+from flext_core import FlextResult, FlextTypes
 
 from flext_ldif import (
     FlextLDIFAPI,
-    flext_ldif_parse,
-    flext_ldif_validate,
-    flext_ldif_write,
+    FlextLDIFModels,
+    FlextLDIFServices,
 )
 
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
@@ -43,6 +42,27 @@ from flext_dbt_ldif.simple_api import (
 FlextLDIFParser = FlextLDIFAPI
 FlextLDIFValidator = FlextLDIFAPI
 FlextLDIFWriter = FlextLDIFAPI
+
+# Function aliases using available API
+def flext_ldif_parse(content):
+    """Parse LDIF content using FlextLDIFAPI."""
+    api = FlextLDIFAPI()
+    return api.parse_string(content)
+
+def flext_ldif_validate(content):
+    """Validate LDIF content using FlextLDIFAPI."""
+    api = FlextLDIFAPI()
+    parse_result = api.parse_string(content)
+    if parse_result.is_failure:
+        return parse_result
+    return api.validate_entries(parse_result.unwrap())
+
+def flext_ldif_write(entries):
+    """Write LDIF entries using FlextLDIFAPI."""
+    api = FlextLDIFAPI()
+    return api.write_entries(entries)
+
+# Additional compatibility aliases
 flext_ldif_format_entry = flext_ldif_write
 flext_ldif_parse_content = flext_ldif_parse
 flext_ldif_validate_syntax = flext_ldif_validate
