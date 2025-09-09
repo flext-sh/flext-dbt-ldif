@@ -43,11 +43,13 @@ FlextLDIFParser = FlextLDIFAPI
 FlextLDIFValidator = FlextLDIFAPI
 FlextLDIFWriter = FlextLDIFAPI
 
+
 # Function aliases using available API
 def flext_ldif_parse(content):
     """Parse LDIF content using FlextLDIFAPI."""
     api = FlextLDIFAPI()
     return api.parse_string(content)
+
 
 def flext_ldif_validate(content):
     """Validate LDIF content using FlextLDIFAPI."""
@@ -57,10 +59,12 @@ def flext_ldif_validate(content):
         return parse_result
     return api.validate_entries(parse_result.unwrap())
 
+
 def flext_ldif_write(entries):
     """Write LDIF entries using FlextLDIFAPI."""
     api = FlextLDIFAPI()
     return api.write_entries(entries)
+
 
 # Additional compatibility aliases
 flext_ldif_format_entry = flext_ldif_write
