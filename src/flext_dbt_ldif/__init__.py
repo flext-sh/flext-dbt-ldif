@@ -7,31 +7,26 @@ SPDX-License-Identifier: MIT
 import importlib.metadata
 
 from flext_core import FlextResult, FlextTypes
-
 from flext_ldif import (
     FlextLDIFAPI,
-    FlextLDIFModels,
-    FlextLDIFServices,
 )
 
+from flext_dbt_ldif.core import DBTModelGenerator, LDIFAnalytics
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_exceptions import (
-    FlextDbtLdifError,
-    FlextDbtLdifValidationError,
-    FlextDbtLdifProcessingError,
     FlextDbtLdifConnectionError,
+    FlextDbtLdifError,
     FlextDbtLdifModelError,
+    FlextDbtLdifProcessingError,
     FlextDbtLdifTransformationError,
+    FlextDbtLdifValidationError,
 )
-from flext_dbt_ldif.models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 from flext_dbt_ldif.dbt_services import (
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
 )
-
-from flext_dbt_ldif.core import DBTModelGenerator, LDIFAnalytics
-
+from flext_dbt_ldif.models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 from flext_dbt_ldif.simple_api import (
     generate_ldif_models,
     process_ldif_file,
@@ -117,36 +112,36 @@ class DimensionModel:
 
 
 __all__: FlextTypes.Core.StringList = [
-    # Core DBT Pattern Components
-    "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
-    "FlextDbtLdifConfig",  # Configuration management
-    "FlextDbtLdifModelGenerator",  # Programmatic model generation
-    "FlextDbtLdifService",  # High-level workflow orchestration
-    "FlextDbtLdifWorkflowManager",  # Batch processing workflows
-    "FlextLDIFDbtModel",  # DBT model value object
-    # Exception Hierarchy
-    "FlextDbtLdifError",  # Base exception
-    "FlextDbtLdifValidationError",  # Validation errors
-    "FlextDbtLdifProcessingError",  # Processing errors
-    "FlextDbtLdifConnectionError",  # Connection errors
-    "FlextDbtLdifModelError",  # Model-specific errors
-    "FlextDbtLdifTransformationError",  # Transformation errors
-    "generate_ldif_models",
-    "process_ldif_file",
-    "validate_ldif_quality",
-    # Legacy Core Components (backward compatibility)
-    "DBTModelGenerator",  # Legacy from core.py
-    "LDIFAnalytics",  # Legacy analytics class
-    # Foundation Components (from flext-core and flext-ldif)
-    "FlextResult",  # FlextResult pattern
-    "FlextLDIFAPI",  # LDIF API integration
     # Convenience Classes and Aliases
     "AnalyticsModel",  # Analytics model functionality
     "ChangeTracker",  # Change tracking functionality
+    # Legacy Core Components (backward compatibility)
+    "DBTModelGenerator",  # Legacy from core.py
     "DimensionModel",  # Dimension model functionality
+    # Core DBT Pattern Components
+    "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
+    "FlextDbtLdifConfig",  # Configuration management
+    "FlextDbtLdifConnectionError",  # Connection errors
+    # Exception Hierarchy
+    "FlextDbtLdifError",  # Base exception
+    "FlextDbtLdifModelError",  # Model-specific errors
+    "FlextDbtLdifModelGenerator",  # Programmatic model generation
+    "FlextDbtLdifProcessingError",  # Processing errors
+    "FlextDbtLdifService",  # High-level workflow orchestration
+    "FlextDbtLdifTransformationError",  # Transformation errors
+    "FlextDbtLdifValidationError",  # Validation errors
+    "FlextDbtLdifWorkflowManager",  # Batch processing workflows
+    "FlextLDIFAPI",  # LDIF API integration
+    "FlextLDIFDbtModel",  # DBT model value object
+    # Foundation Components (from flext-core and flext-ldif)
+    "FlextResult",  # FlextResult pattern
+    "LDIFAnalytics",  # Legacy analytics class
     "LDIFAnalyzer",
     "LDIFInsights",  # LDIF insights functionality
     "ModelGenerator",
+    # Version Information
+    "__version__",
+    "__version_info__",
     # Compatibility Functions (backward compatibility)
     "flext_ldif_format_entry",
     "flext_ldif_parse",  # LDIF parsing function
@@ -154,7 +149,7 @@ __all__: FlextTypes.Core.StringList = [
     "flext_ldif_validate",  # LDIF validation function
     "flext_ldif_validate_syntax",
     "flext_ldif_write",  # LDIF writing function
-    # Version Information
-    "__version__",
-    "__version_info__",
+    "generate_ldif_models",
+    "process_ldif_file",
+    "validate_ldif_quality",
 ]
