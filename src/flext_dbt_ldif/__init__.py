@@ -79,8 +79,8 @@ except importlib.metadata.PackageNotFoundError:
 __version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
 
 # Create convenience aliases for common usage patterns
-LDIFAnalyzer = LDIFAnalytics  # Alias for backward compatibility
-ModelGenerator = FlextDbtLdifModelGenerator  # Alias for convenience
+LDIFAnalyzer = LDIFAnalytics
+ModelGenerator = FlextDbtLdifModelGenerator
 
 
 # Additional convenience classes
@@ -131,10 +131,9 @@ __all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifConnectionError",  # Connection errors
     "FlextDbtLdifModelError",  # Model-specific errors
     "FlextDbtLdifTransformationError",  # Transformation errors
-    # Simple API (convenience functions)
-    "generate_ldif_models",  # Simple model generation
-    "process_ldif_file",  # Simple file processing
-    "validate_ldif_quality",  # Simple quality validation
+    "generate_ldif_models",
+    "process_ldif_file",
+    "validate_ldif_quality",
     # Legacy Core Components (backward compatibility)
     "DBTModelGenerator",  # Legacy from core.py
     "LDIFAnalytics",  # Legacy analytics class
@@ -145,15 +144,15 @@ __all__: FlextTypes.Core.StringList = [
     "AnalyticsModel",  # Analytics model functionality
     "ChangeTracker",  # Change tracking functionality
     "DimensionModel",  # Dimension model functionality
-    "LDIFAnalyzer",  # Alias for LDIFAnalytics
+    "LDIFAnalyzer",
     "LDIFInsights",  # LDIF insights functionality
-    "ModelGenerator",  # Alias for FlextDbtLdifModelGenerator
+    "ModelGenerator",
     # Compatibility Functions (backward compatibility)
-    "flext_ldif_format_entry",  # Alias for flext_ldif_write
+    "flext_ldif_format_entry",
     "flext_ldif_parse",  # LDIF parsing function
-    "flext_ldif_parse_content",  # Alias for flext_ldif_parse
+    "flext_ldif_parse_content",
     "flext_ldif_validate",  # LDIF validation function
-    "flext_ldif_validate_syntax",  # Alias for flext_ldif_validate
+    "flext_ldif_validate_syntax",
     "flext_ldif_write",  # LDIF writing function
     # Version Information
     "__version__",

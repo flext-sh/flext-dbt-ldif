@@ -34,8 +34,8 @@ class FlextDbtLdifCliService:
                 "Programmatic dbt model generation",
                 "LDIF data processing and analytics",
                 "Advanced SQL pattern generation",
-                "PostgreSQL optimized transformations"
-            ]
+                "PostgreSQL optimized transformations",
+            ],
         }
 
         # Use flext-cli to format and display data
@@ -55,7 +55,9 @@ class FlextDbtLdifCliService:
         """Display generate message using flext-cli."""
         try:
             # Try flext-cli formatting
-            self._cli_api.format_data({"message": "Model generation functionality coming soon!"})
+            self._cli_api.format_data(
+                {"message": "Model generation functionality coming soon!"}
+            )
             return FlextResult[str].ok("Generate message displayed")
         except Exception:
             # Fallback display
@@ -65,7 +67,9 @@ class FlextDbtLdifCliService:
         """Display validate message using flext-cli."""
         try:
             # Try flext-cli formatting
-            self._cli_api.format_data({"message": "Model validation functionality coming soon!"})
+            self._cli_api.format_data(
+                {"message": "Model validation functionality coming soon!"}
+            )
             return FlextResult[str].ok("Validate message displayed")
         except Exception:
             # Fallback display
@@ -99,7 +103,6 @@ def validate() -> None:
 def main() -> NoReturn:
     """Main CLI entry point for flext-dbt-ldif."""
     try:
-        # Simple command dispatching without Click
         import sys
 
         if len(sys.argv) > 1:

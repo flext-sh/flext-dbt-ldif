@@ -121,7 +121,6 @@ class LDIFAnalytics:
                 attributes = data.get("attributes", {})
                 changetype = data.get("changetype")
 
-                # Type guard for attributes
                 formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
                 if isinstance(attributes, dict) and attributes:
                     # Ensure attributes are in the right format (dict[str, FlextTypes.Core.StringList])
@@ -144,7 +143,6 @@ class LDIFAnalytics:
                     logger.warning("Invalid attributes type or empty, skipping entry")
                     continue
 
-                # Type guard for changetype
                 changetype_str: str | None = None
                 if changetype is not None and isinstance(changetype, str):
                     changetype_str = changetype
