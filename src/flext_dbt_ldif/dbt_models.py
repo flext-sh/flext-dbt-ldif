@@ -402,7 +402,6 @@ class FlextDbtLdifModelGenerator:
 
     def _determine_column_type(self, attr_info: FlextTypes.Core.Dict) -> str:
         """Determine appropriate column type based on attribute analysis."""
-        # Simple type inference based on attribute analysis
         max_varchar_length = 255
         if attr_info.get("is_numeric"):
             return "integer"

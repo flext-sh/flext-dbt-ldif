@@ -47,7 +47,7 @@ def test_api_imports() -> None:
     assert callable(flext_ldif_parse)
     assert callable(flext_ldif_validate)
     assert callable(flext_ldif_write)
-    # Types are exposed
+
     assert FlextResult is not None
     assert FlextLDIFAPI is not None
     assert ModelGenerator is not None
