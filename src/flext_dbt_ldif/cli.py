@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import sys
 from typing import NoReturn
 
 from flext_cli import FlextCliApi, FlextCliConfig
@@ -103,8 +104,6 @@ def validate() -> None:
 def main() -> NoReturn:
     """Main CLI entry point for flext-dbt-ldif."""
     try:
-        import sys
-
         if len(sys.argv) > 1:
             command = sys.argv[1]
             if command == "info":
@@ -122,7 +121,7 @@ def main() -> NoReturn:
         logger.info("Interrupted by user")
         sys.exit(1)
     except (OSError, RuntimeError, ValueError) as e:
-        logger.exception(f"CLI error: {e}")
+        logger.exception("CLI error: %s", e)
         sys.exit(1)
 
 

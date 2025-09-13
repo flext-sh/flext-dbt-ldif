@@ -1,6 +1,4 @@
-"""Test exceptions functionality.
-
-This module tests the exceptions functionality of flext-dbt-ldif.
+"""Test exceptions for FLEXT DBT LDIF.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT

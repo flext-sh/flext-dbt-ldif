@@ -1,6 +1,4 @@
-"""Test DBT models functionality.
-
-This module tests the DBT models functionality of flext-dbt-ldif.
+"""Test DBT models for FLEXT DBT LDIF.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT

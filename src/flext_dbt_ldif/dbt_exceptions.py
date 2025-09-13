@@ -1,6 +1,5 @@
-"""LDIF DBT Exception Hierarchy.
+"""FLEXT DBT LDIF Exceptions Module.
 
-Exception hierarchy following FLEXT patterns using factory pattern from flext-core.
 Eliminates code duplication by using create_module_exception_classes() factory.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
