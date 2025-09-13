@@ -1,12 +1,3 @@
-"""DBT client for LDIF operations.
-
-Provides high-level interface for DBT LDIF transformations.
-Integrates flext-ldif and flext-meltano for complete data pipeline operations.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
-
 from __future__ import annotations
 
 from pathlib import Path

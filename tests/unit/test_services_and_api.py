@@ -1,6 +1,4 @@
-"""Test services and simple API functionality.
-
-This module tests the services and simple API functionality of flext-dbt-ldif.
+"""Test services and API for FLEXT DBT LDIF.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT

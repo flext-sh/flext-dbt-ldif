@@ -1,9 +1,5 @@
-"""DBT configuration for LDIF transformations.
+"""FLEXT DBT LDIF Configuration Module.
 
-Provides configuration management for DBT LDIF projects using flext-core patterns.
-Integrates with flext-ldif for data processing and flext-meltano for DBT execution.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 

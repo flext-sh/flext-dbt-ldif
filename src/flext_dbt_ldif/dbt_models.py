@@ -1,12 +1,3 @@
-"""DBT models for LDIF transformations.
-
-Provides programmatic generation and management of DBT models for LDIF data.
-Uses flext-ldif for data analysis and flext-meltano for DBT model patterns.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
-
 from __future__ import annotations
 
 from pathlib import Path

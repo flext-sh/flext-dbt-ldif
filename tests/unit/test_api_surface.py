@@ -1,13 +1,14 @@
-"""Test API surface of flext-dbt-ldif.
+"""Test API surface for FLEXT DBT LDIF.
 
-This module tests the API surface of flext-dbt-ldif to ensure all
-public functions and classes are properly exposed and callable.
+Public functions and classes are properly exposed and callable.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations
+
+from flext_core import FlextResult
 
 from flext_dbt_ldif import (
     AnalyticsModel,
@@ -19,7 +20,6 @@ from flext_dbt_ldif import (
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
     FlextLDIFAPI,
-    FlextResult,
     LDIFAnalyzer,
     LDIFInsights,
     ModelGenerator,

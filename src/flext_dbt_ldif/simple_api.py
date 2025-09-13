@@ -1,7 +1,4 @@
-"""Simple API for LDIF DBT operations.
-
-Provides simplified interface for common LDIF-to-DBT operations.
-Follows the same pattern as flext-dbt-ldap for consistency.
+"""FLEXT DBT LDIF Simple API Module.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -13,7 +10,7 @@ from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
 
-from .dbt_services import FlextDbtLdifService
+from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 
 logger = FlextLogger(__name__)
 

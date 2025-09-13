@@ -18,318 +18,332 @@ HIGH_VALIDITY_THRESHOLD = 0.95
 MEDIUM_VALIDITY_THRESHOLD = 0.8
 
 
-class DBTModelGenerator:
-    """Generates dbt models programmatically for LDIF analytics."""
+class FlextDbtLdifCore:
+    """Unified DBT LDIF core functionality with nested service classes."""
 
-    def __init__(self, project_dir: Path | None = None) -> None:
-        """Initialize the model generator.
+    class ModelGenerator:
+        """Generates dbt models programmatically for LDIF analytics."""
 
-        Args:
-            project_dir: Path to the dbt project directory (defaults to current)
+        def __init__(self, project_dir: Path | None = None) -> None:
+            """Initialize the model generator.
 
-        Returns:
-            object: Description of return value.
+            Args:
+                project_dir: Path to the dbt project directory (defaults to current)
 
+            Returns:
+                object: Description of return value.
+
+            """
+            self.project_dir = project_dir if project_dir is not None else Path.cwd()
+            self.models_dir = self.project_dir / "models"
+
+        def generate_staging_models(self) -> list[FlextTypes.Core.Dict]:
+            """Generate staging layer models for LDIF data.
+
+            Returns:
+                List of generated model configurations
+
+            """
+            logger.info("Generating staging models for LDIF data")
+
+            # This is where the sophisticated model generation logic would go
+            # Based on the manifest.json analysis, we know these models exist:
+            return [
+                {
+                    "name": "stg_ldif_entries",
+                    "description": "Staging model for LDIF entries with "
+                    "data quality checks",
+                    "materialization": "view",
+                    "columns": [
+                        {"name": "dn", "type": "varchar", "tests": ["not_null", "unique"]},
+                        {"name": "object_class", "type": "varchar", "tests": ["not_null"]},
+                        {"name": "is_valid_dn", "type": "boolean"},
+                        {"name": "dn_depth", "type": "integer"},
+                        {"name": "entry_type", "type": "varchar"},
+                        {"name": "primary_object_class", "type": "varchar"},
+                        {"name": "processed_at", "type": "timestamp"},
+                    ],
+                },
+            ]
+
+        def generate_analytics_models(self) -> list[FlextTypes.Core.Dict]:
+            """Generate analytics layer models.
+
+            Returns:
+                List of analytics model configurations
+
+            """
+            logger.info("Generating analytics models")
+
+            return [
+                {
+                    "name": "analytics_ldif_insights",
+                    "description": "Advanced analytics model with "
+                    "sophisticated SQL patterns",
+                    "materialization": "table",
+                    "features": [
+                        "time_series_analysis",
+                        "anomaly_detection",
+                        "statistical_methods",
+                        "moving_averages",
+                        "risk_assessment",
+                    ],
+                },
+            ]
+
+    class Analytics:
+        """LDIF-specific analytics functionality using flext-ldif infrastructure.
+
+        This class eliminates code duplication by delegating ALL analytics operations
+        to the FlextLDIFAPI, maintaining business rule compliance.
         """
-        self.project_dir = project_dir if project_dir is not None else Path.cwd()
-        self.models_dir = self.project_dir / "models"
 
-    def generate_staging_models(self) -> list[FlextTypes.Core.Dict]:
-        """Generate staging layer models for LDIF data.
+        def __init__(self) -> None:
+            """Initialize analytics with flext-ldif API."""
+            self._ldif_api = FlextLDIFAPI()
 
-        Returns:
-            List of generated model configurations
+        def _convert_dict_to_entries(
+            self,
+            ldif_data: list[FlextTypes.Core.Dict],
+        ) -> list[FlextLDIFEntry]:
+            """Convert dictionary data to FlextLDIFEntry objects using flext-ldif factory.
 
-        """
-        logger.info("Generating staging models for LDIF data")
+            Args:
+                ldif_data: List of LDIF entry dictionaries
 
-        # This is where the sophisticated model generation logic would go
-        # Based on the manifest.json analysis, we know these models exist:
-        return [
-            {
-                "name": "stg_ldif_entries",
-                "description": "Staging model for LDIF entries with "
-                "data quality checks",
-                "materialization": "view",
-                "columns": [
-                    {"name": "dn", "type": "varchar", "tests": ["not_null", "unique"]},
-                    {"name": "object_class", "type": "varchar", "tests": ["not_null"]},
-                    {"name": "is_valid_dn", "type": "boolean"},
-                    {"name": "dn_depth", "type": "integer"},
-                    {"name": "entry_type", "type": "varchar"},
-                    {"name": "primary_object_class", "type": "varchar"},
-                    {"name": "processed_at", "type": "timestamp"},
-                ],
-            },
-        ]
+            Returns:
+                List of valid FlextLDIFEntry objects
 
-    def generate_analytics_models(self) -> list[FlextTypes.Core.Dict]:
-        """Generate analytics layer models.
+            """
+            entries: list[FlextLDIFEntry] = []
+            for data in ldif_data:
+                try:
+                    # Extract required data from dict with proper type checking
+                    dn = str(data.get("dn", ""))
+                    attributes = data.get("attributes", {})
+                    changetype = data.get("changetype")
 
-        Returns:
-            List of analytics model configurations
+                    formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
+                    if isinstance(attributes, dict) and attributes:
+                        # Ensure attributes are in the right format (dict[str, FlextTypes.Core.StringList])
+                        for key, value in attributes.items():
+                            if isinstance(value, list):
+                                formatted_attrs[str(key)] = [str(v) for v in value]
+                            else:
+                                formatted_attrs[str(key)] = [str(value)]
+                    else:
+                        # Build attributes from top-level keys when 'attributes' is absent
+                        for key, value in data.items():
+                            if key in {"dn", "changetype", "attributes"}:
+                                continue
+                            if isinstance(value, list):
+                                formatted_attrs[str(key)] = [str(v) for v in value]
+                            else:
+                                formatted_attrs[str(key)] = [str(value)]
 
-        """
-        logger.info("Generating analytics models")
+                    if not formatted_attrs:
+                        logger.warning("Invalid attributes type or empty, skipping entry")
+                        continue
 
-        return [
-            {
-                "name": "analytics_ldif_insights",
-                "description": "Advanced analytics model with "
-                "sophisticated SQL patterns",
-                "materialization": "table",
-                "features": [
-                    "time_series_analysis",
-                    "anomaly_detection",
-                    "statistical_methods",
-                    "moving_averages",
-                    "risk_assessment",
-                ],
-            },
-        ]
+                    changetype_str: str | None = None
+                    if changetype is not None and isinstance(changetype, str):
+                        changetype_str = changetype
 
-
-class LDIFAnalytics:
-    """LDIF-specific analytics functionality using flext-ldif infrastructure.
-
-    This class eliminates code duplication by delegating ALL analytics operations
-    to the FlextLDIFAPI, maintaining business rule compliance.
-    """
-
-    def __init__(self) -> None:
-        """Initialize analytics with flext-ldif API."""
-        self._ldif_api = FlextLDIFAPI()
-
-    def _convert_dict_to_entries(
-        self,
-        ldif_data: list[FlextTypes.Core.Dict],
-    ) -> list[FlextLDIFEntry]:
-        """Convert dictionary data to FlextLDIFEntry objects using flext-ldif factory.
-
-        Args:
-            ldif_data: List of LDIF entry dictionaries
-
-        Returns:
-            List of valid FlextLDIFEntry objects
-
-        """
-        entries: list[FlextLDIFEntry] = []
-        for data in ldif_data:
-            try:
-                # Extract required data from dict with proper type checking
-                dn = str(data.get("dn", ""))
-                attributes = data.get("attributes", {})
-                changetype = data.get("changetype")
-
-                formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
-                if isinstance(attributes, dict) and attributes:
-                    # Ensure attributes are in the right format (dict[str, FlextTypes.Core.StringList])
-                    for key, value in attributes.items():
-                        if isinstance(value, list):
-                            formatted_attrs[str(key)] = [str(v) for v in value]
-                        else:
-                            formatted_attrs[str(key)] = [str(value)]
-                else:
-                    # Build attributes from top-level keys when 'attributes' is absent
-                    for key, value in data.items():
-                        if key in {"dn", "changetype", "attributes"}:
-                            continue
-                        if isinstance(value, list):
-                            formatted_attrs[str(key)] = [str(v) for v in value]
-                        else:
-                            formatted_attrs[str(key)] = [str(value)]
-
-                if not formatted_attrs:
-                    logger.warning("Invalid attributes type or empty, skipping entry")
-                    continue
-
-                changetype_str: str | None = None
-                if changetype is not None and isinstance(changetype, str):
-                    changetype_str = changetype
-
-                # Use flext-ldif factory for entry creation
-                entry_result = FlextLDIFFactory.create_entry(
-                    dn=dn,
-                    attributes=formatted_attrs,
-                    changetype=changetype_str,
-                )
-
-                if entry_result.success and entry_result.value:
-                    entries.append(entry_result.value)
-                else:
-                    logger.warning("Failed to create entry: %s", entry_result.error)
-
-            except Exception as e:
-                logger.warning("Skipping invalid entry: %s", e)
-
-        return entries
-
-    def analyze_entry_patterns(
-        self,
-        ldif_data: list[FlextTypes.Core.Dict],
-    ) -> FlextResult[FlextTypes.Core.Dict]:
-        """Analyze patterns in LDIF entries using flext-ldif infrastructure.
-
-        Args:
-            ldif_data: List of LDIF entry dictionaries
-
-        Returns:
-            FlextResult with analysis results or error
-
-        """
-        logger.info(
-            "Analyzing patterns in %d LDIF entries using flext-ldif",
-            len(ldif_data),
-        )
-
-        try:
-            # Convert dict entries to FlextLDIFEntry objects for proper analysis
-            entries = self._convert_dict_to_entries(ldif_data)
-
-            # Use flext-ldif API for statistics - NO local logic
-            stats_result = self._ldif_api.get_entry_statistics(entries)
-            if not stats_result.success:
-                return FlextResult[FlextTypes.Core.Dict].fail(
-                    f"Statistics generation failed: {stats_result.error}",
-                )
-
-            stats = stats_result.value or {}
-
-            # Get object class distribution using flext-ldif filtering
-            object_classes: FlextTypes.Core.CounterDict = {}
-            for entry in entries:
-                # Get object classes from the entry's attributes
-                for obj_class in entry.attributes.get_object_classes():
-                    object_classes[obj_class] = object_classes.get(obj_class, 0) + 1
-
-            # Use flext-ldif hierarchical sorting for depth analysis
-            sorted_result = self._ldif_api.sort_hierarchically(entries)
-            dn_depth_distribution: FlextTypes.Core.CounterDict = {}
-            if sorted_result.success and sorted_result.value:
-                for entry in sorted_result.value:
-                    depth = entry.dn.get_depth()
-                    depth_key = f"depth_{depth}"
-                    dn_depth_distribution[depth_key] = (
-                        dn_depth_distribution.get(depth_key, 0) + 1
+                    # Use flext-ldif factory for entry creation
+                    entry_result = FlextLDIFFactory.create_entry(
+                        dn=dn,
+                        attributes=formatted_attrs,
+                        changetype=changetype_str,
                     )
 
-            # Use flext-ldif analysis patterns - NO local calculation
-            risk_result = self._ldif_api.analyze_entry_patterns(
-                entries,
-            )
-            risk_assessment = risk_result.value if risk_result.success else "unknown"
+                    if entry_result.success and entry_result.value:
+                        entries.append(entry_result.value)
+                    else:
+                        logger.warning("Failed to create entry: %s", entry_result.error)
 
-            return FlextResult[FlextTypes.Core.Dict].ok(
-                {
-                    "total_entries": stats.get("total_entries", 0),
-                    "persons": stats.get("person_entries", 0),
-                    "groups": stats.get("group_entries", 0),
-                    "organizational_units": stats.get("other_entries", 0),
-                    "valid_entries": stats.get("valid_entries", 0),
-                    "unique_object_classes": list(object_classes.keys()),
-                    "object_class_distribution": object_classes,
-                    "dn_depth_distribution": dn_depth_distribution,
-                    "risk_assessment": risk_assessment,
-                },
-            )
+                except Exception as e:
+                    logger.warning("Skipping invalid entry: %s", e)
 
-        except Exception as e:
-            logger.exception("Entry pattern analysis failed")
-            return FlextResult[FlextTypes.Core.Dict].fail(f"Analysis failed: {e}")
+            return entries
 
-    def generate_quality_metrics(
-        self,
-        entries: list[FlextTypes.Core.Dict],
-    ) -> FlextResult[dict[str, float]]:
-        """Generate data quality metrics using flext-ldif validation.
+        def analyze_entry_patterns(
+            self,
+            ldif_data: list[FlextTypes.Core.Dict],
+        ) -> FlextResult[FlextTypes.Core.Dict]:
+            """Analyze patterns in LDIF entries using flext-ldif infrastructure.
 
-        Args:
-            entries: List of LDIF entries as dictionaries
+            Args:
+                ldif_data: List of LDIF entry dictionaries
 
-        Returns:
-            FlextResult with quality metrics or error
+            Returns:
+                FlextResult with analysis results or error
 
-        """
-        if not entries:
-            return FlextResult[dict[str, float]].ok(
-                {
-                    "completeness": 0.0,
-                    "validity": 0.0,
-                    "consistency": 0.0,
-                },
+            """
+            logger.info(
+                "Analyzing patterns in %d LDIF entries using flext-ldif",
+                len(ldif_data),
             )
 
-        try:
-            # Convert to FlextLDIFEntry objects using helper method
-            ldif_entries = self._convert_dict_to_entries(entries)
+            try:
+                # Convert dict entries to FlextLDIFEntry objects for proper analysis
+                entries = self._convert_dict_to_entries(ldif_data)
 
-            total_entries = len(entries)
-            converted_entries = len(ldif_entries)
+                # Use flext-ldif API for statistics - NO local logic
+                stats_result = self._ldif_api.get_entry_statistics(entries)
+                if not stats_result.success:
+                    return FlextResult[FlextTypes.Core.Dict].fail(
+                        f"Statistics generation failed: {stats_result.error}",
+                    )
 
-            # Use flext-ldif validation - NO local validation logic
-            valid_entries = len(self._ldif_api.filter_valid(ldif_entries).value or [])
+                stats = stats_result.value or {}
 
-            # Calculate metrics based on flext-ldif operations
-            completeness = (
-                (converted_entries / total_entries) * 100.0
-                if total_entries > 0
-                else 0.0
-            )
-            validity = (
-                (valid_entries / converted_entries) * 100.0
-                if converted_entries > 0
-                else 0.0
-            )
+                # Get object class distribution using flext-ldif filtering
+                object_classes: FlextTypes.Core.CounterDict = {}
+                for entry in entries:
+                    # Get object classes from the entry's attributes
+                    for obj_class in entry.attributes.get_object_classes():
+                        object_classes[obj_class] = object_classes.get(obj_class, 0) + 1
 
-            # Consistency check using flext-ldif entry statistics
-            stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
-            consistency = 100.0  # Default high consistency
-            if stats_result.success and stats_result.value:
-                stats = stats_result.value
-                # Check consistency based on valid vs total ratio
-                if stats.get("total", 0) > 0:
-                    consistency = (
-                        stats.get("valid", 0) / stats.get("total", 1)
-                    ) * 100.0
+                # Use flext-ldif hierarchical sorting for depth analysis
+                sorted_result = self._ldif_api.sort_hierarchically(entries)
+                dn_depth_distribution: FlextTypes.Core.CounterDict = {}
+                if sorted_result.success and sorted_result.value:
+                    for entry in sorted_result.value:
+                        depth = entry.dn.get_depth()
+                        depth_key = f"depth_{depth}"
+                        dn_depth_distribution[depth_key] = (
+                            dn_depth_distribution.get(depth_key, 0) + 1
+                        )
 
-            return FlextResult[dict[str, float]].ok(
-                {
-                    "completeness": round(completeness, 2),
-                    "validity": round(validity, 2),
-                    "consistency": round(consistency, 2),
-                },
-            )
+                # Use flext-ldif analysis patterns - NO local calculation
+                risk_result = self._ldif_api.analyze_entry_patterns(
+                    entries,
+                )
+                risk_assessment = risk_result.value if risk_result.success else "unknown"
 
-        except Exception as e:
-            logger.exception("Quality metrics generation failed")
-            return FlextResult[dict[str, float]].fail(f"Quality metrics failed: {e}")
-
-    def get_statistics_for_dbt(
-        self,
-        entries: list[FlextTypes.Core.Dict],
-    ) -> FlextResult[Mapping[str, object]]:
-        """Get statistics formatted for dbt model generation.
-
-        Args:
-            entries: List of LDIF entry dictionaries
-
-        Returns:
-            FlextResult with dbt-compatible statistics or error
-
-        """
-        try:
-            # Convert to FlextLDIFEntry objects using helper method
-            ldif_entries = self._convert_dict_to_entries(entries)
-
-            # Use flext-ldif API for all statistics
-            stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
-            if not stats_result.success:
-                return FlextResult[Mapping[str, object]].fail(
-                    f"dbt statistics failed: {stats_result.error}"
+                return FlextResult[FlextTypes.Core.Dict].ok(
+                    {
+                        "total_entries": stats.get("total_entries", 0),
+                        "persons": stats.get("person_entries", 0),
+                        "groups": stats.get("group_entries", 0),
+                        "organizational_units": stats.get("other_entries", 0),
+                        "valid_entries": stats.get("valid_entries", 0),
+                        "unique_object_classes": list(object_classes.keys()),
+                        "object_class_distribution": object_classes,
+                        "dn_depth_distribution": dn_depth_distribution,
+                        "risk_assessment": risk_assessment,
+                    },
                 )
 
-            return FlextResult[Mapping[str, object]].ok(stats_result.value or {})
+            except Exception as e:
+                logger.exception("Entry pattern analysis failed")
+                return FlextResult[FlextTypes.Core.Dict].fail(f"Analysis failed: {e}")
 
-        except Exception as e:
-            logger.exception("dbt statistics generation failed")
-            return FlextResult[Mapping[str, object]].fail(f"dbt statistics error: {e}")
+        def generate_quality_metrics(
+            self,
+            entries: list[FlextTypes.Core.Dict],
+        ) -> FlextResult[dict[str, float]]:
+            """Generate data quality metrics using flext-ldif validation.
+
+            Args:
+                entries: List of LDIF entries as dictionaries
+
+            Returns:
+                FlextResult with quality metrics or error
+
+            """
+            if not entries:
+                return FlextResult[dict[str, float]].ok(
+                    {
+                        "completeness": 0.0,
+                        "validity": 0.0,
+                        "consistency": 0.0,
+                    },
+                )
+
+            try:
+                # Convert to FlextLDIFEntry objects using helper method
+                ldif_entries = self._convert_dict_to_entries(entries)
+
+                total_entries = len(entries)
+                converted_entries = len(ldif_entries)
+
+                # Use flext-ldif validation - NO local validation logic
+                valid_entries = len(self._ldif_api.filter_valid(ldif_entries).value or [])
+
+                # Calculate metrics based on flext-ldif operations
+                completeness = (
+                    (converted_entries / total_entries) * 100.0
+                    if total_entries > 0
+                    else 0.0
+                )
+                validity = (
+                    (valid_entries / converted_entries) * 100.0
+                    if converted_entries > 0
+                    else 0.0
+                )
+
+                # Consistency check using flext-ldif entry statistics
+                stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
+                consistency = 100.0  # Default high consistency
+                if stats_result.success and stats_result.value:
+                    stats = stats_result.value
+                    # Check consistency based on valid vs total ratio
+                    if stats.get("total", 0) > 0:
+                        consistency = (
+                            stats.get("valid", 0) / stats.get("total", 1)
+                        ) * 100.0
+
+                return FlextResult[dict[str, float]].ok(
+                    {
+                        "completeness": round(completeness, 2),
+                        "validity": round(validity, 2),
+                        "consistency": round(consistency, 2),
+                    },
+                )
+
+            except Exception as e:
+                logger.exception("Quality metrics generation failed")
+                return FlextResult[dict[str, float]].fail(f"Quality metrics failed: {e}")
+
+        def get_statistics_for_dbt(
+            self,
+            entries: list[FlextTypes.Core.Dict],
+        ) -> FlextResult[Mapping[str, object]]:
+            """Get statistics formatted for dbt model generation.
+
+            Args:
+                entries: List of LDIF entry dictionaries
+
+            Returns:
+                FlextResult with dbt-compatible statistics or error
+
+            """
+            try:
+                # Convert to FlextLDIFEntry objects using helper method
+                ldif_entries = self._convert_dict_to_entries(entries)
+
+                # Use flext-ldif API for all statistics
+                stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
+                if not stats_result.success:
+                    return FlextResult[Mapping[str, object]].fail(
+                        f"dbt statistics failed: {stats_result.error}"
+                    )
+
+                return FlextResult[Mapping[str, object]].ok(stats_result.value or {})
+
+            except Exception as e:
+                logger.exception("dbt statistics generation failed")
+                return FlextResult[Mapping[str, object]].fail(f"dbt statistics error: {e}")
+
+
+# Backward compatibility aliases
+DBTModelGenerator = FlextDbtLdifCore.ModelGenerator
+LDIFAnalytics = FlextDbtLdifCore.Analytics
+
+
+__all__: FlextTypes.Core.StringList = [
+    "FlextDbtLdifCore",
+    "DBTModelGenerator",
+    "LDIFAnalytics",
+]

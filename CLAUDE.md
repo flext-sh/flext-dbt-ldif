@@ -13,10 +13,11 @@
 **OBJECTIVE**: Achieve 100% professional quality compliance for flext-dbt-ldif with zero regressions, following SOLID principles, Python 3.13+ standards, Pydantic best practices, dbt Core patterns, and flext-core foundation patterns for LDIF analytics operations.
 
 **CRITICAL REQUIREMENTS FOR LDIF DBT PROJECT**:
+
 - ✅ **95%+ pytest pass rate** with **75%+ coverage** for LDIF analytics logic (flext-core proven achievable at 79%)
 - ✅ **Zero errors** in ruff, mypy (strict mode), and pyright across ALL LDIF analytics source code
 - ✅ **Unified LDIF service classes** - single responsibility, no aliases, no wrappers, no helpers
-- ✅ **Direct flext-core integration** - eliminate LDIF complexity, reduce dbt configuration overhead  
+- ✅ **Direct flext-core integration** - eliminate LDIF complexity, reduce dbt configuration overhead
 - ✅ **MANDATORY flext-cli usage** - ALL LDIF CLI projects use flext-cli for CLI AND output, NO direct Click/Rich
 - ✅ **ZERO fallback tolerance** - no try/except fallbacks in LDIF handlers, no workarounds, always correct dbt solutions
 - ✅ **SOLID compliance** - proper LDIF abstraction, dependency injection, clean dbt architecture
@@ -26,8 +27,9 @@
 - ✅ **Production-ready LDIF code** - no workarounds, fallbacks, try-pass blocks, or incomplete dbt implementations
 
 **CURRENT FLEXT-DBT-LDIF STATUS** (Evidence-based):
+
 - 🔴 **Ruff Issues**: LDIF-specific violations in dbt transformations and programmatic model generation
-- 🟡 **MyPy Issues**: 0 in main src/ LDIF modules (already compliant)  
+- 🟡 **MyPy Issues**: 0 in main src/ LDIF modules (already compliant)
 - 🟡 **Pyright Issues**: Minor LDIF API mismatches in dbt service definitions
 - 🔴 **Pytest Status**: LDIF test infrastructure needs fixing for dbt transformation testing
 - 🟢 **flext-core Foundation**: 79% coverage, fully functional API for LDIF operations
@@ -136,45 +138,45 @@ from flext_ldif import (
 # ✅ CORRECT - Unified LDIF dbt service class (VERIFIED WORKING PATTERN)
 class UnifiedFlextDbtLdifService(FlextDomainService):
     """Single unified LDIF dbt service class following flext-core patterns.
-    
+
     This class consolidates all LDIF dbt-related operations:
     - LDIF file parsing and validation
     - Programmatic dbt model generation for LDIF analytics
     - LDIF-specific data quality validation
     - Advanced LDIF analytics with anomaly detection
-    
+
     Note: FlextDomainService is Pydantic-based, inherits from BaseModel
     """
-    
+
     def __init__(self, **data) -> None:
         """Initialize LDIF dbt service with proper dependency injection."""
         super().__init__(**data)
         # Use direct class access - NO wrapper functions (per updated flext-core)
         self._container = FlextContainer.get_global()
         self._logger = FlextLogger(__name__)
-    
+
     def parse_ldif_data(self, ldif_config: dict) -> FlextResult[LdifDataFrame]:
         """Parse LDIF file data with proper error handling."""
         if not ldif_config:
             return FlextResult[LdifDataFrame].fail("LDIF configuration cannot be empty")
-        
+
         # Validate LDIF configuration
         validation_result = self._validate_ldif_config(ldif_config)
         if validation_result.is_failure:
             return FlextResult[LdifDataFrame].fail(f"LDIF config validation failed: {validation_result.error}")
-        
+
         # Parse LDIF data through flext-ldif integration (NO direct ldif parsing)
         parsing_result = self._parse_ldif_entries(ldif_config)
         if parsing_result.is_failure:
             return FlextResult[LdifDataFrame].fail(f"LDIF parsing failed: {parsing_result.error}")
-            
+
         return FlextResult[LdifDataFrame].ok(parsing_result.unwrap())
-    
+
     def generate_programmatic_dbt_models(self, ldif_data: LdifDataFrame) -> FlextResult[DbtModelCollection]:
         """Generate dbt models programmatically for LDIF data with advanced analytics patterns."""
         if not ldif_data or ldif_data.empty:
             return FlextResult[DbtModelCollection].fail("LDIF data cannot be empty")
-        
+
         # Generate programmatic models for LDIF analytics
         models_result = (
             self._create_ldif_staging_models(ldif_data)
@@ -183,12 +185,12 @@ class UnifiedFlextDbtLdifService(FlextDomainService):
             .flat_map(self._create_ldif_analytics_models)
             .flat_map(self._create_ldif_anomaly_detection_models)
         )
-        
+
         if models_result.is_failure:
             return FlextResult[DbtModelCollection].fail(f"LDIF dbt model generation failed: {models_result.error}")
-            
+
         return FlextResult[DbtModelCollection].ok(models_result.unwrap())
-    
+
     def execute_ldif_analytics_pipeline(self, pipeline_config: LdifDbtPipelineConfig) -> FlextResult[LdifAnalyticsPipelineResult]:
         """Execute complete LDIF analytics pipeline with error handling."""
         return (
@@ -202,7 +204,7 @@ class UnifiedFlextDbtLdifService(FlextDomainService):
             .map(lambda results: self._create_ldif_analytics_pipeline_result(results))
             .map_error(lambda e: f"LDIF analytics pipeline failed: {e}")
         )
-    
+
     def _validate_ldif_config(self, config: dict) -> FlextResult[dict]:
         """Validate LDIF configuration structure."""
         required_fields = ["file_path", "encoding", "output_format"]
@@ -210,37 +212,37 @@ class UnifiedFlextDbtLdifService(FlextDomainService):
             if field not in config:
                 return FlextResult[dict].fail(f"Missing required LDIF field: {field}")
         return FlextResult[dict].ok(config)
-    
+
     def _parse_ldif_entries(self, config: dict) -> FlextResult[LdifDataFrame]:
         """Parse LDIF entries through flext-ldif integration."""
         # Implementation using flext-ldif API (NO direct ldif parsing)
         ldif_api_result = self._container.get("ldif_api")
         if ldif_api_result.is_failure:
             return FlextResult[LdifDataFrame].fail("LDIF API service unavailable")
-        
+
         ldif_api = ldif_api_result.unwrap()
         return ldif_api.parse_ldif_file(config)
-    
+
     def _create_ldif_staging_models(self, data: LdifDataFrame) -> FlextResult[DbtModelCollection]:
         """Create staging models for raw LDIF data."""
         # Implementation for LDIF staging models
         return FlextResult[DbtModelCollection].ok(DbtModelCollection())
-    
+
     def _create_ldif_dimension_models(self, staging_models: DbtModelCollection) -> FlextResult[DbtModelCollection]:
         """Create dimension models for LDIF analytics (entries, attributes, change tracking)."""
         # Implementation for LDIF dimensional modeling
         return FlextResult[DbtModelCollection].ok(DbtModelCollection())
-    
+
     def _create_ldif_fact_models(self, dimension_models: DbtModelCollection) -> FlextResult[DbtModelCollection]:
         """Create fact models for LDIF changes and relationships."""
         # Implementation for LDIF fact models
         return FlextResult[DbtModelCollection].ok(DbtModelCollection())
-    
+
     def _create_ldif_analytics_models(self, fact_models: DbtModelCollection) -> FlextResult[DbtModelCollection]:
         """Create advanced analytics models for LDIF insights and reporting."""
         # Implementation for LDIF analytics models
         return FlextResult[DbtModelCollection].ok(DbtModelCollection())
-    
+
     def _create_ldif_anomaly_detection_models(self, analytics_models: DbtModelCollection) -> FlextResult[DbtModelCollection]:
         """Create anomaly detection models for LDIF data quality and risk assessment."""
         # Implementation for LDIF anomaly detection models
@@ -251,12 +253,12 @@ from flext_core import FlextModels
 
 class LdifEntry(FlextModels.Entity):
     """LDIF entry entity with business rules validation."""
-    
+
     dn: str
     change_type: str
     attributes: dict
     change_sequence: int
-    
+
     def validate_business_rules(self) -> FlextResult[None]:
         """Required abstract method implementation for LDIF entries."""
         if not self.dn.strip():
@@ -267,12 +269,12 @@ class LdifEntry(FlextModels.Entity):
 
 class LdifDbtPipelineConfig(FlextModels.Value):
     """LDIF dbt pipeline configuration value object."""
-    
+
     ldif_config: dict
     dbt_config: dict
     analytics_config: dict
     output_config: dict
-    
+
     def validate_business_rules(self) -> FlextResult[None]:
         """Required abstract method implementation for pipeline config."""
         if not self.ldif_config:
@@ -295,22 +297,22 @@ from flext_cli import FlextCliApi, FlextCliMain, FlextCliConfig
 
 class LdifCliService:
     """LDIF CLI service using flext-cli foundation - NO Click imports allowed.
-    
-    CONFIGURATION AUTHORITY: 
+
+    CONFIGURATION AUTHORITY:
     - flext-cli automatically loads .env from execution root
     - flext-core provides configuration infrastructure for LDIF
     - Project ONLY describes LDIF configuration schema, never loads manually
     """
-    
+
     def __init__(self) -> None:
         """Initialize LDIF CLI service with automatic configuration loading."""
         # ✅ AUTOMATIC: LDIF configuration loaded transparently by flext-cli/flext-core
         self._cli_api = FlextCliApi()
         self._config = FlextCliConfig()  # Automatically includes .env + defaults + CLI params for LDIF
-        
+
     def define_ldif_configuration_schema(self) -> FlextResult[dict]:
         """Define LDIF-specific configuration schema.
-        
+
         Project ONLY describes LDIF configuration needs - flext-cli handles:
         1. Multi-format file detection (.env, .toml, .yaml, .json)
         2. Environment variable precedence for LDIF settings
@@ -323,7 +325,7 @@ class LdifCliService:
             # LDIF File configuration
             "ldif": {
                 "file_path": {
-                    "default": "./data/input.ldif",   # Level 3: DEFAULT CONSTANTS  
+                    "default": "./data/input.ldif",   # Level 3: DEFAULT CONSTANTS
                     "env_var": "LDIF_FILE_PATH",      # Levels 1&2: ENV VARS → CONFIG FILE
                     "cli_param": "--ldif-file",       # Level 4: CLI PARAMETERS
                     "config_formats": {
@@ -394,14 +396,14 @@ class LdifCliService:
                 }
             }
         }
-        
+
         # Register LDIF schema with flext-cli - handles ALL formats automatically
         schema_result = self._config.register_universal_schema(ldif_config_schema)
         if schema_result.is_failure:
             return FlextResult[dict].fail(f"LDIF schema registration failed: {schema_result.error}")
-            
+
         return FlextResult[dict].ok(ldif_config_schema)
-    
+
     def create_ldif_cli_interface(self) -> FlextResult[FlextCliMain]:
         """Create LDIF CLI interface using flext-cli patterns."""
         # Initialize main CLI handler for LDIF operations
@@ -409,22 +411,22 @@ class LdifCliService:
             name="flext-dbt-ldif",
             description="FLEXT dbt LDIF - Enterprise LDIF Analytics with Programmatic Model Generation"
         )
-        
+
         # Register LDIF command groups through flext-cli
         parse_result = main_cli.register_command_group("parse", self._create_ldif_parse_commands)
         if parse_result.is_failure:
             return FlextResult[FlextCliMain].fail(f"LDIF parse commands registration failed: {parse_result.error}")
-            
-        analyze_result = main_cli.register_command_group("analyze", self._create_ldif_analyze_commands)  
+
+        analyze_result = main_cli.register_command_group("analyze", self._create_ldif_analyze_commands)
         if analyze_result.is_failure:
             return FlextResult[FlextCliMain].fail(f"LDIF analyze commands registration failed: {analyze_result.error}")
-            
+
         generate_result = main_cli.register_command_group("generate", self._create_ldif_generate_commands)
         if generate_result.is_failure:
             return FlextResult[FlextCliMain].fail(f"LDIF generate commands registration failed: {generate_result.error}")
-            
+
         return FlextResult[FlextCliMain].ok(main_cli)
-    
+
     def _create_ldif_parse_commands(self) -> FlextResult[dict]:
         """Create LDIF parsing commands using flext-cli patterns."""
         # Use flext-cli command builders, NEVER Click decorators OR Rich output for LDIF
@@ -437,26 +439,26 @@ class LdifCliService:
                 output_format="table"  # Use flext-cli output formatting for LDIF data
             ),
             "validate": self._cli_api.create_command(
-                name="validate", 
+                name="validate",
                 description="Validate LDIF file structure",
                 handler=self._handle_ldif_validation,
                 output_format="json"   # Use flext-cli output formatting
             )
         }
         return FlextResult[dict].ok(commands)
-    
+
     def _handle_ldif_file_parsing(self, args: dict) -> FlextResult[str]:
         """Handle LDIF file parsing command."""
         # Validate required arguments
         if not args.get("file_path"):
             return FlextResult[str].fail("File path is required for LDIF parsing")
-        
+
         # Get LDIF service from container
         container = FlextContainer.get_global()
         ldif_service_result = container.get("ldif_dbt_service")
         if ldif_service_result.is_failure:
             return FlextResult[str].fail("LDIF dbt service unavailable")
-        
+
         # Parse LDIF data - NO try/except fallbacks
         ldif_service = ldif_service_result.unwrap()
         ldif_config = {
@@ -464,11 +466,11 @@ class LdifCliService:
             "encoding": args.get("encoding", "utf-8"),
             # Configuration automatically loaded from flext-cli config
         }
-        
+
         parsing_result = ldif_service.parse_ldif_data(ldif_config)
         if parsing_result.is_failure:
             return FlextResult[str].fail(f"LDIF parsing failed: {parsing_result.error}")
-        
+
         # Display results using flext-cli output wrappers
         ldif_data = parsing_result.unwrap()
         display_result = self._cli_api.format_output(
@@ -477,7 +479,7 @@ class LdifCliService:
             headers=["DN", "Change Type", "Attributes", "Sequence"],
             style="ldif_analytics"
         )
-        
+
         return FlextResult[str].ok(f"LDIF parsing successful: {len(ldif_data)} entries processed")
 
 # ✅ CORRECT - LDIF CLI entry point using flext-cli
@@ -485,7 +487,7 @@ def main() -> None:
     """Main LDIF CLI entry point - uses flext-cli, never Click directly."""
     cli_service = LdifCliService()
     cli_result = cli_service.create_ldif_cli_interface()
-    
+
     if cli_result.is_failure:
         # Use flext-cli for error output too - NO direct print/rich usage
         cli_api = FlextCliApi()
@@ -496,7 +498,7 @@ def main() -> None:
         )
         cli_api.display_error(error_output.unwrap() if error_output.is_success else cli_result.error)
         exit(1)
-        
+
     cli = cli_result.unwrap()
     cli.run()
 ```
@@ -514,7 +516,7 @@ def main() -> None:
 echo "=== LDIF DBT RUFF ISSUES ==="
 ruff check . --output-format=github | grep -i ldif | wc -l
 
-echo "=== LDIF DBT MYPY ISSUES ==="  
+echo "=== LDIF DBT MYPY ISSUES ==="
 mypy src/ --show-error-codes --no-error-summary 2>&1 | grep -E "error:|note:" | grep -i ldif | wc -l
 
 echo "=== LDIF DBT PYRIGHT ISSUES ==="
@@ -542,7 +544,7 @@ class LdifParser:
 
 class LdifAnalyzer:
     def analyze(self): pass
-    
+
 class DbtModelGenerator:
     def generate(self): pass
 
@@ -552,19 +554,19 @@ def parse_ldif_change(): pass
 # AFTER - Single unified LDIF dbt class (incremental improvement)
 class UnifiedFlextDbtLdifService:
     """Consolidated LDIF dbt service following single responsibility principle."""
-    
+
     def parse_ldif_data(self, config: dict) -> FlextResult[LdifDataFrame]:
         """Former LdifParser.parse with proper error handling."""
         # Implementation using flext-core patterns for LDIF
-        
+
     def analyze_ldif_data(self, data: LdifDataFrame) -> FlextResult[LdifAnalysisResult]:
         """Former LdifAnalyzer.analyze with proper error handling."""
         # Implementation using flext-core patterns for LDIF
-        
+
     def generate_programmatic_dbt_models(self, data: LdifAnalysisResult) -> FlextResult[DbtModelCollection]:
         """Former DbtModelGenerator.generate with proper error handling."""
         # Implementation using flext-core patterns for LDIF dbt
-        
+
     def _parse_ldif_change(self, change_line: str) -> FlextResult[LdifChange]:
         """Former parse_ldif_change now as private method."""
         # Implementation as part of unified LDIF class
@@ -639,7 +641,7 @@ from flext_ldif import get_flext_ldif_api  # If available
 
 class LdifDbtCliTestingService:
     """LDIF dbt CLI testing service using FLEXT ecosystem - .env automatically loaded."""
-    
+
     def __init__(self) -> None:
         """Initialize LDIF CLI testing with automatic .env configuration loading."""
         # ✅ AUTOMATIC: .env loaded transparently by FLEXT ecosystem
@@ -647,49 +649,49 @@ class LdifDbtCliTestingService:
         self._cli_api = FlextCliApi()
         self._config = FlextCliConfig()  # Automatically loads .env + defaults + CLI params
         self._ldif_api = get_flext_ldif_api() if 'flext_ldif' in globals() else None
-        
+
     def debug_ldif_configuration(self) -> FlextResult[dict]:
         """Debug LDIF CLI configuration using FLEXT patterns - .env as source of truth."""
         self._logger.debug("Starting LDIF CLI configuration debugging")
-        
+
         # ✅ CORRECT: Access LDIF configuration through FLEXT API (includes .env automatically)
         config_result = self._config.get_all_configuration()
         if config_result.is_failure:
             return FlextResult[dict].fail(f"LDIF configuration access failed: {config_result.error}")
-            
+
         config_data = config_result.unwrap()
-        
+
         # Filter LDIF-specific configuration
         ldif_config = {k: v for k, v in config_data.items() if 'ldif' in k.lower()}
-        
+
         # Debug output through FLEXT CLI API
         debug_display_result = self._cli_api.display_debug_information(
             title="LDIF CLI Configuration Debug (ENV → .env → DEFAULT → CLI)",
             data=ldif_config,
             format_type="tree"  # flext-cli handles formatted output
         )
-        
+
         if debug_display_result.is_failure:
             return FlextResult[dict].fail(f"LDIF debug display failed: {debug_display_result.error}")
-            
+
         return FlextResult[dict].ok(ldif_config)
-    
+
     def test_ldif_parsing_debug(self) -> FlextResult[dict]:
         """Test LDIF parsing with debug logging - FLEXT-LDIF exclusively."""
         self._logger.debug("Starting LDIF parsing testing")
-        
+
         # ✅ CORRECT: Get LDIF configuration from .env through FLEXT config
         ldif_config_result = self._config.get_ldif_configuration()
         if ldif_config_result.is_failure:
             return FlextResult[dict].fail(f"LDIF config access failed: {ldif_config_result.error}")
-            
+
         ldif_config = ldif_config_result.unwrap()
-        
+
         # ✅ CORRECT: Test parsing through FLEXT-LDIF API (NO external tools)
         if self._ldif_api:
             parsing_result = self._ldif_api.test_parsing_with_debug(
                 file_path=ldif_config["file_path"],
-                encoding=ldif_config["encoding"], 
+                encoding=ldif_config["encoding"],
                 batch_size=ldif_config["batch_size"],
                 debug_mode=True
             )
@@ -697,7 +699,7 @@ class LdifDbtCliTestingService:
             # Fallback to direct service testing
             ldif_service_result = self._test_ldif_service_directly(ldif_config)
             parsing_result = ldif_service_result
-        
+
         if parsing_result.is_failure:
             # Display debug information through FLEXT CLI
             self._cli_api.display_error_with_debug(
@@ -705,13 +707,13 @@ class LdifDbtCliTestingService:
                 debug_data=ldif_config,
                 suggestions=[
                     "Check .env file LDIF configuration",
-                    "Verify LDIF file exists and is readable", 
+                    "Verify LDIF file exists and is readable",
                     "Validate LDIF file format and encoding",
                     "Check LDIF file permissions"
                 ]
             )
             return FlextResult[dict].fail(parsing_result.error)
-            
+
         # Display success with debug information
         parsing_info = parsing_result.unwrap()
         self._cli_api.display_success_with_debug(
@@ -719,7 +721,7 @@ class LdifDbtCliTestingService:
             debug_data=parsing_info,
             format_type="table"
         )
-        
+
         return FlextResult[dict].ok(parsing_info)
 ```
 
@@ -733,12 +735,12 @@ class LdifDbtCliTestingService:
 # ✅ CORRECT - LDIF-specific dbt model generation
 class LdifAnalyticsModelGenerator:
     """Generate analytics models for LDIF data."""
-    
+
     def generate_entry_dimension(self, ldif_entries: LdifDataFrame) -> FlextResult[DbtModel]:
         """Generate entry dimension model from LDIF entry data."""
         entry_dimension_sql = """
         {{ config(materialized='table') }}
-        
+
         select
             {{ dbt_utils.surrogate_key(['dn', 'change_sequence']) }} as entry_sk,
             dn as entry_dn,
@@ -751,18 +753,18 @@ class LdifAnalyticsModelGenerator:
             is_active
         from {{ ref('stg_ldif_entries') }}
         """
-        
+
         return FlextResult[DbtModel].ok(DbtModel(
             name="dim_ldif_entries",
             sql=entry_dimension_sql,
             materialization="table"
         ))
-    
+
     def generate_change_fact(self, ldif_changes: LdifDataFrame) -> FlextResult[DbtModel]:
         """Generate change fact table from LDIF change data."""
         change_fact_sql = """
         {{ config(materialized='incremental', unique_key='change_sk') }}
-        
+
         select
             {{ dbt_utils.surrogate_key(['dn', 'change_sequence', 'change_timestamp']) }} as change_sk,
             e.entry_sk,
@@ -776,23 +778,23 @@ class LdifAnalyticsModelGenerator:
             created_date
         from {{ ref('stg_ldif_changes') }} c
         join {{ ref('dim_ldif_entries') }} e on c.dn = e.entry_dn
-        
+
         {% if is_incremental() %}
             where change_timestamp > (select max(change_timestamp) from {{ this }})
         {% endif %}
         """
-        
+
         return FlextResult[DbtModel].ok(DbtModel(
             name="fact_ldif_changes",
             sql=change_fact_sql,
             materialization="incremental"
         ))
-    
+
     def generate_anomaly_detection_model(self, ldif_data: LdifDataFrame) -> FlextResult[DbtModel]:
         """Generate anomaly detection model for LDIF risk assessment."""
         anomaly_detection_sql = """
         {{ config(materialized='table') }}
-        
+
         with change_patterns as (
             select
                 dn,
@@ -803,13 +805,13 @@ class LdifAnalyticsModelGenerator:
             from {{ ref('fact_ldif_changes') }}
             group by dn, change_type
         ),
-        
+
         anomaly_scores as (
             select
                 c.*,
                 p.avg_change_size,
                 p.stddev_change_size,
-                case 
+                case
                     when p.stddev_change_size > 0 then
                         abs(c.change_size - p.avg_change_size) / p.stddev_change_size
                     else 0
@@ -822,7 +824,7 @@ class LdifAnalyticsModelGenerator:
             from {{ ref('fact_ldif_changes') }} c
             join change_patterns p on c.dn = p.dn and c.change_type = p.change_type
         )
-        
+
         select
             change_sk,
             dn,
@@ -837,7 +839,7 @@ class LdifAnalyticsModelGenerator:
         from anomaly_scores
         where is_anomalous = true
         """
-        
+
         return FlextResult[DbtModel].ok(DbtModel(
             name="ldif_anomaly_detection",
             sql=anomaly_detection_sql,
@@ -868,7 +870,7 @@ class LdifAnalyticsModelGenerator:
 {% endmacro %}
 
 {% macro extract_ldif_change_attributes(attributes_json_column) %}
-    select 
+    select
         key as attribute_name,
         value as attribute_value
     from json_each_text({{ attributes_json_column }})
@@ -887,7 +889,7 @@ class LdifAnalyticsModelGenerator:
 - [ ] Plan incremental LDIF improvements (never wholesale rewrites)
 - [ ] Establish measurable success criteria from current LDIF baseline
 
-### During Each LDIF Development Cycle  
+### During Each LDIF Development Cycle
 
 - [ ] Make minimal, focused LDIF changes (single aspect per change)
 - [ ] Validate after every LDIF modification using quality gates
@@ -898,7 +900,7 @@ class LdifAnalyticsModelGenerator:
 ### After Each LDIF Development Session
 
 - [ ] Full quality gate validation (ruff + mypy + pyright + pytest) for LDIF code
-- [ ] LDIF coverage measurement and improvement tracking  
+- [ ] LDIF coverage measurement and improvement tracking
 - [ ] Integration testing with real LDIF dependencies
 - [ ] Update LDIF documentation reflecting current reality
 - [ ] Commit with descriptive messages explaining LDIF improvements
@@ -929,7 +931,7 @@ mypy src/ --strict --show-error-codes | grep -i ldif
 pyright src/ --stats | grep -i ldif
 pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=95 -k ldif
 
-# LDIF Functional Validation  
+# LDIF Functional Validation
 python -c "
 import sys
 sys.path.insert(0, 'src')
@@ -938,18 +940,18 @@ try:
     # Test all major LDIF imports
     from flext_core import FlextResult, FlextContainer, FlextModels
     print('✅ flext-core integration: SUCCESS')
-    
+
     # Test LDIF dbt functionality
     from src.unified_flext_dbt_ldif_service import UnifiedFlextDbtLdifService
     print('✅ LDIF dbt service import: SUCCESS')
-    
+
     # Test LDIF service instantiation
     ldif_service = UnifiedFlextDbtLdifService()
     print('✅ LDIF service creation: SUCCESS')
-    
+
     print('✅ All LDIF imports: SUCCESS')
     print('✅ FINAL LDIF VALIDATION: PASSED')
-    
+
 except Exception as e:
     print(f'❌ LDIF VALIDATION FAILED: {e}')
     sys.exit(1)

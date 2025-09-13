@@ -1,12 +1,3 @@
-"""DBT services for LDIF workflow orchestration.
-
-Provides high-level orchestration services for complete LDIF-to-DBT workflows.
-Integrates all components: config, client, models, and exceptions.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -14,9 +5,9 @@ from pathlib import Path
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif.models import FlextLDIFEntry
 
-from .dbt_client import FlextDbtLdifClient
-from .dbt_config import FlextDbtLdifConfig
-from .dbt_models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
+from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
+from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 
 logger = FlextLogger(__name__)
 # Quality assessment thresholds

@@ -1,11 +1,3 @@
-"""Test DBT client functionality.
-
-This module tests the DBT client functionality of flext-dbt-ldif.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -30,7 +22,7 @@ def test_parse_ldif_file_ok(
 ) -> None:
     """Test parsing LDIF file."""
 
-    def _parse_file(_self: object, _path: Path) -> FlextResult[FlextTypes.Core.List]:
+    def _parse_file(_self: object, __path: Path) -> FlextResult[FlextTypes.Core.List]:
         return FlextResult[None].ok([])
 
     monkeypatch.setattr(
