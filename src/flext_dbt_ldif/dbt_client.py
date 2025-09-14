@@ -42,7 +42,9 @@ class FlextDbtLdifClient:
         """Get or create DBT service instance."""
         if self._dbt_service is None:
             # Enhanced dbt service configuration with meltano_config integration planned
-            self._dbt_service = FlextMeltanoService(service_type="dbt", dbt_name="dbt-core")
+            self._dbt_service = FlextMeltanoService(
+                service_type="dbt", dbt_name="dbt-core"
+            )
         return self._dbt_service
 
     def parse_ldif_file(
