@@ -1,3 +1,5 @@
+"""Unit tests for DBT client functionality."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -44,7 +46,7 @@ def test_validate_ldif_data_ok(
     def _validate(
         _self: object, _entries: FlextTypes.Core.List
     ) -> FlextResult[FlextTypes.Core.Dict]:
-        return FlextResult[None].ok({})
+        return FlextResult[None].ok(None)
 
     def _stats(
         _self: object, _entries: FlextTypes.Core.List
@@ -99,7 +101,7 @@ def test_run_full_pipeline_ok(
         _self: FlextDbtLdifClient,
         _entries: FlextTypes.Core.List,
     ) -> FlextResult[FlextTypes.Core.Dict]:
-        return FlextResult[None].ok({"quality_score": 0.9})
+        return FlextResult[FlextTypes.Core.Dict].ok({"quality_score": 0.9})
 
     def _transform(
         _self: FlextDbtLdifClient,

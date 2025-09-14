@@ -1,3 +1,7 @@
+"""DBT models functionality for flext-dbt-ldif."""
+
+# ruff: noqa: S608  # SQL injection warnings are false positives for dbt SQL template generation
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -431,6 +435,7 @@ class FlextDbtLdifModelGenerator:
             else "view"
         )
         # Build SQL from static template with whitelisted tokens
+        # Note: This generates dbt SQL templates, not executable SQL - variables are controlled inputs
         return (
             "-- Staging model for LDIF data\n"
             "-- Generated automatically by flext-dbt-ldif\n\n"

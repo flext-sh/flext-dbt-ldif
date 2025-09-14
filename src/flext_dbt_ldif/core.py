@@ -55,8 +55,16 @@ class FlextDbtLdifCore:
                     "data quality checks",
                     "materialization": "view",
                     "columns": [
-                        {"name": "dn", "type": "varchar", "tests": ["not_null", "unique"]},
-                        {"name": "object_class", "type": "varchar", "tests": ["not_null"]},
+                        {
+                            "name": "dn",
+                            "type": "varchar",
+                            "tests": ["not_null", "unique"],
+                        },
+                        {
+                            "name": "object_class",
+                            "type": "varchar",
+                            "tests": ["not_null"],
+                        },
                         {"name": "is_valid_dn", "type": "boolean"},
                         {"name": "dn_depth", "type": "integer"},
                         {"name": "entry_type", "type": "varchar"},
@@ -142,7 +150,9 @@ class FlextDbtLdifCore:
                                 formatted_attrs[str(key)] = [str(value)]
 
                     if not formatted_attrs:
-                        logger.warning("Invalid attributes type or empty, skipping entry")
+                        logger.warning(
+                            "Invalid attributes type or empty, skipping entry"
+                        )
                         continue
 
                     changetype_str: str | None = None
@@ -219,7 +229,9 @@ class FlextDbtLdifCore:
                 risk_result = self._ldif_api.analyze_entry_patterns(
                     entries,
                 )
-                risk_assessment = risk_result.value if risk_result.success else "unknown"
+                risk_assessment = (
+                    risk_result.value if risk_result.success else "unknown"
+                )
 
                 return FlextResult[FlextTypes.Core.Dict].ok(
                     {
@@ -269,7 +281,9 @@ class FlextDbtLdifCore:
                 converted_entries = len(ldif_entries)
 
                 # Use flext-ldif validation - NO local validation logic
-                valid_entries = len(self._ldif_api.filter_valid(ldif_entries).value or [])
+                valid_entries = len(
+                    self._ldif_api.filter_valid(ldif_entries).value or []
+                )
 
                 # Calculate metrics based on flext-ldif operations
                 completeness = (
@@ -304,7 +318,9 @@ class FlextDbtLdifCore:
 
             except Exception as e:
                 logger.exception("Quality metrics generation failed")
-                return FlextResult[dict[str, float]].fail(f"Quality metrics failed: {e}")
+                return FlextResult[dict[str, float]].fail(
+                    f"Quality metrics failed: {e}"
+                )
 
         def get_statistics_for_dbt(
             self,
@@ -334,7 +350,9 @@ class FlextDbtLdifCore:
 
             except Exception as e:
                 logger.exception("dbt statistics generation failed")
-                return FlextResult[Mapping[str, object]].fail(f"dbt statistics error: {e}")
+                return FlextResult[Mapping[str, object]].fail(
+                    f"dbt statistics error: {e}"
+                )
 
 
 # Backward compatibility aliases
@@ -343,7 +361,7 @@ LDIFAnalytics = FlextDbtLdifCore.Analytics
 
 
 __all__: FlextTypes.Core.StringList = [
-    "FlextDbtLdifCore",
     "DBTModelGenerator",
+    "FlextDbtLdifCore",
     "LDIFAnalytics",
 ]

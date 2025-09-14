@@ -120,8 +120,8 @@ def main() -> NoReturn:
     except KeyboardInterrupt:
         logger.info("Interrupted by user")
         sys.exit(1)
-    except (OSError, RuntimeError, ValueError) as e:
-        logger.exception("CLI error: %s", e)
+    except (OSError, RuntimeError, ValueError):
+        logger.exception("CLI error")
         sys.exit(1)
 
 

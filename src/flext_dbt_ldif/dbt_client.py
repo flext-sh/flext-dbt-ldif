@@ -1,3 +1,5 @@
+"""DBT client functionality for flext-dbt-ldif."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -5,8 +7,7 @@ from pathlib import Path
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLDIFAPI
 from flext_ldif.models import FlextLDIFModels
-from flext_meltano import create_dbt_hub
-from flext_meltano.dbt_hub import FlextDbtHub
+from flext_meltano.services import FlextMeltanoService
 
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 
@@ -33,16 +34,16 @@ class FlextDbtLdifClient:
         """
         self.config = config or FlextDbtLdifConfig()
         self._ldif_api = FlextLDIFAPI()
-        self._dbt_hub: FlextDbtHub | None = None
+        self._dbt_service: FlextMeltanoService | None = None
         logger.info("Initialized DBT LDIF client with config: %s", self.config)
 
     @property
-    def dbt_hub(self) -> FlextDbtHub:
-        """Get or create DBT hub instance."""
-        if self._dbt_hub is None:
-            self.config.get_meltano_config()
-            self._dbt_hub = create_dbt_hub()
-        return self._dbt_hub
+    def dbt_service(self) -> FlextMeltanoService:
+        """Get or create DBT service instance."""
+        if self._dbt_service is None:
+            # Enhanced dbt service configuration with meltano_config integration planned
+            self._dbt_service = FlextMeltanoService(service_type="dbt", dbt_name="dbt-core")
+        return self._dbt_service
 
     def parse_ldif_file(
         self,
@@ -159,7 +160,7 @@ class FlextDbtLdifClient:
                 )
             transformed_data = prepared_result.value or {}
             # Use flext-meltano DBT hub for execution
-            _ = self.dbt_hub
+            _ = self.dbt_service
             if model_names:
                 # Run specific models - use generic method
                 result = FlextResult[None].ok(
