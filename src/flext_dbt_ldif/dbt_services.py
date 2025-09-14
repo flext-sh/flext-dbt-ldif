@@ -1,3 +1,5 @@
+"""DBT services functionality for flext-dbt-ldif."""
+
 from __future__ import annotations
 
 from pathlib import Path
