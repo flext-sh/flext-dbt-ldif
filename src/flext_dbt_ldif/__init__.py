@@ -12,14 +12,7 @@ from flext_ldif import FlextLDIFAPI
 from flext_dbt_ldif.core import DBTModelGenerator, LDIFAnalytics
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
-from flext_dbt_ldif.dbt_exceptions import (
-    FlextDbtLdifConnectionError,
-    FlextDbtLdifError,
-    FlextDbtLdifModelError,
-    FlextDbtLdifProcessingError,
-    FlextDbtLdifTransformationError,
-    FlextDbtLdifValidationError,
-)
+from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
 from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
 from flext_dbt_ldif.dbt_services import (
     FlextDbtLdifService,
@@ -52,14 +45,9 @@ __all__: FlextTypes.Core.StringList = [
     "DBTModelGenerator",  # Legacy from core.py
     "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
     "FlextDbtLdifConfig",  # Configuration management
-    "FlextDbtLdifConnectionError",  # Connection errors
-    "FlextDbtLdifError",  # Base exception
-    "FlextDbtLdifModelError",  # Model-specific errors
+    "FlextDbtLdifError",  # Unified exception with error codes
     "FlextDbtLdifModelGenerator",  # Programmatic model generation
-    "FlextDbtLdifProcessingError",  # Processing errors
     "FlextDbtLdifService",  # High-level workflow orchestration
-    "FlextDbtLdifTransformationError",  # Transformation errors
-    "FlextDbtLdifValidationError",  # Validation errors
     "FlextDbtLdifWorkflowManager",  # Batch processing workflows
     "FlextLDIFAPI",  # LDIF API integration
     "FlextLDIFDbtModel",  # DBT model value object
