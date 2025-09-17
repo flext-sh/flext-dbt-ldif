@@ -11,7 +11,6 @@ from typing import NoReturn
 
 from flext_cli import FlextCliApi, FlextCliConfig
 from flext_core import FlextLogger, FlextResult
-
 from flext_dbt_ldif import __version__
 
 logger = FlextLogger(__name__)

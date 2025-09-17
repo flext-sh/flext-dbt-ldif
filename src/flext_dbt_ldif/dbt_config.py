@@ -7,9 +7,10 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextConfig, FlextLogger, FlextTypes
-from flext_ldif import FlextLDIFConfig
 from flext_meltano.config import FlextMeltanoConfig
+
+from flext_core import FlextConfig, FlextLogger, FlextTypes
+from flext_ldif import FlextLdifConfig
 
 logger = FlextLogger(__name__)
 
@@ -74,9 +75,9 @@ class FlextDbtLdifConfig(FlextConfig):
         "dcObject": "domains",
     }
 
-    def get_ldif_config(self) -> FlextLDIFConfig:
+    def get_ldif_config(self) -> FlextLdifConfig:
         """Get LDIF configuration for flext-ldif integration."""
-        return FlextLDIFConfig(
+        return FlextLdifConfig(
             max_entries=20000,
             max_entry_size=self.ldif_max_file_size,
             strict_validation=self.ldif_validate_syntax,

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
-from flext_ldif import FlextLDIFAPI
-from flext_ldif.models import FlextLDIFModels
+from flext_ldif.models import FlextLdifModels
 from flext_meltano.services import FlextMeltanoService
 
+from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from flext_ldif import FlextLdifAPI
 
 logger = FlextLogger(__name__)
 
@@ -33,7 +33,7 @@ class FlextDbtLdifClient:
 
         """
         self.config = config or FlextDbtLdifConfig()
-        self._ldif_api = FlextLDIFAPI()
+        self._ldif_api = FlextLdifAPI()
         self._dbt_service: FlextMeltanoService | None = None
         logger.info("Initialized DBT LDIF client with config: %s", self.config)
 
@@ -50,7 +50,7 @@ class FlextDbtLdifClient:
     def parse_ldif_file(
         self,
         file_path: Path | str | None = None,
-    ) -> FlextResult[list[FlextLDIFModels.Entry]]:
+    ) -> FlextResult[list[FlextLdifModels.Entry]]:
         """Parse LDIF file for DBT processing.
 
         Args:
@@ -72,19 +72,19 @@ class FlextDbtLdifClient:
                 logger.info("Successfully parsed %d LDIF entries", len(entries))
             else:
                 logger.error("LDIF parsing failed: %s", result.error)
-                return FlextResult[list[FlextLDIFModels.Entry]].fail(
+                return FlextResult[list[FlextLdifModels.Entry]].fail(
                     f"LDIF parsing failed: {result.error}",
                 )
             return result
         except Exception as e:
             logger.exception("Unexpected error during LDIF parsing")
-            return FlextResult[list[FlextLDIFModels.Entry]].fail(
+            return FlextResult[list[FlextLdifModels.Entry]].fail(
                 f"LDIF parsing error: {e}",
             )
 
     def validate_ldif_data(
         self,
-        entries: list[FlextLDIFModels.Entry],
+        entries: list[FlextLdifModels.Entry],
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Validate LDIF data quality for DBT processing.
 
@@ -135,7 +135,7 @@ class FlextDbtLdifClient:
 
     def transform_with_dbt(
         self,
-        entries: list[FlextLDIFModels.Entry],
+        entries: list[FlextLdifModels.Entry],
         model_names: FlextTypes.Core.StringList | None = None,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Transform LDIF data using DBT models.
@@ -229,7 +229,7 @@ class FlextDbtLdifClient:
 
     def _prepare_ldif_data_for_dbt(
         self,
-        entries: list[FlextLDIFModels.Entry],
+        entries: list[FlextLdifModels.Entry],
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Prepare LDIF entries for DBT processing using flext-ldif API.
 

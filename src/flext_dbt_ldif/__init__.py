@@ -7,13 +7,11 @@ SPDX-License-Identifier: MIT
 import importlib.metadata
 
 from flext_core import FlextResult, FlextTypes
-from flext_ldif import FlextLDIFAPI
-
 from flext_dbt_ldif.core import DBTModelGenerator, LDIFAnalytics
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
-from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLDIFDbtModel
+from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
 from flext_dbt_ldif.dbt_services import (
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
@@ -23,11 +21,12 @@ from flext_dbt_ldif.simple_api import (
     process_ldif_file,
     validate_ldif_quality,
 )
+from flext_ldif import FlextLdifAPI
 
 # Create compatibility aliases for old API names (backward compatibility)
-FlextLDIFParser = FlextLDIFAPI
-FlextLDIFValidator = FlextLDIFAPI
-FlextLDIFWriter = FlextLDIFAPI
+FlextLdifParser = FlextLdifAPI
+FlextLdifValidator = FlextLdifAPI
+FlextLdifWriter = FlextLdifAPI
 
 try:
     __version__ = importlib.metadata.version("flext-dbt-ldif")
@@ -49,8 +48,8 @@ __all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifModelGenerator",  # Programmatic model generation
     "FlextDbtLdifService",  # High-level workflow orchestration
     "FlextDbtLdifWorkflowManager",  # Batch processing workflows
-    "FlextLDIFAPI",  # LDIF API integration
-    "FlextLDIFDbtModel",  # DBT model value object
+    "FlextLdifAPI",  # LDIF API integration
+    "FlextLdifDbtModel",  # DBT model value object
     "FlextResult",  # FlextResult pattern
     "LDIFAnalytics",  # Legacy analytics class
     "LDIFAnalyzer",

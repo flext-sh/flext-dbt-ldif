@@ -9,7 +9,6 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_core import FlextResult
-
 from flext_dbt_ldif import (
     AnalyticsModel,
     ChangeTracker,
@@ -19,7 +18,7 @@ from flext_dbt_ldif import (
     FlextDbtLdifModelGenerator,
     FlextDbtLdifService,
     FlextDbtLdifWorkflowManager,
-    FlextLDIFAPI,
+    FlextLdifAPI,
     LDIFAnalyzer,
     LDIFInsights,
     ModelGenerator,
@@ -49,5 +48,5 @@ def test_api_imports() -> None:
     assert callable(flext_ldif_write)
 
     assert FlextResult is not None
-    assert FlextLDIFAPI is not None
+    assert FlextLdifAPI is not None
     assert ModelGenerator is not None
