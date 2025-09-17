@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext_core import FlextResult, FlextTypes
 
-from flext_dbt_ldif import FlextDbtLdifService, FlextLDIFDbtModel
+from flext_core import FlextResult, FlextTypes
+from flext_dbt_ldif import FlextDbtLdifService, FlextLdifDbtModel
 
 
 @pytest.fixture
@@ -46,14 +46,14 @@ def test_run_complete_workflow_all(
         svc.model_generator,
         "generate_staging_models",
         lambda _e: FlextResult[None].ok(
-            [cast("object", FlextLDIFDbtModel("stg_persons", "d", []))],
+            [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_analytics_models",
         lambda _m: FlextResult[None].ok(
-            [cast("object", FlextLDIFDbtModel("analytics_ldif_insights", "d", []))],
+            [cast("object", FlextLdifDbtModel("analytics_ldif_insights", "d", []))],
         ),
     )
     monkeypatch.setattr(
@@ -104,7 +104,7 @@ def test_run_data_quality_assessment(
         svc.model_generator,
         "generate_staging_models",
         lambda _e: FlextResult[None].ok(
-            [cast("object", FlextLDIFDbtModel("stg_persons", "d", []))],
+            [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
 
@@ -128,7 +128,7 @@ def test_generate_model_documentation(
         svc.model_generator,
         "generate_staging_models",
         lambda _e: FlextResult[None].ok(
-            [cast("object", FlextLDIFDbtModel("stg_persons", "d", []))],
+            [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
 
