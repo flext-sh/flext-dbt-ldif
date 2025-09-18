@@ -30,4 +30,4 @@ class TestVersion:
 
     def test_version_not_empty(self) -> None:
         """Test that __version__ is not empty."""
-        assert __version__.strip() != ""
+        assert __version__.strip()

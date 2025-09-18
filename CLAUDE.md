@@ -3,18 +3,18 @@
 **Enterprise-Grade LDIF Analytics Quality Assurance & Refactoring Guidelines**
 **Version**: 2.1.0 | **Authority**: WORKSPACE | **Updated**: 2025-01-08
 **Environment**: `/home/marlonsc/flext/.venv/bin/python` (No PYTHONPATH required)
-**Based on**: flext-core 0.9.0 with 75%+ test coverage (PROVEN FOUNDATION)
+**Based on**: flext-core 0.9.9 with 75%+ test coverage (PROVEN FOUNDATION)
 **Project Context**: Specialized dbt project for LDIF (LDAP Data Interchange Format) analytics with programmatic model generation
 
 **Hierarchy**: This document provides project-specific standards based on workspace-level patterns defined in [../CLAUDE.md](../CLAUDE.md). For architectural principles, quality gates, and MCP server usage, reference the main workspace standards.
 
 ## 🔗 MCP SERVER INTEGRATION
 
-| MCP Server | Purpose | Status |
-|------------|---------|--------|
-| **serena** | DBT LDIF codebase analysis and data transformation patterns | **ACTIVE** |
-| **sequential-thinking** | LDIF data modeling and DBT architecture problem solving | **ACTIVE** |
-| **github** | DBT ecosystem integration and transformation PRs | **ACTIVE** |
+| MCP Server              | Purpose                                                     | Status     |
+| ----------------------- | ----------------------------------------------------------- | ---------- |
+| **serena**              | DBT LDIF codebase analysis and data transformation patterns | **ACTIVE** |
+| **sequential-thinking** | LDIF data modeling and DBT architecture problem solving     | **ACTIVE** |
+| **github**              | DBT ecosystem integration and transformation PRs            | **ACTIVE** |
 
 **Usage**: `claude mcp list` for available servers, leverage for DBT-specific development patterns and LDIF transformation analysis.
 
