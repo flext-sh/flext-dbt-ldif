@@ -3,8 +3,20 @@
 **Enterprise-Grade LDIF Analytics Quality Assurance & Refactoring Guidelines**
 **Version**: 2.1.0 | **Authority**: WORKSPACE | **Updated**: 2025-01-08
 **Environment**: `/home/marlonsc/flext/.venv/bin/python` (No PYTHONPATH required)
-**Based on**: flext-core 0.9.0 with 79% test coverage (PROVEN FOUNDATION)
+**Based on**: flext-core 0.9.0 with 75%+ test coverage (PROVEN FOUNDATION)
 **Project Context**: Specialized dbt project for LDIF (LDAP Data Interchange Format) analytics with programmatic model generation
+
+**Hierarchy**: This document provides project-specific standards based on workspace-level patterns defined in [../CLAUDE.md](../CLAUDE.md). For architectural principles, quality gates, and MCP server usage, reference the main workspace standards.
+
+## 🔗 MCP SERVER INTEGRATION
+
+| MCP Server | Purpose | Status |
+|------------|---------|--------|
+| **serena** | DBT LDIF codebase analysis and data transformation patterns | **ACTIVE** |
+| **sequential-thinking** | LDIF data modeling and DBT architecture problem solving | **ACTIVE** |
+| **github** | DBT ecosystem integration and transformation PRs | **ACTIVE** |
+
+**Usage**: `claude mcp list` for available servers, leverage for DBT-specific development patterns and LDIF transformation analysis.
 
 ---
 
@@ -41,8 +53,8 @@
 ### ❌ FORBIDDEN LDIF DBT PRACTICES
 
 1. **LDIF ANALYTICS QUALITY VIOLATIONS**:
-   - Any use of `# type: ignore` without specific error codes in LDIF handlers
-   - Any use of `Any` types instead of proper LDIF type annotations
+   - object use of `# type: ignore` without specific error codes in LDIF handlers
+   - object use of `object` types instead of proper LDIF type annotations
    - Silencing LDIF errors with ignore hints instead of fixing dbt root causes
    - Creating LDIF wrappers, aliases, or compatibility facades
    - Using sed, awk, or automated scripts for complex LDIF refactoring
@@ -60,7 +72,7 @@
    - **FORBIDDEN**: Direct `import rich` in any LDIF project code for output/formatting
    - **FORBIDDEN**: Direct `from dbt import` bypassing FlextDbtLdifService
    - **FORBIDDEN**: Local LDIF CLI implementations bypassing flext-cli
-   - **FORBIDDEN**: Any LDIF CLI functionality not going through flext-cli layer
+   - **FORBIDDEN**: object LDIF CLI functionality not going through flext-cli layer
    - **REQUIRED**: If flext-cli lacks LDIF functionality, IMPROVE flext-cli first - NEVER work around
    - **PRINCIPLE**: Fix the foundation, don't work around LDIF patterns
    - **OUTPUT RULE**: ALL LDIF data output, formatting, tables, progress bars MUST use flext-cli wrappers
@@ -881,7 +893,7 @@ class LdifAnalyticsModelGenerator:
 
 ## ⚡ EXECUTION CHECKLIST FOR LDIF DBT PROJECT
 
-### Before Starting Any LDIF Work
+### Before Starting object LDIF Work
 
 - [ ] Read all documentation: `CLAUDE.md`, `FLEXT_REFACTORING_PROMPT.md`, project `README.md`
 - [ ] Verify virtual environment: `/home/marlonsc/flext/.venv/bin/python` (VERIFIED WORKING)
