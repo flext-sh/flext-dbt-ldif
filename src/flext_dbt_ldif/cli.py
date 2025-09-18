@@ -40,8 +40,10 @@ class FlextDbtLdifCliService:
 
         # Use flext-cli to format and display data
         try:
-            formatted_data = self._cli_api.format_data(info_data)
-            if formatted_data is not None:
+            formatted_data = self._cli_api.format_data(info_data, "json")
+            if (
+                formatted_data.is_success
+            ):  # Fixed: Check FlextResult success instead of None
                 for _feature in info_data["features"]:
                     pass
                 return FlextResult[str].ok("Package information displayed successfully")
@@ -56,7 +58,7 @@ class FlextDbtLdifCliService:
         try:
             # Try flext-cli formatting
             self._cli_api.format_data(
-                {"message": "Model generation functionality coming soon!"}
+                {"message": "Model generation functionality coming soon!"}, "json"
             )
             return FlextResult[str].ok("Generate message displayed")
         except Exception:
@@ -68,7 +70,7 @@ class FlextDbtLdifCliService:
         try:
             # Try flext-cli formatting
             self._cli_api.format_data(
-                {"message": "Model validation functionality coming soon!"}
+                {"message": "Model validation functionality coming soon!"}, "json"
             )
             return FlextResult[str].ok("Validate message displayed")
         except Exception:
