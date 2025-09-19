@@ -65,7 +65,9 @@ class FlextDbtLdifUnifiedService:
         """Nested helper class for model definition operations."""
 
         @staticmethod
-        def to_yaml_config(model_instance: FlextDbtLdifUnifiedService) -> FlextTypes.Core.Dict:
+        def to_yaml_config(
+            model_instance: FlextDbtLdifUnifiedService,
+        ) -> FlextTypes.Core.Dict:
             """Convert model to YAML configuration format.
 
             Args:
@@ -135,7 +137,9 @@ class FlextDbtLdifUnifiedService:
                 return FlextResult[FlextTypes.Core.Dict].ok(schema_info)
             except Exception as e:
                 logger.exception("Error analyzing LDIF schema")
-                return FlextResult[FlextTypes.Core.Dict].fail(f"Schema analysis error: {e}")
+                return FlextResult[FlextTypes.Core.Dict].fail(
+                    f"Schema analysis error: {e}"
+                )
 
     class _ModelGeneration:
         """Nested helper class for DBT model generation operations."""
@@ -156,8 +160,12 @@ class FlextDbtLdifUnifiedService:
 
             """
             try:
-                logger.info("Generating staging models for %d LDIF entries", len(entries))
-                schema_result = service_instance._SchemaAnalysis.analyze_ldif_schema(service_instance, entries)
+                logger.info(
+                    "Generating staging models for %d LDIF entries", len(entries)
+                )
+                schema_result = service_instance._SchemaAnalysis.analyze_ldif_schema(
+                    service_instance, entries
+                )
                 if not schema_result.success:
                     return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
                         f"Schema analysis failed: {schema_result.error}",
@@ -166,7 +174,9 @@ class FlextDbtLdifUnifiedService:
                 grouped_entries = {"ldif_entries": entries}
                 models = []
                 for entry_type, type_entries in grouped_entries.items():
-                    schema_name = service_instance.config.get_schema_for_entry_type(entry_type)
+                    schema_name = service_instance.config.get_schema_for_entry_type(
+                        entry_type
+                    )
                     if not schema_name:
                         continue
                     model = service_instance._ModelGeneration._generate_staging_model_for_type(
@@ -181,7 +191,9 @@ class FlextDbtLdifUnifiedService:
                 return FlextResult[list[FlextDbtLdifUnifiedService]].ok(models)
             except Exception as e:
                 logger.exception("Error generating staging models")
-                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(f"Staging model generation error: {e}")
+                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
+                    f"Staging model generation error: {e}"
+                )
 
         @staticmethod
         def generate_analytics_models(
@@ -197,7 +209,10 @@ class FlextDbtLdifUnifiedService:
 
             """
             try:
-                logger.info("Generating analytics models from %d staging models", len(staging_models))
+                logger.info(
+                    "Generating analytics models from %d staging models",
+                    len(staging_models),
+                )
                 analytics_models = []
 
                 # Create insights model
@@ -216,7 +231,10 @@ class FlextDbtLdifUnifiedService:
                             "name": "total_entries",
                             "type": "integer",
                             "description": "Total number of LDIF entries",
-                            "tests": ["not_null", {"accepted_values": {"values": [">= 0"]}}],
+                            "tests": [
+                                "not_null",
+                                {"accepted_values": {"values": [">= 0"]}},
+                            ],
                         },
                         {
                             "name": "entry_type",
@@ -228,13 +246,23 @@ class FlextDbtLdifUnifiedService:
                             "name": "quality_score",
                             "type": "decimal(5,2)",
                             "description": "Data quality score (0-100)",
-                            "tests": ["not_null", {"accepted_values": {"values": ["between 0 and 100"]}}],
+                            "tests": [
+                                "not_null",
+                                {"accepted_values": {"values": ["between 0 and 100"]}},
+                            ],
                         },
                         {
                             "name": "risk_level",
                             "type": "varchar",
                             "description": "Risk assessment level",
-                            "tests": ["not_null", {"accepted_values": {"values": ["low", "medium", "high"]}}],
+                            "tests": [
+                                "not_null",
+                                {
+                                    "accepted_values": {
+                                        "values": ["low", "medium", "high"]
+                                    }
+                                },
+                            ],
                         },
                     ],
                     meta={
@@ -261,7 +289,10 @@ class FlextDbtLdifUnifiedService:
                             "name": "dn_depth",
                             "type": "integer",
                             "description": "Depth level in DN hierarchy",
-                            "tests": ["not_null", {"accepted_values": {"values": [">= 0"]}}],
+                            "tests": [
+                                "not_null",
+                                {"accepted_values": {"values": [">= 0"]}},
+                            ],
                         },
                         {
                             "name": "parent_dn",
@@ -272,13 +303,19 @@ class FlextDbtLdifUnifiedService:
                             "name": "children_count",
                             "type": "integer",
                             "description": "Number of child entries",
-                            "tests": ["not_null", {"accepted_values": {"values": [">= 0"]}}],
+                            "tests": [
+                                "not_null",
+                                {"accepted_values": {"values": [">= 0"]}},
+                            ],
                         },
                         {
                             "name": "subtree_size",
                             "type": "integer",
                             "description": "Total entries in subtree",
-                            "tests": ["not_null", {"accepted_values": {"values": [">= 1"]}}],
+                            "tests": [
+                                "not_null",
+                                {"accepted_values": {"values": [">= 1"]}},
+                            ],
                         },
                     ],
                     meta={
@@ -289,10 +326,14 @@ class FlextDbtLdifUnifiedService:
                 )
                 analytics_models.append(hierarchy_model)
                 logger.info("Generated %d analytics models", len(analytics_models))
-                return FlextResult[list[FlextDbtLdifUnifiedService]].ok(analytics_models)
+                return FlextResult[list[FlextDbtLdifUnifiedService]].ok(
+                    analytics_models
+                )
             except Exception as e:
                 logger.exception("Error generating analytics models")
-                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(f"Analytics model generation error: {e}")
+                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
+                    f"Analytics model generation error: {e}"
+                )
 
         @staticmethod
         def _generate_staging_model_for_type(
@@ -305,7 +346,9 @@ class FlextDbtLdifUnifiedService:
             """Generate a staging model for a specific entry type."""
             has_entries = len(entries) > 0
             declared_total = (
-                schema_info.get("total_entries") if isinstance(schema_info, dict) else None
+                schema_info.get("total_entries")
+                if isinstance(schema_info, dict)
+                else None
             )
             _ = declared_total
 
@@ -334,7 +377,10 @@ class FlextDbtLdifUnifiedService:
                 },
             ]
 
-            for ldif_attr, mapped_attr in service_instance.config.ldif_attribute_mapping.items():
+            for (
+                ldif_attr,
+                mapped_attr,
+            ) in service_instance.config.ldif_attribute_mapping.items():
                 if ldif_attr != "dn":
                     column_def: FlextTypes.Core.Dict = {
                         "name": mapped_attr,
@@ -381,11 +427,17 @@ class FlextDbtLdifUnifiedService:
 
             """
             try:
-                logger.info("Writing %d models to disk: %s", len(models), service_instance.models_dir)
+                logger.info(
+                    "Writing %d models to disk: %s",
+                    len(models),
+                    service_instance.models_dir,
+                )
                 service_instance.models_dir.mkdir(parents=True, exist_ok=True)
                 written_files = []
                 for model in models:
-                    sql_content = service_instance._SQLGeneration._generate_sql_for_model(model)
+                    sql_content = (
+                        service_instance._SQLGeneration._generate_sql_for_model(model)
+                    )
                     sql_file = service_instance.models_dir / f"{model.name}.sql"
                     if not overwrite and sql_file.exists():
                         logger.warning("Skipping existing model: %s", sql_file)
@@ -393,9 +445,13 @@ class FlextDbtLdifUnifiedService:
                     sql_file.write_text(sql_content)
                     written_files.append(str(sql_file))
 
-                    yaml_config = service_instance._ModelDefinition.to_yaml_config(model)
+                    yaml_config = service_instance._ModelDefinition.to_yaml_config(
+                        model
+                    )
                     yaml_file = service_instance.models_dir / f"{model.name}.yml"
-                    yaml_content = service_instance._SQLGeneration._generate_basic_yaml(yaml_config)
+                    yaml_content = service_instance._SQLGeneration._generate_basic_yaml(
+                        yaml_config
+                    )
                     yaml_file.write_text(yaml_content)
                     written_files.append(str(yaml_file))
                 logger.info("Successfully wrote %d files", len(written_files))
@@ -408,7 +464,9 @@ class FlextDbtLdifUnifiedService:
                 )
             except Exception as e:
                 logger.exception("Error writing models to disk")
-                return FlextResult[FlextTypes.Core.Dict].fail(f"Model writing error: {e}")
+                return FlextResult[FlextTypes.Core.Dict].fail(
+                    f"Model writing error: {e}"
+                )
 
     class _SQLGeneration:
         """Nested helper class for SQL generation operations."""
@@ -417,10 +475,18 @@ class FlextDbtLdifUnifiedService:
         def _generate_sql_for_model(model: FlextDbtLdifUnifiedService) -> str:
             """Generate SQL content for DBT model using flext-meltano patterns."""
             if model.name.startswith("stg_"):
-                return FlextDbtLdifUnifiedService._SQLGeneration._generate_staging_sql(model)
+                return FlextDbtLdifUnifiedService._SQLGeneration._generate_staging_sql(
+                    model
+                )
             if model.name.startswith("analytics_"):
-                return FlextDbtLdifUnifiedService._SQLGeneration._generate_analytics_sql(model)
-            return FlextDbtLdifUnifiedService._SQLGeneration._generate_generic_sql(model)
+                return (
+                    FlextDbtLdifUnifiedService._SQLGeneration._generate_analytics_sql(
+                        model
+                    )
+                )
+            return FlextDbtLdifUnifiedService._SQLGeneration._generate_generic_sql(
+                model
+            )
 
         @staticmethod
         def _generate_staging_sql(model: FlextDbtLdifUnifiedService) -> str:
@@ -553,7 +619,9 @@ class FlextDbtLdifUnifiedService:
         overwrite: bool = False,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Write generated DBT models to disk."""
-        return self._FileOperations.write_models_to_disk(self, models, overwrite=overwrite)
+        return self._FileOperations.write_models_to_disk(
+            self, models, overwrite=overwrite
+        )
 
 
 __all__: FlextTypes.Core.StringList = [

@@ -57,7 +57,8 @@ class TestFlextDbtLdifError:
     def test_exception_with_explicit_error_code(self) -> None:
         """Test exception creation with explicit error code."""
         error = FlextDbtLdifError(
-            "Validation failed", error_code=FlextDbtLdifError.ErrorCode.VALIDATION_ERROR,
+            "Validation failed",
+            error_code=FlextDbtLdifError.ErrorCode.VALIDATION_ERROR,
         )
 
         assert str(error) == "Validation failed"
@@ -106,7 +107,8 @@ class TestFlextDbtLdifErrorFactoryMethods:
     def test_configuration_error_factory(self) -> None:
         """Test configuration error factory method."""
         error = FlextDbtLdifError.configuration_error(
-            "Missing required config", config_field="database_url",
+            "Missing required config",
+            config_field="database_url",
         )
 
         assert str(error) == "Missing required config"
@@ -115,7 +117,9 @@ class TestFlextDbtLdifErrorFactoryMethods:
     def test_connection_error_factory(self) -> None:
         """Test connection error factory method."""
         error = FlextDbtLdifError.connection_error(
-            "Database connection failed", host="localhost", port=5432,
+            "Database connection failed",
+            host="localhost",
+            port=5432,
         )
 
         assert str(error) == "Database connection failed"
@@ -131,7 +135,8 @@ class TestFlextDbtLdifErrorFactoryMethods:
     def test_authentication_error_factory(self) -> None:
         """Test authentication error factory method."""
         error = FlextDbtLdifError.authentication_error(
-            "LDAP authentication failed", username="testuser",
+            "LDAP authentication failed",
+            username="testuser",
         )
 
         assert str(error) == "LDAP authentication failed"
@@ -140,7 +145,8 @@ class TestFlextDbtLdifErrorFactoryMethods:
     def test_timeout_error_factory(self) -> None:
         """Test timeout error factory method."""
         error = FlextDbtLdifError.timeout_error(
-            "Operation timed out", timeout_seconds=30,
+            "Operation timed out",
+            timeout_seconds=30,
         )
 
         assert str(error) == "Operation timed out"
@@ -149,7 +155,9 @@ class TestFlextDbtLdifErrorFactoryMethods:
     def test_parse_error_factory(self) -> None:
         """Test parse error factory method with LDIF-specific context."""
         error = FlextDbtLdifError.parse_error(
-            "LDIF parsing failed", line_number=10, entry_dn="cn=user,dc=example,dc=com",
+            "LDIF parsing failed",
+            line_number=10,
+            entry_dn="cn=user,dc=example,dc=com",
         )
 
         assert str(error) == "LDIF parsing failed"
@@ -311,7 +319,8 @@ class TestFlextDbtLdifErrorIntegration:
         """Test that factory methods produce consistent error instances."""
         error1 = FlextDbtLdifError.validation_error("Test validation")
         error2 = FlextDbtLdifError(
-            "Test validation", error_code=FlextDbtLdifError.ErrorCode.VALIDATION_ERROR,
+            "Test validation",
+            error_code=FlextDbtLdifError.ErrorCode.VALIDATION_ERROR,
         )
 
         # Both should have the same error code and message

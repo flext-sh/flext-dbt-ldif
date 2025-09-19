@@ -64,7 +64,9 @@ class FlextDbtLdifError(Exception):
     # Factory methods for common error scenarios
     @classmethod
     def validation_error(
-        cls, message: str = "LDIF data validation failed", **context: object,
+        cls,
+        message: str = "LDIF data validation failed",
+        **context: object,
     ) -> FlextDbtLdifError:
         """Create validation error."""
         return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)
@@ -80,28 +82,36 @@ class FlextDbtLdifError(Exception):
 
     @classmethod
     def connection_error(
-        cls, message: str = "LDIF DBT database connection failed", **context: object,
+        cls,
+        message: str = "LDIF DBT database connection failed",
+        **context: object,
     ) -> FlextDbtLdifError:
         """Create connection error."""
         return cls(message, error_code=cls.ErrorCode.CONNECTION_ERROR, **context)
 
     @classmethod
     def processing_error(
-        cls, message: str = "LDIF processing operations failed", **context: object,
+        cls,
+        message: str = "LDIF processing operations failed",
+        **context: object,
     ) -> FlextDbtLdifError:
         """Create processing error."""
         return cls(message, error_code=cls.ErrorCode.PROCESSING_ERROR, **context)
 
     @classmethod
     def authentication_error(
-        cls, message: str = "LDIF DBT authentication failed", **context: object,
+        cls,
+        message: str = "LDIF DBT authentication failed",
+        **context: object,
     ) -> FlextDbtLdifError:
         """Create authentication error."""
         return cls(message, error_code=cls.ErrorCode.AUTHENTICATION_ERROR, **context)
 
     @classmethod
     def timeout_error(
-        cls, message: str = "LDIF DBT operation timeout", **context: object,
+        cls,
+        message: str = "LDIF DBT operation timeout",
+        **context: object,
     ) -> FlextDbtLdifError:
         """Create timeout error."""
         return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)

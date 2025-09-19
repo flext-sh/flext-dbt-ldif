@@ -495,7 +495,9 @@ class FlextDbtLdifService:
         ) -> FlextResult[FlextTypes.Core.Dict]:
             """Process multiple LDIF files in sequence or parallel."""
             logger.info(
-                "Processing %d files with parallel=%s", len(file_paths), parallel,
+                "Processing %d files with parallel=%s",
+                len(file_paths),
+                parallel,
             )
 
             batch_results: FlextTypes.Core.Dict = {
@@ -531,7 +533,9 @@ class FlextDbtLdifService:
                                 "file": str(file_path),
                                 "status": "success" if result.success else "failed",
                                 "data": result.value if result.success else None,
-                                "error": str(result.error) if not result.success else None,
+                                "error": str(result.error)
+                                if not result.success
+                                else None,
                             },
                         )
 
