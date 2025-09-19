@@ -43,7 +43,8 @@ class FlextDbtLdifClient:
         if self._dbt_service is None:
             # Enhanced dbt service configuration with meltano_config integration planned
             self._dbt_service = FlextMeltanoService(
-                service_type="dbt", dbt_name="dbt-core",
+                service_type="dbt",
+                dbt_name="dbt-core",
             )
         return self._dbt_service
 
@@ -295,7 +296,8 @@ class FlextDbtLdifClient:
             )
 
     def _map_entry_attributes(
-        self, entry_data: FlextTypes.Core.Dict,
+        self,
+        entry_data: FlextTypes.Core.Dict,
     ) -> FlextTypes.Core.Dict:
         """Map LDIF entry attributes using configuration mapping."""
         mapped_attrs = {"dn": entry_data.get("dn")}

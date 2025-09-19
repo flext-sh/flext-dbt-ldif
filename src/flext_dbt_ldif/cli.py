@@ -109,7 +109,8 @@ class FlextDbtLdifCliService:
         """Display generate message using flext-cli."""
         try:
             self._cli_api.format_data(
-                {"message": "Model generation functionality coming soon!"}, "json",
+                {"message": "Model generation functionality coming soon!"},
+                "json",
             )
             return FlextResult[str].ok("Generate message displayed")
         except Exception as e:
@@ -119,7 +120,8 @@ class FlextDbtLdifCliService:
         """Display validate message using flext-cli."""
         try:
             self._cli_api.format_data(
-                {"message": "Model validation functionality coming soon!"}, "json",
+                {"message": "Model validation functionality coming soon!"},
+                "json",
             )
             return FlextResult[str].ok("Validate message displayed")
         except Exception as e:
