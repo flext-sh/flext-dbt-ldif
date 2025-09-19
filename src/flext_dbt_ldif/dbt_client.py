@@ -43,7 +43,7 @@ class FlextDbtLdifClient:
         if self._dbt_service is None:
             # Enhanced dbt service configuration with meltano_config integration planned
             self._dbt_service = FlextMeltanoService(
-                service_type="dbt", dbt_name="dbt-core"
+                service_type="dbt", dbt_name="dbt-core",
             )
         return self._dbt_service
 
@@ -167,14 +167,14 @@ class FlextDbtLdifClient:
                 # Run specific models - return proper Dict type
                 specific_result_data: FlextTypes.Core.Dict = {
                     "models": model_names,
-                    "data": transformed_data
+                    "data": transformed_data,
                 }
                 result = FlextResult[FlextTypes.Core.Dict].ok(specific_result_data)
             else:
                 # Run all models - return proper Dict type
                 all_result_data: FlextTypes.Core.Dict = {
                     "all_models": "true",
-                    "data": transformed_data
+                    "data": transformed_data,
                 }
                 result = FlextResult[FlextTypes.Core.Dict].ok(all_result_data)
 
@@ -210,7 +210,7 @@ class FlextDbtLdifClient:
         parse_result = self.parse_ldif_file(file_path)
         if not parse_result.success:
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Parse failed: {parse_result.error}"
+                f"Parse failed: {parse_result.error}",
             )
         entries = parse_result.value or []
         # Step 2: Validate data quality
@@ -291,11 +291,11 @@ class FlextDbtLdifClient:
         except Exception as e:
             logger.exception("Error preparing LDIF data for DBT")
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Data preparation error: {e}"
+                f"Data preparation error: {e}",
             )
 
     def _map_entry_attributes(
-        self, entry_data: FlextTypes.Core.Dict
+        self, entry_data: FlextTypes.Core.Dict,
     ) -> FlextTypes.Core.Dict:
         """Map LDIF entry attributes using configuration mapping."""
         mapped_attrs = {"dn": entry_data.get("dn")}

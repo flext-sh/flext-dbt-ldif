@@ -11,7 +11,7 @@ from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
-from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 from flext_dbt_ldif.simple_api import (
     generate_ldif_models,
@@ -33,10 +33,9 @@ __all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifConfig",  # Configuration management
     "FlextDbtLdifCore",  # Core functionality
     "FlextDbtLdifError",  # Unified exception with error codes
-    "FlextDbtLdifModelGenerator",  # Programmatic model generation
     "FlextDbtLdifService",  # High-level workflow orchestration with integrated batch processing
+    "FlextDbtLdifUnifiedService",  # Unified DBT model service (consolidated from old classes)
     "FlextLdifAPI",  # LDIF API integration
-    "FlextLdifDbtModel",  # DBT model value object
     "FlextResult",  # FlextResult pattern
     "__version__",
     "__version_info__",

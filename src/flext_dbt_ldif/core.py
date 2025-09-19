@@ -151,7 +151,7 @@ class FlextDbtLdifCore:
 
                     if not formatted_attrs:
                         logger.warning(
-                            "Invalid attributes type or empty, skipping entry"
+                            "Invalid attributes type or empty, skipping entry",
                         )
                         continue
 
@@ -160,12 +160,12 @@ class FlextDbtLdifCore:
                     # Use FlextLdifModels factory method for proper type construction
                     try:
                         entry = FlextLdifModels.create_entry(
-                            {"dn": dn, "attributes": formatted_attrs}
+                            {"dn": dn, "attributes": formatted_attrs},
                         )
                         entry_result = FlextResult[FlextLdifModels.Entry].ok(entry)
                     except Exception as e:
                         entry_result = FlextResult[FlextLdifModels.Entry].fail(
-                            f"Entry creation failed: {e}"
+                            f"Entry creation failed: {e}",
                         )
 
                     if entry_result.success and entry_result.value:
@@ -230,7 +230,7 @@ class FlextDbtLdifCore:
                 # Simple risk assessment based on entry count and validity
                 total_entries = len(entries)
                 valid_entries = len(
-                    [e for e in entries if e.validate_business_rules().success]
+                    [e for e in entries if e.validate_business_rules().success],
                 )
                 validity_ratio = (
                     valid_entries / total_entries if total_entries > 0 else 0.0
@@ -292,7 +292,7 @@ class FlextDbtLdifCore:
 
                 # Use flext-ldif validation - NO local validation logic
                 valid_entries = len(
-                    self._ldif_api.filter_valid(ldif_entries).value or []
+                    self._ldif_api.filter_valid(ldif_entries).value or [],
                 )
 
                 # Calculate metrics based on flext-ldif operations
@@ -329,7 +329,7 @@ class FlextDbtLdifCore:
             except Exception as e:
                 logger.exception("Quality metrics generation failed")
                 return FlextResult[dict[str, float]].fail(
-                    f"Quality metrics failed: {e}"
+                    f"Quality metrics failed: {e}",
                 )
 
         def get_statistics_for_dbt(
@@ -353,7 +353,7 @@ class FlextDbtLdifCore:
                 stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
                 if not stats_result.success:
                     return FlextResult[Mapping[str, object]].fail(
-                        f"dbt statistics failed: {stats_result.error}"
+                        f"dbt statistics failed: {stats_result.error}",
                     )
 
                 return FlextResult[Mapping[str, object]].ok(stats_result.value or {})
@@ -361,7 +361,7 @@ class FlextDbtLdifCore:
             except Exception as e:
                 logger.exception("dbt statistics generation failed")
                 return FlextResult[Mapping[str, object]].fail(
-                    f"dbt statistics error: {e}"
+                    f"dbt statistics error: {e}",
                 )
 
 

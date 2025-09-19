@@ -44,12 +44,12 @@ def test_validate_ldif_data_ok(
     """Test validating LDIF data."""
 
     def _validate(
-        _self: object, _entries: FlextTypes.Core.List
+        _self: object, _entries: FlextTypes.Core.List,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok(None)
 
     def _stats(
-        _self: object, _entries: FlextTypes.Core.List
+        _self: object, _entries: FlextTypes.Core.List,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         return FlextResult[None].ok({"quality_score": 0.95})
 

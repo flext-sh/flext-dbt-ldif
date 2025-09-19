@@ -144,7 +144,7 @@ class FlextDbtLdifUnifiedService:
         def generate_staging_models(
             service_instance: FlextDbtLdifUnifiedService,
             entries: list[FlextLdifModels.Entry],
-        ) -> FlextResult[list]:
+        ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
             """Generate staging layer DBT models for LDIF data.
 
             Args:
@@ -159,7 +159,7 @@ class FlextDbtLdifUnifiedService:
                 logger.info("Generating staging models for %d LDIF entries", len(entries))
                 schema_result = service_instance._SchemaAnalysis.analyze_ldif_schema(service_instance, entries)
                 if not schema_result.success:
-                    return FlextResult[list].fail(
+                    return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
                         f"Schema analysis failed: {schema_result.error}",
                     )
                 schema_info = schema_result.value or {}
@@ -178,20 +178,18 @@ class FlextDbtLdifUnifiedService:
                     )
                     models.append(model)
                 logger.info("Generated %d staging models", len(models))
-                return FlextResult[list].ok(models)
+                return FlextResult[list[FlextDbtLdifUnifiedService]].ok(models)
             except Exception as e:
                 logger.exception("Error generating staging models")
-                return FlextResult[list].fail(f"Staging model generation error: {e}")
+                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(f"Staging model generation error: {e}")
 
         @staticmethod
         def generate_analytics_models(
-            service_instance: FlextDbtLdifUnifiedService,
-            staging_models: list,
-        ) -> FlextResult[list]:
+            staging_models: list[FlextDbtLdifUnifiedService],
+        ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
             """Generate analytics layer DBT models.
 
             Args:
-                service_instance: The parent service instance
                 staging_models: List of staging models to build upon
 
             Returns:
@@ -291,10 +289,10 @@ class FlextDbtLdifUnifiedService:
                 )
                 analytics_models.append(hierarchy_model)
                 logger.info("Generated %d analytics models", len(analytics_models))
-                return FlextResult[list].ok(analytics_models)
+                return FlextResult[list[FlextDbtLdifUnifiedService]].ok(analytics_models)
             except Exception as e:
                 logger.exception("Error generating analytics models")
-                return FlextResult[list].fail(f"Analytics model generation error: {e}")
+                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(f"Analytics model generation error: {e}")
 
         @staticmethod
         def _generate_staging_model_for_type(
@@ -367,7 +365,7 @@ class FlextDbtLdifUnifiedService:
         @staticmethod
         def write_models_to_disk(
             service_instance: FlextDbtLdifUnifiedService,
-            models: list,
+            models: list[FlextDbtLdifUnifiedService],
             *,
             overwrite: bool = False,
         ) -> FlextResult[FlextTypes.Core.Dict]:
@@ -467,12 +465,32 @@ class FlextDbtLdifUnifiedService:
         @staticmethod
         def _generate_analytics_sql(model: FlextDbtLdifUnifiedService) -> str:
             """Generate analytics SQL for DBT model."""
-            return "SELECT * FROM {{ ref('analytics_table') }}"
+            # Use model configuration for SQL generation
+            table_name = getattr(model, "table_name", "analytics_table")
+            return f"SELECT * FROM {{{{ ref('{table_name}') }}}}"
 
         @staticmethod
         def _generate_generic_sql(model: FlextDbtLdifUnifiedService) -> str:
             """Generate generic SQL for DBT model."""
-            return "SELECT * FROM {{ ref('generic_table') }}"
+            # Generate SQL based on model configuration
+            columns = []
+            for col in model.columns:
+                if isinstance(col, dict) and "name" in col:
+                    col_name = col["name"]
+                    if isinstance(col_name, str):
+                        columns.append(col_name)
+
+            column_list = ",\n    ".join(columns) if columns else "*"
+
+            return (
+                "-- Generic model for LDIF data\n"
+                f"-- Model: {model.name}\n"
+                f"-- Description: {model.description}\n\n"
+                f"{{{{ config(materialized='{model.materialization}') }}}}\n\n"
+                "select\n"
+                f"    {column_list}\n"
+                "from {{ ref('stg_ldif_entries') }}"
+            )
 
         @staticmethod
         def _generate_basic_yaml(yaml_config: FlextTypes.Core.Dict) -> str:
@@ -517,20 +535,20 @@ class FlextDbtLdifUnifiedService:
     def generate_staging_models(
         self,
         entries: list[FlextLdifModels.Entry],
-    ) -> FlextResult[list]:
+    ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
         """Generate staging layer DBT models for LDIF data."""
         return self._ModelGeneration.generate_staging_models(self, entries)
 
     def generate_analytics_models(
         self,
-        staging_models: list,
-    ) -> FlextResult[list]:
+        staging_models: list[FlextDbtLdifUnifiedService],
+    ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
         """Generate analytics layer DBT models."""
-        return self._ModelGeneration.generate_analytics_models(self, staging_models)
+        return self._ModelGeneration.generate_analytics_models(staging_models)
 
     def write_models_to_disk(
         self,
-        models: list,
+        models: list[FlextDbtLdifUnifiedService],
         *,
         overwrite: bool = False,
     ) -> FlextResult[FlextTypes.Core.Dict]:
