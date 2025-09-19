@@ -11,10 +11,10 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from flext_core import FlextExceptions, FlextTypes
+from flext_core import FlextTypes
 
 
-class FlextDbtLdifError(FlextExceptions):
+class FlextDbtLdifError(Exception):
     """Unified exception for all LDIF DBT operations with error codes.
 
     Single responsibility class that handles all LDIF DBT error scenarios
@@ -58,7 +58,7 @@ class FlextDbtLdifError(FlextExceptions):
         context["error_code"] = error_code.value
         context["operation"] = context.get("operation", "ldif_dbt_operation")
 
-        super().__init__(message, **context)
+        super().__init__(message)
         self.error_code = error_code
 
     # Factory methods for common error scenarios

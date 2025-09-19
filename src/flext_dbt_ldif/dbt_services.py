@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_ldif.models import FlextLdifEntry
-
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from flext_ldif import FlextLdifModels
 
 logger = FlextLogger(__name__)
 # Quality assessment thresholds
@@ -19,10 +18,11 @@ MAX_OBJECT_CLASSES_THRESHOLD = 20
 
 
 class FlextDbtLdifService:
-    """High-level service for LDIF-to-DBT workflow orchestration.
+    """Unified LDIF-to-DBT service with complete workflow orchestration.
 
     Provides complete workflow management combining parsing, validation,
-    model generation, and transformation execution.
+    model generation, transformation execution, and batch processing.
+    Follows single class per module pattern with nested helpers.
     """
 
     def __init__(
@@ -181,7 +181,7 @@ class FlextDbtLdifService:
 
     def generate_and_write_models(
         self,
-        entries: list[FlextLdifEntry],
+        entries: list[FlextLdifModels.Entry],
         *,
         overwrite: bool = False,
     ) -> FlextResult[FlextTypes.Core.Dict]:
@@ -277,15 +277,11 @@ class FlextDbtLdifService:
             validation_result = self.client.validate_ldif_data(entries)
             validation_metrics = (
                 validation_result.value if validation_result.success else {}
-            )
-            if validation_metrics is None:
-                validation_metrics = {}
+            ) or {}
 
             # Analyze schema using model generator
             schema_result = self.model_generator.analyze_ldif_schema(entries)
-            schema_info = schema_result.value if schema_result.success else {}
-            if schema_info is None:
-                schema_info = {}
+            schema_info = (schema_result.value if schema_result.success else {}) or {}
 
             # Compile comprehensive assessment
             quality_assessment = {
@@ -331,7 +327,7 @@ class FlextDbtLdifService:
 
     def generate_model_documentation(
         self,
-        entries: list[FlextLdifEntry],
+        entries: list[FlextLdifModels.Entry],
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Generate documentation for DBT models based on LDIF analysis.
 
@@ -474,137 +470,90 @@ class FlextDbtLdifService:
             "dependencies": {model.name: ["ldif_source"] for model in models},
         }
 
+    class _WorkflowManager:
+        """Nested workflow manager for batch LDIF processing.
 
-class FlextDbtLdifWorkflowManager:
-    """Advanced workflow manager for batch LDIF processing.
-
-    Handles multiple LDIF files and complex workflow orchestration.
-    """
-
-    def __init__(
-        self,
-        config: FlextDbtLdifConfig | None = None,
-        project_dir: Path | None = None,
-    ) -> None:
-        """Initialize workflow manager.
-
-        Args:
-            config: Configuration for operations
-            project_dir: DBT project directory
-
+        Handles multiple LDIF files and complex workflow orchestration
+        as part of the unified service class.
         """
-        self.config = config or FlextDbtLdifConfig()
-        self.project_dir = project_dir or Path.cwd()
-        self.service = FlextDbtLdifService(self.config, self.project_dir)
 
-        logger.info("Initialized DBT LDIF workflow manager")
+        def __init__(self, parent_service: FlextDbtLdifService) -> None:
+            """Initialize workflow manager with parent service reference."""
+            self.parent_service = parent_service
+            self.config = parent_service.config
+            self.project_dir = parent_service.project_dir
 
-    def process_multiple_ldif_files(
-        self,
-        ldif_files: list[Path | str],
-        *,
-        batch_size: int = 10,
-    ) -> FlextResult[FlextTypes.Core.Dict]:
-        """Process multiple LDIF files in batches.
-
-        Args:
-            ldif_files: List of LDIF file paths
-            batch_size: Number of files to process per batch
-
-        Returns:
-            FlextResult containing batch processing results
-
-        """
-        logger.info(
-            "Processing %d LDIF files in batches of %d",
-            len(ldif_files),
-            batch_size,
-        )
-
-        try:
-            batch_results = []
-
-            for i in range(0, len(ldif_files), batch_size):
-                batch = ldif_files[i : i + batch_size]
-                logger.info(
-                    "Processing batch %d: %d files",
-                    i // batch_size + 1,
-                    len(batch),
-                )
-
-                batch_result = self._process_file_batch(batch)
-                batch_results.append(
-                    batch_result.value
-                    if batch_result.success
-                    else {"error": batch_result.error},
-                )
-
-            return FlextResult[FlextTypes.Core.Dict].ok(
-                {
-                    "total_files": len(ldif_files),
-                    "batch_size": batch_size,
-                    "batch_count": len(batch_results),
-                    "batch_results": batch_results,
-                    "status": "completed",
-                },
+        def process_multiple_files(
+            self,
+            file_paths: list[Path],
+            *,
+            parallel: bool = False,
+        ) -> FlextResult[FlextTypes.Core.Dict]:
+            """Process multiple LDIF files in sequence or parallel."""
+            logger.info(
+                "Processing %d files with parallel=%s", len(file_paths), parallel
             )
 
-        except Exception as e:
-            logger.exception("Error in batch processing")
-            return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Batch processing error: {e}"
-            )
+            batch_results: FlextTypes.Core.Dict = {
+                "total": len(file_paths),
+                "successful": 0,
+                "failed": 0,
+                "results": [],
+            }
 
-    def _process_file_batch(
-        self,
-        file_batch: list[Path | str],
-    ) -> FlextResult[FlextTypes.Core.Dict]:
-        """Process a batch of LDIF files."""
-        batch_results: FlextTypes.Core.Dict = {
-            "files": [str(f) for f in file_batch],
-            "results": [],
-            "summary": {"success": 0, "failed": 0},
-        }
-
-        summary = batch_results["summary"]
-        results = batch_results["results"]
-
-        for file_path in file_batch:
-            try:
-                result = self.service.run_complete_workflow(file_path)
-                if result.success:
-                    if isinstance(summary, dict) and "success" in summary:
-                        summary["success"] = int(summary["success"]) + 1
-                elif isinstance(summary, dict) and "failed" in summary:
-                    summary["failed"] = int(summary["failed"]) + 1
-
-                if isinstance(results, list):
-                    results.append(
-                        {
-                            "file": str(file_path),
-                            "status": "success" if result.success else "failed",
-                            "data": result.value if result.success else None,
-                            "error": str(result.error) if not result.success else None,
-                        },
+            for file_path in file_paths:
+                try:
+                    # Use parent service for individual file processing
+                    result = self.parent_service.run_complete_workflow(
+                        ldif_file=file_path,
                     )
 
-            except Exception as e:
-                logger.exception("Error processing file: %s", file_path)
-                if isinstance(summary, dict) and "failed" in summary:
-                    summary["failed"] = int(summary["failed"]) + 1
-                if isinstance(results, list):
-                    results.append(
-                        {
-                            "file": str(file_path),
-                            "status": "failed",
-                            "error": str(e),
-                        },
-                    )
+                    if result.success:
+                        current_success = batch_results.get("successful", 0)
+                        if isinstance(current_success, int):
+                            batch_results["successful"] = current_success + 1
+                        else:
+                            batch_results["successful"] = 1
+                    else:
+                        current_failed = batch_results.get("failed", 0)
+                        if isinstance(current_failed, int):
+                            batch_results["failed"] = current_failed + 1
+                        else:
+                            batch_results["failed"] = 1
 
-        return FlextResult[FlextTypes.Core.Dict].ok(batch_results)
+                    if isinstance(batch_results["results"], list):
+                        batch_results["results"].append(
+                            {
+                                "file": str(file_path),
+                                "status": "success" if result.success else "failed",
+                                "data": result.value if result.success else None,
+                                "error": str(result.error) if not result.success else None,
+                            }
+                        )
+
+                except Exception as e:
+                    logger.exception("Error processing file: %s", file_path)
+                    current_failed = batch_results.get("failed", 0)
+                    if isinstance(current_failed, int):
+                        batch_results["failed"] = current_failed + 1
+                    else:
+                        batch_results["failed"] = 1
+                    if isinstance(batch_results["results"], list):
+                        batch_results["results"].append(
+                            {
+                                "file": str(file_path),
+                                "status": "failed",
+                                "error": str(e),
+                            }
+                        )
+
+            return FlextResult[FlextTypes.Core.Dict].ok(batch_results)
+
+    def get_workflow_manager(self) -> _WorkflowManager:
+        """Get workflow manager for batch processing operations."""
+        return self._WorkflowManager(self)
 
 
 __all__: FlextTypes.Core.StringList = [
     "FlextDbtLdifService",
-    "FlextDbtLdifWorkflowManager",
 ]

@@ -164,23 +164,27 @@ class FlextDbtLdifClient:
             # Use flext-meltano DBT hub for execution
             _ = self.dbt_service
             if model_names:
-                # Run specific models - use generic method
-                result = FlextResult[None].ok(
-                    {"models": model_names, "data": transformed_data},
-                )
+                # Run specific models - return proper Dict type
+                specific_result_data: FlextTypes.Core.Dict = {
+                    "models": model_names,
+                    "data": transformed_data
+                }
+                result = FlextResult[FlextTypes.Core.Dict].ok(specific_result_data)
             else:
-                # Run all models - use generic method
-                result = FlextResult[None].ok(
-                    {"all_models": "true", "data": transformed_data},
-                )
+                # Run all models - return proper Dict type
+                all_result_data: FlextTypes.Core.Dict = {
+                    "all_models": "true",
+                    "data": transformed_data
+                }
+                result = FlextResult[FlextTypes.Core.Dict].ok(all_result_data)
+
             if result.success:
                 logger.info("DBT transformation completed successfully")
-            else:
-                logger.error("DBT transformation failed: %s", result.error)
-                return FlextResult[FlextTypes.Core.Dict].fail(
-                    f"DBT transformation failed: {result.error}",
-                )
-            return result
+                return result
+            logger.error("DBT transformation failed: %s", result.error)
+            return FlextResult[FlextTypes.Core.Dict].fail(
+                f"DBT transformation failed: {result.error}",
+            )
         except Exception as e:
             logger.exception("Unexpected error during DBT transformation")
             return FlextResult[FlextTypes.Core.Dict].fail(
@@ -244,19 +248,19 @@ class FlextDbtLdifClient:
         """
         try:
             prepared_data: dict[str, list[FlextTypes.Core.Dict]] = {}
-            # Get object class distribution using flext-ldif classification
-            stats_result = self._ldif_api.get_objectclass_distribution(entries)
+            # Get object class distribution using flext-ldif analytics
+            stats_result = self._ldif_api._analytics.object_class_distribution(entries)
             if not stats_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Entry statistics failed: {stats_result.error}",
                 )
             # Apply schema mapping from config - simple transformation approach
             for entry in entries:
-                if hasattr(entry, "object_classes") and entry.object_classes:
+                # Get object classes using the entry's method
+                object_classes = entry.get_object_classes()
+                if object_classes:
                     # Find the primary object class
-                    primary_class = (
-                        entry.object_classes[0] if entry.object_classes else "unknown"
-                    )
+                    primary_class = object_classes[0] if object_classes else "unknown"
                     entry_type = (
                         self.config.get_entry_type_for_object_class(primary_class)
                         or "unknown"
@@ -268,9 +272,9 @@ class FlextDbtLdifClient:
                         # Convert entry to dict format
                         if hasattr(entry, "dn") and hasattr(entry, "attributes"):
                             # Convert LDIF entry to a plain dict for DBT mapping
-                            entry_dict: FlextTypes.Core.Dict = {"dn": entry.dn}
-                            # flext-ldif exposes attributes mapping via entry.attributes.attributes
-                            attrs = getattr(entry.attributes, "attributes", {})
+                            entry_dict: FlextTypes.Core.Dict = {"dn": entry.dn.value}
+                            # Use the attributes data property to access the underlying dict
+                            attrs = entry.attributes.data
                             if isinstance(attrs, dict):
                                 for k, v in attrs.items():
                                     entry_dict[str(k)] = v  # preserve original values
