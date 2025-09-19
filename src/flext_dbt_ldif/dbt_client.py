@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_ldif.models import FlextLdifModels
-from flext_meltano.services import FlextMeltanoService
-
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_ldif import FlextLdifAPI
+from flext_ldif.models import FlextLdifModels
+from flext_meltano.services import FlextMeltanoService
 
 logger = FlextLogger(__name__)
 
