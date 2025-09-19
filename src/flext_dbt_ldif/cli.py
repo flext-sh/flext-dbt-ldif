@@ -9,7 +9,7 @@ from __future__ import annotations
 import sys
 from typing import NoReturn
 
-from flext_cli import FlextCliApi, FlextCliConfig
+from flext_cli import FlextCliApi, FlextCliConfigs
 from flext_core import FlextLogger, FlextResult
 from flext_dbt_ldif import __version__
 
@@ -22,7 +22,7 @@ class FlextDbtLdifCliService:
     def __init__(self) -> None:
         """Initialize CLI service with flext-cli patterns."""
         self._cli_api = FlextCliApi()
-        self._config = FlextCliConfig()
+        self._config = FlextCliConfigs()
 
     class _CommandHandlers:
         """Nested helper class for command handling operations."""
@@ -58,11 +58,17 @@ class FlextDbtLdifCliService:
                 if len(sys.argv) > 1:
                     command = sys.argv[1]
                     if command == "info":
-                        service_instance._CommandHandlers.handle_info_command(service_instance)
+                        service_instance._CommandHandlers.handle_info_command(
+                            service_instance,
+                        )
                     elif command == "generate":
-                        service_instance._CommandHandlers.handle_generate_command(service_instance)
+                        service_instance._CommandHandlers.handle_generate_command(
+                            service_instance,
+                        )
                     elif command == "validate":
-                        service_instance._CommandHandlers.handle_validate_command(service_instance)
+                        service_instance._CommandHandlers.handle_validate_command(
+                            service_instance,
+                        )
                     else:
                         logger.error("Unknown command: %s", command)
                         sys.exit(1)
@@ -103,7 +109,7 @@ class FlextDbtLdifCliService:
         """Display generate message using flext-cli."""
         try:
             self._cli_api.format_data(
-                {"message": "Model generation functionality coming soon!"}, "json"
+                {"message": "Model generation functionality coming soon!"}, "json",
             )
             return FlextResult[str].ok("Generate message displayed")
         except Exception as e:
@@ -113,7 +119,7 @@ class FlextDbtLdifCliService:
         """Display validate message using flext-cli."""
         try:
             self._cli_api.format_data(
-                {"message": "Model validation functionality coming soon!"}, "json"
+                {"message": "Model validation functionality coming soon!"}, "json",
             )
             return FlextResult[str].ok("Validate message displayed")
         except Exception as e:

@@ -130,7 +130,7 @@ from flext_core import (
 from flext_cli import (
     FlextCliApi,           # High-level CLI API for LDIF operations
     FlextCliMain,          # Main CLI entry point for LDIF commands
-    FlextCliConfig,        # Configuration management for LDIF CLI
+    FlextCliConfigs,        # Configuration management for LDIF CLI
     FlextCliConstants,     # LDIF CLI-specific constants
     # NEVER import click or rich directly - ALL LDIF CLI + OUTPUT through flext-cli
 )
@@ -303,7 +303,7 @@ __all__ = ["UnifiedFlextDbtLdifService", "LdifEntry", "LdifDbtPipelineConfig"]
 
 ```python
 # ✅ CORRECT - ALL LDIF CLI projects MUST use flext-cli exclusively
-from flext_cli import FlextCliApi, FlextCliMain, FlextCliConfig
+from flext_cli import FlextCliApi, FlextCliMain, FlextCliConfigs
 # ❌ FORBIDDEN - NEVER import click directly in LDIF projects
 # import click  # THIS IS ABSOLUTELY FORBIDDEN IN LDIF PROJECTS
 
@@ -320,7 +320,7 @@ class LdifCliService:
         """Initialize LDIF CLI service with automatic configuration loading."""
         # ✅ AUTOMATIC: LDIF configuration loaded transparently by flext-cli/flext-core
         self._cli_api = FlextCliApi()
-        self._config = FlextCliConfig()  # Automatically includes .env + defaults + CLI params for LDIF
+        self._config = FlextCliConfigs()  # Automatically includes .env + defaults + CLI params for LDIF
 
     def define_ldif_configuration_schema(self) -> FlextResult[dict]:
         """Define LDIF-specific configuration schema.
@@ -648,7 +648,7 @@ python -m flext_dbt_ldif generate models --programmatic \
 
 ```python
 from flext_core import FlextResult, get_logger
-from flext_cli import FlextCliApi, FlextCliConfig
+from flext_cli import FlextCliApi, FlextCliConfigs
 from flext_ldif import get_flext_ldif_api  # If available
 
 class LdifDbtCliTestingService:
@@ -659,7 +659,7 @@ class LdifDbtCliTestingService:
         # ✅ AUTOMATIC: .env loaded transparently by FLEXT ecosystem
         self._logger = get_logger("ldif_cli_testing")
         self._cli_api = FlextCliApi()
-        self._config = FlextCliConfig()  # Automatically loads .env + defaults + CLI params
+        self._config = FlextCliConfigs()  # Automatically loads .env + defaults + CLI params
         self._ldif_api = get_flext_ldif_api() if 'flext_ldif' in globals() else None
 
     def debug_ldif_configuration(self) -> FlextResult[dict]:

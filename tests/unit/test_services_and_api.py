@@ -70,7 +70,7 @@ def test_generate_and_write_models_ok(
             {
                 "written_files": ["f.sql", "f.yml"],
                 "output_dir": ".",
-            }
+            },
         )
 
     monkeypatch.setattr(service.model_generator, "generate_staging_models", _gen_stg)

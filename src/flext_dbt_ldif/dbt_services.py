@@ -7,7 +7,7 @@ from pathlib import Path
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
-from flext_dbt_ldif.dbt_models import FlextDbtLdifModelGenerator, FlextLdifDbtModel
+from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_ldif import FlextLdifModels
 
 logger = FlextLogger(__name__)
@@ -42,7 +42,11 @@ class FlextDbtLdifService:
 
         # Initialize components with maximum composition
         self.client = FlextDbtLdifClient(self.config)
-        self.model_generator = FlextDbtLdifModelGenerator(self.config, self.project_dir)
+        self.model_generator = FlextDbtLdifUnifiedService(
+            name="default_generator",
+            config=self.config,
+            project_dir=self.project_dir,
+        )
 
         logger.info("Initialized DBT LDIF service: %s", self.project_dir)
 
@@ -154,7 +158,7 @@ class FlextDbtLdifService:
             parse_result = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
-                    f"Parse failed: {parse_result.error}"
+                    f"Parse failed: {parse_result.error}",
                 )
 
             entries = parse_result.value or []
@@ -176,7 +180,7 @@ class FlextDbtLdifService:
         except Exception as e:
             logger.exception("Error in parse and validate")
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Parse/validation error: {e}"
+                f"Parse/validation error: {e}",
             )
 
     def generate_and_write_models(
@@ -245,7 +249,7 @@ class FlextDbtLdifService:
         except Exception as e:
             logger.exception("Error in generate and write models")
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Model generation error: {e}"
+                f"Model generation error: {e}",
             )
 
     def run_data_quality_assessment(
@@ -268,7 +272,7 @@ class FlextDbtLdifService:
             parse_result = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
-                    f"Parse failed: {parse_result.error}"
+                    f"Parse failed: {parse_result.error}",
                 )
 
             entries = parse_result.value or []
@@ -322,7 +326,7 @@ class FlextDbtLdifService:
         except Exception as e:
             logger.exception("Error in data quality assessment")
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Quality assessment error: {e}"
+                f"Quality assessment error: {e}",
             )
 
     def generate_model_documentation(
@@ -371,7 +375,7 @@ class FlextDbtLdifService:
                             "name": model.name,
                             "description": model.description,
                             "columns": len(model.columns),
-                            "tests": len(model.tests),
+                            "tests": 0,  # Tests are embedded in columns
                         }
                         for model in staging_models
                     ],
@@ -390,7 +394,7 @@ class FlextDbtLdifService:
         except Exception as e:
             logger.exception("Error generating model documentation")
             return FlextResult[FlextTypes.Core.Dict].fail(
-                f"Documentation generation error: {e}"
+                f"Documentation generation error: {e}",
             )
 
     def _assess_risk_level(self, quality_score: float) -> str:
@@ -456,7 +460,7 @@ class FlextDbtLdifService:
 
     def _generate_lineage_info(
         self,
-        models: list[FlextLdifDbtModel],
+        models: list[FlextDbtLdifUnifiedService],
     ) -> FlextTypes.Core.Dict:
         """Generate data lineage information for models."""
         return {
@@ -491,7 +495,7 @@ class FlextDbtLdifService:
         ) -> FlextResult[FlextTypes.Core.Dict]:
             """Process multiple LDIF files in sequence or parallel."""
             logger.info(
-                "Processing %d files with parallel=%s", len(file_paths), parallel
+                "Processing %d files with parallel=%s", len(file_paths), parallel,
             )
 
             batch_results: FlextTypes.Core.Dict = {
@@ -528,7 +532,7 @@ class FlextDbtLdifService:
                                 "status": "success" if result.success else "failed",
                                 "data": result.value if result.success else None,
                                 "error": str(result.error) if not result.success else None,
-                            }
+                            },
                         )
 
                 except Exception as e:
@@ -544,7 +548,7 @@ class FlextDbtLdifService:
                                 "file": str(file_path),
                                 "status": "failed",
                                 "error": str(e),
-                            }
+                            },
                         )
 
             return FlextResult[FlextTypes.Core.Dict].ok(batch_results)
