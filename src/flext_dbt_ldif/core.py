@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
-from flext_ldif import FlextLdifAPI, FlextLdifEntry, FlextLdifFactory
+from flext_ldif import FlextLdifAPI, FlextLdifModels
 
 logger = FlextLogger(__name__)
 # Constants for magic number elimination
@@ -113,23 +113,23 @@ class FlextDbtLdifCore:
         def _convert_dict_to_entries(
             self,
             ldif_data: list[FlextTypes.Core.Dict],
-        ) -> list[FlextLdifEntry]:
-            """Convert dictionary data to FlextLdifEntry objects using flext-ldif factory.
+        ) -> list[FlextLdifModels.Entry]:
+            """Convert dictionary data to FlextLdifModels.Entry objects using flext-ldif factory.
 
             Args:
                 ldif_data: List of LDIF entry dictionaries
 
             Returns:
-                List of valid FlextLdifEntry objects
+                List of valid FlextLdifModels.Entry objects
 
             """
-            entries: list[FlextLdifEntry] = []
+            entries: list[FlextLdifModels.Entry] = []
             for data in ldif_data:
                 try:
                     # Extract required data from dict with proper type checking
                     dn = str(data.get("dn", ""))
                     attributes = data.get("attributes", {})
-                    changetype = data.get("changetype")
+                    # Note: changetype is not used (Entry constructor only needs dn and attributes)
 
                     formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
                     if isinstance(attributes, dict) and attributes:
@@ -155,16 +155,18 @@ class FlextDbtLdifCore:
                         )
                         continue
 
-                    changetype_str: str | None = None
-                    if changetype is not None and isinstance(changetype, str):
-                        changetype_str = changetype
+                    # Note: changetype is not used in Entry constructor - Entry is for parsed entries only
 
-                    # Use flext-ldif factory for entry creation
-                    entry_result = FlextLdifFactory.create_entry(
-                        dn=dn,
-                        attributes=formatted_attrs,
-                        changetype=changetype_str,
-                    )
+                    # Use FlextLdifModels factory method for proper type construction
+                    try:
+                        entry = FlextLdifModels.create_entry(
+                            {"dn": dn, "attributes": formatted_attrs}
+                        )
+                        entry_result = FlextResult[FlextLdifModels.Entry].ok(entry)
+                    except Exception as e:
+                        entry_result = FlextResult[FlextLdifModels.Entry].fail(
+                            f"Entry creation failed: {e}"
+                        )
 
                     if entry_result.success and entry_result.value:
                         entries.append(entry_result.value)
@@ -195,7 +197,7 @@ class FlextDbtLdifCore:
             )
 
             try:
-                # Convert dict entries to FlextLdifEntry objects for proper analysis
+                # Convert dict entries to FlextLdifModels.Entry objects for proper analysis
                 entries = self._convert_dict_to_entries(ldif_data)
 
                 # Use flext-ldif API for statistics - NO local logic
@@ -210,8 +212,8 @@ class FlextDbtLdifCore:
                 # Get object class distribution using flext-ldif filtering
                 object_classes: FlextTypes.Core.CounterDict = {}
                 for entry in entries:
-                    # Get object classes from the entry's attributes
-                    for obj_class in entry.attributes.get_object_classes():
+                    # Get object classes from the entry's object classes method
+                    for obj_class in entry.get_object_classes():
                         object_classes[obj_class] = object_classes.get(obj_class, 0) + 1
 
                 # Use flext-ldif hierarchical sorting for depth analysis
@@ -225,13 +227,21 @@ class FlextDbtLdifCore:
                             dn_depth_distribution.get(depth_key, 0) + 1
                         )
 
-                # Use flext-ldif analysis patterns - NO local calculation
-                risk_result = self._ldif_api.analyze_entry_patterns(
-                    entries,
+                # Simple risk assessment based on entry count and validity
+                total_entries = len(entries)
+                valid_entries = len(
+                    [e for e in entries if e.validate_business_rules().success]
                 )
-                risk_assessment = (
-                    risk_result.value if risk_result.success else "unknown"
+                validity_ratio = (
+                    valid_entries / total_entries if total_entries > 0 else 0.0
                 )
+
+                if validity_ratio >= HIGH_VALIDITY_THRESHOLD:
+                    risk_assessment = "low"
+                elif validity_ratio >= MEDIUM_VALIDITY_THRESHOLD:
+                    risk_assessment = "medium"
+                else:
+                    risk_assessment = "high"
 
                 return FlextResult[FlextTypes.Core.Dict].ok(
                     {
@@ -274,7 +284,7 @@ class FlextDbtLdifCore:
                 )
 
             try:
-                # Convert to FlextLdifEntry objects using helper method
+                # Convert to FlextLdifModels.Entry objects using helper method
                 ldif_entries = self._convert_dict_to_entries(entries)
 
                 total_entries = len(entries)
@@ -336,7 +346,7 @@ class FlextDbtLdifCore:
 
             """
             try:
-                # Convert to FlextLdifEntry objects using helper method
+                # Convert to FlextLdifModels.Entry objects using helper method
                 ldif_entries = self._convert_dict_to_entries(entries)
 
                 # Use flext-ldif API for all statistics
@@ -355,13 +365,6 @@ class FlextDbtLdifCore:
                 )
 
 
-# Backward compatibility aliases
-DBTModelGenerator = FlextDbtLdifCore.ModelGenerator
-LDIFAnalytics = FlextDbtLdifCore.Analytics
-
-
 __all__: FlextTypes.Core.StringList = [
-    "DBTModelGenerator",
     "FlextDbtLdifCore",
-    "LDIFAnalytics",
 ]

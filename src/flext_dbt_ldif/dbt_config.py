@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import ClassVar
 
 from flext_meltano.config import FlextMeltanoConfig
@@ -78,20 +79,17 @@ class FlextDbtLdifConfig(FlextConfig):
     def get_ldif_config(self) -> FlextLdifConfig:
         """Get LDIF configuration for flext-ldif integration."""
         return FlextLdifConfig(
-            max_entries=20000,
-            max_entry_size=self.ldif_max_file_size,
-            strict_validation=self.ldif_validate_syntax,
-            input_encoding=self.ldif_encoding,
-            output_encoding=self.ldif_encoding,
+            ldif_max_entries=20000,
+            ldif_max_file_size_mb=self.ldif_max_file_size,
+            ldif_strict_validation=self.ldif_validate_syntax,
+            ldif_encoding=self.ldif_encoding,
         )
 
     def get_meltano_config(self) -> FlextMeltanoConfig:
         """Get Meltano configuration for flext-meltano integration."""
         return FlextMeltanoConfig(
-            project_root=self.dbt_project_dir,
-            environment="dev",
-            dbt_project_dir=self.dbt_project_dir,
-            dbt_profiles_dir=self.dbt_profiles_dir,
+            project_root=Path(self.dbt_project_dir),
+            environment="development",
         )
 
     def get_ldif_quality_config(self) -> FlextTypes.Core.Dict:
