@@ -1,4 +1,8 @@
-"""DBT models functionality for flext-dbt-ldif."""
+"""DBT models functionality for flext-dbt-ldif.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 # ruff: noqa: S608  # SQL injection warnings are false positives for dbt SQL template generation
 
