@@ -8,9 +8,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar
 
+from flext_meltano.config import FlextMeltanoConfig
+
 from flext_core import FlextConfig, FlextLogger, FlextTypes
 from flext_ldif import FlextLdifConfig
-from flext_meltano.config import FlextMeltanoConfig
 
 logger = FlextLogger(__name__)
 
