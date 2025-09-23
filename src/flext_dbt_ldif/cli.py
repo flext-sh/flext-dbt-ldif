@@ -9,7 +9,7 @@ from __future__ import annotations
 import sys
 from typing import NoReturn
 
-from flext_cli import FlextCliApi, FlextCliConfigs
+from flext_cli import FlextCliApi, FlextCliModels
 from flext_core import FlextLogger, FlextResult
 from flext_dbt_ldif import __version__
 
@@ -22,7 +22,7 @@ class FlextDbtLdifCliService:
     def __init__(self) -> None:
         """Initialize CLI service with flext-cli patterns."""
         self._cli_api = FlextCliApi()
-        self._config = FlextCliConfigs()
+        self._config = FlextCliModels.FlextCliConfig()
 
     class _CommandHandlers:
         """Nested helper class for command handling operations."""
@@ -32,21 +32,21 @@ class FlextDbtLdifCliService:
             """Handle info command execution."""
             result = service_instance.display_info()
             if result.is_failure:
-                logger.error("Info command failed: %s", result.error)
+                logger.error(f"Info command failed: {result.error}")
 
         @staticmethod
         def handle_generate_command(service_instance: FlextDbtLdifCliService) -> None:
             """Handle generate command execution."""
             result = service_instance.display_generate_message()
             if result.is_failure:
-                logger.error("Generate command failed: %s", result.error)
+                logger.error(f"Generate command failed: {result.error}")
 
         @staticmethod
         def handle_validate_command(service_instance: FlextDbtLdifCliService) -> None:
             """Handle validate command execution."""
             result = service_instance.display_validate_message()
             if result.is_failure:
-                logger.error("Validate command failed: %s", result.error)
+                logger.error(f"Validate command failed: {result.error}")
 
     class _MainEntry:
         """Nested helper class for main entry point operations."""
@@ -70,7 +70,7 @@ class FlextDbtLdifCliService:
                             service_instance,
                         )
                     else:
-                        logger.error("Unknown command: %s", command)
+                        logger.error(f"Unknown command: {command}")
                         sys.exit(1)
 
                 sys.exit(0)
