@@ -7,19 +7,38 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import os
-import sys
 import tempfile
 from collections.abc import Generator
-from pathlib import Path
 
 import pytest
 
 from flext_core import FlextTypes
+from flext_tests import FlextTestDocker
 
-# Add docker directory to path to import shared fixtures
-docker_dir = Path("/home/marlonsc/flext/docker")
-if str(docker_dir) not in sys.path:
-    sys.path.insert(0, str(docker_dir))
+
+@pytest.fixture(scope="session")
+def docker_control() -> FlextTestDocker:
+    """Provide FlextTestDocker instance for container management."""
+    return FlextTestDocker()
+
+
+@pytest.fixture(scope="session")
+def shared_ldap_container(docker_control: FlextTestDocker) -> FlextTestDocker:
+    """Start and maintain flext-openldap-test container.
+
+    Container auto-starts if not running and remains running after tests.
+    """
+    result = docker_control.start_container("flext-openldap-test")
+    if result.is_failure:
+        pytest.skip(f"Failed to start LDAP container: {result.error}")
+
+    yield "flext-openldap-test"
+
+    # Keep container running after tests
+    docker_control.stop_container("flext-openldap-test", remove=False)
+
+
+# Import shared fixtures from docker directory
 
 
 # Test environment setup
@@ -43,7 +62,7 @@ def set_test_environment() -> Generator[None]:
 @pytest.fixture(scope="session", autouse=True)
 def ensure_shared_docker_container(shared_ldap_container: object) -> None:
     """Ensure shared Docker container is started for the test session.
-    
+
     This fixture automatically starts the shared LDAP container if not running,
     and ensures it's available for all tests in the session.
     """
@@ -124,6 +143,7 @@ def dbt_ldif_project_config() -> FlextTypes.Core.Dict:
 @pytest.fixture
 def ldif_source_config(shared_ldap_config: dict) -> FlextTypes.Core.Dict:
     """LDIF source configuration for testing using shared container."""
+    _ = shared_ldap_config  # Acknowledge parameter usage
     return {
         "server": "localhost",
         "port": 3390,  # Use shared container port

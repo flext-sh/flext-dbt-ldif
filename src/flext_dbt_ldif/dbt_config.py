@@ -77,7 +77,7 @@ class FlextDbtLdifConfig(FlextConfig):
         "dcObject": "domains",
     }
 
-    def get_ldif_config(self) -> FlextLdifConfig:
+    def get_ldif_config(self: object) -> FlextLdifConfig:
         """Get LDIF configuration for flext-ldif integration."""
         return FlextLdifConfig(
             ldif_max_entries=20000,
@@ -86,14 +86,14 @@ class FlextDbtLdifConfig(FlextConfig):
             ldif_encoding=self.ldif_encoding,
         )
 
-    def get_meltano_config(self) -> FlextMeltanoConfig:
+    def get_meltano_config(self: object) -> FlextMeltanoConfig:
         """Get Meltano configuration for flext-meltano integration."""
         return FlextMeltanoConfig(
             project_root=Path(self.dbt_project_dir),
             environment="development",
         )
 
-    def get_ldif_quality_config(self) -> FlextTypes.Core.Dict:
+    def get_ldif_quality_config(self: object) -> FlextTypes.Core.Dict:
         """Get data quality configuration for LDIF validation."""
         return {
             "min_quality_threshold": self.min_quality_threshold,

@@ -41,7 +41,7 @@ class FlextDbtLdifService:
             project_dir: DBT project directory
 
         """
-        self.config = config or FlextDbtLdifConfig()
+        self.config: dict[str, object] = config or FlextDbtLdifConfig()
         self.project_dir = project_dir or Path.cwd()
 
         # Initialize components with maximum composition
@@ -89,14 +89,14 @@ class FlextDbtLdifService:
 
         try:
             # Step 1: Parse and validate LDIF
-            parse_result = self.parse_and_validate_ldif(ldif_file)
+            parse_result: FlextResult[object] = self.parse_and_validate_ldif(ldif_file)
             if not parse_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"LDIF parsing/validation failed: {parse_result.error}",
                 )
 
             parse_data = parse_result.value or {}
-            entries = parse_data.get("entries", [])
+            entries: list[object] = parse_data.get("entries", [])
             workflow_results["parse_validation"] = parse_data
             if isinstance(workflow_results["steps_completed"], list):
                 workflow_results["steps_completed"].append("parse_validation")
@@ -159,7 +159,7 @@ class FlextDbtLdifService:
 
         try:
             # Parse LDIF file
-            parse_result = self.client.parse_ldif_file(ldif_file)
+            parse_result: FlextResult[object] = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Parse failed: {parse_result.error}",
@@ -168,7 +168,9 @@ class FlextDbtLdifService:
             entries = parse_result.value or []
 
             # Validate entries
-            validation_result = self.client.validate_ldif_data(entries)
+            validation_result: FlextResult[object] = self.client.validate_ldif_data(
+                entries
+            )
             if not validation_result.success:
                 return validation_result
 
@@ -207,7 +209,9 @@ class FlextDbtLdifService:
 
         try:
             # Generate staging models
-            staging_result = self.model_generator.generate_staging_models(entries)
+            staging_result: FlextResult[object] = (
+                self.model_generator.generate_staging_models(entries)
+            )
             if not staging_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Staging generation failed: {staging_result.error}",
@@ -273,7 +277,7 @@ class FlextDbtLdifService:
 
         try:
             # Parse LDIF
-            parse_result = self.client.parse_ldif_file(ldif_file)
+            parse_result: FlextResult[object] = self.client.parse_ldif_file(ldif_file)
             if not parse_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Parse failed: {parse_result.error}",
@@ -282,13 +286,17 @@ class FlextDbtLdifService:
             entries = parse_result.value or []
 
             # Run validation
-            validation_result = self.client.validate_ldif_data(entries)
+            validation_result: FlextResult[object] = self.client.validate_ldif_data(
+                entries
+            )
             validation_metrics = (
                 validation_result.value if validation_result.success else {}
             ) or {}
 
             # Analyze schema using model generator
-            schema_result = self.model_generator.analyze_ldif_schema(entries)
+            schema_result: FlextResult[object] = (
+                self.model_generator.analyze_ldif_schema(entries)
+            )
             schema_info = (schema_result.value if schema_result.success else {}) or {}
 
             # Compile comprehensive assessment
@@ -350,14 +358,18 @@ class FlextDbtLdifService:
 
         try:
             # Analyze schema
-            schema_result = self.model_generator.analyze_ldif_schema(entries)
+            schema_result: FlextResult[object] = (
+                self.model_generator.analyze_ldif_schema(entries)
+            )
             if not schema_result.success:
                 return schema_result
 
             schema_info = schema_result.value or {}
 
             # Generate models for analysis
-            staging_result = self.model_generator.generate_staging_models(entries)
+            staging_result: FlextResult[object] = (
+                self.model_generator.generate_staging_models(entries)
+            )
             if not staging_result.success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Staging model generation failed: {staging_result.error}",
@@ -415,7 +427,7 @@ class FlextDbtLdifService:
         schema_info: FlextTypes.Core.Dict,
     ) -> FlextTypes.Core.StringList:
         """Generate quality improvement recommendations."""
-        recommendations = []
+        recommendations: list[str] = []
 
         quality_score_obj = validation_metrics.get("quality_score", 0.0) or 0.0
         quality_score = (
@@ -440,7 +452,7 @@ class FlextDbtLdifService:
                 "Invalid DN entries found - check DN format and syntax",
             )
 
-        object_classes_obj = schema_info.get("object_classes", [])
+        object_classes_obj: list[object] = schema_info.get("object_classes", [])
         object_classes = (
             object_classes_obj if isinstance(object_classes_obj, list) else []
         )
@@ -488,7 +500,7 @@ class FlextDbtLdifService:
         def __init__(self, parent_service: FlextDbtLdifService) -> None:
             """Initialize workflow manager with parent service reference."""
             self.parent_service = parent_service
-            self.config = parent_service.config
+            self.config: dict[str, object] = parent_service.config
             self.project_dir = parent_service.project_dir
 
         def process_multiple_files(
@@ -561,7 +573,7 @@ class FlextDbtLdifService:
 
             return FlextResult[FlextTypes.Core.Dict].ok(batch_results)
 
-    def get_workflow_manager(self) -> _WorkflowManager:
+    def get_workflow_manager(self: object) -> _WorkflowManager:
         """Get workflow manager for batch processing operations."""
         return self._WorkflowManager(self)
 
