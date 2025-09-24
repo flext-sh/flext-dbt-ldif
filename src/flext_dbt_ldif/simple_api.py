@@ -86,12 +86,12 @@ def generate_ldif_models(
     service = FlextDbtLdifService(project_dir=proj_path)
 
     # Parse file first
-    parse_result = service.parse_and_validate_ldif(ldif_file)
+    parse_result: FlextResult[object] = service.parse_and_validate_ldif(ldif_file)
     if not parse_result.success:
         return parse_result
 
     parse_data = parse_result.value or {}
-    entries = parse_data.get("entries", [])
+    entries: list[object] = parse_data.get("entries", [])
     if not isinstance(entries, list):
         return FlextResult[FlextTypes.Core.Dict].fail("Invalid entries data format")
     return service.generate_and_write_models(entries, overwrite=overwrite)

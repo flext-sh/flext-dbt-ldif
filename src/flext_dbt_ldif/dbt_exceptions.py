@@ -11,10 +11,10 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from flext_core import FlextTypes
+from flext_core import FlextExceptions, FlextTypes
 
 
-class FlextDbtLdifError(Exception):
+class FlextDbtLdifError(FlextExceptions.Error):
     """Unified exception for all LDIF DBT operations with error codes.
 
     Single responsibility class that handles all LDIF DBT error scenarios
@@ -184,15 +184,15 @@ class FlextDbtLdifError(Exception):
             context["model_name"] = model_name
         return cls(message, error_code=cls.ErrorCode.TEST_ERROR, **context)
 
-    def is_validation_error(self) -> bool:
+    def is_validation_error(self: object) -> bool:
         """Check if this is a validation error."""
         return self.error_code == self.ErrorCode.VALIDATION_ERROR
 
-    def is_configuration_error(self) -> bool:
+    def is_configuration_error(self: object) -> bool:
         """Check if this is a configuration error."""
         return self.error_code == self.ErrorCode.CONFIGURATION_ERROR
 
-    def is_processing_error(self) -> bool:
+    def is_processing_error(self: object) -> bool:
         """Check if this is a processing error."""
         return self.error_code in {
             self.ErrorCode.PROCESSING_ERROR,

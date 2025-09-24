@@ -37,7 +37,7 @@ class FlextDbtLdifCore:
             self.project_dir = project_dir if project_dir is not None else Path.cwd()
             self.models_dir = self.project_dir / "models"
 
-        def generate_staging_models(self) -> list[FlextTypes.Core.Dict]:
+        def generate_staging_models(self: object) -> list[FlextTypes.Core.Dict]:
             """Generate staging layer models for LDIF data.
 
             Returns:
@@ -74,7 +74,7 @@ class FlextDbtLdifCore:
                 },
             ]
 
-        def generate_analytics_models(self) -> list[FlextTypes.Core.Dict]:
+        def generate_analytics_models(self: object) -> list[FlextTypes.Core.Dict]:
             """Generate analytics layer models.
 
             Returns:
@@ -106,7 +106,7 @@ class FlextDbtLdifCore:
         to the FlextLdifAPI, maintaining business rule compliance.
         """
 
-        def __init__(self) -> None:
+        def __init__(self: object) -> None:
             """Initialize analytics with flext-ldif API."""
             self._ldif_api = FlextLdifAPI()
 
@@ -128,7 +128,7 @@ class FlextDbtLdifCore:
                 try:
                     # Extract required data from dict with proper type checking
                     dn = str(data.get("dn", ""))
-                    attributes = data.get("attributes", {})
+                    attributes: dict[str, object] = data.get("attributes", {})
                     # Note: changetype is not used (Entry constructor only needs dn and attributes)
 
                     formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
@@ -196,7 +196,9 @@ class FlextDbtLdifCore:
                 entries = self._convert_dict_to_entries(ldif_data)
 
                 # Use flext-ldif API for statistics - NO local logic
-                stats_result = self._ldif_api.get_entry_statistics(entries)
+                stats_result: FlextResult[object] = self._ldif_api.get_entry_statistics(
+                    entries
+                )
                 if not stats_result.success:
                     return FlextResult[FlextTypes.Core.Dict].fail(
                         f"Statistics generation failed: {stats_result.error}",
@@ -212,7 +214,9 @@ class FlextDbtLdifCore:
                         object_classes[obj_class] = object_classes.get(obj_class, 0) + 1
 
                 # Use flext-ldif hierarchical sorting for depth analysis
-                sorted_result = self._ldif_api.sort_hierarchically(entries)
+                sorted_result: FlextResult[object] = self._ldif_api.sort_hierarchically(
+                    entries
+                )
                 dn_depth_distribution: FlextTypes.Core.CounterDict = {}
                 if sorted_result.success and sorted_result.value:
                     for entry in sorted_result.value:
@@ -303,7 +307,9 @@ class FlextDbtLdifCore:
                 )
 
                 # Consistency check using flext-ldif entry statistics
-                stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
+                stats_result: FlextResult[object] = self._ldif_api.get_entry_statistics(
+                    ldif_entries
+                )
                 consistency = 100.0  # Default high consistency
                 if stats_result.success and stats_result.value:
                     stats = stats_result.value
@@ -345,7 +351,9 @@ class FlextDbtLdifCore:
                 ldif_entries = self._convert_dict_to_entries(entries)
 
                 # Use flext-ldif API for all statistics
-                stats_result = self._ldif_api.get_entry_statistics(ldif_entries)
+                stats_result: FlextResult[object] = self._ldif_api.get_entry_statistics(
+                    ldif_entries
+                )
                 if not stats_result.success:
                     return FlextResult[Mapping[str, object]].fail(
                         f"dbt statistics failed: {stats_result.error}",

@@ -4,15 +4,13 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
-# ruff: noqa: S608  # SQL injection warnings are false positives for dbt SQL template generation
-
 from __future__ import annotations
 
 from pathlib import Path
 
 import yaml
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_ldif import FlextLdifAPI, FlextLdifModels
 
@@ -20,7 +18,7 @@ from flext_ldif import FlextLdifAPI, FlextLdifModels
 logger = FlextLogger(__name__)
 
 
-class FlextDbtLdifUnifiedService:
+class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
     """Unified DBT LDIF service class consolidating model definition and generation.
 
     This unified service follows the mandatory single-class-per-module pattern,
@@ -59,11 +57,29 @@ class FlextDbtLdifUnifiedService:
         self.meta = meta or {}
 
         # Generation service properties
-        self.config = config or FlextDbtLdifConfig()
+        self.config: FlextDbtLdifConfig = config or FlextDbtLdifConfig()
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
         self._ldif_api = FlextLdifAPI()
         logger.info("Initialized unified LDIF DBT service: %s", self.project_dir)
+
+    def execute(self) -> FlextResult[FlextTypes.Core.Dict]:
+        """Execute the DBT model service.
+
+        Returns:
+            FlextResult[FlextTypes.Core.Dict]: Execution result
+
+        """
+        try:
+            # Basic execution logic - can be extended based on requirements
+            result_data: FlextTypes.Core.Dict = {
+                "model_name": self.name,
+                "status": "executed",
+                "timestamp": "2025-01-01T00:00:00Z",  # Placeholder
+            }
+            return FlextResult[FlextTypes.Core.Dict].ok(result_data)
+        except Exception as e:
+            return FlextResult[FlextTypes.Core.Dict].fail(f"Execution failed: {e}")
 
     class _ModelDefinition:
         """Nested helper class for model definition operations."""
@@ -128,12 +144,12 @@ class FlextDbtLdifUnifiedService:
             """
             try:
                 logger.info("Analyzing LDIF schema from %d entries", len(entries))
-                stats_result = service_instance._ldif_api.get_entry_statistics(entries)
-                if not stats_result.success:
+                stats_result = service_instance._ldif_api.entry_statistics(entries)
+                if not stats_result.is_success:
                     return FlextResult[FlextTypes.Core.Dict].fail(
                         f"Schema analysis failed: {stats_result.error}",
                     )
-                base_stats: FlextTypes.Core.CounterDict = stats_result.value or {}
+                base_stats = stats_result.value or {}
                 schema_info: FlextTypes.Core.Dict = dict(base_stats.items())
                 schema_info["total_entries"] = len(entries)
                 schema_info["has_entries"] = len(entries) > 0
@@ -145,7 +161,7 @@ class FlextDbtLdifUnifiedService:
                     f"Schema analysis error: {e}"
                 )
 
-    class _ModelGeneration:
+    class ModelGeneration:
         """Nested helper class for DBT model generation operations."""
 
         @staticmethod
@@ -170,7 +186,7 @@ class FlextDbtLdifUnifiedService:
                 schema_result = service_instance._SchemaAnalysis.analyze_ldif_schema(
                     service_instance, entries
                 )
-                if not schema_result.success:
+                if not schema_result.is_success:
                     return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
                         f"Schema analysis failed: {schema_result.error}",
                     )
@@ -183,8 +199,7 @@ class FlextDbtLdifUnifiedService:
                     )
                     if not schema_name:
                         continue
-                    model = service_instance._ModelGeneration._generate_staging_model_for_type(
-                        service_instance,
+                    model = service_instance.ModelGeneration.generate_staging_model_for_type(
                         entry_type,
                         schema_name,
                         type_entries,
@@ -217,7 +232,7 @@ class FlextDbtLdifUnifiedService:
                     "Generating analytics models from %d staging models",
                     len(staging_models),
                 )
-                analytics_models = []
+                analytics_models: list[FlextDbtLdifUnifiedService] = []
 
                 # Create insights model
                 insights_model = FlextDbtLdifUnifiedService(
@@ -341,7 +356,6 @@ class FlextDbtLdifUnifiedService:
 
         @staticmethod
         def _generate_staging_model_for_type(
-            service_instance: FlextDbtLdifUnifiedService,
             entry_type: str,
             schema_name: str,
             entries: list[FlextLdifModels.Entry],
@@ -384,14 +398,14 @@ class FlextDbtLdifUnifiedService:
             for (
                 ldif_attr,
                 mapped_attr,
-            ) in service_instance.config.ldif_attribute_mapping.items():
+            ) in FlextDbtLdifConfig.ldif_attribute_mapping.items():
                 if ldif_attr != "dn":
                     column_def: FlextTypes.Core.Dict = {
                         "name": mapped_attr,
                         "type": "varchar",
                         "description": f"LDIF {ldif_attr} attribute",
                     }
-                    if ldif_attr in service_instance.config.required_attributes:
+                    if ldif_attr in FlextDbtLdifConfig.required_attributes:
                         column_def["tests"] = ["not_null"]
                     common_attrs.append(column_def)
 
@@ -439,8 +453,8 @@ class FlextDbtLdifUnifiedService:
                 service_instance.models_dir.mkdir(parents=True, exist_ok=True)
                 written_files = []
                 for model in models:
-                    sql_content = (
-                        service_instance._SQLGeneration._generate_sql_for_model(model)
+                    sql_content = service_instance.SQLGeneration.generate_sql_for_model(
+                        model
                     )
                     sql_file = service_instance.models_dir / f"{model.name}.sql"
                     if not overwrite and sql_file.exists():
@@ -453,7 +467,7 @@ class FlextDbtLdifUnifiedService:
                         model
                     )
                     yaml_file = service_instance.models_dir / f"{model.name}.yml"
-                    yaml_content = service_instance._SQLGeneration._generate_basic_yaml(
+                    yaml_content = service_instance.SQLGeneration.generate_basic_yaml(
                         yaml_config
                     )
                     yaml_file.write_text(yaml_content)
@@ -472,36 +486,32 @@ class FlextDbtLdifUnifiedService:
                     f"Model writing error: {e}"
                 )
 
-    class _SQLGeneration:
+    class SQLGeneration:
         """Nested helper class for SQL generation operations."""
 
         @staticmethod
         def _generate_sql_for_model(model: FlextDbtLdifUnifiedService) -> str:
             """Generate SQL content for DBT model using flext-meltano patterns."""
             if model.name.startswith("stg_"):
-                return FlextDbtLdifUnifiedService._SQLGeneration._generate_staging_sql(
+                return FlextDbtLdifUnifiedService.SQLGeneration.generate_staging_sql(
                     model
                 )
             if model.name.startswith("analytics_"):
-                return (
-                    FlextDbtLdifUnifiedService._SQLGeneration._generate_analytics_sql(
-                        model
-                    )
+                return FlextDbtLdifUnifiedService.SQLGeneration.generate_analytics_sql(
+                    model
                 )
-            return FlextDbtLdifUnifiedService._SQLGeneration._generate_generic_sql(
-                model
-            )
+            return FlextDbtLdifUnifiedService.SQLGeneration.generate_generic_sql(model)
 
         @staticmethod
         def _generate_staging_sql(model: FlextDbtLdifUnifiedService) -> str:
             """Generate SQL for staging model."""
-            columns = []
+            columns: list[str] = []
             for col in model.columns:
                 if isinstance(col, dict) and "name" in col:
                     col_name = col["name"]
                     if isinstance(col_name, str):
                         columns.append(col_name)
-            column_list = ",\n    ".join(columns)
+            column_list: str = ",\n    ".join(columns)
 
             allowed_materializations = {"view", "table", "ephemeral", "incremental"}
             materialized = (
@@ -510,15 +520,16 @@ class FlextDbtLdifUnifiedService:
                 else "view"
             )
 
+            # Generate DBT template string (not executable SQL)
             return (
                 "-- Staging model for LDIF data\n"
                 "-- Generated automatically by flext-dbt-ldif\n\n"
-                "{{ config(materialized='" + materialized + "') }}\n\n"
+                f"{{ config(materialized='{materialized}') }}\n\n"
                 "with source_data as (\n"
                 "    select\n"
-                "        " + column_list + ",\n"
+                f"        {column_list},\n"
                 "        current_timestamp as processed_at\n"
-                "    from {{ source('ldif', 'raw_ldif_entries') }}\n"
+                "    from { source('ldif', 'raw_ldif_entries') }\n"
                 "),\n\n"
                 "validated_data as (\n"
                 "    select *,\n"
@@ -537,7 +548,8 @@ class FlextDbtLdifUnifiedService:
             """Generate analytics SQL for DBT model."""
             # Use model configuration for SQL generation
             table_name = getattr(model, "table_name", "analytics_table")
-            return f"SELECT * FROM {{{{ ref('{table_name}') }}}}"
+            # Generate DBT template string (not executable SQL)
+            return f"SELECT * FROM {{ ref('{table_name}') }}"
 
         @staticmethod
         def _generate_generic_sql(model: FlextDbtLdifUnifiedService) -> str:
@@ -550,7 +562,7 @@ class FlextDbtLdifUnifiedService:
                     if isinstance(col_name, str):
                         columns.append(col_name)
 
-            column_list = ",\n    ".join(columns) if columns else "*"
+            column_list: str = ",\n    ".join(columns) if columns else "*"
 
             return (
                 "-- Generic model for LDIF data\n"
