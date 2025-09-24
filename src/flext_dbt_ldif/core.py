@@ -13,6 +13,7 @@ from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLdifAPI, FlextLdifModels
 
 logger = FlextLogger(__name__)
+
 # Constants for magic number elimination
 HIGH_VALIDITY_THRESHOLD = 0.95
 MEDIUM_VALIDITY_THRESHOLD = 0.8
