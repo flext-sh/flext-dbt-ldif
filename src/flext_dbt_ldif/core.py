@@ -157,16 +157,11 @@ class FlextDbtLdifCore:
 
                     # Note: changetype is not used in Entry constructor - Entry is for parsed entries only
 
-                    # Use FlextLdifModels factory method for proper type construction
-                    try:
-                        entry = FlextLdifModels.create_entry(
-                            {"dn": dn, "attributes": formatted_attrs},
-                        )
-                        entry_result = FlextResult[FlextLdifModels.Entry].ok(entry)
-                    except Exception as e:
-                        entry_result = FlextResult[FlextLdifModels.Entry].fail(
-                            f"Entry creation failed: {e}",
-                        )
+                    # Use direct Entry.create() method for proper type construction
+                    entry_result = FlextLdifModels.Entry.create({
+                        "dn": dn,
+                        "attributes": formatted_attrs,
+                    })
 
                     if entry_result.success and entry_result.value:
                         entries.append(entry_result.value)
