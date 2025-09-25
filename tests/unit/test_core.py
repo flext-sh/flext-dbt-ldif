@@ -18,7 +18,7 @@ EXPECTED_BULK_SIZE = 2
 class TestDBTModelGenerator:
     """Test cases for DBTModelGenerator class."""
 
-    def test_init(self, tmp_path: Path) -> None:
+    def test_initialization(self, tmp_path: Path) -> None:
         """Test DBTModelGenerator initialization."""
         generator = DBTModelGenerator(tmp_path)
         if generator.project_dir != tmp_path:
@@ -26,7 +26,7 @@ class TestDBTModelGenerator:
             raise AssertionError(msg)
         assert generator.models_dir == tmp_path / "models"
 
-    def test_generate_staging_models(self, tmp_path: Path) -> None:
+    def test_staging_model_generation(self, tmp_path: Path) -> None:
         """Test staging model generation."""
         generator = DBTModelGenerator(tmp_path)
         models = generator.generate_staging_models()
@@ -42,7 +42,7 @@ class TestDBTModelGenerator:
         if "columns" not in stg_model:
             raise AssertionError(f"Expected columns in {stg_model}")
 
-    def test_generate_analytics_models(self, tmp_path: Path) -> None:
+    def test_analytics_model_generation(self, tmp_path: Path) -> None:
         """Test analytics model generation."""
         generator = DBTModelGenerator(tmp_path)
         models = generator.generate_analytics_models()

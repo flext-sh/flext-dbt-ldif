@@ -82,7 +82,7 @@ def test_generate_and_write_models_ok(
     assert isinstance(result.value, dict)
 
 
-def test_simple_api_helpers(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_monkeypatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test simple API helpers."""
 
     def _run(
