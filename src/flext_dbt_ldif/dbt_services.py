@@ -7,11 +7,13 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import override
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifModels
 
 logger = FlextLogger(__name__)
@@ -29,6 +31,7 @@ class FlextDbtLdifService:
     Follows single class per module pattern with nested helpers.
     """
 
+    @override
     def __init__(
         self,
         config: FlextDbtLdifConfig | None = None,
@@ -47,7 +50,7 @@ class FlextDbtLdifService:
         # Initialize components with maximum composition
         self.client = FlextDbtLdifClient(self.config)
         self.model_generator = FlextDbtLdifUnifiedService(
-            name="default_generator",
+            name=default_generator,
             config=self.config,
             project_dir=self.project_dir,
         )
@@ -60,7 +63,7 @@ class FlextDbtLdifService:
         *,
         generate_models: bool = True,
         run_transformations: bool = True,
-        model_names: FlextTypes.Core.StringList | None = None,
+        model_names: FlextDbtLdifTypes.Core.StringList | None = None,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Run complete LDIF-to-DBT workflow.
 
@@ -176,7 +179,7 @@ class FlextDbtLdifService:
 
             return FlextResult[FlextTypes.Core.Dict].ok(
                 {
-                    "entries": entries,
+                    "entries": "entries",
                     "entry_count": len(entries),
                     "validation_metrics": validation_result.value,
                     "status": "validated",
@@ -305,8 +308,8 @@ class FlextDbtLdifService:
                     "path": str(ldif_file),
                     "total_entries": len(entries),
                 },
-                "validation_metrics": validation_metrics,
-                "schema_analysis": schema_info,
+                "validation_metrics": "validation_metrics",
+                "schema_analysis": "schema_info",
                 "quality_summary": {
                     "overall_score": validation_metrics.get("quality_score", 0.0)
                     if validation_metrics
@@ -364,8 +367,6 @@ class FlextDbtLdifService:
             if not schema_result.success:
                 return schema_result
 
-            schema_info = schema_result.value or {}
-
             # Generate models for analysis
             staging_result: FlextResult[object] = (
                 self.model_generator.generate_staging_models(entries)
@@ -384,7 +385,7 @@ class FlextDbtLdifService:
                     "description": "DBT models for LDIF data analytics and transformations",
                     "version": "1.0.0",
                 },
-                "schema_analysis": schema_info,
+                "schema_analysis": "schema_info",
                 "model_catalog": {
                     "staging_models": [
                         {
@@ -401,7 +402,7 @@ class FlextDbtLdifService:
                     "threshold": self.config.min_quality_threshold,
                     "required_attributes": self.config.required_attributes,
                 },
-                "generated_at": "{{ current_timestamp }}",
+                "generated_at": {{current_timestamp}},
             }
 
             logger.info("Model documentation generated")
@@ -425,7 +426,7 @@ class FlextDbtLdifService:
         self,
         validation_metrics: FlextTypes.Core.Dict,
         schema_info: FlextTypes.Core.Dict,
-    ) -> FlextTypes.Core.StringList:
+    ) -> FlextDbtLdifTypes.Core.StringList:
         """Generate quality improvement recommendations."""
         recommendations: list[str] = []
 
@@ -497,6 +498,7 @@ class FlextDbtLdifService:
         as part of the unified service class.
         """
 
+        @override
         def __init__(self, parent_service: FlextDbtLdifService) -> None:
             """Initialize workflow manager with parent service reference."""
             self.parent_service = parent_service
@@ -547,7 +549,7 @@ class FlextDbtLdifService:
                         batch_results["results"].append(
                             {
                                 "file": str(file_path),
-                                "status": "success" if result.success else "failed",
+                                "status": success if result.success else "failed",
                                 "data": result.value if result.success else None,
                                 "error": str(result.error)
                                 if not result.success
@@ -578,6 +580,6 @@ class FlextDbtLdifService:
         return self._WorkflowManager(self)
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifService",
 ]

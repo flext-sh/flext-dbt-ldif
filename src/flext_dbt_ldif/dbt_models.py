@@ -7,11 +7,13 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import override
 
 import yaml
 
-from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
+from flext_core import FlextLogger, FlextResult, FlextService
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI, FlextLdifModels
 
 # Use the real typed class for precise type checking
@@ -27,6 +29,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
     within a single cohesive service architecture.
     """
 
+    @override
     def __init__(
         self,
         name: str,
@@ -63,6 +66,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
         self._ldif_api = FlextLdifAPI()
         logger.info("Initialized unified LDIF DBT service: %s", self.project_dir)
 
+    @override
     def execute(self) -> FlextResult[FlextTypes.Core.Dict]:
         """Execute the DBT model service.
 
@@ -191,7 +195,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
                         f"Schema analysis failed: {schema_result.error}",
                     )
                 schema_info = schema_result.value or {}
-                grouped_entries = {"ldif_entries": entries}
+                grouped_entries = {"ldif_entries": "entries"}
                 models = []
                 for entry_type, type_entries in grouped_entries.items():
                     schema_name = service_instance.config.get_schema_for_entry_type(
@@ -236,9 +240,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
 
                 # Create insights model
                 insights_model = FlextDbtLdifUnifiedService(
-                    name="analytics_ldif_insights",
+                    name=analytics_ldif_insights,
                     description="Advanced analytics for LDIF data with statistical insights",
-                    materialization="table",
+                    materialization=table,
                     columns=[
                         {
                             "name": "analysis_date",
@@ -263,7 +267,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
                         },
                         {
                             "name": "quality_score",
-                            "type": "decimal(5,2)",
+                            "type": decimal(5, 2),
                             "description": "Data quality score (0-100)",
                             "tests": [
                                 "not_null",
@@ -294,9 +298,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
 
                 # Create hierarchy model
                 hierarchy_model = FlextDbtLdifUnifiedService(
-                    name="analytics_ldif_hierarchy",
+                    name=analytics_ldif_hierarchy,
                     description="Hierarchical analysis of LDIF DN structures",
-                    materialization="table",
+                    materialization=table,
                     columns=[
                         {
                             "name": "dn_path",
@@ -362,7 +366,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             schema_info: FlextTypes.Core.Dict,
         ) -> FlextDbtLdifUnifiedService:
             """Generate a staging model for a specific entry type."""
-            has_entries = len(entries) > 0
+            len(entries) > 0
             declared_total = (
                 schema_info.get("total_entries")
                 if isinstance(schema_info, dict)
@@ -395,13 +399,10 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
                 },
             ]
 
-            for (
-                ldif_attr,
-                mapped_attr,
-            ) in FlextDbtLdifConfig.ldif_attribute_mapping.items():
+            for ldif_attr in FlextDbtLdifConfig.ldif_attribute_mapping:
                 if ldif_attr != "dn":
                     column_def: FlextTypes.Core.Dict = {
-                        "name": mapped_attr,
+                        "name": "mapped_attr",
                         "type": "varchar",
                         "description": f"LDIF {ldif_attr} attribute",
                     }
@@ -412,14 +413,14 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             return FlextDbtLdifUnifiedService(
                 name=schema_name,
                 description=f"Staging model for LDIF {entry_type} entries with data quality checks",
-                materialization="view",
+                materialization=view,
                 columns=common_attrs,
                 meta={
                     "owner": "data_team",
                     "layer": "staging",
                     "data_source": "ldif",
-                    "entry_type": entry_type,
-                    "has_entries": has_entries,
+                    "entry_type": "entry_type",
+                    "has_entries": "has_entries",
                 },
             )
 
@@ -475,7 +476,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
                 logger.info("Successfully wrote %d files", len(written_files))
                 return FlextResult[FlextTypes.Core.Dict].ok(
                     {
-                        "written_files": written_files,
+                        "written_files": "written_files",
                         "models_count": len(models),
                         "output_dir": str(service_instance.models_dir),
                     },
@@ -640,6 +641,6 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
         )
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifUnifiedService",
 ]

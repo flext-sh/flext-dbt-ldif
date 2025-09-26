@@ -4,9 +4,11 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
 
+from __future__ import annotations
+
 import importlib.metadata
 
-from flext_core import FlextResult, FlextTypes
+from flext_core import FlextResult
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
@@ -18,6 +20,7 @@ from flext_dbt_ldif.simple_api import (
     process_ldif_file,
     validate_ldif_quality,
 )
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI
 
 try:
@@ -28,7 +31,7 @@ except importlib.metadata.PackageNotFoundError:
 __version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
     "FlextDbtLdifConfig",  # Configuration management
     "FlextDbtLdifCore",  # Core functionality

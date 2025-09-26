@@ -8,7 +8,7 @@ PYTHON_VERSION := 3.13
 POETRY := poetry
 SRC_DIR := src
 TESTS_DIR := tests
-MIN_COVERAGE := 90
+MIN_COVERAGE := 100
 DBT_PROFILES_DIR := profiles
 DBT_TARGET := dev
 
@@ -41,38 +41,38 @@ validate: lint type-check security test dbt-test ## Run all quality gates
 
 check: lint type-check dbt-compile ## Quick health check
 
-lint: ## Run linting
-	$(POETRY) run ruff check $(SRC_DIR) $(TESTS_DIR)
+lint: ## Run linting (ZERO TOLERANCE)
+	$(POETRY) run ruff check .
 
 format: ## Format code
-	$(POETRY) run ruff format $(SRC_DIR) $(TESTS_DIR)
+	$(POETRY) run ruff format .
 
-type-check: ## Run type checking
-	$(POETRY) run mypy $(SRC_DIR) --strict
+type-check: ## Run type checking with Pyrefly (ZERO TOLERANCE)
+	PYTHONPATH=$(SRC_DIR) $(POETRY) run pyrefly check .
 
 security: ## Run security scanning
 	$(POETRY) run bandit -r $(SRC_DIR)
 	$(POETRY) run pip-audit
 
 fix: ## Auto-fix code issues
-	$(POETRY) run ruff check $(SRC_DIR) $(TESTS_DIR) --fix
-	$(POETRY) run ruff format $(SRC_DIR) $(TESTS_DIR)
+	$(POETRY) run ruff check . --fix
+	$(POETRY) run ruff format .
 
 # ============================================================================
-# TESTING
+# TESTING (MANDATORY - 100% COVERAGE)
 # ============================================================================
 
-test: ## Run tests with coverage
+test: ## Run tests with 100% coverage (MANDATORY)
 	$(POETRY) run pytest $(TESTS_DIR) --cov=$(SRC_DIR) --cov-report=term-missing --cov-fail-under=$(MIN_COVERAGE)
 
 test-unit: ## Run unit tests only
-	$(POETRY) run pytest $(TESTS_DIR) -m "not integration" -v
+	PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest -m "not integration" -v
 
-test-integration: ## Run integration tests only
-	$(POETRY) run pytest $(TESTS_DIR) -m integration -v
+test-integration: ## Run integration tests with Docker only
+	PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest -m integration -v
 
 test-fast: ## Run tests without coverage
-	$(POETRY) run pytest $(TESTS_DIR) -v
+	PYTHONPATH=$(SRC_DIR) $(POETRY) run pytest -v
 
 coverage-html: ## Generate HTML coverage report
 	$(POETRY) run pytest $(TESTS_DIR) --cov=$(SRC_DIR) --cov-report=html
@@ -126,7 +126,7 @@ ldif-analytics: dbt-run ## Run LDIF analytics models
 	$(POETRY) run dbt run --models tag:analytics --profiles-dir $(DBT_PROFILES_DIR) --target $(DBT_TARGET)
 
 generate-models: ## Generate dbt models programmatically
-	$(POETRY) run python -m flext_dbt_ldif.generate_models
+	PYTHONPATH=$(SRC_DIR) $(POETRY) run python -m flext_dbt_ldif.generate_models
 
 # ============================================================================
 # BUILD & DOCS
@@ -157,7 +157,7 @@ deps-audit: ## Security audit dependencies
 # ============================================================================
 
 clean: ## Clean build artifacts
-	rm -rf build/ dist/ *.egg-info/ .pytest_cache/ htmlcov/ .coverage .mypy_cache/ .ruff_cache/
+	rm -rf build/ dist/ *.egg-info/ .pytest_cache/ htmlcov/ .coverage .mypy_cache/ .pyrefly_cache/ .ruff_cache/
 	rm -rf target/ dbt_packages/ logs/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 

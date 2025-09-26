@@ -10,8 +10,10 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import override
 
-from flext_core import FlextExceptions, FlextTypes
+from flext_core import FlextExceptions
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 
 class FlextDbtLdifError(FlextExceptions.Error):
@@ -39,6 +41,7 @@ class FlextDbtLdifError(FlextExceptions.Error):
         TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
         TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
+    @override
     def __init__(
         self,
         message: str,
@@ -202,6 +205,6 @@ class FlextDbtLdifError(FlextExceptions.Error):
         }
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifError",
 ]
