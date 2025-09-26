@@ -1,11 +1,10 @@
-"""Module docstring."""
-
-from __future__ import annotations
-
 """Models for LDIF DBT operations.
 
 This module provides data models for LDIF DBT operations.
 """
+from __future__ import annotations
+
+from typing import override
 
 from flext_core import FlextModels, FlextResult
 
@@ -152,11 +151,11 @@ from {{{{ source('ldif', '{ldif_source}') }}}}
 
                 staging_model = FlextDbtLdifModels(
                     name=f"stg_ldif_{ldif_source.replace('.', '_')}",
-                    dbt_model_type=staging,
+                    dbt_model_type="staging",
                     ldif_source=ldif_source,
                     change_types=["add", "modify", "delete"],
                     columns=[],
-                    materialization=view,
+                    materialization="view",
                     sql_content=sql_content.strip(),
                     description=f"Staging model for LDIF source {ldif_source}",
                     dependencies=[],
@@ -186,7 +185,7 @@ from {{{{ ref('{staging_model.name}') }}}}
 
                 analytics_model = FlextDbtLdifModels(
                     name=analytics_name,
-                    dbt_model_type=analytics,
+                    dbt_model_type="analytics",
                     ldif_source=staging_model.ldif_source,
                     change_types=staging_model.change_types,
                     columns=[
@@ -197,7 +196,7 @@ from {{{{ ref('{staging_model.name}') }}}}
                             "data_type": "TIMESTAMP",
                         },
                     ],
-                    materialization=table,
+                    materialization="table",
                     sql_content=sql_content.strip(),
                     description=f"Analytics model for {staging_model.ldif_source}",
                     dependencies=[staging_model.name],
