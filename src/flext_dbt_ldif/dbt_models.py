@@ -6,12 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from decimal import Decimal
 from pathlib import Path
 from typing import override
 
 import yaml
 
-from flext_core import FlextLogger, FlextResult, FlextService
+from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI, FlextLdifModels
@@ -240,9 +241,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
 
                 # Create insights model
                 insights_model = FlextDbtLdifUnifiedService(
-                    name=analytics_ldif_insights,
+                    name="analytics_ldif_insights",
                     description="Advanced analytics for LDIF data with statistical insights",
-                    materialization=table,
+                    materialization="table",
                     columns=[
                         {
                             "name": "analysis_date",
@@ -267,7 +268,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
                         },
                         {
                             "name": "quality_score",
-                            "type": decimal(5, 2),
+                            "type": Decimal(5, 2),
                             "description": "Data quality score (0-100)",
                             "tests": [
                                 "not_null",
@@ -366,7 +367,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             schema_info: FlextTypes.Core.Dict,
         ) -> FlextDbtLdifUnifiedService:
             """Generate a staging model for a specific entry type."""
-            len(entries) > 0
+            assert len(entries) > 0
             declared_total = (
                 schema_info.get("total_entries")
                 if isinstance(schema_info, dict)

@@ -13,7 +13,7 @@ from typing import ClassVar
 from flext_meltano.config import FlextMeltanoConfig
 from pydantic import Field, field_validator, model_validator
 
-from flext_core import FlextConfig, FlextLogger, FlextTypes
+from flext_core import FlextConfig, FlextLogger
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifConfig
 
@@ -62,7 +62,7 @@ class FlextDbtLdifConfig(FlextConfig):
     dbt_threads: int = Field(
         default=1, ge=1, le=16, description="Number of DBT threads"
     )
-    dbt_log_level: str = Field(default=info, description="DBT log level")
+    dbt_log_level: str = Field(default="info", description="DBT log level")
 
     # LDIF-specific DBT Settings
     ldif_schema_mapping: ClassVar[FlextDbtLdifTypes.Core.Headers] = {
