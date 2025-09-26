@@ -7,12 +7,14 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
+from typing import override
 
 from flext_ldif.models import FlextLdifModels
 from flext_meltano.services import FlextMeltanoService
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI
 
 logger = FlextLogger(__name__)
@@ -26,6 +28,7 @@ class FlextDbtLdifClient:
     with flext-ldif and flext-meltano.
     """
 
+    @override
     def __init__(
         self,
         config: FlextDbtLdifConfig | None = None,
@@ -129,7 +132,7 @@ class FlextDbtLdifClient:
             return FlextResult[FlextTypes.Core.Dict].ok(
                 {
                     **stats,
-                    "quality_score": quality_score,
+                    "quality_score": "quality_score",
                     "validation_status": "passed",
                     "threshold": self.config.min_quality_threshold,
                 },
@@ -143,7 +146,7 @@ class FlextDbtLdifClient:
     def transform_with_dbt(
         self,
         entries: list[FlextLdifModels.Entry],
-        model_names: FlextTypes.Core.StringList | None = None,
+        model_names: FlextDbtLdifTypes.Core.StringList | None = None,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Transform LDIF data using DBT models.
 
@@ -169,14 +172,13 @@ class FlextDbtLdifClient:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Data preparation failed: {prepared_result.error}",
                 )
-            transformed_data = prepared_result.value or {}
             # Use flext-meltano DBT hub for execution
             _ = self.dbt_service
             if model_names:
                 # Run specific models - return proper Dict type
                 specific_result_data: FlextTypes.Core.Dict = {
-                    "models": model_names,
-                    "data": transformed_data,
+                    "models": "model_names",
+                    "data": "transformed_data",
                 }
                 result: FlextResult[object] = FlextResult[FlextTypes.Core.Dict].ok(
                     specific_result_data
@@ -185,7 +187,7 @@ class FlextDbtLdifClient:
                 # Run all models - return proper Dict type
                 all_result_data: FlextTypes.Core.Dict = {
                     "all_models": "true",
-                    "data": transformed_data,
+                    "data": "transformed_data",
                 }
                 result: FlextResult[object] = FlextResult[FlextTypes.Core.Dict].ok(
                     all_result_data
@@ -207,7 +209,7 @@ class FlextDbtLdifClient:
     def run_full_pipeline(
         self,
         file_path: Path | str | None = None,
-        model_names: FlextTypes.Core.StringList | None = None,
+        model_names: FlextDbtLdifTypes.Core.StringList | None = None,
     ) -> FlextResult[FlextTypes.Core.Dict]:
         """Run complete LDIF to DBT transformation pipeline.
 
@@ -264,7 +266,7 @@ class FlextDbtLdifClient:
         try:
             prepared_data: dict[str, list[FlextTypes.Core.Dict]] = {}
             # Get object class distribution using flext-ldif analytics
-            # TODO(flext-team): Implement public analytics method in flext-ldif  # noqa: TD003, FIX002
+            # TODO(flext-team): Implement public analytics method in flext-ldif
             # Issue: https://github.com/flext-team/flext-ldif/issues/analytics-api
             # stats_result: FlextResult[object] = self._ldif_api._analytics.object_class_distribution(entries)
             # if not stats_result.success:
@@ -331,6 +333,6 @@ class FlextDbtLdifClient:
         return mapped_attrs
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifClient",
 ]

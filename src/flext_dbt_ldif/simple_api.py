@@ -8,8 +8,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_core import FlextLogger, FlextResult
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 logger = FlextLogger(__name__)
 
@@ -93,11 +94,13 @@ def generate_ldif_models(
     parse_data = parse_result.value or {}
     entries: list[object] = parse_data.get("entries", [])
     if not isinstance(entries, list):
-        return FlextResult[FlextTypes.Core.Dict].fail("Invalid entries data format")
+        return FlextResult[FlextDbtLdifTypes.Core.Dict].fail(
+            "Invalid entries data format"
+        )
     return service.generate_and_write_models(entries, overwrite=overwrite)
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "generate_ldif_models",
     "process_ldif_file",
     "validate_ldif_quality",

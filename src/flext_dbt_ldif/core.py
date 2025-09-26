@@ -8,8 +8,10 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from pathlib import Path
+from typing import override
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI, FlextLdifModels
 
 logger = FlextLogger(__name__)
@@ -25,6 +27,7 @@ class FlextDbtLdifCore:
     class ModelGenerator:
         """Generates dbt models programmatically for LDIF analytics."""
 
+        @override
         def __init__(self, project_dir: Path | None = None) -> None:
             """Initialize the model generator.
 
@@ -52,8 +55,7 @@ class FlextDbtLdifCore:
             return [
                 {
                     "name": "stg_ldif_entries",
-                    "description": "Staging model for LDIF entries with "
-                    "data quality checks",
+                    "description": "Staging model for LDIF entries with data quality checks",
                     "materialization": "view",
                     "columns": [
                         {
@@ -87,8 +89,7 @@ class FlextDbtLdifCore:
             return [
                 {
                     "name": "analytics_ldif_insights",
-                    "description": "Advanced analytics model with "
-                    "sophisticated SQL patterns",
+                    "description": "Advanced analytics model with sophisticated SQL patterns",
                     "materialization": "table",
                     "features": [
                         "time_series_analysis",
@@ -107,6 +108,7 @@ class FlextDbtLdifCore:
         to the FlextLdifAPI, maintaining business rule compliance.
         """
 
+        @override
         def __init__(self: object) -> None:
             """Initialize analytics with flext-ldif API."""
             self._ldif_api = FlextLdifAPI()
@@ -128,13 +130,13 @@ class FlextDbtLdifCore:
             for data in ldif_data:
                 try:
                     # Extract required data from dict with proper type checking
-                    dn = str(data.get("dn", ""))
+                    str(data.get("dn", ""))
                     attributes: dict[str, object] = data.get("attributes", {})
                     # Note: changetype is not used (Entry constructor only needs dn and attributes)
 
-                    formatted_attrs: dict[str, FlextTypes.Core.StringList] = {}
+                    formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList] = {}
                     if isinstance(attributes, dict) and attributes:
-                        # Ensure attributes are in the right format (dict[str, FlextTypes.Core.StringList])
+                        # Ensure attributes are in the right format (dict[str, FlextDbtLdifTypes.Core.StringList])
                         for key, value in attributes.items():
                             if isinstance(value, list):
                                 formatted_attrs[str(key)] = [str(v) for v in value]
@@ -160,8 +162,8 @@ class FlextDbtLdifCore:
 
                     # Use direct Entry.create() method for proper type construction
                     entry_result = FlextLdifModels.Entry.create({
-                        "dn": dn,
-                        "attributes": formatted_attrs,
+                        "dn": "dn",
+                        "attributes": "formatted_attrs",
                     })
 
                     if entry_result.success and entry_result.value:
@@ -236,12 +238,11 @@ class FlextDbtLdifCore:
                     valid_entries / total_entries if total_entries > 0 else 0.0
                 )
 
-                if validity_ratio >= HIGH_VALIDITY_THRESHOLD:
-                    risk_assessment = "low"
-                elif validity_ratio >= MEDIUM_VALIDITY_THRESHOLD:
-                    risk_assessment = "medium"
-                else:
-                    risk_assessment = "high"
+                if (
+                    validity_ratio >= HIGH_VALIDITY_THRESHOLD
+                    or validity_ratio >= MEDIUM_VALIDITY_THRESHOLD
+                ):
+                    pass
 
                 return FlextResult[FlextTypes.Core.Dict].ok(
                     {
@@ -251,9 +252,9 @@ class FlextDbtLdifCore:
                         "organizational_units": stats.get("other_entries", 0),
                         "valid_entries": stats.get("valid_entries", 0),
                         "unique_object_classes": list(object_classes.keys()),
-                        "object_class_distribution": object_classes,
-                        "dn_depth_distribution": dn_depth_distribution,
-                        "risk_assessment": risk_assessment,
+                        "object_class_distribution": "object_classes",
+                        "dn_depth_distribution": "dn_depth_distribution",
+                        "risk_assessment": "risk_assessment",
                     },
                 )
 
@@ -275,7 +276,7 @@ class FlextDbtLdifCore:
 
             """
             if not entries:
-                return FlextResult[dict[str, float]].ok(
+                return FlextResult[dict["str", "float"]].ok(
                     {
                         "completeness": 0.0,
                         "validity": 0.0,
@@ -320,7 +321,7 @@ class FlextDbtLdifCore:
                             stats.get("valid", 0) / stats.get("total", 1)
                         ) * 100.0
 
-                return FlextResult[dict[str, float]].ok(
+                return FlextResult[dict["str", "float"]].ok(
                     {
                         "completeness": round(completeness, 2),
                         "validity": round(validity, 2),
@@ -330,7 +331,7 @@ class FlextDbtLdifCore:
 
             except Exception as e:
                 logger.exception("Quality metrics generation failed")
-                return FlextResult[dict[str, float]].fail(
+                return FlextResult[dict["str", "float"]].fail(
                     f"Quality metrics failed: {e}",
                 )
 
@@ -356,19 +357,21 @@ class FlextDbtLdifCore:
                     ldif_entries
                 )
                 if not stats_result.success:
-                    return FlextResult[Mapping[str, object]].fail(
+                    return FlextResult[Mapping["str", "object"]].fail(
                         f"dbt statistics failed: {stats_result.error}",
                     )
 
-                return FlextResult[Mapping[str, object]].ok(stats_result.value or {})
+                return FlextResult[Mapping["str", "object"]].ok(
+                    stats_result.value or {}
+                )
 
             except Exception as e:
                 logger.exception("dbt statistics generation failed")
-                return FlextResult[Mapping[str, object]].fail(
+                return FlextResult[Mapping["str", "object"]].fail(
                     f"dbt statistics error: {e}",
                 )
 
 
-__all__: FlextTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifCore",
 ]

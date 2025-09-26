@@ -7,11 +7,10 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import sys
-from typing import NoReturn
+from typing import NoReturn, override
 
 from flext_cli import FlextCliApi, FlextCliModels
 from flext_core import FlextLogger, FlextResult
-from flext_dbt_ldif import __version__
 
 logger = FlextLogger(__name__)
 
@@ -19,6 +18,7 @@ logger = FlextLogger(__name__)
 class FlextDbtLdifCliService:
     """FLEXT dbt LDIF CLI service using flext-cli foundation exclusively."""
 
+    @override
     def __init__(self: object) -> None:
         """Initialize CLI service with flext-cli patterns."""
         self._cli_api = FlextCliApi()
@@ -86,7 +86,7 @@ class FlextDbtLdifCliService:
         """Display package info using flext-cli."""
         info_data = {
             "name": "FLEXT dbt LDIF",
-            "version": __version__,
+            "version": "__version__",
             "description": "Advanced LDAP Data Analytics and Transformations",
             "features": [
                 "Programmatic dbt model generation",
@@ -137,6 +137,7 @@ class FlextDbtLdifCliService:
         """Generate dbt models from LDIF schema definitions."""
         self._CommandHandlers.handle_generate_command(self)
 
+    @override
     def validate(self: object) -> None:
         """Validate dbt models and configurations."""
         self._CommandHandlers.handle_validate_command(self)

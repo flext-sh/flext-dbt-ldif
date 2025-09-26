@@ -12,7 +12,6 @@ from collections.abc import Generator
 
 import pytest
 
-from flext_core import FlextTypes
 from flext_tests import FlextTestDocker
 
 
