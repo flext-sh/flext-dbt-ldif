@@ -44,13 +44,15 @@ class FlextDbtLdifService:
             project_dir: DBT project directory
 
         """
-        self.config: dict[str, object] = config or FlextDbtLdifConfig()
+        self.config: dict[str, object] = (
+            config or FlextDbtLdifConfig.get_global_instance()
+        )
         self.project_dir = project_dir or Path.cwd()
 
         # Initialize components with maximum composition
         self.client = FlextDbtLdifClient(self.config)
         self.model_generator = FlextDbtLdifUnifiedService(
-            name=default_generator,
+            name="default_generator",
             config=self.config,
             project_dir=self.project_dir,
         )
@@ -402,7 +404,7 @@ class FlextDbtLdifService:
                     "threshold": self.config.min_quality_threshold,
                     "required_attributes": self.config.required_attributes,
                 },
-                "generated_at": {{current_timestamp}},
+                "generated_at": "{{ current_timestamp() }}",
             }
 
             logger.info("Model documentation generated")
@@ -549,7 +551,7 @@ class FlextDbtLdifService:
                         batch_results["results"].append(
                             {
                                 "file": str(file_path),
-                                "status": success if result.success else "failed",
+                                "status": "success" if result.success else "failed",
                                 "data": result.value if result.success else None,
                                 "error": str(result.error)
                                 if not result.success

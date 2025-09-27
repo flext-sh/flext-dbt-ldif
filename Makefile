@@ -37,23 +37,30 @@ setup: ## Complete development setup
 # QUALITY GATES
 # ============================================================================
 
+.PHONY: validate
 validate: lint type-check security test dbt-test ## Run all quality gates
 
+.PHONY: check
 check: lint type-check dbt-compile ## Quick health check
 
+.PHONY: lint
 lint: ## Run linting (ZERO TOLERANCE)
 	$(POETRY) run ruff check .
 
+.PHONY: format
 format: ## Format code
 	$(POETRY) run ruff format .
 
+.PHONY: type-check
 type-check: ## Run type checking with Pyrefly (ZERO TOLERANCE)
 	PYTHONPATH=$(SRC_DIR) $(POETRY) run pyrefly check .
 
+.PHONY: security
 security: ## Run security scanning
 	$(POETRY) run bandit -r $(SRC_DIR)
 	$(POETRY) run pip-audit
 
+.PHONY: fix
 fix: ## Auto-fix code issues
 	$(POETRY) run ruff check . --fix
 	$(POETRY) run ruff format .
@@ -62,6 +69,7 @@ fix: ## Auto-fix code issues
 # TESTING (MANDATORY - 100% COVERAGE)
 # ============================================================================
 
+.PHONY: test
 test: ## Run tests with 100% coverage (MANDATORY)
 	$(POETRY) run pytest $(TESTS_DIR) --cov=$(SRC_DIR) --cov-report=term-missing --cov-fail-under=$(MIN_COVERAGE)
 

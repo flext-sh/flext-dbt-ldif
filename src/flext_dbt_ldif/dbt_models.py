@@ -3,6 +3,7 @@
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+# ruff: noqa: S608  # SQL injection warnings are false positives for DBT template strings
 
 from __future__ import annotations
 
@@ -61,7 +62,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
         self.meta = meta or {}
 
         # Generation service properties
-        self.config: FlextDbtLdifConfig = config or FlextDbtLdifConfig()
+        self.config: FlextDbtLdifConfig = (
+            config or FlextDbtLdifConfig.get_global_instance()
+        )
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
         self._ldif_api = FlextLdifAPI()
@@ -299,9 +302,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
 
                 # Create hierarchy model
                 hierarchy_model = FlextDbtLdifUnifiedService(
-                    name=analytics_ldif_hierarchy,
+                    name="analytics_ldif_hierarchy",
                     description="Hierarchical analysis of LDIF DN structures",
-                    materialization=table,
+                    materialization="table",
                     columns=[
                         {
                             "name": "dn_path",
@@ -367,7 +370,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             schema_info: FlextTypes.Core.Dict,
         ) -> FlextDbtLdifUnifiedService:
             """Generate a staging model for a specific entry type."""
-            assert len(entries) > 0
+            if not entries:
+                error_msg = "Entries list cannot be empty"
+                raise ValueError(error_msg)
             declared_total = (
                 schema_info.get("total_entries")
                 if isinstance(schema_info, dict)
@@ -414,7 +419,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             return FlextDbtLdifUnifiedService(
                 name=schema_name,
                 description=f"Staging model for LDIF {entry_type} entries with data quality checks",
-                materialization=view,
+                materialization="view",
                 columns=common_attrs,
                 meta={
                     "owner": "data_team",
@@ -523,6 +528,8 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             )
 
             # Generate DBT template string (not executable SQL)
+            # Note: This is a template string for DBT, not executable SQL
+            # The f-string interpolation is safe as it's used for DBT templating
             return (
                 "-- Staging model for LDIF data\n"
                 "-- Generated automatically by flext-dbt-ldif\n\n"
@@ -551,6 +558,8 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
             # Use model configuration for SQL generation
             table_name = getattr(model, "table_name", "analytics_table")
             # Generate DBT template string (not executable SQL)
+            # Note: This is a template string for DBT, not executable SQL
+            # The f-string interpolation is safe as it's used for DBT templating
             return f"SELECT * FROM {{ ref('{table_name}') }}"
 
         @staticmethod

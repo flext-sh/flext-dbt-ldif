@@ -16,8 +16,8 @@ class FlextDbtLdifConstants(FlextConstants):
 
     # LDIF Configuration
     DEFAULT_LDIF_ENCODING = "utf-8"
-    DEFAULT_BATCH_SIZE = 1000
-    MAX_BATCH_SIZE = 10000
+    DEFAULT_BATCH_SIZE = FlextConstants.Performance.BatchProcessing.DEFAULT_SIZE
+    MAX_BATCH_SIZE = FlextConstants.Performance.BatchProcessing.MAX_ITEMS
 
     # DBT Configuration
     DEFAULT_DBT_PROFILES_DIR = "./profiles"
@@ -28,6 +28,18 @@ class FlextDbtLdifConstants(FlextConstants):
     DEFAULT_SCHEMA = "ldif_analytics"
     DEFAULT_OUTPUT_FORMAT = "postgresql"
     SUPPORTED_OUTPUT_FORMATS: ClassVar[list[str]] = ["postgresql", "duckdb", "parquet"]
+
+    # File Size Limits
+    MIN_FILE_SIZE_KB = 1024  # 1KB minimum
+    MAX_FILE_SIZE_GB = 1024 * 1024 * 1024  # 1GB maximum
+
+    # Performance Thresholds
+    PERFORMANCE_THRESHOLD_ENTRIES_PER_SECOND = 100
+    PERFORMANCE_THRESHOLD_ENTRIES_PER_SECOND_MIN = 50
+    PERFORMANCE_THRESHOLD_ENTRY_TIME_MS = 100
+    PERFORMANCE_THRESHOLD_MODEL_RUNTIME_SECONDS = 60
+    PERFORMANCE_THRESHOLD_MODEL_COUNT_INCREMENTAL = 20
+    PERFORMANCE_THRESHOLD_MODEL_RUNTIME_PARTITIONING = 300
 
 
 __all__ = ["FlextDbtLdifConstants"]

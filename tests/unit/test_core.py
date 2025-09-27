@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from flext_core import FlextTypes
 from flext_dbt_ldif import DBTModelGenerator, LDIFAnalytics
 
 # Constants
