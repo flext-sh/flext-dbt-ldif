@@ -39,7 +39,9 @@ class FlextDbtLdifClient:
             config: Configuration for LDIF and DBT operations
 
         """
-        self.config: dict[str, object] = config or FlextDbtLdifConfig()
+        self.config: dict[str, object] = (
+            config or FlextDbtLdifConfig.get_global_instance()
+        )
         self._ldif_api = FlextLdifAPI()
         self._dbt_service: FlextMeltanoService | None = None
         logger.info("Initialized DBT LDIF client with config: %s", self.config)
@@ -266,8 +268,7 @@ class FlextDbtLdifClient:
         try:
             prepared_data: dict[str, list[FlextTypes.Core.Dict]] = {}
             # Get object class distribution using flext-ldif analytics
-            # TODO(flext-team): Implement public analytics method in flext-ldif
-            # Issue: https://github.com/flext-team/flext-ldif/issues/analytics-api
+            # Note: Analytics method implementation pending in flext-ldif
             # stats_result: FlextResult[object] = self._ldif_api._analytics.object_class_distribution(entries)
             # if not stats_result.success:
             #     return FlextResult[FlextTypes.Core.Dict].fail(

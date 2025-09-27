@@ -6,14 +6,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import threading
 from pathlib import Path
-from typing import ClassVar
+from typing import ClassVar, Self
 
 from flext_meltano.config import FlextMeltanoConfig
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, SettingsConfigDict, field_validator, model_validator
 
-from flext_core import FlextConfig, FlextLogger
+from flext_core import FlextConfig, FlextLogger, FlextResult
+from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifConfig
 
@@ -27,19 +27,30 @@ class FlextDbtLdifConfig(FlextConfig):
     - Extends FlextConfig from flext-core
     - No nested classes within Config
     - All defaults from FlextDbtLdifConstants
-    - Dependency injection integration with flext-core container
-    - Uses Pydantic 2.11+ features for validation
+    - Uses enhanced singleton pattern with inverse dependency injection
+    - Uses Pydantic 2.11+ features (field_validator, model_validator)
     """
 
-    # Singleton pattern attributes
-    _global_instance: ClassVar[FlextDbtLdifConfig | None] = None
-    _lock: ClassVar[threading.Lock] = threading.Lock()
+    model_config = SettingsConfigDict(
+        env_prefix="FLEXT_DBT_LDIF_",
+        case_sensitive=False,
+        extra="allow",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+        json_schema_extra={
+            "title": "FLEXT DBT LDIF Configuration",
+            "description": "DBT LDIF configuration extending FlextConfig",
+        },
+    )
 
     # LDIF Processing Settings (from flext-ldif) using Field and proper defaults
     ldif_file_path: str = Field(
         default="", description="Path to LDIF file for processing"
     )
-    ldif_encoding: str = Field(default="utf-8", description="LDIF file encoding")
+    ldif_encoding: str = Field(
+        default=FlextDbtLdifConstants.DEFAULT_LDIF_ENCODING,
+        description="LDIF file encoding",
+    )
     ldif_max_file_size: int = Field(
         default=100 * 1024 * 1024,  # 100MB
         ge=1024,  # 1KB minimum
@@ -56,9 +67,13 @@ class FlextDbtLdifConfig(FlextConfig):
     # DBT Execution Settings (from flext-meltano) using Field
     dbt_project_dir: str = Field(default=".", description="DBT project directory path")
     dbt_profiles_dir: str = Field(
-        default=".", description="DBT profiles directory path"
+        default=FlextDbtLdifConstants.DEFAULT_DBT_PROFILES_DIR,
+        description="DBT profiles directory path",
     )
-    dbt_target: str = Field(default="dev", description="DBT target environment")
+    dbt_target: str = Field(
+        default=FlextDbtLdifConstants.DEFAULT_DBT_TARGET,
+        description="DBT target environment",
+    )
     dbt_threads: int = Field(
         default=1, ge=1, le=16, description="Number of DBT threads"
     )
@@ -112,6 +127,17 @@ class FlextDbtLdifConfig(FlextConfig):
         "dcObject": "domains",
     }
 
+    # Project Identification
+    project_name: str = Field(
+        default="flext-dbt-ldif",
+        description="Project name",
+    )
+
+    project_version: str = Field(
+        default="0.9.0",
+        description="Project version",
+    )
+
     # Pydantic 2.11 field validators
     @field_validator("dbt_target")
     @classmethod
@@ -164,7 +190,7 @@ class FlextDbtLdifConfig(FlextConfig):
         return v
 
     @model_validator(mode="after")
-    def validate_ldif_configuration_consistency(self) -> FlextDbtLdifConfig:
+    def validate_ldif_configuration_consistency(self) -> Self:
         """Validate LDIF configuration consistency."""
         # Validate file path if specified
         if self.ldif_file_path:
@@ -177,6 +203,28 @@ class FlextDbtLdifConfig(FlextConfig):
                 raise ValueError(msg)
 
         return self
+
+    def validate_business_rules(self) -> FlextResult[None]:
+        """Validate DBT LDIF specific business rules."""
+        try:
+            # Validate LDIF configuration
+            if self.ldif_file_path and Path(self.ldif_file_path).suffix != ".ldif":
+                return FlextResult[None].fail("LDIF file must have .ldif extension")
+
+            # Validate DBT configuration
+            if not self.dbt_project_dir:
+                return FlextResult[None].fail("DBT project directory is required")
+
+            # Validate file size limits
+            if self.ldif_max_file_size < FlextDbtLdifConstants.MIN_FILE_SIZE_KB:
+                return FlextResult[None].fail("LDIF max file size must be at least 1KB")
+
+            if self.ldif_max_file_size > FlextDbtLdifConstants.MAX_FILE_SIZE_GB:
+                return FlextResult[None].fail("LDIF max file size cannot exceed 1GB")
+
+            return FlextResult[None].ok(None)
+        except Exception as e:
+            return FlextResult[None].fail(f"Business rules validation failed: {e}")
 
     def get_ldif_config(self) -> FlextLdifConfig:
         """Get LDIF configuration for flext-ldif integration."""
@@ -231,28 +279,66 @@ class FlextDbtLdifConfig(FlextConfig):
     def create_for_environment(
         cls, environment: str, **overrides: object
     ) -> FlextDbtLdifConfig:
-        """Create configuration for specific environment."""
-        return cls(environment=environment, **overrides)
+        """Create configuration for specific environment using enhanced singleton pattern."""
+        return cls.get_or_create_shared_instance(
+            project_name="flext-dbt-ldif", environment=environment, **overrides
+        )
 
     @classmethod
     def create_default(cls) -> FlextDbtLdifConfig:
-        """Create default configuration instance."""
-        return cls()
+        """Create default configuration instance using enhanced singleton pattern."""
+        return cls.get_or_create_shared_instance(project_name="flext-dbt-ldif")
 
-    # Singleton pattern override for proper typing
+    @classmethod
+    def create_for_development(cls) -> FlextDbtLdifConfig:
+        """Create configuration optimized for development using enhanced singleton pattern."""
+        return cls.get_or_create_shared_instance(
+            project_name="flext-dbt-ldif",
+            ldif_validate_syntax=False,
+            dbt_target="dev",
+            dbt_threads=1,
+            dbt_log_level="debug",
+            ldif_max_file_size=10 * 1024 * 1024,  # 10MB for dev
+        )
+
+    @classmethod
+    def create_for_production(cls) -> FlextDbtLdifConfig:
+        """Create configuration optimized for production using enhanced singleton pattern."""
+        return cls.get_or_create_shared_instance(
+            project_name="flext-dbt-ldif",
+            ldif_validate_syntax=True,
+            ldif_validate_schemas=True,
+            dbt_target="production",
+            dbt_threads=8,
+            dbt_log_level="info",
+            ldif_max_file_size=500 * 1024 * 1024,  # 500MB for prod
+        )
+
+    @classmethod
+    def create_for_testing(cls) -> FlextDbtLdifConfig:
+        """Create configuration optimized for testing using enhanced singleton pattern."""
+        return cls.get_or_create_shared_instance(
+            project_name="flext-dbt-ldif",
+            ldif_file_path="./test_data/sample.ldif",
+            ldif_encoding="utf-8",
+            ldif_validate_syntax=True,
+            dbt_target="test",
+            dbt_threads=1,
+            dbt_log_level="debug",
+            ldif_max_file_size=1024 * 1024,  # 1MB for tests
+            min_quality_threshold=0.5,
+        )
+
     @classmethod
     def get_global_instance(cls) -> FlextDbtLdifConfig:
-        """Get the global singleton instance of FlextDbtLdifConfig."""
-        if cls._global_instance is None:
-            with cls._lock:
-                if cls._global_instance is None:
-                    cls._global_instance = cls()
-        return cls._global_instance
+        """Get the global singleton instance using enhanced FlextConfig pattern."""
+        return cls.get_or_create_shared_instance(project_name="flext-dbt-ldif")
 
     @classmethod
     def reset_global_instance(cls) -> None:
         """Reset the global FlextDbtLdifConfig instance (mainly for testing)."""
-        cls._global_instance = None
+        # Use the enhanced FlextConfig reset mechanism
+        cls.reset_shared_instance()
 
 
 __all__: FlextDbtLdifTypes.Core.StringList = [
