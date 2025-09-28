@@ -15,13 +15,14 @@ from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
-from flext_dbt_ldif.models import FlextDbtLdifModels, FlextDbtLdifUtilities
+from flext_dbt_ldif.models import FlextDbtLdifModels
 from flext_dbt_ldif.simple_api import (
     generate_ldif_models,
     process_ldif_file,
     validate_ldif_quality,
 )
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
 from flext_ldif import FlextLdifAPI
 
 try:

@@ -151,7 +151,7 @@ class FlextDbtLdifModels(FlextModels):
                 sql_content = f"""
     select *
     from {{{{ source('ldif', '{ldif_source}') }}}}
-    """  # noqa: S608
+    """
 
                 staging_model = FlextDbtLdifModels(
                     name=f"stg_ldif_{ldif_source.replace('.', '_')}",
@@ -163,7 +163,6 @@ class FlextDbtLdifModels(FlextModels):
                     sql_content=sql_content.strip(),
                     description=f"Staging model for LDIF source {ldif_source}",
                     dependencies=[],
-                    domain_events=[],
                 )
 
                 return FlextResult[FlextDbtLdifModels].ok(staging_model)
@@ -187,7 +186,7 @@ class FlextDbtLdifModels(FlextModels):
         *,
         current_timestamp as analytics_timestamp
     from {{{{ ref('{staging_model.name}') }}}}
-    """  # noqa: S608
+    """
 
                 analytics_model = FlextDbtLdifModels(
                     name=analytics_name,
@@ -206,7 +205,6 @@ class FlextDbtLdifModels(FlextModels):
                     sql_content=sql_content.strip(),
                     description=f"Analytics model for {staging_model.ldif_source}",
                     dependencies=[staging_model.name],
-                    domain_events=[],
                 )
 
                 return FlextResult[FlextDbtLdifModels].ok(analytics_model)
@@ -472,11 +470,11 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
             try:
                 if change_type == "add":
-                    sql = f"INSERT INTO ldif_entries (dn, entry_data, change_type) VALUES ('{entry_data.get('dn', '')}', '{entry_data}', 'add')"  # noqa: S608
+                    sql = f"INSERT INTO ldif_entries (dn, entry_data, change_type) VALUES ('{entry_data.get('dn', '')}', '{entry_data}', 'add')"
                 elif change_type == "modify":
-                    sql = f"UPDATE ldif_entries SET entry_data = '{entry_data}', change_type = 'modify' WHERE dn = '{entry_data.get('dn', '')}'"  # noqa: S608
+                    sql = f"UPDATE ldif_entries SET entry_data = '{entry_data}', change_type = 'modify' WHERE dn = '{entry_data.get('dn', '')}'"
                 elif change_type == "delete":
-                    sql = f"DELETE FROM ldif_entries WHERE dn = '{entry_data.get('dn', '')}'"  # noqa: S608
+                    sql = f"DELETE FROM ldif_entries WHERE dn = '{entry_data.get('dn', '')}'"
                 else:
                     return FlextResult[str].fail(
                         f"Unsupported change type: {change_type}"
@@ -534,7 +532,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
     select
         {column_list}
     from {{{{ source('ldif', '{ldif_source.replace(".", "_")}') }}}}
-    """.strip()  # noqa: S608
+    """.strip()
 
                 return FlextResult[str].ok(sql)
             except Exception as e:
@@ -563,7 +561,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
         max(processing_timestamp) as last_change
     from {{{{ ref('{staging_model_name}') }}}}
     group by changetype
-    """  # noqa: S608
+    """
                 elif analytics_type == "timeline":
                     sql = f"""
     select
@@ -573,7 +571,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
     from {{{{ ref('{staging_model_name}') }}}}
     group by date_trunc('hour', processing_timestamp), changetype
     order by change_hour, changetype
-    """  # noqa: S608
+    """
                 else:
                     return FlextResult[str].fail(
                         f"Unsupported analytics type: {analytics_type}"
