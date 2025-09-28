@@ -14,7 +14,7 @@ from typing import override
 import yaml
 
 from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
-from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI, FlextLdifModels
 

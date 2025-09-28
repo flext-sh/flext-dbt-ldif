@@ -13,7 +13,7 @@ from flext_ldif.models import FlextLdifModels
 from flext_meltano.services import FlextMeltanoService
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
-from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
+from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifAPI
 
