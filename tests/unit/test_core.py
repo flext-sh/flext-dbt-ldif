@@ -9,14 +9,13 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextTypes
-from flext_dbt_ldif import DBTModelGenerator, LDIFAnalytics
 
 # Constants
 EXPECTED_BULK_SIZE = 2
 
 
-class TestDBTModelGenerator:
-    """Test cases for DBTModelGenerator class."""
+class TestFlextDbtLdifUnifiedService:
+    """Test cases for FlextDbtLdifUnifiedService class."""
 
     def test_initialization(self, tmp_path: Path) -> None:
         """Test DBTModelGenerator initialization."""
@@ -71,7 +70,7 @@ class TestLDIFAnalytics:
         """Test pattern analysis with empty data."""
         analytics = LDIFAnalytics()
         result = analytics.analyze_entry_patterns([])
-        assert result.success
+        assert result.is_success
         data = result.value or {}
         if data.get("total_entries") != 0:
             raise AssertionError(f"Expected 0, got {data.get('total_entries')}")
@@ -91,7 +90,7 @@ class TestLDIFAnalytics:
 
         analytics = LDIFAnalytics()
         result = analytics.analyze_entry_patterns(sample_data)
-        assert result.success
+        assert result.is_success
         data = result.value or {}
         if data.get("total_entries") != EXPECTED_BULK_SIZE:
             raise AssertionError(
@@ -109,7 +108,7 @@ class TestLDIFAnalytics:
         """Test quality metrics with empty data."""
         analytics = LDIFAnalytics()
         result = analytics.generate_quality_metrics([])
-        assert result.success
+        assert result.is_success
         data = result.value or {}
         if data.get("completeness") != 0.0:
             raise AssertionError(f"Expected 0.0, got {data.get('completeness')}")
@@ -124,7 +123,7 @@ class TestLDIFAnalytics:
         ]
         analytics = LDIFAnalytics()
         result = analytics.generate_quality_metrics(sample_entries)
-        assert result.success
+        assert result.is_success
         data = result.value or {}
         if "completeness" not in data:
             msg: str = "Expected completeness in result"

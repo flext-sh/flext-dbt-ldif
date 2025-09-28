@@ -9,9 +9,10 @@ from __future__ import annotations
 import importlib.metadata
 
 from flext_core import FlextResult
+from flext_dbt_ldif.cli import main
+from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
-from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
@@ -47,6 +48,7 @@ __all__: FlextDbtLdifTypes.Core.StringList = [
     "__version__",
     "__version_info__",
     "generate_ldif_models",
+    "main",  # CLI main entry point
     "process_ldif_file",
     "validate_ldif_quality",
 ]

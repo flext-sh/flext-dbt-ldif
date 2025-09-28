@@ -32,38 +32,38 @@ def test_run_complete_workflow_all(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[None].ok(entries),
+        lambda _fp: FlextResult[FlextTypes.Core.List].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[None].ok({"quality_score": 0.9}),
+        lambda _e: FlextResult[FlextTypes.Core.Dict].ok({"quality_score": 0.9}),
     )
     monkeypatch.setattr(
         svc.client,
         "transform_with_dbt",
-        lambda _e, _m: FlextResult[None].ok({"ran": True}),
+        lambda _e, _m: FlextResult[FlextTypes.Core.Dict].ok({"ran": True}),
     )
 
     # Model generator behavior
     monkeypatch.setattr(
         svc.model_generator,
         "generate_staging_models",
-        lambda _e: FlextResult[None].ok(
+        lambda _e: FlextResult[list[object]].ok(
             [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_analytics_models",
-        lambda _m: FlextResult[None].ok(
+        lambda _m: FlextResult[list[object]].ok(
             [cast("object", FlextLdifDbtModel("analytics_ldif_insights", "d", []))],
         ),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "write_models_to_disk",
-        lambda _models, *, _overwrite=False: FlextResult[None].ok(
+        lambda _models, *, _overwrite=False: FlextResult[dict[str, str | list[str]]].ok(
             {"written_files": ["a.sql"], "output_dir": str(tmp_path)},
         ),
     )
@@ -74,7 +74,7 @@ def test_run_complete_workflow_all(
         run_transformations=True,
         model_names=["m1"],
     )
-    assert result.success
+    assert result.is_success
     data = result.value or {}
     # Allow completed pipeline via workflow_status key
     assert data.get("workflow_status") == "completed"
@@ -90,30 +90,30 @@ def test_run_data_quality_assessment(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[None].ok(entries),
+        lambda _fp: FlextResult[FlextTypes.Core.List].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[None].ok({"quality_score": 0.88}),
+        lambda _e: FlextResult[FlextTypes.Core.Dict].ok({"quality_score": 0.88}),
     )
 
     # analyze_ldif_schema + generate_staging_models paths
     monkeypatch.setattr(
         svc.model_generator,
         "analyze_ldif_schema",
-        lambda _e: FlextResult[None].ok({"total_entries": 1}),
+        lambda _e: FlextResult[FlextTypes.Core.Dict].ok({"total_entries": 1}),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_staging_models",
-        lambda _e: FlextResult[None].ok(
+        lambda _e: FlextResult[list[object]].ok(
             [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
 
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
-    assert result.success
+    assert result.is_success
     summary = (result.value or {}).get("quality_summary", {})
     assert isinstance(summary, dict)
 
@@ -126,17 +126,17 @@ def test_generate_model_documentation(
     monkeypatch.setattr(
         svc.model_generator,
         "analyze_ldif_schema",
-        lambda _e: FlextResult[None].ok({"total_entries": 0}),
+        lambda _e: FlextResult[FlextTypes.Core.Dict].ok({"total_entries": 0}),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_staging_models",
-        lambda _e: FlextResult[None].ok(
+        lambda _e: FlextResult[list[object]].ok(
             [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
 
     result = svc.generate_model_documentation([])
-    assert result.success
+    assert result.is_success
     doc = result.value or {}
     assert "project_info" in doc

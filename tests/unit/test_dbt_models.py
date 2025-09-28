@@ -38,7 +38,7 @@ def test_write_models_and_sql_generation(tmp_path: Path) -> None:
         materialization="table",
     )
     result = gen.write_models_to_disk([stg, an_insights, an_hier], overwrite=True)
-    assert result.success
+    assert result.is_success
     data = result.value or {}
     written = data.get("written_files", [])
     assert any(str(p).endswith("stg_persons.sql") for p in written)
@@ -50,6 +50,6 @@ def test_generate_analytics_models() -> None:
     """Test generating analytics models."""
     gen = FlextDbtLdifModelGenerator(FlextDbtLdifConfig())
     res = gen.generate_analytics_models([])
-    assert res.success
+    assert res.is_success
     models = res.value or []
     assert any(m.name.startswith("analytics_") for m in models)

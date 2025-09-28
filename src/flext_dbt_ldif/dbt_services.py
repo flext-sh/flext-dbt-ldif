@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import override
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
+from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
-from flext_dbt_ldif.dbt_config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_ldif import FlextLdifModels
@@ -95,7 +95,7 @@ class FlextDbtLdifService:
         try:
             # Step 1: Parse and validate LDIF
             parse_result: FlextResult[object] = self.parse_and_validate_ldif(ldif_file)
-            if not parse_result.success:
+            if not parse_result.is_success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"LDIF parsing/validation failed: {parse_result.error}",
                 )
@@ -111,7 +111,7 @@ class FlextDbtLdifService:
                 model_result = self.generate_and_write_models(
                     entries if isinstance(entries, list) else [],
                 )
-                if not model_result.success:
+                if not model_result.is_success:
                     return FlextResult[FlextTypes.Core.Dict].fail(
                         f"Model generation failed: {model_result.error}",
                     )
@@ -126,7 +126,7 @@ class FlextDbtLdifService:
                     entries if isinstance(entries, list) else [],
                     model_names,
                 )
-                if not transform_result.success:
+                if not transform_result.is_success:
                     return FlextResult[FlextTypes.Core.Dict].fail(
                         f"DBT transformation failed: {transform_result.error}",
                     )
@@ -165,7 +165,7 @@ class FlextDbtLdifService:
         try:
             # Parse LDIF file
             parse_result: FlextResult[object] = self.client.parse_ldif_file(ldif_file)
-            if not parse_result.success:
+            if not parse_result.is_success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Parse failed: {parse_result.error}",
                 )
@@ -176,7 +176,7 @@ class FlextDbtLdifService:
             validation_result: FlextResult[object] = self.client.validate_ldif_data(
                 entries
             )
-            if not validation_result.success:
+            if not validation_result.is_success:
                 return validation_result
 
             return FlextResult[FlextTypes.Core.Dict].ok(
@@ -217,7 +217,7 @@ class FlextDbtLdifService:
             staging_result: FlextResult[object] = (
                 self.model_generator.generate_staging_models(entries)
             )
-            if not staging_result.success:
+            if not staging_result.is_success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Staging generation failed: {staging_result.error}",
                 )
@@ -228,7 +228,7 @@ class FlextDbtLdifService:
             analytics_result = self.model_generator.generate_analytics_models(
                 staging_models,
             )
-            if not analytics_result.success:
+            if not analytics_result.is_success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Analytics generation failed: {analytics_result.error}",
                 )
@@ -283,7 +283,7 @@ class FlextDbtLdifService:
         try:
             # Parse LDIF
             parse_result: FlextResult[object] = self.client.parse_ldif_file(ldif_file)
-            if not parse_result.success:
+            if not parse_result.is_success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Parse failed: {parse_result.error}",
                 )
@@ -373,7 +373,7 @@ class FlextDbtLdifService:
             staging_result: FlextResult[object] = (
                 self.model_generator.generate_staging_models(entries)
             )
-            if not staging_result.success:
+            if not staging_result.is_success:
                 return FlextResult[FlextTypes.Core.Dict].fail(
                     f"Staging model generation failed: {staging_result.error}",
                 )
