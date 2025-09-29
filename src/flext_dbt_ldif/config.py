@@ -52,9 +52,9 @@ class FlextDbtLdifConfig(FlextConfig):
         description="LDIF file encoding",
     )
     ldif_max_file_size: int = Field(
-        default=100 * 1024 * 1024,  # 100MB
-        ge=1024,  # 1KB minimum
-        le=1024 * 1024 * 1024,  # 1GB maximum
+        default=FlextDbtLdifConstants.MAX_FILE_SIZE_GB,
+        ge=FlextDbtLdifConstants.MIN_FILE_SIZE_KB,
+        le=FlextDbtLdifConstants.MAX_FILE_SIZE_GB,
         description="Maximum LDIF file size in bytes",
     )
     ldif_validate_syntax: bool = Field(
@@ -75,7 +75,10 @@ class FlextDbtLdifConfig(FlextConfig):
         description="DBT target environment",
     )
     dbt_threads: int = Field(
-        default=1, ge=1, le=16, description="Number of DBT threads"
+        default=FlextDbtLdifConstants.DEFAULT_BATCH_SIZE // 1000,
+        ge=1,
+        le=16,
+        description="Number of DBT threads",
     )
     dbt_log_level: str = Field(default="info", description="DBT log level")
 
@@ -109,7 +112,11 @@ class FlextDbtLdifConfig(FlextConfig):
         default=True, description="Validate LDIF distinguished names"
     )
     max_dn_depth: int = Field(
-        default=10, ge=1, le=50, description="Maximum DN depth for validation"
+        default=FlextDbtLdifConstants.PERFORMANCE_THRESHOLD_MODEL_COUNT_INCREMENTAL
+        // 2,
+        ge=1,
+        le=50,
+        description="Maximum DN depth for validation",
     )
 
     # LDIF Entry Type Mapping

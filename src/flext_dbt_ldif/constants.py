@@ -34,6 +34,16 @@ class FlextDbtLdifConstants(FlextConstants):
     MAX_FILE_SIZE_GB = 1024 * 1024 * 1024  # 1GB maximum
 
     # Performance Thresholds
+    # Schema Analysis Limits
+    MAX_SAMPLE_VALUES = 5  # Maximum sample values to display
+
+    # Entry Count Thresholds
+    LARGE_DATASET_THRESHOLD = 1000000  # 1M entries threshold for optimizations
+
+    # Size Thresholds
+    LARGE_ENTRY_SIZE_BYTES = 10240  # 10KB per entry threshold
+
+    # Performance Thresholds
     PERFORMANCE_THRESHOLD_ENTRIES_PER_SECOND = 100
     PERFORMANCE_THRESHOLD_ENTRIES_PER_SECOND_MIN = 50
     PERFORMANCE_THRESHOLD_ENTRY_TIME_MS = 100

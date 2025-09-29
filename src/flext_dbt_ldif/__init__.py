@@ -17,6 +17,7 @@ from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
 from flext_dbt_ldif.simple_api import (
     generate_ldif_models,
     process_ldif_file,
@@ -40,6 +41,7 @@ __all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifCore",  # Core functionality
     "FlextDbtLdifError",  # Unified exception with error codes
     "FlextDbtLdifModels",  # Standardized [Project]Models pattern
+    "FlextDbtLdifProtocols",  # Standardized [Project]Protocols pattern
     "FlextDbtLdifService",  # High-level workflow orchestration with integrated batch processing
     "FlextDbtLdifUnifiedService",  # Unified DBT model service (consolidated from old classes)
     "FlextDbtLdifUtilities",  # Standardized [Project]Utilities pattern
