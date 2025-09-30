@@ -150,7 +150,7 @@ class FlextDbtLdifModels(FlextModels):
                 sql_content = f"""
     select *
     from {{{{ source('ldif', '{ldif_source}') }}}}
-    """  # noqa: S608
+    """
 
                 staging_model = FlextDbtLdifModels(
                     name=f"stg_ldif_{ldif_source.replace('.', '_')}",
@@ -185,7 +185,7 @@ class FlextDbtLdifModels(FlextModels):
         *,
         current_timestamp as analytics_timestamp
     from {{{{ ref('{staging_model.name}') }}}}
-    """  # noqa: S608
+    """
 
                 analytics_model = FlextDbtLdifModels(
                     name=analytics_name,
