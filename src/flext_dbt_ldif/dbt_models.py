@@ -3,7 +3,7 @@
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-# ruff: noqa: S608  # SQL injection warnings are false positives for DBT template strings
+# SQL injection warnings are false positives for DBT template strings
 
 from __future__ import annotations
 

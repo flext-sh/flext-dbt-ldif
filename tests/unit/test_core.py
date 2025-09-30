@@ -9,6 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextTypes
+from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 
 # Constants
 EXPECTED_BULK_SIZE = 2
@@ -18,8 +19,8 @@ class TestFlextDbtLdifUnifiedService:
     """Test cases for FlextDbtLdifUnifiedService class."""
 
     def test_initialization(self, tmp_path: Path) -> None:
-        """Test DBTModelGenerator initialization."""
-        generator = DBTModelGenerator(tmp_path)
+        """Test FlextDbtLdifUnifiedService initialization."""
+        generator = FlextDbtLdifUnifiedService(tmp_path)
         if generator.project_dir != tmp_path:
             msg: str = f"Expected {tmp_path}, got {generator.project_dir}"
             raise AssertionError(msg)
@@ -27,7 +28,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_staging_model_generation(self, tmp_path: Path) -> None:
         """Test staging model generation."""
-        generator = DBTModelGenerator(tmp_path)
+        generator = FlextDbtLdifUnifiedService(tmp_path)
         models = generator.generate_staging_models()
 
         assert isinstance(models, list)
@@ -43,7 +44,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_analytics_model_generation(self, tmp_path: Path) -> None:
         """Test analytics model generation."""
-        generator = DBTModelGenerator(tmp_path)
+        generator = FlextDbtLdifUnifiedService(tmp_path)
         models = generator.generate_analytics_models()
 
         assert isinstance(models, list)
@@ -63,12 +64,12 @@ class TestFlextDbtLdifUnifiedService:
             raise AssertionError(f"Expected features in {analytics_model}")
 
 
-class TestLDIFAnalytics:
-    """Test cases for LDIFAnalytics class."""
+class TestFlextDbtLdifUnifiedService:
+    """Test cases for FlextDbtLdifUnifiedService class."""
 
     def test_analyze_entry_patterns_empty(self) -> None:
         """Test pattern analysis with empty data."""
-        analytics = LDIFAnalytics()
+        analytics = FlextDbtLdifUnifiedService()
         result = analytics.analyze_entry_patterns([])
         assert result.is_success
         data = result.value or {}
@@ -88,7 +89,7 @@ class TestLDIFAnalytics:
             },
         ]
 
-        analytics = LDIFAnalytics()
+        analytics = FlextDbtLdifUnifiedService()
         result = analytics.analyze_entry_patterns(sample_data)
         assert result.is_success
         data = result.value or {}
@@ -106,7 +107,7 @@ class TestLDIFAnalytics:
 
     def test_generate_quality_metrics_empty(self) -> None:
         """Test quality metrics with empty data."""
-        analytics = LDIFAnalytics()
+        analytics = FlextDbtLdifUnifiedService()
         result = analytics.generate_quality_metrics([])
         assert result.is_success
         data = result.value or {}
@@ -121,7 +122,7 @@ class TestLDIFAnalytics:
         sample_entries: list[FlextTypes.Core.Dict] = [
             {"dn": "test", "objectClass": ["top"]},
         ]
-        analytics = LDIFAnalytics()
+        analytics = FlextDbtLdifUnifiedService()
         result = analytics.generate_quality_metrics(sample_entries)
         assert result.is_success
         data = result.value or {}

@@ -309,7 +309,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
                         select_clauses.append(f"    {attr_name}")
 
                 # Use model_name in description (DBT template - safe SQL generation)
-                model_sql = f"""{{{{  # noqa: S608
+                model_sql = f"""{{{{
     config(
         materialized='view',
         tags=['ldif', 'staging'],
