@@ -31,7 +31,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: DBT run results or error
 
             """
-            ...
 
         def test_dbt_models(
             self,
@@ -48,7 +47,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: DBT test results or error
 
             """
-            ...
 
         def compile_dbt_models(
             self,
@@ -65,7 +63,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: DBT compilation results or error
 
             """
-            ...
 
         def get_dbt_manifest(self) -> FlextResult[dict[str, object]]:
             """Get DBT manifest with LDIF model definitions.
@@ -74,7 +71,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: DBT manifest or error
 
             """
-            ...
 
         def validate_dbt_project(self, project_path: str) -> FlextResult[bool]:
             """Validate DBT project configuration for LDIF integration.
@@ -86,7 +82,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[bool]: Validation status or error
 
             """
-            ...
 
     @runtime_checkable
     class LdifIntegrationProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -105,7 +100,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Parsed LDIF entries or error
 
             """
-            ...
 
         def transform_ldif_to_dbt_format(
             self,
@@ -122,7 +116,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Transformed data or error
 
             """
-            ...
 
         def validate_ldif_data_quality(
             self, data: list[dict[str, object]], quality_rules: dict[str, object]
@@ -137,7 +130,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Quality validation results or error
 
             """
-            ...
 
         def export_ldif_to_warehouse(
             self,
@@ -154,7 +146,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Export operation results or error
 
             """
-            ...
 
     @runtime_checkable
     class ModelingProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -175,7 +166,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Entry dimension model or error
 
             """
-            ...
 
         def create_attribute_dimension(
             self,
@@ -192,7 +182,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Attribute dimension model or error
 
             """
-            ...
 
         def create_change_tracking_model(
             self,
@@ -209,7 +198,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Change tracking model or error
 
             """
-            ...
 
         def generate_fact_tables(
             self, dimensions: list[dict[str, object]], fact_config: dict[str, object]
@@ -224,7 +212,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Generated fact tables or error
 
             """
-            ...
 
     @runtime_checkable
     class TransformationProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -245,7 +232,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Normalized LDIF data or error
 
             """
-            ...
 
         def process_ldif_changesets(
             self,
@@ -262,7 +248,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Processed changeset data or error
 
             """
-            ...
 
         def apply_business_rules(
             self, data: list[dict[str, object]], business_rules: dict[str, object]
@@ -277,7 +262,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Transformed data or error
 
             """
-            ...
 
         def generate_derived_attributes(
             self,
@@ -294,7 +278,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Data with derived attributes or error
 
             """
-            ...
 
     @runtime_checkable
     class MacroProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -312,7 +295,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[str]: Generated DBT macro or error
 
             """
-            ...
 
         def create_ldif_test_macro(
             self, test_config: dict[str, object]
@@ -326,7 +308,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[str]: Generated test macro or error
 
             """
-            ...
 
         def generate_ldif_transformation_macro(
             self, transformation_config: dict[str, object]
@@ -340,7 +321,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[str]: Generated transformation macro or error
 
             """
-            ...
 
         def create_ldif_snapshot_macro(
             self, snapshot_config: dict[str, object]
@@ -354,7 +334,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[str]: Generated snapshot macro or error
 
             """
-            ...
 
     @runtime_checkable
     class QualityProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -373,7 +352,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Format validation results or error
 
             """
-            ...
 
         def check_data_completeness(
             self, data: list[dict[str, object]], completeness_config: dict[str, object]
@@ -388,7 +366,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Completeness check results or error
 
             """
-            ...
 
         def detect_data_anomalies(
             self, data: list[dict[str, object]], anomaly_config: dict[str, object]
@@ -403,7 +380,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[list[dict[str, object]]]: Detected anomalies or error
 
             """
-            ...
 
         def generate_quality_report(
             self,
@@ -420,7 +396,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Quality report or error
 
             """
-            ...
 
     @runtime_checkable
     class PerformanceProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -441,7 +416,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Optimization recommendations or error
 
             """
-            ...
 
         def cache_ldif_parsing(
             self, parsing_config: dict[str, object], cache_config: dict[str, object]
@@ -456,7 +430,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[bool]: Caching setup success status
 
             """
-            ...
 
         def monitor_dbt_performance(
             self, run_results: dict[str, object]
@@ -470,7 +443,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Performance metrics or error
 
             """
-            ...
 
         def optimize_ldif_parsing(
             self, parsing_config: dict[str, object]
@@ -484,7 +456,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Parsing optimization results or error
 
             """
-            ...
 
     @runtime_checkable
     class MonitoringProtocol(FlextProtocols.Domain.Service, Protocol):
@@ -503,7 +474,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[bool]: Metric tracking success status
 
             """
-            ...
 
         def monitor_ldif_data_freshness(
             self, freshness_config: dict[str, object]
@@ -517,7 +487,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Data freshness status or error
 
             """
-            ...
 
         def get_health_status(self) -> FlextResult[dict[str, object]]:
             """Get DBT LDIF integration health status.
@@ -526,7 +495,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Health status or error
 
             """
-            ...
 
         def create_monitoring_dashboard(
             self, dashboard_config: dict[str, object]
@@ -540,7 +508,6 @@ class FlextDbtLdifProtocols(FlextProtocols):
                 FlextResult[dict[str, object]]: Dashboard creation result or error
 
             """
-            ...
 
     # Convenience aliases for easier downstream usage
     DbtLdifProtocol = DbtProtocol

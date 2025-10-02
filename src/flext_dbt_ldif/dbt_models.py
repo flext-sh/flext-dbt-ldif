@@ -3,8 +3,8 @@
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
-# SQL injection warnings are false positives for DBT template strings
 
+# SQL injection warnings are false positives for DBT template strings
 from __future__ import annotations
 
 from decimal import Decimal
@@ -12,11 +12,11 @@ from pathlib import Path
 from typing import override
 
 import yaml
-
 from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
+from flext_ldif import FlextLdif, FlextLdifModels
+
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
-from flext_ldif import FlextLdif, FlextLdifModels
 
 # Use the real typed class for precise type checking
 logger = FlextLogger(__name__)
