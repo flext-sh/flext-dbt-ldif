@@ -1,33 +1,38 @@
-"""Unit tests for version module.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
+"""Version metadata tests for flext-dbt-ldif."""
 
 from __future__ import annotations
 
-from flext_dbt_ldif import __version__
+from collections.abc import Mapping
+
+from flext_core.metadata import FlextProjectMetadata, FlextProjectPerson
+
+from flext_dbt_ldif import __version__, __version_info__
+from flext_dbt_ldif.version import VERSION, FlextDbtLdifVersion
 
 
-class TestVersion:
-    """Test cases for version module."""
+def test_dunder_alignment() -> None:
+    """Dunder version exports map to the canonical VERSION object."""
+    assert __version__ == VERSION.version
+    assert __version_info__ == VERSION.version_info
 
-    def test_version_is_string(self) -> None:
-        """Test that __version__ is a string."""
-        assert isinstance(__version__, str)
 
-    def test_version_format(self) -> None:
-        """Test that __version__ follows semantic versioning format."""
-        # Basic check for semantic versioning pattern (major.minor.patch)
-        parts = __version__.split(".")
-        if len(parts) < 3:
-            raise AssertionError(f"Expected at least 3 parts, got {len(parts)}")
-        if not all(part.isdigit() for part in parts[:3]):
-            non_digits = [part for part in parts[:3] if not part.isdigit()]
-            raise AssertionError(
-                f"Expected all parts to be digits, found non-digits: {non_digits}",
-            )
+def test_metadata_payload() -> None:
+    """Ensure VERSION carries the pyproject metadata."""
+    assert isinstance(VERSION, FlextDbtLdifVersion)
+    assert isinstance(VERSION.metadata, FlextProjectMetadata)
+    assert isinstance(VERSION.urls, Mapping)
+    assert VERSION.version_tuple == VERSION.version_info
 
-    def test_version_not_empty(self) -> None:
-        """Test that __version__ is not empty."""
-        assert __version__.strip()
+
+def test_contact_details() -> None:
+    """Primary author and maintainer information is exposed."""
+    assert isinstance(VERSION.author, FlextProjectPerson)
+    assert isinstance(VERSION.maintainer, FlextProjectPerson)
+    assert VERSION.author_name
+    assert VERSION.maintainer_name
+
+
+def test_metadata_passthrough() -> None:
+    """Author and maintainer collections match metadata."""
+    assert VERSION.authors == VERSION.metadata.authors
+    assert VERSION.maintainers == VERSION.metadata.maintainers

@@ -6,9 +6,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import importlib.metadata
+from typing import Final
 
 from flext_core import FlextResult
+from flext_ldif import FlextLdif
+
 from flext_dbt_ldif.cli import main
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.core import FlextDbtLdifCore
@@ -25,32 +27,29 @@ from flext_dbt_ldif.simple_api import (
 )
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
-from flext_ldif import FlextLdif
+from flext_dbt_ldif.version import VERSION, FlextDbtLdifVersion
 
-try:
-    __version__ = importlib.metadata.version("flext-dbt-ldif")
-except importlib.metadata.PackageNotFoundError:
-    __version__ = "0.9.0"
+PROJECT_VERSION: Final[FlextDbtLdifVersion] = VERSION
 
-__version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
-
+__version__: str = VERSION.version
+__version_info__: tuple[int | str, ...] = VERSION.version_info
 
 __all__: FlextDbtLdifTypes.Core.StringList = [
-    "FlextDbtLdifClient",  # Main client for LDIF-DBT operations
-    "FlextDbtLdifConfig",  # Configuration management
-    "FlextDbtLdifCore",  # Core functionality
-    "FlextDbtLdifError",  # Unified exception with error codes
-    "FlextDbtLdifModels",  # Standardized [Project]Models pattern
-    "FlextDbtLdifProtocols",  # Standardized [Project]Protocols pattern
-    "FlextDbtLdifService",  # High-level workflow orchestration with integrated batch processing
-    "FlextDbtLdifUnifiedService",  # Unified DBT model service (consolidated from old classes)
-    "FlextDbtLdifUtilities",  # Standardized [Project]Utilities pattern
-    "FlextLdif",  # LDIF API integration
-    "FlextResult",  # FlextResult pattern
+    "FlextDbtLdifClient",
+    "FlextDbtLdifConfig",
+    "FlextDbtLdifCore",
+    "FlextDbtLdifError",
+    "FlextDbtLdifModels",
+    "FlextDbtLdifProtocols",
+    "FlextDbtLdifService",
+    "FlextDbtLdifUnifiedService",
+    "FlextDbtLdifUtilities",
+    "FlextLdif",
+    "FlextResult",
     "__version__",
     "__version_info__",
     "generate_ldif_models",
-    "main",  # CLI main entry point
+    "main",
     "process_ldif_file",
     "validate_ldif_quality",
 ]
