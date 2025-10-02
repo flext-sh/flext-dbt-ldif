@@ -25,7 +25,7 @@ from flext_dbt_ldif.simple_api import (
 )
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
-from flext_ldif import FlextLdifAPI
+from flext_ldif import FlextLdif
 
 try:
     __version__ = importlib.metadata.version("flext-dbt-ldif")
@@ -45,7 +45,7 @@ __all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifService",  # High-level workflow orchestration with integrated batch processing
     "FlextDbtLdifUnifiedService",  # Unified DBT model service (consolidated from old classes)
     "FlextDbtLdifUtilities",  # Standardized [Project]Utilities pattern
-    "FlextLdifAPI",  # LDIF API integration
+    "FlextLdif",  # LDIF API integration
     "FlextResult",  # FlextResult pattern
     "__version__",
     "__version_info__",

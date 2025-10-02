@@ -16,7 +16,7 @@ import yaml
 from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
-from flext_ldif import FlextLdifAPI, FlextLdifModels
+from flext_ldif import FlextLdif, FlextLdifModels
 
 # Use the real typed class for precise type checking
 logger = FlextLogger(__name__)
@@ -67,7 +67,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Core.Dict]):
         )
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
-        self._ldif_api = FlextLdifAPI()
+        self._ldif_api = FlextLdif()
         logger.info("Initialized unified LDIF DBT service: %s", self.project_dir)
 
     @override

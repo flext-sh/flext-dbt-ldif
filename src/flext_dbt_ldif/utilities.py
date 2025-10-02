@@ -763,8 +763,8 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     f"LDIF performance optimization failed: {e}"
                 )
 
-    async def execute_async(self) -> FlextResult[dict[str, Any]]:
-        """Execute DBT LDIF utilities service operation asynchronously."""
+    def execute(self) -> FlextResult[dict[str, Any]]:
+        """Execute DBT LDIF utilities service operation hronously."""
         return FlextResult[dict[str, Any]].ok({
             "status": "operational",
             "service": "flext-dbt-ldif-utilities",

@@ -15,7 +15,7 @@ from flext_meltano.services import FlextMeltanoService
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
-from flext_ldif import FlextLdifAPI
+from flext_ldif import FlextLdif
 
 logger = FlextLogger(__name__)
 
@@ -42,7 +42,7 @@ class FlextDbtLdifClient:
         self.config: dict[str, object] = (
             config or FlextDbtLdifConfig.get_global_instance()
         )
-        self._ldif_api = FlextLdifAPI()
+        self._ldif_api = FlextLdif()
         self._dbt_service: FlextMeltanoService | None = None
         logger.info("Initialized DBT LDIF client with config: %s", self.config)
 

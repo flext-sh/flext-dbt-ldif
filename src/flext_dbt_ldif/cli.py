@@ -9,7 +9,7 @@ from __future__ import annotations
 import sys
 from typing import NoReturn, override
 
-from flext_cli import FlextCliApi, FlextCliModels
+from flext_cli import FlextCli, FlextCliModels
 from flext_core import FlextLogger, FlextResult
 
 logger = FlextLogger(__name__)
@@ -21,7 +21,7 @@ class FlextDbtLdifCliService:
     @override
     def __init__(self: object) -> None:
         """Initialize CLI service with flext-cli patterns."""
-        self._cli_api = FlextCliApi()
+        self._cli_api = FlextCli()
         self._config: dict[str, object] = FlextCliModels.FlextCliConfig()
 
     class _CommandHandlers:

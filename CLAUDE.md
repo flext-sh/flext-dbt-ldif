@@ -8,13 +8,35 @@
 
 **Hierarchy**: This document provides project-specific standards based on workspace-level patterns defined in [../CLAUDE.md](../CLAUDE.md). For architectural principles, quality gates, and MCP server usage, reference the main workspace standards.
 
-## 🔗 MCP SERVER INTEGRATION
+## 📋 DOCUMENT STRUCTURE & REFERENCES
 
-| MCP Server              | Purpose                                                     | Status     |
-| ----------------------- | ----------------------------------------------------------- | ---------- |
-| **serena**              | DBT LDIF codebase analysis and data transformation patterns | **ACTIVE** |
-| **sequential-thinking** | LDIF data modeling and DBT architecture problem solving     | **ACTIVE** |
-| **github**              | DBT ecosystem integration and transformation PRs            | **ACTIVE** |
+**Quick Links**:
+- **[~/.claude/commands/flext.md](~/.claude/commands/flext.md)**: Optimization command for module refactoring (USE with `/flext` command)
+- **[../CLAUDE.md](../CLAUDE.md)**: FLEXT ecosystem standards and domain library rules
+
+**Document Purpose**:
+- **This file (CLAUDE.md)**: Project-specific flext-dbt-ldif standards, DBT LDIF analytics patterns, and LDIF programmatic model generation authority
+- **flext.md command**: Practical refactoring workflows and MCP tool usage patterns (HOW-TO)
+- **Workspace CLAUDE.md**: Domain library standards and ecosystem architectural principles (WHAT and WHY)
+
+**DO NOT DUPLICATE**: This file focuses on flext-dbt-ldif DBT analytics authority with MANDATORY use of flext-meltano, flext-ldif, and flext-core.
+
+**Usage**: Reference [~/.claude/commands/flext.md](~/.claude/commands/flext.md) for MCP workflows. Use `/flext` command for DBT LDIF module optimization and Clean Architecture refactoring.
+
+**CRITICAL INTEGRATION DEPENDENCIES**:
+- **flext-meltano**: MANDATORY for ALL DBT operations (ZERO TOLERANCE for direct dbt imports)
+- **flext-ldif**: MANDATORY for ALL LDIF operations (ZERO TOLERANCE for direct LDIF parsing imports)
+- **flext-core**: Foundation patterns (FlextResult, FlextService, FlextContainer)
+- **flext-cli**: MANDATORY for ALL CLI operations (ZERO TOLERANCE for direct click/rich imports)
+
+## 🔗 MCP SERVER INTEGRATION (MANDATORY)
+
+| MCP Server              | Purpose                                                     | Status          |
+| ----------------------- | ----------------------------------------------------------- | --------------- |
+| **serena-flext**        | Semantic code analysis, symbol manipulation, refactoring    | **MANDATORY**   |
+| **sequential-thinking** | LDIF data modeling and DBT architecture problem solving     | **RECOMMENDED** |
+| **context7**            | Third-party library documentation (dbt, LDIF analytics)     | **RECOMMENDED** |
+| **github**              | Repository operations and DBT ecosystem PRs                 | **ACTIVE**      |
 
 **Usage**: `claude mcp list` for available servers, leverage for DBT-specific development patterns and LDIF transformation analysis.
 

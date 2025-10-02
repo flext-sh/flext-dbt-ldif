@@ -12,7 +12,7 @@ from typing import override
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
-from flext_ldif import FlextLdifAPI, FlextLdifModels
+from flext_ldif import FlextLdif, FlextLdifModels
 
 logger = FlextLogger(__name__)
 
@@ -105,13 +105,13 @@ class FlextDbtLdifCore:
         """LDIF-specific analytics functionality using flext-ldif infrastructure.
 
         This class eliminates code duplication by delegating ALL analytics operations
-        to the FlextLdifAPI, maintaining business rule compliance.
+        to the FlextLdif, maintaining business rule compliance.
         """
 
         @override
         def __init__(self: object) -> None:
             """Initialize analytics with flext-ldif API."""
-            self._ldif_api = FlextLdifAPI()
+            self._ldif_api = FlextLdif()
 
         def _convert_dict_to_entries(
             self,
