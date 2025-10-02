@@ -13,7 +13,7 @@ from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifConfig,
     FlextDbtLdifService,
-    FlextLdifAPI,
+    FlextLdif,
     __version__,
     generate_ldif_models,
     process_ldif_file,
@@ -34,4 +34,4 @@ def test_api_imports() -> None:
     assert callable(validate_ldif_quality)
 
     assert FlextResult is not None
-    assert FlextLdifAPI is not None
+    assert FlextLdif is not None
