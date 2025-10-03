@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextConstants
+from flext_core import FlextConstants, FlextTypes
 
 
 class FlextDbtLdifConstants(FlextConstants):
@@ -22,12 +22,16 @@ class FlextDbtLdifConstants(FlextConstants):
     # DBT Configuration
     DEFAULT_DBT_PROFILES_DIR = "./profiles"
     DEFAULT_DBT_TARGET = "dev"
-    DBT_ALLOWED_TARGETS: ClassVar[list[str]] = ["dev", "staging", "prod"]
+    DBT_ALLOWED_TARGETS: ClassVar[FlextTypes.StringList] = ["dev", "staging", "prod"]
 
     # LDIF DBT Model Configuration
     DEFAULT_SCHEMA = "ldif_analytics"
     DEFAULT_OUTPUT_FORMAT = "postgresql"
-    SUPPORTED_OUTPUT_FORMATS: ClassVar[list[str]] = ["postgresql", "duckdb", "parquet"]
+    SUPPORTED_OUTPUT_FORMATS: ClassVar[FlextTypes.StringList] = [
+        "postgresql",
+        "duckdb",
+        "parquet",
+    ]
 
     # File Size Limits
     MIN_FILE_SIZE_KB = 1024  # 1KB minimum

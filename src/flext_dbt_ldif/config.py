@@ -9,13 +9,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar, Self
 
+from flext_ldif import FlextLdifConfig
 from flext_meltano.config import FlextMeltanoConfig
 from pydantic import Field, SettingsConfigDict, field_validator, model_validator
 
 from flext_core import FlextConfig, FlextLogger, FlextResult
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
-from flext_ldif import FlextLdifConfig
 
 logger = FlextLogger(__name__)
 

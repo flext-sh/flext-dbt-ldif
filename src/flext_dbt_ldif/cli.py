@@ -10,7 +10,8 @@ import sys
 from typing import NoReturn, override
 
 from flext_cli import FlextCli, FlextCliModels
-from flext_core import FlextLogger, FlextResult
+
+from flext_core import FlextLogger, FlextResult, FlextTypes
 
 logger = FlextLogger(__name__)
 
@@ -22,7 +23,7 @@ class FlextDbtLdifCliService:
     def __init__(self: object) -> None:
         """Initialize CLI service with flext-cli patterns."""
         self._cli_api = FlextCli()
-        self._config: dict[str, object] = FlextCliModels.FlextCliConfig()
+        self._config: FlextTypes.Dict = FlextCliModels.FlextCliConfig()
 
     class _CommandHandlers:
         """Nested helper class for command handling operations."""
@@ -98,7 +99,7 @@ class FlextDbtLdifCliService:
 
         # Use flext-cli to format and display data
         try:
-            formatted_data: dict[str, object] = self._cli_api.format_data(
+            formatted_data: FlextTypes.Dict = self._cli_api.format_data(
                 info_data, "json"
             )
             if formatted_data.is_success:
