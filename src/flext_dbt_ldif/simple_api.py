@@ -21,7 +21,7 @@ def process_ldif_file(
     *,
     generate_models: bool = True,
     run_transformations: bool = False,
-) -> FlextResult[FlextTypes.Core.Dict]:
+) -> FlextResult[FlextTypes.Dict]:
     """Simple function to process an LDIF file with DBT.
 
     Args:
@@ -48,7 +48,7 @@ def process_ldif_file(
 
 def validate_ldif_quality(
     ldif_file: Path | str,
-) -> FlextResult[FlextTypes.Core.Dict]:
+) -> FlextResult[FlextTypes.Dict]:
     """Simple function to validate LDIF data quality.
 
     Args:
@@ -69,7 +69,7 @@ def generate_ldif_models(
     project_dir: Path | str | None = None,
     *,
     overwrite: bool = False,
-) -> FlextResult[FlextTypes.Core.Dict]:
+) -> FlextResult[FlextTypes.Dict]:
     """Simple function to generate DBT models from LDIF.
 
     Args:
@@ -92,7 +92,7 @@ def generate_ldif_models(
         return parse_result
 
     parse_data = parse_result.value or {}
-    entries: list[object] = parse_data.get("entries", [])
+    entries: FlextTypes.List = parse_data.get("entries", [])
     if not isinstance(entries, list):
         return FlextResult[FlextDbtLdifTypes.Core.Dict].fail(
             "Invalid entries data format"

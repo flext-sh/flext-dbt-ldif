@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import override
 
-from flext_core import FlextModels, FlextResult
+from flext_core import FlextModels, FlextResult, FlextTypes
 
 
 class FlextDbtLdifModels(FlextModels):
@@ -20,12 +20,12 @@ class FlextDbtLdifModels(FlextModels):
     name: str
     dbt_model_type: str  # staging, intermediate, marts, analytics
     ldif_source: str
-    change_types: list[str]
-    columns: list[dict[str, object]]
+    change_types: FlextTypes.StringList
+    columns: list[FlextTypes.Dict]
     materialization: str
     sql_content: str
     description: str
-    dependencies: list[str]
+    dependencies: FlextTypes.StringList
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate DBT LDIF model business rules."""
@@ -70,10 +70,10 @@ class FlextDbtLdifModels(FlextModels):
         except Exception as e:
             return FlextResult[str].fail(f"SQL file generation failed: {e}")
 
-    def to_schema_entry(self) -> FlextResult[dict[str, object]]:
+    def to_schema_entry(self) -> FlextResult[FlextTypes.Dict]:
         """Convert model to schema.yml entry."""
         try:
-            schema_entry: dict[str, object] = {
+            schema_entry: FlextTypes.Dict = {
                 "name": self.name,
                 "description": self.description,
                 "columns": [
@@ -94,7 +94,7 @@ class FlextDbtLdifModels(FlextModels):
     @classmethod
     def create_generator(
         cls,
-        config: dict[str, object],
+        config: FlextTypes.Dict,
     ) -> FlextDbtLdifModels._ModelGenerator:
         """Create a model generator instance."""
         return cls._ModelGenerator(config)
@@ -105,13 +105,13 @@ class FlextDbtLdifModels(FlextModels):
         @override
         def __init__(
             self,
-            config: dict[str, object],
+            config: FlextTypes.Dict,
         ) -> None:
             """Initialize the LDIF model generator."""
             self.config = config
 
         def generate_staging_models(
-            self, ldif_sources: list[str]
+            self, ldif_sources: FlextTypes.StringList
         ) -> FlextResult[list[FlextDbtLdifModels]]:
             """Generate staging models from LDIF sources."""
             staging_models: list[FlextDbtLdifModels] = []

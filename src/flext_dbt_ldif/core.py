@@ -10,9 +10,10 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import override
 
+from flext_ldif import FlextLdif, FlextLdifModels
+
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
-from flext_ldif import FlextLdif, FlextLdifModels
 
 logger = FlextLogger(__name__)
 
@@ -41,7 +42,7 @@ class FlextDbtLdifCore:
             self.project_dir = project_dir if project_dir is not None else Path.cwd()
             self.models_dir = self.project_dir / "models"
 
-        def generate_staging_models(self: object) -> list[FlextTypes.Core.Dict]:
+        def generate_staging_models(self: object) -> list[FlextTypes.Dict]:
             """Generate staging layer models for LDIF data.
 
             Returns:
@@ -77,7 +78,7 @@ class FlextDbtLdifCore:
                 },
             ]
 
-        def generate_analytics_models(self: object) -> list[FlextTypes.Core.Dict]:
+        def generate_analytics_models(self: object) -> list[FlextTypes.Dict]:
             """Generate analytics layer models.
 
             Returns:
@@ -115,7 +116,7 @@ class FlextDbtLdifCore:
 
         def _convert_dict_to_entries(
             self,
-            ldif_data: list[FlextTypes.Core.Dict],
+            ldif_data: list[FlextTypes.Dict],
         ) -> list[FlextLdifModels.Entry]:
             """Convert dictionary data to FlextLdifModels.Entry objects using flext-ldif factory.
 
@@ -131,7 +132,7 @@ class FlextDbtLdifCore:
                 try:
                     # Extract required data from dict with proper type checking
                     str(data.get("dn", ""))
-                    attributes: dict[str, object] = data.get("attributes", {})
+                    attributes: FlextTypes.Dict = data.get("attributes", {})
                     # Note: changetype is not used (Entry constructor only needs dn and attributes)
 
                     formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList] = {}
@@ -178,8 +179,8 @@ class FlextDbtLdifCore:
 
         def analyze_entry_patterns(
             self,
-            ldif_data: list[FlextTypes.Core.Dict],
-        ) -> FlextResult[FlextTypes.Core.Dict]:
+            ldif_data: list[FlextTypes.Dict],
+        ) -> FlextResult[FlextTypes.Dict]:
             """Analyze patterns in LDIF entries using flext-ldif infrastructure.
 
             Args:
@@ -203,14 +204,14 @@ class FlextDbtLdifCore:
                     entries
                 )
                 if not stats_result.success:
-                    return FlextResult[FlextTypes.Core.Dict].fail(
+                    return FlextResult[FlextTypes.Dict].fail(
                         f"Statistics generation failed: {stats_result.error}",
                     )
 
                 stats = stats_result.value or {}
 
                 # Get object class distribution using flext-ldif filtering
-                object_classes: FlextTypes.Core.CounterDict = {}
+                object_classes: FlextTypes.IntDict = {}
                 for entry in entries:
                     # Get object classes from the entry's object classes method
                     for obj_class in entry.get_object_classes():
@@ -220,7 +221,7 @@ class FlextDbtLdifCore:
                 sorted_result: FlextResult[object] = self._ldif_api.sort_hierarchically(
                     entries
                 )
-                dn_depth_distribution: FlextTypes.Core.CounterDict = {}
+                dn_depth_distribution: FlextTypes.IntDict = {}
                 if sorted_result.success and sorted_result.value:
                     for entry in sorted_result.value:
                         depth = entry.dn.get_depth()
@@ -244,7 +245,7 @@ class FlextDbtLdifCore:
                 ):
                     pass
 
-                return FlextResult[FlextTypes.Core.Dict].ok(
+                return FlextResult[FlextTypes.Dict].ok(
                     {
                         "total_entries": stats.get("total_entries", 0),
                         "persons": stats.get("person_entries", 0),
@@ -260,12 +261,12 @@ class FlextDbtLdifCore:
 
             except Exception as e:
                 logger.exception("Entry pattern analysis failed")
-                return FlextResult[FlextTypes.Core.Dict].fail(f"Analysis failed: {e}")
+                return FlextResult[FlextTypes.Dict].fail(f"Analysis failed: {e}")
 
         def generate_quality_metrics(
             self,
-            entries: list[FlextTypes.Core.Dict],
-        ) -> FlextResult[dict[str, float]]:
+            entries: list[FlextTypes.Dict],
+        ) -> FlextResult[FlextTypes.FloatDict]:
             """Generate data quality metrics using flext-ldif validation.
 
             Args:
@@ -337,7 +338,7 @@ class FlextDbtLdifCore:
 
         def get_statistics_for_dbt(
             self,
-            entries: list[FlextTypes.Core.Dict],
+            entries: list[FlextTypes.Dict],
         ) -> FlextResult[Mapping[str, object]]:
             """Get statistics formatted for dbt model generation.
 

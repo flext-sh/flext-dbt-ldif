@@ -13,12 +13,12 @@ from flext_core import (
     FlextContainer,
     FlextLogger,
     FlextResult,
+    FlextTypes,
     FlextUtilities,
 )
-
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 
-__all__: list[str] = ["FlextDbtLdifUtilities"]
+__all__: FlextTypes.StringList = ["FlextDbtLdifUtilities"]
 
 
 class FlextDbtLdifUtilities(FlextUtilities):
@@ -47,14 +47,14 @@ class FlextDbtLdifUtilities(FlextUtilities):
         self._container = FlextContainer.get_global()
         self._logger = FlextLogger(__name__)
 
-    def execute(self) -> FlextResult[dict[str, object]]:
+    def execute(self) -> FlextResult[FlextTypes.Dict]:
         """Execute the main DBT LDIF service operation.
 
         Returns:
-            FlextResult[dict[str, object]]: Service status and capabilities.
+            FlextResult[FlextTypes.Dict]: Service status and capabilities.
 
         """
-        return FlextResult[dict[str, object]].ok({
+        return FlextResult[FlextTypes.Dict].ok({
             "status": "operational",
             "service": "flext-dbt-ldif-utilities",
             "capabilities": [
@@ -84,7 +84,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
         def parse_ldif_file(
             file_path: Path,
             batch_size: int = 5000,
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Parse LDIF file and extract records for DBT processing.
 
             Args:
@@ -97,12 +97,12 @@ class FlextDbtLdifUtilities(FlextUtilities):
             """
             try:
                 if not file_path.exists():
-                    return FlextResult[dict[str, object]].fail(
+                    return FlextResult[FlextTypes.Dict].fail(
                         f"LDIF file not found: {file_path}"
                     )
 
                 if file_path.suffix.lower() != ".ldif":
-                    return FlextResult[dict[str, object]].fail(
+                    return FlextResult[FlextTypes.Dict].fail(
                         f"Invalid LDIF file extension: {file_path}"
                     )
 
@@ -181,17 +181,17 @@ class FlextDbtLdifUtilities(FlextUtilities):
                     "file_size_bytes": file_path.stat().st_size,
                 }
 
-                return FlextResult[dict[str, object]].ok(parsed_data)
+                return FlextResult[FlextTypes.Dict].ok(parsed_data)
 
             except Exception as e:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Dict].fail(
                     f"LDIF file parsing failed: {e}"
                 )
 
         @staticmethod
         def validate_ldif_structure(
-            ldif_data: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+            ldif_data: FlextTypes.Dict,
+        ) -> FlextResult[FlextTypes.Dict]:
             """Validate LDIF data structure for DBT compatibility.
 
             Args:
@@ -261,19 +261,17 @@ class FlextDbtLdifUtilities(FlextUtilities):
                     "attribute_analysis": attribute_types,
                 }
 
-                return FlextResult[dict[str, object]].ok(validation_results)
+                return FlextResult[FlextTypes.Dict].ok(validation_results)
 
             except Exception as e:
-                return FlextResult[dict[str, object]].fail(
-                    f"LDIF validation failed: {e}"
-                )
+                return FlextResult[FlextTypes.Dict].fail(f"LDIF validation failed: {e}")
 
     class DbtModelGeneration:
         """DBT model generation utilities for LDIF data."""
 
         @staticmethod
         def generate_ldif_staging_model(
-            ldif_schema: dict[str, object],
+            ldif_schema: FlextTypes.Dict,
             model_name: str = "stg_ldif_entries",
         ) -> FlextResult[str]:
             """Generate DBT staging model for LDIF data.
@@ -336,7 +334,7 @@ where dn is not null
         @staticmethod
         def generate_ldif_dimension_model(
             model_type: str,
-            ldif_schema: dict[str, object],
+            ldif_schema: FlextTypes.Dict,
         ) -> FlextResult[str]:
             """Generate dimensional model for LDIF data.
 
@@ -452,8 +450,8 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
         @staticmethod
         def analyze_ldif_schema(
-            ldif_data: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+            ldif_data: FlextTypes.Dict,
+        ) -> FlextResult[FlextTypes.Dict]:
             """Analyze LDIF data to extract schema information.
 
             Args:
@@ -545,18 +543,18 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 for attr_info in schema_analysis["attributes"].values():
                     attr_info["data_types"] = list(attr_info["data_types"])
 
-                return FlextResult[dict[str, object]].ok(schema_analysis)
+                return FlextResult[FlextTypes.Dict].ok(schema_analysis)
 
             except Exception as e:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Dict].fail(
                     f"LDIF schema analysis failed: {e}"
                 )
 
         @staticmethod
         def generate_dbt_source_definition(
-            schema_analysis: dict[str, object],
+            schema_analysis: FlextTypes.Dict,
             source_name: str = "ldif",
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[FlextTypes.Dict]:
             """Generate DBT source definition for LDIF data.
 
             Args:
@@ -625,10 +623,10 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     ],
                 }
 
-                return FlextResult[dict[str, object]].ok(source_definition)
+                return FlextResult[FlextTypes.Dict].ok(source_definition)
 
             except Exception as e:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Dict].fail(
                     f"DBT source definition generation failed: {e}"
                 )
 
@@ -636,7 +634,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
         """DBT macro generation utilities for LDIF operations."""
 
         @staticmethod
-        def create_ldif_parsing_macros() -> FlextResult[dict[str, str]]:
+        def create_ldif_parsing_macros() -> FlextResult[FlextTypes.StringDict]:
             """Create DBT macros for LDIF data parsing.
 
             Returns:
@@ -698,10 +696,10 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
     end
 {% endmacro %}"""
 
-                return FlextResult[dict[str, str]].ok(macros)
+                return FlextResult[FlextTypes.StringDict].ok(macros)
 
             except Exception as e:
-                return FlextResult[dict[str, str]].fail(
+                return FlextResult[FlextTypes.StringDict].fail(
                     f"LDIF macro generation failed: {e}"
                 )
 
@@ -710,8 +708,8 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
         @staticmethod
         def optimize_ldif_processing(
-            processing_stats: dict[str, object],
-        ) -> FlextResult[dict[str, object]]:
+            processing_stats: FlextTypes.Dict,
+        ) -> FlextResult[FlextTypes.Dict]:
             """Optimize LDIF processing performance based on statistics.
 
             Args:
@@ -759,18 +757,9 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                         "Large entries detected - consider streaming processing"
                     )
 
-                return FlextResult[dict[str, object]].ok(optimizations)
+                return FlextResult[FlextTypes.Dict].ok(optimizations)
 
             except Exception as e:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.Dict].fail(
                     f"LDIF performance optimization failed: {e}"
                 )
-
-    def execute(self) -> FlextResult[dict[str, object]]:
-        """Execute DBT LDIF utilities service operation hronously."""
-        return FlextResult[dict[str, object]].ok({
-            "status": "operational",
-            "service": "flext-dbt-ldif-utilities",
-            "timestamp": "now",
-            "version": "1.0.0",
-        })
