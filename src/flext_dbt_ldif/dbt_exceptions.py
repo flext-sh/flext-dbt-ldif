@@ -13,6 +13,7 @@ from enum import StrEnum
 from typing import override
 
 from flext_core import FlextExceptions
+
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 

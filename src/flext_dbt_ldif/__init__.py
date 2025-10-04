@@ -8,9 +8,9 @@ from __future__ import annotations
 
 from typing import Final
 
+from flext_core import FlextResult
 from flext_ldif import FlextLdif
 
-from flext_core import FlextResult
 from flext_dbt_ldif.cli import main
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.core import FlextDbtLdifCore
@@ -21,6 +21,8 @@ from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 from flext_dbt_ldif.models import FlextDbtLdifModels
 from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
 from flext_dbt_ldif.simple_api import (
+    FlextDbtLdif,
+    FlextDbtLdifAPI,
     generate_ldif_models,
     process_ldif_file,
     validate_ldif_quality,
@@ -35,6 +37,8 @@ __version__: str = VERSION.version
 __version_info__: tuple[int | str, ...] = VERSION.version_info
 
 __all__: FlextDbtLdifTypes.Core.StringList = [
+    "FlextDbtLdif",
+    "FlextDbtLdifAPI",
     "FlextDbtLdifClient",
     "FlextDbtLdifConfig",
     "FlextDbtLdifCore",

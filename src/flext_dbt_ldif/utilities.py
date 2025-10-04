@@ -16,6 +16,7 @@ from flext_core import (
     FlextTypes,
     FlextUtilities,
 )
+
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 
 __all__: FlextTypes.StringList = ["FlextDbtLdifUtilities"]
