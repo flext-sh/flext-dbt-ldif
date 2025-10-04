@@ -10,9 +10,9 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import override
 
+from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLdif, FlextLdifModels
 
-from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 logger = FlextLogger(__name__)

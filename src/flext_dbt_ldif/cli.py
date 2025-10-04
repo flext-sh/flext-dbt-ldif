@@ -10,7 +10,6 @@ import sys
 from typing import NoReturn, override
 
 from flext_cli import FlextCli, FlextCliModels
-
 from flext_core import FlextLogger, FlextResult, FlextTypes
 
 logger = FlextLogger(__name__)

@@ -9,11 +9,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar, Self
 
+from flext_core import FlextConfig, FlextLogger, FlextResult
 from flext_ldif import FlextLdifConfig
 from flext_meltano.config import FlextMeltanoConfig
-from pydantic import Field, SettingsConfigDict, field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
+from pydantic_settings import SettingsConfigDict
 
-from flext_core import FlextConfig, FlextLogger, FlextResult
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
@@ -83,14 +84,14 @@ class FlextDbtLdifConfig(FlextConfig):
     dbt_log_level: str = Field(default="info", description="DBT log level")
 
     # LDIF-specific DBT Settings
-    ldif_schema_mapping: ClassVar[FlextDbtLdifTypes.Core.Headers] = {
+    ldif_schema_mapping: ClassVar[FlextDbtLdifTypes.Core.Dict] = {
         "persons": "stg_persons",
         "groups": "stg_groups",
         "org_units": "stg_org_units",
         "domains": "stg_domains",
     }
 
-    ldif_attribute_mapping: ClassVar[FlextDbtLdifTypes.Core.Headers] = {
+    ldif_attribute_mapping: ClassVar[FlextDbtLdifTypes.Core.Dict] = {
         "cn": "common_name",
         "uid": "user_id",
         "mail": "email",
@@ -104,7 +105,7 @@ class FlextDbtLdifConfig(FlextConfig):
     min_quality_threshold: float = Field(
         default=0.8, ge=0.0, le=1.0, description="Minimum data quality threshold"
     )
-    required_attributes: ClassVar[FlextDbtLdifTypes.Core.StringList] = [
+    required_attributes: ClassVar[FlextDbtLdifTypes.Core.List] = [
         "dn",
         "objectClass",
     ]
@@ -120,7 +121,7 @@ class FlextDbtLdifConfig(FlextConfig):
     )
 
     # LDIF Entry Type Mapping
-    entry_type_mapping: ClassVar[FlextDbtLdifTypes.Core.Headers] = {
+    entry_type_mapping: ClassVar[FlextDbtLdifTypes.Core.Dict] = {
         "person": "persons",
         "organizationalPerson": "persons",
         "inetOrgPerson": "persons",
@@ -348,6 +349,6 @@ class FlextDbtLdifConfig(FlextConfig):
         cls.reset_shared_instance()
 
 
-__all__: FlextDbtLdifTypes.Core.StringList = [
+__all__: FlextDbtLdifTypes.Core.List = [
     "FlextDbtLdifConfig",
 ]

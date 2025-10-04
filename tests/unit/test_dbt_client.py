@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-
 from flext_core import FlextResult, FlextTypes
+
 from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifConfig
 
 
