@@ -54,7 +54,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         # Complete FLEXT ecosystem integration
         self._container = FlextContainer.ensure_global_manager().get_or_create()
         self._context = FlextContext()
-        self._logger = FlextLogger(__name__)
+        self.logger = FlextLogger(__name__)
 
     @classmethod
     def create(cls) -> FlextDbtLdif:
@@ -98,7 +98,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         """
         try:
-            self._logger.info("Processing LDIF file: %s", ldif_file)
+            self.logger.info("Processing LDIF file: %s", ldif_file)
 
             # Use provided project_dir or fall back to config
             proj_path = Path(project_dir) if project_dir else self._config.project_dir
@@ -128,7 +128,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         """
         try:
-            self._logger.info("Validating LDIF quality: %s", ldif_file)
+            self.logger.info("Validating LDIF quality: %s", ldif_file)
             return self.service.run_data_quality_assessment(ldif_file)
         except Exception as e:
             return FlextResult[FlextTypes.Dict].fail(
@@ -154,7 +154,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         """
         try:
-            self._logger.info("Generating LDIF models: %s", ldif_file)
+            self.logger.info("Generating LDIF models: %s", ldif_file)
 
             # Use provided project_dir or fall back to config
             proj_path = Path(project_dir) if project_dir else self._config.project_dir
