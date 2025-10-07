@@ -95,11 +95,11 @@ class FlextDbtLdifModels(FlextModels):
     def create_generator(
         cls,
         config: FlextTypes.Dict,
-    ) -> FlextDbtLdifModels._ModelGenerator:
+    ) -> FlextDbtLdifModels.ModelGenerator:
         """Create a model generator instance."""
-        return cls._ModelGenerator(config)
+        return cls.ModelGenerator(config)
 
-    class _ModelGenerator:
+    class ModelGenerator:
         """Internal model generator class for DBT LDIF models."""
 
         @override
