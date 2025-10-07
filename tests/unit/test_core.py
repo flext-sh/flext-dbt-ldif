@@ -64,10 +64,6 @@ class TestFlextDbtLdifUnifiedService:
         if "features" not in analytics_model:
             raise AssertionError(f"Expected features in {analytics_model}")
 
-
-class TestFlextDbtLdifUnifiedService:
-    """Test cases for FlextDbtLdifUnifiedService class."""
-
     def test_analyze_entry_patterns_empty(self) -> None:
         """Test pattern analysis with empty data."""
         analytics = FlextDbtLdifUnifiedService()
