@@ -18,6 +18,7 @@ class FlextDbtLdifVersion:
     """Version information container for flext-dbt-ldif."""
 
     def __init__(self) -> None:
+        """Initialize version information."""
         self.major = MAJOR
         self.minor = MINOR
         self.patch = PATCH
