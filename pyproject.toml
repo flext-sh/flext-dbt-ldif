@@ -18,16 +18,15 @@
     ]
     dependencies = [
         "click>=8.2.1",
-        "flext-core @ file:///home/marlonsc/flext/flext-core",
-        "flext-ldif @ file:///home/marlonsc/flext/flext-ldif",
-        "flext-meltano @ file:///home/marlonsc/flext/flext-meltano",
-        "flext-observability @ file:///home/marlonsc/flext/flext-observability",
+        "flext-core @ file:../flext-core",
+        "flext-ldif @ file:../flext-ldif",
+        "flext-meltano @ file:../flext-meltano",
+        "flext-observability @ file:../flext-observability",
         "pydantic>=2.11.7",
         "rich>=14.0.0",
     ]
     description = "FLEXT dbt LDIF Analytics - Advanced LDAP Data Analytics and Transformations"
     keywords = [
-        "",
         "data-transformation",
         "dbt",
         "enterprise",
