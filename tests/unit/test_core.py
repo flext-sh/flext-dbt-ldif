@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextTypes
+from flext_core import FlextCore
 
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 
@@ -75,7 +75,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_analyze_entry_patterns_with_data(self) -> None:
         """Test pattern analysis with sample data."""
-        sample_data: list[FlextTypes.Dict] = [
+        sample_data: list[FlextCore.Types.Dict] = [
             {
                 "dn": "cn=user1,ou=users,dc=example,dc=com",
                 "objectClass": ["inetOrgPerson"],
@@ -116,7 +116,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_quality_metrics_with_data(self) -> None:
         """Test quality metrics with sample data."""
-        sample_entries: list[FlextTypes.Dict] = [
+        sample_entries: list[FlextCore.Types.Dict] = [
             {"dn": "test", "objectClass": ["top"]},
         ]
         analytics = FlextDbtLdifUnifiedService()

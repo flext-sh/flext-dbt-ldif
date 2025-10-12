@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_core import FlextConfig, FlextLogger, FlextResult
+from flext_core import FlextCore
 from flext_ldif import FlextLdifConfig
 from flext_meltano.config import FlextMeltanoConfig
 from pydantic import Field, field_validator, model_validator
@@ -18,14 +18,14 @@ from pydantic_settings import SettingsConfigDict
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
-logger = FlextLogger(__name__)
+logger = FlextCore.Logger(__name__)
 
 
-class FlextDbtLdifConfig(FlextConfig):
-    """Single Pydantic 2 Settings class for flext-dbt-ldif extending FlextConfig.
+class FlextDbtLdifConfig(FlextCore.Config):
+    """Single Pydantic 2 Settings class for flext-dbt-ldif extending FlextCore.Config.
 
     Follows standardized pattern:
-    - Extends FlextConfig from flext-core
+    - Extends FlextCore.Config from flext-core
     - No nested classes within Config
     - All defaults from FlextDbtLdifConstants
     - Uses enhanced singleton pattern with inverse dependency injection
@@ -40,7 +40,7 @@ class FlextDbtLdifConfig(FlextConfig):
         str_strip_whitespace=True,
         json_schema_extra={
             "title": "FLEXT DBT LDIF Configuration",
-            "description": "DBT LDIF configuration extending FlextConfig",
+            "description": "DBT LDIF configuration extending FlextCore.Config",
         },
     )
 
@@ -212,27 +212,33 @@ class FlextDbtLdifConfig(FlextConfig):
 
         return self
 
-    def validate_business_rules(self) -> FlextResult[None]:
+    def validate_business_rules(self) -> FlextCore.Result[None]:
         """Validate DBT LDIF specific business rules."""
         try:
             # Validate LDIF configuration
             if self.ldif_file_path and Path(self.ldif_file_path).suffix != ".ldif":
-                return FlextResult[None].fail("LDIF file must have .ldif extension")
+                return FlextCore.Result[None].fail(
+                    "LDIF file must have .ldif extension"
+                )
 
             # Validate DBT configuration
             if not self.dbt_project_dir:
-                return FlextResult[None].fail("DBT project directory is required")
+                return FlextCore.Result[None].fail("DBT project directory is required")
 
             # Validate file size limits
             if self.ldif_max_file_size < FlextDbtLdifConstants.MIN_FILE_SIZE_KB:
-                return FlextResult[None].fail("LDIF max file size must be at least 1KB")
+                return FlextCore.Result[None].fail(
+                    "LDIF max file size must be at least 1KB"
+                )
 
             if self.ldif_max_file_size > FlextDbtLdifConstants.MAX_FILE_SIZE_GB:
-                return FlextResult[None].fail("LDIF max file size cannot exceed 1GB")
+                return FlextCore.Result[None].fail(
+                    "LDIF max file size cannot exceed 1GB"
+                )
 
-            return FlextResult[None].ok(None)
+            return FlextCore.Result[None].ok(None)
         except Exception as e:
-            return FlextResult[None].fail(f"Business rules validation failed: {e}")
+            return FlextCore.Result[None].fail(f"Business rules validation failed: {e}")
 
     def get_ldif_config(self) -> FlextLdifConfig:
         """Get LDIF configuration for flext-ldif integration."""
@@ -339,13 +345,13 @@ class FlextDbtLdifConfig(FlextConfig):
 
     @classmethod
     def get_global_instance(cls) -> FlextDbtLdifConfig:
-        """Get the global singleton instance using enhanced FlextConfig pattern."""
+        """Get the global singleton instance using enhanced FlextCore.Config pattern."""
         return cls.get_or_create_shared_instance(project_name="flext-dbt-ldif")
 
     @classmethod
     def reset_global_instance(cls) -> None:
         """Reset the global FlextDbtLdifConfig instance (mainly for testing)."""
-        # Use the enhanced FlextConfig reset mechanism
+        # Use the enhanced FlextCore.Config reset mechanism
         cls.reset_shared_instance()
 
 

@@ -12,12 +12,12 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import override
 
-from flext_core import FlextExceptions
+from flext_core import FlextCore
 
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 
-class FlextDbtLdifError(FlextExceptions.Error):
+class FlextDbtLdifError(FlextCore.Exceptions.Error):
     """Unified exception for all LDIF DBT operations with error codes.
 
     Single responsibility class that handles all LDIF DBT error scenarios
