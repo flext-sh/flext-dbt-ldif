@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import pytest
-from flext_core import FlextExceptions
+from flext_core import FlextCore
 
 from flext_dbt_ldif import FlextDbtLdifError
 
@@ -79,11 +79,11 @@ class TestFlextDbtLdifError:
         assert hasattr(error, "context")
 
     def test_exception_inheritance(self) -> None:
-        """Test that FlextDbtLdifError inherits from flext-core FlextExceptions."""
+        """Test that FlextDbtLdifError inherits from flext-core FlextCore.Exceptions."""
         error = FlextDbtLdifError("Test message")
 
-        # Should inherit from FlextExceptions (from flext-core)
-        assert isinstance(error, FlextExceptions)
+        # Should inherit from FlextCore.Exceptions (from flext-core)
+        assert isinstance(error, FlextCore.Exceptions)
         assert isinstance(error, Exception)
 
 

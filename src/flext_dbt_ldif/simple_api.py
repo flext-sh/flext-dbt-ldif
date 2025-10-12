@@ -10,20 +10,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import (
-    FlextContainer,
-    FlextContext,
-    FlextLogger,
-    FlextResult,
-    FlextService,
-    FlextTypes,
-)
+from flext_core import FlextCore
 
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 
 
-class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
+class FlextDbtLdif(FlextCore.Service[FlextDbtLdifConfig]):
     """Unified DBT LDIF facade with complete FLEXT ecosystem integration.
 
     This is the single unified class for the flext-dbt-ldif domain providing
@@ -37,10 +30,10 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
     - Direct use of flext-core centralized services
 
     **FLEXT INTEGRATION**: Complete integration with flext-core patterns:
-    - FlextContainer for dependency injection
-    - FlextContext for operation context
-    - FlextLogger for structured logging
-    - FlextResult for railway-oriented error handling
+    - FlextCore.Container for dependency injection
+    - FlextCore.Context for operation context
+    - FlextCore.Logger for structured logging
+    - FlextCore.Result for railway-oriented error handling
 
     **PYTHON 3.13+ COMPATIBILITY**: Uses modern patterns and latest type features.
     """
@@ -52,9 +45,9 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         self._service: FlextDbtLdifService | None = None
 
         # Complete FLEXT ecosystem integration
-        self._container = FlextContainer.get_global().clear()().get_or_create()
-        self._context = FlextContext()
-        self.logger = FlextLogger(__name__)
+        self._container = FlextCore.Container.get_global().clear()().get_or_create()
+        self._context = FlextCore.Context()
+        self.logger = FlextCore.Logger(__name__)
 
     @classmethod
     def create(cls) -> FlextDbtLdif:
@@ -74,7 +67,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         return self._config
 
     # =============================================================================
-    # MAIN OPERATIONS - Enhanced with FlextResult error handling
+    # MAIN OPERATIONS - Enhanced with FlextCore.Result error handling
     # =============================================================================
 
     def process_ldif_file(
@@ -84,7 +77,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Process an LDIF file with DBT using railway pattern.
 
         Args:
@@ -94,7 +87,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             run_transformations: Whether to run transformations
 
         Returns:
-            FlextResult containing processing results
+            FlextCore.Result containing processing results
 
         """
         try:
@@ -113,25 +106,27 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
                 run_transformations=run_transformations,
             )
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"LDIF processing failed: {e}")
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
+                f"LDIF processing failed: {e}"
+            )
 
     def validate_ldif_quality(
         self, ldif_file: Path | str
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Validate LDIF data quality using railway pattern.
 
         Args:
             ldif_file: Path to LDIF file
 
         Returns:
-            FlextResult containing quality assessment
+            FlextCore.Result containing quality assessment
 
         """
         try:
             self.logger.info("Validating LDIF quality: %s", ldif_file)
             return self.service.run_data_quality_assessment(ldif_file)
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
                 f"LDIF quality validation failed: {e}"
             )
 
@@ -141,7 +136,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Generate DBT models from LDIF using railway pattern.
 
         Args:
@@ -150,7 +145,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             overwrite: Whether to overwrite existing models
 
         Returns:
-            FlextResult containing model generation results
+            FlextCore.Result containing model generation results
 
         """
         try:
@@ -166,18 +161,22 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             # Parse file first
             parse_result = service.parse_and_validate_ldif(ldif_file)
             if not parse_result.success:
-                return FlextResult[FlextTypes.Dict].fail(
+                return FlextCore.Result[FlextCore.Types.Dict].fail(
                     f"LDIF parsing failed: {parse_result.error}"
                 )
 
             parse_data = parse_result.value or {}
-            entries: FlextTypes.List = parse_data.get("entries", [])
+            entries: FlextCore.Types.List = parse_data.get("entries", [])
             if not isinstance(entries, list):
-                return FlextResult[FlextTypes.Dict].fail("Invalid entries data format")
+                return FlextCore.Result[FlextCore.Types.Dict].fail(
+                    "Invalid entries data format"
+                )
 
             return service.generate_and_write_models(entries, overwrite=overwrite)
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Model generation failed: {e}")
+            return FlextCore.Result[FlextCore.Types.Dict].fail(
+                f"Model generation failed: {e}"
+            )
 
 
 # Backward compatibility aliases
@@ -191,7 +190,7 @@ def process_ldif_file(
     *,
     generate_models: bool = True,
     run_transformations: bool = False,
-) -> FlextResult[FlextTypes.Dict]:
+) -> FlextCore.Result[FlextCore.Types.Dict]:
     """Legacy function wrapper - use FlextDbtLdif.process_ldif_file() instead."""
     api = FlextDbtLdif()
     return api.process_ldif_file(
@@ -202,7 +201,9 @@ def process_ldif_file(
     )
 
 
-def validate_ldif_quality(ldif_file: Path | str) -> FlextResult[FlextTypes.Dict]:
+def validate_ldif_quality(
+    ldif_file: Path | str,
+) -> FlextCore.Result[FlextCore.Types.Dict]:
     """Legacy function wrapper - use FlextDbtLdif.validate_ldif_quality() instead."""
     api = FlextDbtLdif()
     return api.validate_ldif_quality(ldif_file)
@@ -213,7 +214,7 @@ def generate_ldif_models(
     project_dir: Path | str | None = None,
     *,
     overwrite: bool = False,
-) -> FlextResult[FlextTypes.Dict]:
+) -> FlextCore.Result[FlextCore.Types.Dict]:
     """Legacy function wrapper - use FlextDbtLdif.generate_ldif_models() instead."""
     api = FlextDbtLdif()
     return api.generate_ldif_models(ldif_file, project_dir, overwrite=overwrite)

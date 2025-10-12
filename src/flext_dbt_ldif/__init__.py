@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_core import FlextResult
 from flext_ldif import FlextLdif
 
 from flext_dbt_ldif.__version__ import __version__, __version_info__
@@ -34,10 +33,9 @@ from flext_dbt_ldif.version import VERSION, FlextDbtLdifVersion
 
 PROJECT_VERSION: Final[FlextDbtLdifVersion] = VERSION
 
-__version__: str = VERSION.version
-__version_info__: tuple[int | str, ...] = VERSION.version_info
 
 __all__: FlextDbtLdifTypes.Core.StringList = [
+    "FlextCore.Result",
     "FlextDbtLdif",
     "FlextDbtLdifAPI",
     "FlextDbtLdifClient",
@@ -50,7 +48,6 @@ __all__: FlextDbtLdifTypes.Core.StringList = [
     "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
     "FlextLdif",
-    "FlextResult",
     "__version__",
     "__version_info__",
     "generate_ldif_models",

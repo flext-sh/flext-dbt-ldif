@@ -12,17 +12,17 @@ from pathlib import Path
 from typing import override
 
 import yaml
-from flext_core import FlextLogger, FlextResult, FlextService, FlextTypes
+from flext_core import FlextCore
 from flext_ldif import FlextLdif, FlextLdifModels
 
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 # Use the real typed class for precise type checking
-logger = FlextLogger(__name__)
+logger = FlextCore.Logger(__name__)
 
 
-class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
+class FlextDbtLdifUnifiedService(FlextCore.Service[FlextCore.Types.Dict]):
     """Unified DBT LDIF service class consolidating model definition and generation.
 
     This unified service follows the mandatory single-class-per-module pattern,
@@ -37,8 +37,8 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         name: str,
         description: str = "",
         materialization: str = "view",
-        columns: list[FlextTypes.Dict] | None = None,
-        meta: FlextTypes.Dict | None = None,
+        columns: list[FlextCore.Types.Dict] | None = None,
+        meta: FlextCore.Types.Dict | None = None,
         config: FlextDbtLdifConfig | None = None,
         project_dir: Path | None = None,
     ) -> None:
@@ -71,23 +71,23 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         logger.info("Initialized unified LDIF DBT service: %s", self.project_dir)
 
     @override
-    def execute(self) -> FlextResult[FlextTypes.Dict]:
+    def execute(self) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Execute the DBT model service.
 
         Returns:
-            FlextResult[FlextTypes.Dict]: Execution result
+            FlextCore.Result[FlextCore.Types.Dict]: Execution result
 
         """
         try:
             # Basic execution logic - can be extended based on requirements
-            result_data: FlextTypes.Dict = {
+            result_data: FlextCore.Types.Dict = {
                 "model_name": self.name,
                 "status": "executed",
                 "timestamp": "2025-01-01T00:00:00Z",  # Placeholder
             }
-            return FlextResult[FlextTypes.Dict].ok(result_data)
+            return FlextCore.Result[FlextCore.Types.Dict].ok(result_data)
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Execution failed: {e}")
+            return FlextCore.Result[FlextCore.Types.Dict].fail(f"Execution failed: {e}")
 
     class _ModelDefinition:
         """Nested helper class for model definition operations."""
@@ -95,7 +95,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         @staticmethod
         def to_yaml_config(
             model_instance: FlextDbtLdifUnifiedService,
-        ) -> FlextTypes.Dict:
+        ) -> FlextCore.Types.Dict:
             """Convert model to YAML configuration format.
 
             Args:
@@ -114,7 +114,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
             }
 
         @staticmethod
-        def to_dict(model_instance: FlextDbtLdifUnifiedService) -> FlextTypes.Dict:
+        def to_dict(model_instance: FlextDbtLdifUnifiedService) -> FlextCore.Types.Dict:
             """Convert model to dictionary representation.
 
             Args:
@@ -139,7 +139,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         def analyze_ldif_schema(
             service_instance: FlextDbtLdifUnifiedService,
             entries: list[FlextLdifModels.Entry],
-        ) -> FlextResult[FlextTypes.Dict]:
+        ) -> FlextCore.Result[FlextCore.Types.Dict]:
             """Analyze LDIF entries to determine schema structure.
 
             Args:
@@ -147,25 +147,27 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                 entries: List of LDIF entries to analyze
 
             Returns:
-                FlextResult containing schema analysis
+                FlextCore.Result containing schema analysis
 
             """
             try:
                 logger.info("Analyzing LDIF schema from %d entries", len(entries))
                 stats_result = service_instance._ldif_api.entry_statistics(entries)
                 if not stats_result.is_success:
-                    return FlextResult[FlextTypes.Dict].fail(
+                    return FlextCore.Result[FlextCore.Types.Dict].fail(
                         f"Schema analysis failed: {stats_result.error}",
                     )
                 base_stats = stats_result.value or {}
-                schema_info: FlextTypes.Dict = dict(base_stats.items())
+                schema_info: FlextCore.Types.Dict = dict(base_stats.items())
                 schema_info["total_entries"] = len(entries)
                 schema_info["has_entries"] = len(entries) > 0
                 logger.info("LDIF schema analysis completed")
-                return FlextResult[FlextTypes.Dict].ok(schema_info)
+                return FlextCore.Result[FlextCore.Types.Dict].ok(schema_info)
             except Exception as e:
                 logger.exception("Error analyzing LDIF schema")
-                return FlextResult[FlextTypes.Dict].fail(f"Schema analysis error: {e}")
+                return FlextCore.Result[FlextCore.Types.Dict].fail(
+                    f"Schema analysis error: {e}"
+                )
 
     class ModelGeneration:
         """Nested helper class for DBT model generation operations."""
@@ -174,7 +176,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         def generate_staging_models(
             service_instance: FlextDbtLdifUnifiedService,
             entries: list[FlextLdifModels.Entry],
-        ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
+        ) -> FlextCore.Result[list[FlextDbtLdifUnifiedService]]:
             """Generate staging layer DBT models for LDIF data.
 
             Args:
@@ -182,7 +184,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                 entries: LDIF entries to generate models for
 
             Returns:
-                FlextResult containing list of staging models
+                FlextCore.Result containing list of staging models
 
             """
             try:
@@ -193,7 +195,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                     service_instance, entries
                 )
                 if not schema_result.is_success:
-                    return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
+                    return FlextCore.Result[list[FlextDbtLdifUnifiedService]].fail(
                         f"Schema analysis failed: {schema_result.error}",
                     )
                 schema_info = schema_result.value or {}
@@ -213,24 +215,24 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                     )
                     models.append(model)
                 logger.info("Generated %d staging models", len(models))
-                return FlextResult[list[FlextDbtLdifUnifiedService]].ok(models)
+                return FlextCore.Result[list[FlextDbtLdifUnifiedService]].ok(models)
             except Exception as e:
                 logger.exception("Error generating staging models")
-                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
+                return FlextCore.Result[list[FlextDbtLdifUnifiedService]].fail(
                     f"Staging model generation error: {e}"
                 )
 
         @staticmethod
         def generate_analytics_models(
             staging_models: list[FlextDbtLdifUnifiedService],
-        ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
+        ) -> FlextCore.Result[list[FlextDbtLdifUnifiedService]]:
             """Generate analytics layer DBT models.
 
             Args:
                 staging_models: List of staging models to build upon
 
             Returns:
-                FlextResult containing list of analytics models
+                FlextCore.Result containing list of analytics models
 
             """
             try:
@@ -351,12 +353,12 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                 )
                 analytics_models.append(hierarchy_model)
                 logger.info("Generated %d analytics models", len(analytics_models))
-                return FlextResult[list[FlextDbtLdifUnifiedService]].ok(
+                return FlextCore.Result[list[FlextDbtLdifUnifiedService]].ok(
                     analytics_models
                 )
             except Exception as e:
                 logger.exception("Error generating analytics models")
-                return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
+                return FlextCore.Result[list[FlextDbtLdifUnifiedService]].fail(
                     f"Analytics model generation error: {e}"
                 )
 
@@ -365,7 +367,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
             entry_type: str,
             schema_name: str,
             entries: list[FlextLdifModels.Entry],
-            schema_info: FlextTypes.Dict,
+            schema_info: FlextCore.Types.Dict,
         ) -> FlextDbtLdifUnifiedService:
             """Generate a staging model for a specific entry type."""
             if not entries:
@@ -378,7 +380,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
             )
             _ = declared_total
 
-            common_attrs: list[FlextTypes.Dict] = [
+            common_attrs: list[FlextCore.Types.Dict] = [
                 {
                     "name": "dn",
                     "type": "varchar",
@@ -405,7 +407,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
 
             for ldif_attr in FlextDbtLdifConfig.ldif_attribute_mapping:
                 if ldif_attr != "dn":
-                    column_def: FlextTypes.Dict = {
+                    column_def: FlextCore.Types.Dict = {
                         "name": "mapped_attr",
                         "type": "varchar",
                         "description": f"LDIF {ldif_attr} attribute",
@@ -437,7 +439,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
             models: list[FlextDbtLdifUnifiedService],
             *,
             overwrite: bool = False,
-        ) -> FlextResult[FlextTypes.Dict]:
+        ) -> FlextCore.Result[FlextCore.Types.Dict]:
             """Write generated DBT models to disk.
 
             Args:
@@ -446,7 +448,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                 overwrite: Whether to overwrite existing files
 
             Returns:
-                FlextResult containing write operation results
+                FlextCore.Result containing write operation results
 
             """
             try:
@@ -478,7 +480,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                     yaml_file.write_text(yaml_content)
                     written_files.append(str(yaml_file))
                 logger.info("Successfully wrote %d files", len(written_files))
-                return FlextResult[FlextTypes.Dict].ok(
+                return FlextCore.Result[FlextCore.Types.Dict].ok(
                     {
                         "written_files": "written_files",
                         "models_count": len(models),
@@ -487,7 +489,9 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
                 )
             except Exception as e:
                 logger.exception("Error writing models to disk")
-                return FlextResult[FlextTypes.Dict].fail(f"Model writing error: {e}")
+                return FlextCore.Result[FlextCore.Types.Dict].fail(
+                    f"Model writing error: {e}"
+                )
 
     class SQLGeneration:
         """Nested helper class for SQL generation operations."""
@@ -508,7 +512,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         @staticmethod
         def _generate_staging_sql(model: FlextDbtLdifUnifiedService) -> str:
             """Generate SQL for staging model."""
-            columns: FlextTypes.StringList = []
+            columns: FlextCore.Types.StringList = []
             for col in model.columns:
                 if isinstance(col, dict) and "name" in col:
                     col_name = col["name"]
@@ -582,7 +586,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
             )
 
         @staticmethod
-        def _generate_basic_yaml(yaml_config: FlextTypes.Dict) -> str:
+        def _generate_basic_yaml(yaml_config: FlextCore.Types.Dict) -> str:
             """Generate basic YAML content for DBT model."""
             schema_content = {"version": 2, "models": [yaml_config]}
             return yaml.dump(schema_content, default_flow_style=False, indent=2)
@@ -591,7 +595,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         """Nested helper class for column type determination."""
 
         @staticmethod
-        def _determine_column_type(attr_info: FlextTypes.Dict) -> str:
+        def _determine_column_type(attr_info: FlextCore.Types.Dict) -> str:
             """Determine appropriate column type based on attribute analysis."""
             max_varchar_length = 255
             if attr_info.get("is_numeric"):
@@ -606,32 +610,32 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
             return "varchar"
 
     # Public interface methods (delegate to nested classes)
-    def to_yaml_config(self) -> FlextTypes.Dict:
+    def to_yaml_config(self) -> FlextCore.Types.Dict:
         """Convert model to YAML configuration format."""
         return self._ModelDefinition.to_yaml_config(self)
 
-    def to_dict(self) -> FlextTypes.Dict:
+    def to_dict(self) -> FlextCore.Types.Dict:
         """Convert model to dictionary representation."""
         return self._ModelDefinition.to_dict(self)
 
     def analyze_ldif_schema(
         self,
         entries: list[FlextLdifModels.Entry],
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Analyze LDIF entries to determine schema structure."""
         return self._SchemaAnalysis.analyze_ldif_schema(self, entries)
 
     def generate_staging_models(
         self,
         entries: list[FlextLdifModels.Entry],
-    ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
+    ) -> FlextCore.Result[list[FlextDbtLdifUnifiedService]]:
         """Generate staging layer DBT models for LDIF data."""
         return self._ModelGeneration.generate_staging_models(self, entries)
 
     def generate_analytics_models(
         self,
         staging_models: list[FlextDbtLdifUnifiedService],
-    ) -> FlextResult[list[FlextDbtLdifUnifiedService]]:
+    ) -> FlextCore.Result[list[FlextDbtLdifUnifiedService]]:
         """Generate analytics layer DBT models."""
         return self._ModelGeneration.generate_analytics_models(staging_models)
 
@@ -640,7 +644,7 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.Dict]):
         models: list[FlextDbtLdifUnifiedService],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextCore.Result[FlextCore.Types.Dict]:
         """Write generated DBT models to disk."""
         return self._FileOperations.write_models_to_disk(
             self, models, overwrite=overwrite
