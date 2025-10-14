@@ -130,7 +130,7 @@ class FlextDbtLdifCore:
             entries: list[FlextLdifModels.Entry] = []
             for data in ldif_data:
                 try:
-                    # Extract required data from dict with proper type checking
+                    # Extract required data from dict[str, object] with proper type checking
                     str(data.get("dn", ""))
                     attributes: FlextCore.Types.Dict = data.get("attributes", {})
                     # Note: changetype is not used (Entry constructor only needs dn and attributes)
@@ -196,7 +196,7 @@ class FlextDbtLdifCore:
             )
 
             try:
-                # Convert dict entries to FlextLdifModels.Entry objects for proper analysis
+                # Convert dict[str, object] entries to FlextLdifModels.Entry objects for proper analysis
                 entries = self._convert_dict_to_entries(ldif_data)
 
                 # Use flext-ldif API for statistics - NO local logic
