@@ -291,9 +291,9 @@ class FlextDbtLdifClient:
                     if schema_name:
                         if schema_name not in prepared_data:
                             prepared_data[schema_name] = []
-                        # Convert entry to dict format
+                        # Convert entry to dict[str, object] format
                         if hasattr(entry, "dn") and hasattr(entry, "attributes"):
-                            # Convert LDIF entry to a plain dict for DBT mapping
+                            # Convert LDIF entry to a plain dict[str, object] for DBT mapping
                             entry_dict: FlextCore.Types.Dict = {"dn": entry.dn.value}
                             # Use the attributes data property to access the underlying dict
                             attrs = entry.attributes.data

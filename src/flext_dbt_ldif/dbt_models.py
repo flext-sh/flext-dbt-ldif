@@ -158,7 +158,9 @@ class FlextDbtLdifUnifiedService(FlextCore.Service[FlextCore.Types.Dict]):
                         f"Schema analysis failed: {stats_result.error}",
                     )
                 base_stats = stats_result.value or {}
-                schema_info: FlextCore.Types.Dict = dict(base_stats.items())
+                schema_info: FlextCore.Types.Dict = dict[str, object](
+                    base_stats.items()
+                )
                 schema_info["total_entries"] = len(entries)
                 schema_info["has_entries"] = len(entries) > 0
                 logger.info("LDIF schema analysis completed")
