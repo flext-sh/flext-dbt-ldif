@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 class FlextDbtLdifVersion:
     """Version information for flext-dbt-ldif package."""
 
-    def __init__(self, metadata: FlextProjectMetadata) -> None:  # type: ignore[valid-type]
+    def __init__(self, metadata: FlextProjectMetadata) -> None:
         """Initialize version from metadata.
 
         Args:
