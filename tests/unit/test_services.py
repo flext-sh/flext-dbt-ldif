@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextTypes
 
 from flext_dbt_ldif import FlextDbtLdifService, FlextLdifDbtModel
 
@@ -28,44 +28,44 @@ def test_run_complete_workflow_all(
     tmp_path: Path,
 ) -> None:
     """Test complete workflow with all entities."""
-    entries: FlextCore.Types.List = [object(), object()]
+    entries: FlextTypes.List = [object(), object()]
 
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextCore.Result[FlextCore.Types.List].ok(entries),
+        lambda _fp: FlextResult[FlextTypes.List].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextCore.Result[FlextCore.Types.Dict].ok({"quality_score": 0.9}),
+        lambda _e: FlextResult[FlextTypes.Dict].ok({"quality_score": 0.9}),
     )
     monkeypatch.setattr(
         svc.client,
         "transform_with_dbt",
-        lambda _e, _m: FlextCore.Result[FlextCore.Types.Dict].ok({"ran": True}),
+        lambda _e, _m: FlextResult[FlextTypes.Dict].ok({"ran": True}),
     )
 
     # Model generator behavior
     monkeypatch.setattr(
         svc.model_generator,
         "generate_staging_models",
-        lambda _e: FlextCore.Result[FlextCore.Types.List].ok(
+        lambda _e: FlextResult[FlextTypes.List].ok(
             [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_analytics_models",
-        lambda _m: FlextCore.Result[FlextCore.Types.List].ok(
+        lambda _m: FlextResult[FlextTypes.List].ok(
             [cast("object", FlextLdifDbtModel("analytics_ldif_insights", "d", []))],
         ),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "write_models_to_disk",
-        lambda _models, *, _overwrite=False: FlextCore.Result[
-            dict[str, str | FlextCore.Types.StringList]
+        lambda _models, *, _overwrite=False: FlextResult[
+            dict[str, str | FlextTypes.StringList]
         ].ok(
             {"written_files": ["a.sql"], "output_dir": str(tmp_path)},
         ),
@@ -89,28 +89,28 @@ def test_run_data_quality_assessment(
     tmp_path: Path,
 ) -> None:
     """Test data quality assessment."""
-    entries: FlextCore.Types.List = [object()]
+    entries: FlextTypes.List = [object()]
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextCore.Result[FlextCore.Types.List].ok(entries),
+        lambda _fp: FlextResult[FlextTypes.List].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextCore.Result[FlextCore.Types.Dict].ok({"quality_score": 0.88}),
+        lambda _e: FlextResult[FlextTypes.Dict].ok({"quality_score": 0.88}),
     )
 
     # analyze_ldif_schema + generate_staging_models paths
     monkeypatch.setattr(
         svc.model_generator,
         "analyze_ldif_schema",
-        lambda _e: FlextCore.Result[FlextCore.Types.Dict].ok({"total_entries": 1}),
+        lambda _e: FlextResult[FlextTypes.Dict].ok({"total_entries": 1}),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_staging_models",
-        lambda _e: FlextCore.Result[FlextCore.Types.List].ok(
+        lambda _e: FlextResult[FlextTypes.List].ok(
             [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )
@@ -129,12 +129,12 @@ def test_generate_model_documentation(
     monkeypatch.setattr(
         svc.model_generator,
         "analyze_ldif_schema",
-        lambda _e: FlextCore.Result[FlextCore.Types.Dict].ok({"total_entries": 0}),
+        lambda _e: FlextResult[FlextTypes.Dict].ok({"total_entries": 0}),
     )
     monkeypatch.setattr(
         svc.model_generator,
         "generate_staging_models",
-        lambda _e: FlextCore.Result[FlextCore.Types.List].ok(
+        lambda _e: FlextResult[FlextTypes.List].ok(
             [cast("object", FlextLdifDbtModel("stg_persons", "d", []))],
         ),
     )

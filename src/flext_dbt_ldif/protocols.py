@@ -2,11 +2,11 @@
 
 from typing import Protocol, runtime_checkable
 
-from flext_core import FlextCore
+from flext_core import FlextProtocols, FlextResult, FlextTypes
 
 
 class FlextDbtLdifProtocols:
-    """DBT LDIF protocols with explicit re-exports from FlextCore.Protocols foundation.
+    """DBT LDIF protocols with explicit re-exports from FlextProtocols foundation.
 
     This class provides protocol definitions for DBT operations with LDIF data integration,
     data transformation, modeling, and enterprise LDIF analytics patterns.
@@ -21,12 +21,6 @@ class FlextDbtLdifProtocols:
     # RE-EXPORT FOUNDATION PROTOCOLS (EXPLICIT PATTERN)
     # ============================================================================
 
-    Foundation = FlextCore.Protocols.Foundation
-    Domain = FlextCore.Protocols.Domain
-    Application = FlextCore.Protocols.Application
-    Infrastructure = FlextCore.Protocols.Infrastructure
-    Extensions = FlextCore.Protocols.Extensions
-    Commands = FlextCore.Protocols.Commands
 
     # ============================================================================
     # DBT LDIF-SPECIFIC PROTOCOLS (DOMAIN NAMESPACE)
@@ -36,14 +30,14 @@ class FlextDbtLdifProtocols:
         """DBT LDIF domain protocols for LDIF data transformation and analytics."""
 
         @runtime_checkable
-        class DbtProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class DbtProtocol(FlextProtocols.Service, Protocol):
             """Protocol for DBT operations with LDIF data."""
 
             def run_dbt_models(
                 self,
-                models: FlextCore.Types.StringList | None = None,
-                config: FlextCore.Types.Dict | None = None,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                models: FlextTypes.StringList | None = None,
+                config: FlextTypes.Dict | None = None,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Run DBT models with LDIF data sources.
 
                 Args:
@@ -51,15 +45,15 @@ class FlextDbtLdifProtocols:
                     config: DBT configuration parameters
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: DBT run results or error
+                    FlextResult[FlextTypes.Dict]: DBT run results or error
 
                 """
 
             def test_dbt_models(
                 self,
-                models: FlextCore.Types.StringList | None = None,
-                config: FlextCore.Types.Dict | None = None,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                models: FlextTypes.StringList | None = None,
+                config: FlextTypes.Dict | None = None,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Test DBT models with LDIF data validation.
 
                 Args:
@@ -67,15 +61,15 @@ class FlextDbtLdifProtocols:
                     config: DBT test configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: DBT test results or error
+                    FlextResult[FlextTypes.Dict]: DBT test results or error
 
                 """
 
             def compile_dbt_models(
                 self,
-                models: FlextCore.Types.StringList | None = None,
-                config: FlextCore.Types.Dict | None = None,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                models: FlextTypes.StringList | None = None,
+                config: FlextTypes.Dict | None = None,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Compile DBT models for LDIF data processing.
 
                 Args:
@@ -83,36 +77,36 @@ class FlextDbtLdifProtocols:
                     config: DBT compilation configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: DBT compilation results or error
+                    FlextResult[FlextTypes.Dict]: DBT compilation results or error
 
                 """
 
-            def get_dbt_manifest(self) -> FlextCore.Result[FlextCore.Types.Dict]:
+            def get_dbt_manifest(self) -> FlextResult[FlextTypes.Dict]:
                 """Get DBT manifest with LDIF model definitions.
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: DBT manifest or error
+                    FlextResult[FlextTypes.Dict]: DBT manifest or error
 
                 """
 
-            def validate_dbt_project(self, project_path: str) -> FlextCore.Result[bool]:
+            def validate_dbt_project(self, project_path: str) -> FlextResult[bool]:
                 """Validate DBT project configuration for LDIF integration.
 
                 Args:
                     project_path: Path to DBT project directory
 
                 Returns:
-                    FlextCore.Result[bool]: Validation status or error
+                    FlextResult[bool]: Validation status or error
 
                 """
 
         @runtime_checkable
-        class LdifIntegrationProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class LdifIntegrationProtocol(FlextProtocols.Service, Protocol):
             """Protocol for LDIF data integration operations."""
 
             def parse_ldif_file(
-                self, ldif_file_path: str, parsing_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                self, ldif_file_path: str, parsing_config: FlextTypes.Dict
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Parse LDIF file for DBT processing.
 
                 Args:
@@ -120,15 +114,15 @@ class FlextDbtLdifProtocols:
                     parsing_config: LDIF parsing configuration
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Parsed LDIF entries or error
+                    FlextResult[list[FlextTypes.Dict]]: Parsed LDIF entries or error
 
                 """
 
             def transform_ldif_to_dbt_format(
                 self,
-                ldif_data: list[FlextCore.Types.Dict],
-                transformation_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                ldif_data: list[FlextTypes.Dict],
+                transformation_config: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Transform LDIF data to DBT-compatible format.
 
                 Args:
@@ -136,15 +130,15 @@ class FlextDbtLdifProtocols:
                     transformation_config: Transformation parameters
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Transformed data or error
+                    FlextResult[list[FlextTypes.Dict]]: Transformed data or error
 
                 """
 
             def validate_ldif_data_quality(
                 self,
-                data: list[FlextCore.Types.Dict],
-                quality_rules: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                data: list[FlextTypes.Dict],
+                quality_rules: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Validate LDIF data quality for DBT processing.
 
                 Args:
@@ -152,15 +146,15 @@ class FlextDbtLdifProtocols:
                     quality_rules: Data quality validation rules
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Quality validation results or error
+                    FlextResult[FlextTypes.Dict]: Quality validation results or error
 
                 """
 
             def export_ldif_to_warehouse(
                 self,
-                ldif_data: list[FlextCore.Types.Dict],
-                warehouse_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                ldif_data: list[FlextTypes.Dict],
+                warehouse_config: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Export LDIF data to data warehouse for DBT processing.
 
                 Args:
@@ -168,19 +162,19 @@ class FlextDbtLdifProtocols:
                     warehouse_config: Data warehouse configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Export operation results or error
+                    FlextResult[FlextTypes.Dict]: Export operation results or error
 
                 """
 
         @runtime_checkable
-        class ModelingProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class ModelingProtocol(FlextProtocols.Service, Protocol):
             """Protocol for LDIF data modeling operations."""
 
             def create_entry_dimension(
                 self,
-                ldif_entries: list[FlextCore.Types.Dict],
-                dimension_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                ldif_entries: list[FlextTypes.Dict],
+                dimension_config: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Create entry dimension model from LDIF entry data.
 
                 Args:
@@ -188,15 +182,15 @@ class FlextDbtLdifProtocols:
                     dimension_config: Dimension modeling configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Entry dimension model or error
+                    FlextResult[FlextTypes.Dict]: Entry dimension model or error
 
                 """
 
             def create_attribute_dimension(
                 self,
-                ldif_attributes: list[FlextCore.Types.Dict],
-                dimension_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                ldif_attributes: list[FlextTypes.Dict],
+                dimension_config: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Create attribute dimension model from LDIF attribute data.
 
                 Args:
@@ -204,15 +198,15 @@ class FlextDbtLdifProtocols:
                     dimension_config: Dimension modeling configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Attribute dimension model or error
+                    FlextResult[FlextTypes.Dict]: Attribute dimension model or error
 
                 """
 
             def create_change_tracking_model(
                 self,
-                ldif_changes: list[FlextCore.Types.Dict],
-                tracking_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                ldif_changes: list[FlextTypes.Dict],
+                tracking_config: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Create change tracking model from LDIF change data.
 
                 Args:
@@ -220,15 +214,15 @@ class FlextDbtLdifProtocols:
                     tracking_config: Change tracking configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Change tracking model or error
+                    FlextResult[FlextTypes.Dict]: Change tracking model or error
 
                 """
 
             def generate_fact_tables(
                 self,
-                dimensions: list[FlextCore.Types.Dict],
-                fact_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                dimensions: list[FlextTypes.Dict],
+                fact_config: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Generate fact tables from LDIF dimensions.
 
                 Args:
@@ -236,19 +230,19 @@ class FlextDbtLdifProtocols:
                     fact_config: Fact table configuration
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Generated fact tables or error
+                    FlextResult[list[FlextTypes.Dict]]: Generated fact tables or error
 
                 """
 
         @runtime_checkable
-        class TransformationProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class TransformationProtocol(FlextProtocols.Service, Protocol):
             """Protocol for LDIF data transformation operations."""
 
             def normalize_ldif_attributes(
                 self,
-                ldif_entries: list[FlextCore.Types.Dict],
-                normalization_rules: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                ldif_entries: list[FlextTypes.Dict],
+                normalization_rules: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Normalize LDIF attributes for consistent data processing.
 
                 Args:
@@ -256,15 +250,15 @@ class FlextDbtLdifProtocols:
                     normalization_rules: Attribute normalization rules
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Normalized LDIF data or error
+                    FlextResult[list[FlextTypes.Dict]]: Normalized LDIF data or error
 
                 """
 
             def process_ldif_changesets(
                 self,
-                ldif_changes: list[FlextCore.Types.Dict],
-                processing_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                ldif_changes: list[FlextTypes.Dict],
+                processing_config: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Process LDIF changeset data for analytics.
 
                 Args:
@@ -272,15 +266,15 @@ class FlextDbtLdifProtocols:
                     processing_config: Changeset processing configuration
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Processed changeset data or error
+                    FlextResult[list[FlextTypes.Dict]]: Processed changeset data or error
 
                 """
 
             def apply_business_rules(
                 self,
-                data: list[FlextCore.Types.Dict],
-                business_rules: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                data: list[FlextTypes.Dict],
+                business_rules: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Apply business rules to LDIF data transformations.
 
                 Args:
@@ -288,15 +282,15 @@ class FlextDbtLdifProtocols:
                     business_rules: Business transformation rules
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Transformed data or error
+                    FlextResult[list[FlextTypes.Dict]]: Transformed data or error
 
                 """
 
             def generate_derived_attributes(
                 self,
-                ldif_data: list[FlextCore.Types.Dict],
-                derivation_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                ldif_data: list[FlextTypes.Dict],
+                derivation_config: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Generate derived attributes from LDIF base attributes.
 
                 Args:
@@ -304,75 +298,75 @@ class FlextDbtLdifProtocols:
                     derivation_config: Attribute derivation configuration
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Data with derived attributes or error
+                    FlextResult[list[FlextTypes.Dict]]: Data with derived attributes or error
 
                 """
 
         @runtime_checkable
-        class MacroProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class MacroProtocol(FlextProtocols.Service, Protocol):
             """Protocol for DBT macro operations with LDIF data."""
 
             def generate_ldif_source_macro(
-                self, source_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[str]:
+                self, source_config: FlextTypes.Dict
+            ) -> FlextResult[str]:
                 """Generate DBT macro for LDIF data sources.
 
                 Args:
                     source_config: LDIF source configuration
 
                 Returns:
-                    FlextCore.Result[str]: Generated DBT macro or error
+                    FlextResult[str]: Generated DBT macro or error
 
                 """
 
             def create_ldif_test_macro(
-                self, test_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[str]:
+                self, test_config: FlextTypes.Dict
+            ) -> FlextResult[str]:
                 """Create DBT test macro for LDIF data validation.
 
                 Args:
                     test_config: LDIF test configuration
 
                 Returns:
-                    FlextCore.Result[str]: Generated test macro or error
+                    FlextResult[str]: Generated test macro or error
 
                 """
 
             def generate_ldif_transformation_macro(
-                self, transformation_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[str]:
+                self, transformation_config: FlextTypes.Dict
+            ) -> FlextResult[str]:
                 """Generate DBT transformation macro for LDIF data.
 
                 Args:
                     transformation_config: Transformation configuration
 
                 Returns:
-                    FlextCore.Result[str]: Generated transformation macro or error
+                    FlextResult[str]: Generated transformation macro or error
 
                 """
 
             def create_ldif_snapshot_macro(
-                self, snapshot_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[str]:
+                self, snapshot_config: FlextTypes.Dict
+            ) -> FlextResult[str]:
                 """Create DBT snapshot macro for LDIF data versioning.
 
                 Args:
                     snapshot_config: Snapshot configuration
 
                 Returns:
-                    FlextCore.Result[str]: Generated snapshot macro or error
+                    FlextResult[str]: Generated snapshot macro or error
 
                 """
 
         @runtime_checkable
-        class QualityProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class QualityProtocol(FlextProtocols.Service, Protocol):
             """Protocol for LDIF data quality operations."""
 
             def validate_ldif_format_compliance(
                 self,
-                ldif_data: list[FlextCore.Types.Dict],
-                format_rules: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                ldif_data: list[FlextTypes.Dict],
+                format_rules: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Validate LDIF data against format compliance rules.
 
                 Args:
@@ -380,15 +374,15 @@ class FlextDbtLdifProtocols:
                     format_rules: Format compliance rules
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Format validation results or error
+                    FlextResult[FlextTypes.Dict]: Format validation results or error
 
                 """
 
             def check_data_completeness(
                 self,
-                data: list[FlextCore.Types.Dict],
-                completeness_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                data: list[FlextTypes.Dict],
+                completeness_config: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Check LDIF data completeness for DBT processing.
 
                 Args:
@@ -396,15 +390,15 @@ class FlextDbtLdifProtocols:
                     completeness_config: Completeness validation configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Completeness check results or error
+                    FlextResult[FlextTypes.Dict]: Completeness check results or error
 
                 """
 
             def detect_data_anomalies(
                 self,
-                data: list[FlextCore.Types.Dict],
-                anomaly_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[list[FlextCore.Types.Dict]]:
+                data: list[FlextTypes.Dict],
+                anomaly_config: FlextTypes.Dict,
+            ) -> FlextResult[list[FlextTypes.Dict]]:
                 """Detect anomalies in LDIF data for quality assurance.
 
                 Args:
@@ -412,15 +406,15 @@ class FlextDbtLdifProtocols:
                     anomaly_config: Anomaly detection configuration
 
                 Returns:
-                    FlextCore.Result[list[FlextCore.Types.Dict]]: Detected anomalies or error
+                    FlextResult[list[FlextTypes.Dict]]: Detected anomalies or error
 
                 """
 
             def generate_quality_report(
                 self,
-                quality_results: list[FlextCore.Types.Dict],
-                report_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                quality_results: list[FlextTypes.Dict],
+                report_config: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Generate data quality report for LDIF DBT processing.
 
                 Args:
@@ -428,19 +422,19 @@ class FlextDbtLdifProtocols:
                     report_config: Report generation configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Quality report or error
+                    FlextResult[FlextTypes.Dict]: Quality report or error
 
                 """
 
         @runtime_checkable
-        class PerformanceProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class PerformanceProtocol(FlextProtocols.Service, Protocol):
             """Protocol for DBT LDIF performance optimization operations."""
 
             def optimize_dbt_models(
                 self,
-                model_config: FlextCore.Types.Dict,
-                performance_metrics: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                model_config: FlextTypes.Dict,
+                performance_metrics: FlextTypes.Dict,
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Optimize DBT models for LDIF data processing performance.
 
                 Args:
@@ -448,15 +442,15 @@ class FlextDbtLdifProtocols:
                     performance_metrics: Current performance metrics
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Optimization recommendations or error
+                    FlextResult[FlextTypes.Dict]: Optimization recommendations or error
 
                 """
 
             def cache_ldif_parsing(
                 self,
-                parsing_config: FlextCore.Types.Dict,
-                cache_config: FlextCore.Types.Dict,
-            ) -> FlextCore.Result[bool]:
+                parsing_config: FlextTypes.Dict,
+                cache_config: FlextTypes.Dict,
+            ) -> FlextResult[bool]:
                 """Cache LDIF parsing operations for improved performance.
 
                 Args:
@@ -464,43 +458,43 @@ class FlextDbtLdifProtocols:
                     cache_config: Caching configuration
 
                 Returns:
-                    FlextCore.Result[bool]: Caching setup success status
+                    FlextResult[bool]: Caching setup success status
 
                 """
 
             def monitor_dbt_performance(
-                self, run_results: FlextCore.Types.Dict
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                self, run_results: FlextTypes.Dict
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Monitor DBT performance with LDIF data processing.
 
                 Args:
                     run_results: DBT run results
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Performance metrics or error
+                    FlextResult[FlextTypes.Dict]: Performance metrics or error
 
                 """
 
             def optimize_ldif_parsing(
-                self, parsing_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                self, parsing_config: FlextTypes.Dict
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Optimize LDIF parsing operations for DBT data processing.
 
                 Args:
                     parsing_config: LDIF parsing configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Parsing optimization results or error
+                    FlextResult[FlextTypes.Dict]: Parsing optimization results or error
 
                 """
 
         @runtime_checkable
-        class MonitoringProtocol(FlextCore.Protocols.Domain.Service, Protocol):
+        class MonitoringProtocol(FlextProtocols.Service, Protocol):
             """Protocol for DBT LDIF monitoring operations."""
 
             def track_dbt_run_metrics(
-                self, run_id: str, metrics: FlextCore.Types.Dict
-            ) -> FlextCore.Result[bool]:
+                self, run_id: str, metrics: FlextTypes.Dict
+            ) -> FlextResult[bool]:
                 """Track DBT run metrics for LDIF data processing.
 
                 Args:
@@ -508,41 +502,41 @@ class FlextDbtLdifProtocols:
                     metrics: Run metrics data
 
                 Returns:
-                    FlextCore.Result[bool]: Metric tracking success status
+                    FlextResult[bool]: Metric tracking success status
 
                 """
 
             def monitor_ldif_data_freshness(
-                self, freshness_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                self, freshness_config: FlextTypes.Dict
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Monitor LDIF data freshness for DBT processing.
 
                 Args:
                     freshness_config: Data freshness monitoring configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Data freshness status or error
+                    FlextResult[FlextTypes.Dict]: Data freshness status or error
 
                 """
 
-            def get_health_status(self) -> FlextCore.Result[FlextCore.Types.Dict]:
+            def get_health_status(self) -> FlextResult[FlextTypes.Dict]:
                 """Get DBT LDIF integration health status.
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Health status or error
+                    FlextResult[FlextTypes.Dict]: Health status or error
 
                 """
 
             def create_monitoring_dashboard(
-                self, dashboard_config: FlextCore.Types.Dict
-            ) -> FlextCore.Result[FlextCore.Types.Dict]:
+                self, dashboard_config: FlextTypes.Dict
+            ) -> FlextResult[FlextTypes.Dict]:
                 """Create monitoring dashboard for DBT LDIF operations.
 
                 Args:
                     dashboard_config: Dashboard configuration
 
                 Returns:
-                    FlextCore.Result[FlextCore.Types.Dict]: Dashboard creation result or error
+                    FlextResult[FlextTypes.Dict]: Dashboard creation result or error
 
                 """
 

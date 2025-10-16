@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextTypes
 
 from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifConfig
 
@@ -29,10 +29,8 @@ def test_parse_ldif_file_ok(
 ) -> None:
     """Test parsing LDIF file."""
 
-    def _parse_file(
-        _self: object, __path: Path
-    ) -> FlextCore.Result[FlextCore.Types.List]:
-        return FlextCore.Result[FlextCore.Types.List].ok([])
+    def _parse_file(_self: object, __path: Path) -> FlextResult[FlextTypes.List]:
+        return FlextResult[FlextTypes.List].ok([])
 
     monkeypatch.setattr(
         client,
@@ -52,20 +50,20 @@ def test_validate_ldif_data_ok(
 
     def _validate(
         _self: object,
-        _entries: FlextCore.Types.List,
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
-        return FlextCore.Result[FlextCore.Types.Dict].ok({})
+        _entries: FlextTypes.List,
+    ) -> FlextResult[FlextTypes.Dict]:
+        return FlextResult[FlextTypes.Dict].ok({})
 
     def _stats(
         _self: object,
-        _entries: FlextCore.Types.List,
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"quality_score": 0.95})
+        _entries: FlextTypes.List,
+    ) -> FlextResult[FlextTypes.Dict]:
+        return FlextResult[FlextTypes.Dict].ok({"quality_score": 0.95})
 
     api = type("API", (), {"validate": _validate, "get_entry_statistics": _stats})()
     monkeypatch.setattr(client, "_ldif_api", api)
 
-    result = client.validate_ldif_data(cast("FlextCore.Types.List", []))
+    result = client.validate_ldif_data(cast("FlextTypes.List", []))
     assert result.is_success
     data = result.value or {}
     assert data.get("quality_score") == 0.95
@@ -80,15 +78,15 @@ def test_transform_with_dbt_ok(
 
     def _prep(
         _self: FlextDbtLdifClient,
-        _entries: FlextCore.Types.List,
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"prepared": True})
+        _entries: FlextTypes.List,
+    ) -> FlextResult[FlextTypes.Dict]:
+        return FlextResult[FlextTypes.Dict].ok({"prepared": True})
 
     monkeypatch.setattr(FlextDbtLdifClient, "_prepare_ldif_data_for_dbt", _prep)
     # Preload hub to avoid real initialization
     client._dbt_hub = cast("object", object())
 
-    result = client.transform_with_dbt(cast("FlextCore.Types.List", []), ["m1", "m2"])
+    result = client.transform_with_dbt(cast("FlextTypes.List", []), ["m1", "m2"])
     assert result.is_success
     assert isinstance(result.value, dict)
 
@@ -103,21 +101,21 @@ def test_run_full_pipeline_ok(
     def _parse(
         _self: FlextDbtLdifClient,
         _file: Path | str | None = None,
-    ) -> FlextCore.Result[FlextCore.Types.List]:
-        return FlextCore.Result[FlextCore.Types.List].ok([])
+    ) -> FlextResult[FlextTypes.List]:
+        return FlextResult[FlextTypes.List].ok([])
 
     def _validate(
         _self: FlextDbtLdifClient,
-        _entries: FlextCore.Types.List,
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"quality_score": 0.9})
+        _entries: FlextTypes.List,
+    ) -> FlextResult[FlextTypes.Dict]:
+        return FlextResult[FlextTypes.Dict].ok({"quality_score": 0.9})
 
     def _transform(
         _self: FlextDbtLdifClient,
-        _entries: FlextCore.Types.List,
-        _models: FlextCore.Types.StringList | None,
-    ) -> FlextCore.Result[FlextCore.Types.Dict]:
-        return FlextCore.Result[FlextCore.Types.Dict].ok({"ran": True})
+        _entries: FlextTypes.List,
+        _models: FlextTypes.StringList | None,
+    ) -> FlextResult[FlextTypes.Dict]:
+        return FlextResult[FlextTypes.Dict].ok({"ran": True})
 
     monkeypatch.setattr(FlextDbtLdifClient, "parse_ldif_file", _parse)
     monkeypatch.setattr(FlextDbtLdifClient, "validate_ldif_data", _validate)

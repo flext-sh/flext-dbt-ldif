@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from flext_core.metadata import FlextProjectMetadata, FlextProjectPerson
+from flext_core import FlextProjectMetadata, FlextProjectPerson
 
 from flext_dbt_ldif import __version__, __version_info__
 from flext_dbt_ldif.version import VERSION, FlextDbtLdifVersion
