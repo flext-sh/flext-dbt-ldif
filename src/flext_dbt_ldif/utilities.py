@@ -56,20 +56,18 @@ class FlextDbtLdifUtilities(FlextUtilities):
             FlextResult[FlextTypes.Dict]: Service status and capabilities.
 
         """
-        return FlextResult[FlextTypes.Dict].ok(
-            {
-                "status": "operational",
-                "service": "flext-dbt-ldif-utilities",
-                "capabilities": [
-                    "ldif_file_processing",
-                    "dbt_model_generation",
-                    "ldif_schema_mapping",
-                    "data_transformation",
-                    "macro_generation",
-                    "performance_optimization",
-                ],
-            }
-        )
+        return FlextResult[FlextTypes.Dict].ok({
+            "status": "operational",
+            "service": "flext-dbt-ldif-utilities",
+            "capabilities": [
+                "ldif_file_processing",
+                "dbt_model_generation",
+                "ldif_schema_mapping",
+                "data_transformation",
+                "macro_generation",
+                "performance_optimization",
+            ],
+        })
 
     @property
     def logger(self) -> FlextLogger:
@@ -137,14 +135,12 @@ class FlextDbtLdifUtilities(FlextUtilities):
                         if line.startswith("dn:"):
                             # Save previous entry if exists
                             if current_entry and current_dn:
-                                parsed_data["entries"].append(
-                                    {
-                                        "dn": current_dn,
-                                        "attributes": current_entry,
-                                        "record_number": record_count,
-                                        "batch_number": batch_count // batch_size,
-                                    }
-                                )
+                                parsed_data["entries"].append({
+                                    "dn": current_dn,
+                                    "attributes": current_entry,
+                                    "record_number": record_count,
+                                    "batch_number": batch_count // batch_size,
+                                })
                                 record_count += 1
 
                                 # Process in batches for memory efficiency
@@ -173,13 +169,11 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                     # Process last entry
                     if current_entry and current_dn:
-                        parsed_data["entries"].append(
-                            {
-                                "dn": current_dn,
-                                "attributes": current_entry,
-                                "record_number": record_count,
-                            }
-                        )
+                        parsed_data["entries"].append({
+                            "dn": current_dn,
+                            "attributes": current_entry,
+                            "record_number": record_count,
+                        })
                         record_count += 1
 
                 parsed_data["total_records"] = record_count
@@ -310,12 +304,10 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                     # Handle multi-valued attributes
                     if attr_info.get("multi_valued"):
-                        select_clauses.extend(
-                            (
-                                f"    {attr_name} as {attr_name}_array",
-                                f"    array_to_string({attr_name}, ',') as {attr_name}_text",
-                            )
-                        )
+                        select_clauses.extend((
+                            f"    {attr_name} as {attr_name}_array",
+                            f"    array_to_string({attr_name}, ',') as {attr_name}_text",
+                        ))
                     else:
                         select_clauses.append(f"    {attr_name}")
 
