@@ -7,10 +7,10 @@ from __future__ import annotations
 
 from typing import override
 
-from flext_core import FlextCore
+from flext_core import FlextModels, FlextResult, FlextTypes
 
 
-class FlextDbtLdifModels(FlextCore.Models):
+class FlextDbtLdifModels(FlextModels):
     """Unified DBT LDIF models collection with analytics capabilities.
 
     Immutable representation of a generated DBT model with LDIF-specific metadata
@@ -20,32 +20,32 @@ class FlextDbtLdifModels(FlextCore.Models):
     name: str
     dbt_model_type: str  # staging, intermediate, marts, analytics
     ldif_source: str
-    change_types: FlextCore.Types.StringList
-    columns: list[FlextCore.Types.Dict]
+    change_types: FlextTypes.StringList
+    columns: list[FlextTypes.Dict]
     materialization: str
     sql_content: str
     description: str
-    dependencies: FlextCore.Types.StringList
+    dependencies: FlextTypes.StringList
 
-    def validate_business_rules(self) -> FlextCore.Result[None]:
+    def validate_business_rules(self) -> FlextResult[None]:
         """Validate DBT LDIF model business rules."""
         try:
             if not self.name.strip():
-                return FlextCore.Result[None].fail("Model name cannot be empty")
+                return FlextResult[None].fail("Model name cannot be empty")
             if self.dbt_model_type not in {
                 "staging",
                 "intermediate",
                 "marts",
                 "analytics",
             }:
-                return FlextCore.Result[None].fail("Invalid model_type")
+                return FlextResult[None].fail("Invalid model_type")
             if not self.ldif_source.strip():
-                return FlextCore.Result[None].fail("LDIF source cannot be empty")
+                return FlextResult[None].fail("LDIF source cannot be empty")
             if not self.sql_content.strip():
-                return FlextCore.Result[None].fail("SQL content cannot be empty")
-            return FlextCore.Result[None].ok(None)
+                return FlextResult[None].fail("SQL content cannot be empty")
+            return FlextResult[None].ok(None)
         except Exception as e:
-            return FlextCore.Result[None].fail(f"Business rule validation failed: {e}")
+            return FlextResult[None].fail(f"Business rule validation failed: {e}")
 
     def get_file_path(self) -> str:
         """Get the file path for this DBT LDIF model."""
@@ -55,7 +55,7 @@ class FlextDbtLdifModels(FlextCore.Models):
         """Get the schema file path for this DBT LDIF model."""
         return f"models/{self.dbt_model_type}/schema.yml"
 
-    def to_sql_file(self) -> FlextCore.Result[str]:
+    def to_sql_file(self) -> FlextResult[str]:
         """Convert model to SQL file content."""
         try:
             config_block = f"""
@@ -66,14 +66,14 @@ class FlextDbtLdifModels(FlextCore.Models):
   )
 }}}}"""
             content = f"{config_block}\n\n{self.sql_content}"
-            return FlextCore.Result[str].ok(content)
+            return FlextResult[str].ok(content)
         except Exception as e:
-            return FlextCore.Result[str].fail(f"SQL file generation failed: {e}")
+            return FlextResult[str].fail(f"SQL file generation failed: {e}")
 
-    def to_schema_entry(self) -> FlextCore.Result[FlextCore.Types.Dict]:
+    def to_schema_entry(self) -> FlextResult[FlextTypes.Dict]:
         """Convert model to schema.yml entry."""
         try:
-            schema_entry: FlextCore.Types.Dict = {
+            schema_entry: FlextTypes.Dict = {
                 "name": self.name,
                 "description": self.description,
                 "columns": [
@@ -85,16 +85,16 @@ class FlextDbtLdifModels(FlextCore.Models):
                     for col in self.columns
                 ],
             }
-            return FlextCore.Result[dict["str", "object"]].ok(schema_entry)
+            return FlextResult[dict["str", "object"]].ok(schema_entry)
         except Exception as e:
-            return FlextCore.Result[dict["str", "object"]].fail(
+            return FlextResult[dict["str", "object"]].fail(
                 f"Schema entry generation failed: {e}"
             )
 
     @classmethod
     def create_generator(
         cls,
-        config: FlextCore.Types.Dict,
+        config: FlextTypes.Dict,
     ) -> FlextDbtLdifModels.ModelGenerator:
         """Create a model generator instance."""
         return cls.ModelGenerator(config)
@@ -105,14 +105,14 @@ class FlextDbtLdifModels(FlextCore.Models):
         @override
         def __init__(
             self,
-            config: FlextCore.Types.Dict,
+            config: FlextTypes.Dict,
         ) -> None:
             """Initialize the LDIF model generator."""
             self.config = config
 
         def generate_staging_models(
-            self, ldif_sources: FlextCore.Types.StringList
-        ) -> FlextCore.Result[list[FlextDbtLdifModels]]:
+            self, ldif_sources: FlextTypes.StringList
+        ) -> FlextResult[list[FlextDbtLdifModels]]:
             """Generate staging models from LDIF sources."""
             staging_models: list[FlextDbtLdifModels] = []
 
@@ -123,11 +123,11 @@ class FlextDbtLdifModels(FlextCore.Models):
 
                 staging_models.append(model_result.unwrap())
 
-            return FlextCore.Result[list[FlextDbtLdifModels]].ok(staging_models)
+            return FlextResult[list[FlextDbtLdifModels]].ok(staging_models)
 
         def generate_analytics_models(
             self, staging_models: list[FlextDbtLdifModels]
-        ) -> FlextCore.Result[list[FlextDbtLdifModels]]:
+        ) -> FlextResult[list[FlextDbtLdifModels]]:
             """Generate analytics models from staging models."""
             analytics_models: list[FlextDbtLdifModels] = []
 
@@ -138,11 +138,11 @@ class FlextDbtLdifModels(FlextCore.Models):
 
                 analytics_models.append(model_result.unwrap())
 
-            return FlextCore.Result[list[FlextDbtLdifModels]].ok(analytics_models)
+            return FlextResult[list[FlextDbtLdifModels]].ok(analytics_models)
 
         def _create_staging_model(
             self, ldif_source: str
-        ) -> FlextCore.Result[FlextDbtLdifModels]:
+        ) -> FlextResult[FlextDbtLdifModels]:
             """Create a staging model from LDIF source."""
             try:
                 # Note: This is a template string for DBT, not executable SQL
@@ -164,16 +164,16 @@ class FlextDbtLdifModels(FlextCore.Models):
                     dependencies=[],
                 )
 
-                return FlextCore.Result[FlextDbtLdifModels].ok(staging_model)
+                return FlextResult[FlextDbtLdifModels].ok(staging_model)
 
             except Exception as e:
-                return FlextCore.Result[FlextDbtLdifModels].fail(
+                return FlextResult[FlextDbtLdifModels].fail(
                     f"Failed to create staging model: {e}"
                 )
 
         def _create_analytics_model(
             self, staging_model: FlextDbtLdifModels
-        ) -> FlextCore.Result[FlextDbtLdifModels]:
+        ) -> FlextResult[FlextDbtLdifModels]:
             """Create an analytics model from staging model."""
             try:
                 analytics_name = staging_model.name.replace("stg_", "analytics_")
@@ -206,10 +206,10 @@ class FlextDbtLdifModels(FlextCore.Models):
                     dependencies=[staging_model.name],
                 )
 
-                return FlextCore.Result[FlextDbtLdifModels].ok(analytics_model)
+                return FlextResult[FlextDbtLdifModels].ok(analytics_model)
 
             except Exception as e:
-                return FlextCore.Result[FlextDbtLdifModels].fail(
+                return FlextResult[FlextDbtLdifModels].fail(
                     f"Failed to create analytics model: {e}"
                 )
 

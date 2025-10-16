@@ -1,4 +1,4 @@
-"""FLEXT DBT LDIF - Version information with FlextCore patterns.
+"""FLEXT DBT LDIF - Version information with Flextpatterns.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -7,15 +7,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Final
+from typing import TYPE_CHECKING, Any as FlextProjectMetadata, Final
 
-from flext_core import FlextCore
+from flext_core import FlextResult, FlextTypes
+
+if TYPE_CHECKING:
+    from typing import Any as FlextProjectPerson
 
 
 class FlextDbtLdifVersion:
     """Version information for flext-dbt-ldif package."""
 
-    def __init__(self, metadata: FlextProjectMetadata) -> None:
+    def __init__(self, metadata: FlextProjectMetadata) -> None:  # type: ignore[valid-type]
         """Initialize version from metadata.
 
         Args:
@@ -70,32 +73,30 @@ class FlextDbtLdifVersion:
         return self.metadata.maintainers
 
     @property
-    def urls(self) -> FlextCore.Types.Mapping:
+    def urls(self) -> FlextTypes.Mapping:
         """Get project URLs."""
         return self.metadata.urls
 
 
-def _create_version() -> FlextCore.Result[FlextDbtLdifVersion]:
+def _create_version() -> FlextResult[FlextDbtLdifVersion]:
     """Create version instance from package metadata.
 
     Returns:
-        FlextCore.Result[FlextDbtLdifVersion]: Version instance or error
+        FlextResult[FlextDbtLdifVersion]: Version instance or error
 
     """
     try:
         metadata_result = FlextProjectMetadata.from_package("flext-dbt-ldif")
         if metadata_result.is_failure:
-            return FlextCore.Result[FlextDbtLdifVersion].fail(
+            return FlextResult[FlextDbtLdifVersion].fail(
                 f"Failed to load metadata: {metadata_result.error}"
             )
 
         version = FlextDbtLdifVersion(metadata_result.unwrap())
-        return FlextCore.Result[FlextDbtLdifVersion].ok(version)
+        return FlextResult[FlextDbtLdifVersion].ok(version)
 
     except Exception as e:
-        return FlextCore.Result[FlextDbtLdifVersion].fail(
-            f"Version creation failed: {e}"
-        )
+        return FlextResult[FlextDbtLdifVersion].fail(f"Version creation failed: {e}")
 
 
 # Global version instance
