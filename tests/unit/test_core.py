@@ -9,8 +9,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextTypes
-
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 
 # Constants
@@ -76,7 +74,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_analyze_entry_patterns_with_data(self) -> None:
         """Test pattern analysis with sample data."""
-        sample_data: list[FlextTypes.Dict] = [
+        sample_data: list[dict[str, object]] = [
             {
                 "dn": "cn=user1,ou=users,dc=example,dc=com",
                 "objectClass": ["inetOrgPerson"],
@@ -117,7 +115,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_quality_metrics_with_data(self) -> None:
         """Test quality metrics with sample data."""
-        sample_entries: list[FlextTypes.Dict] = [
+        sample_entries: list[dict[str, object]] = [
             {"dn": "test", "objectClass": ["top"]},
         ]
         analytics = FlextDbtLdifUnifiedService()

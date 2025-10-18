@@ -16,7 +16,6 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
-    FlextTypes,
 )
 
 from flext_dbt_ldif.config import FlextDbtLdifConfig
@@ -84,7 +83,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Process an LDIF file with DBT using railway pattern.
 
         Args:
@@ -113,11 +112,11 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
                 run_transformations=run_transformations,
             )
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"LDIF processing failed: {e}")
+            return FlextResult[dict[str, object]].fail(f"LDIF processing failed: {e}")
 
     def validate_ldif_quality(
         self, ldif_file: Path | str
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Validate LDIF data quality using railway pattern.
 
         Args:
@@ -131,7 +130,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             self.logger.info("Validating LDIF quality: %s", ldif_file)
             return self.service.run_data_quality_assessment(ldif_file)
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(
+            return FlextResult[dict[str, object]].fail(
                 f"LDIF quality validation failed: {e}"
             )
 
@@ -141,7 +140,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> FlextResult[FlextTypes.Dict]:
+    ) -> FlextResult[dict[str, object]]:
         """Generate DBT models from LDIF using railway pattern.
 
         Args:
@@ -166,18 +165,20 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             # Parse file first
             parse_result = service.parse_and_validate_ldif(ldif_file)
             if not parse_result.success:
-                return FlextResult[FlextTypes.Dict].fail(
+                return FlextResult[dict[str, object]].fail(
                     f"LDIF parsing failed: {parse_result.error}"
                 )
 
             parse_data = parse_result.value or {}
-            entries: FlextTypes.List = parse_data.get("entries", [])
+            entries: list[object] = parse_data.get("entries", [])
             if not isinstance(entries, list):
-                return FlextResult[FlextTypes.Dict].fail("Invalid entries data format")
+                return FlextResult[dict[str, object]].fail(
+                    "Invalid entries data format"
+                )
 
             return service.generate_and_write_models(entries, overwrite=overwrite)
         except Exception as e:
-            return FlextResult[FlextTypes.Dict].fail(f"Model generation failed: {e}")
+            return FlextResult[dict[str, object]].fail(f"Model generation failed: {e}")
 
 
 # Backward compatibility aliases
@@ -191,7 +192,7 @@ def process_ldif_file(
     *,
     generate_models: bool = True,
     run_transformations: bool = False,
-) -> FlextResult[FlextTypes.Dict]:
+) -> FlextResult[dict[str, object]]:
     """Legacy function wrapper - use FlextDbtLdif.process_ldif_file() instead."""
     api = FlextDbtLdif()
     return api.process_ldif_file(
@@ -204,7 +205,7 @@ def process_ldif_file(
 
 def validate_ldif_quality(
     ldif_file: Path | str,
-) -> FlextResult[FlextTypes.Dict]:
+) -> FlextResult[dict[str, object]]:
     """Legacy function wrapper - use FlextDbtLdif.validate_ldif_quality() instead."""
     api = FlextDbtLdif()
     return api.validate_ldif_quality(ldif_file)
@@ -215,7 +216,7 @@ def generate_ldif_models(
     project_dir: Path | str | None = None,
     *,
     overwrite: bool = False,
-) -> FlextResult[FlextTypes.Dict]:
+) -> FlextResult[dict[str, object]]:
     """Legacy function wrapper - use FlextDbtLdif.generate_ldif_models() instead."""
     api = FlextDbtLdif()
     return api.generate_ldif_models(ldif_file, project_dir, overwrite=overwrite)
