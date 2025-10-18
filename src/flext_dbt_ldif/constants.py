@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from flext_core import FlextConstants, FlextTypes
+from flext_core import FlextConstants
 
 
 class FlextDbtLdifConstants(FlextConstants):
@@ -23,7 +23,7 @@ class FlextDbtLdifConstants(FlextConstants):
     # DBT Configuration
     DEFAULT_DBT_PROFILES_DIR = "./profiles"
     DEFAULT_DBT_TARGET = "dev"
-    DBT_ALLOWED_TARGETS: ClassVar[FlextTypes.StringList] = [
+    DBT_ALLOWED_TARGETS: ClassVar[list[str]] = [
         "dev",
         "staging",
         "prod",
@@ -32,7 +32,7 @@ class FlextDbtLdifConstants(FlextConstants):
     # LDIF DBT Model Configuration
     DEFAULT_SCHEMA = "ldif_analytics"
     DEFAULT_OUTPUT_FORMAT = "postgresql"
-    SUPPORTED_OUTPUT_FORMATS: ClassVar[FlextTypes.StringList] = [
+    SUPPORTED_OUTPUT_FORMATS: ClassVar[list[str]] = [
         "postgresql",
         "duckdb",
         "parquet",

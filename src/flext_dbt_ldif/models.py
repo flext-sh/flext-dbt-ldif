@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import override
 
-from flext_core import FlextModels, FlextResult, FlextTypes
+from flext_core import FlextModels, FlextResult
 
 
 class FlextDbtLdifModels(FlextModels):
@@ -20,12 +20,12 @@ class FlextDbtLdifModels(FlextModels):
     name: str
     dbt_model_type: str  # staging, intermediate, marts, analytics
     ldif_source: str
-    change_types: FlextTypes.StringList
-    columns: list[FlextTypes.Dict]
+    change_types: list[str]
+    columns: list[dict[str, object]]
     materialization: str
     sql_content: str
     description: str
-    dependencies: FlextTypes.StringList
+    dependencies: list[str]
 
     def validate_business_rules(self) -> FlextResult[None]:
         """Validate DBT LDIF model business rules."""
@@ -70,10 +70,10 @@ class FlextDbtLdifModels(FlextModels):
         except Exception as e:
             return FlextResult[str].fail(f"SQL file generation failed: {e}")
 
-    def to_schema_entry(self) -> FlextResult[FlextTypes.Dict]:
+    def to_schema_entry(self) -> FlextResult[dict[str, object]]:
         """Convert model to schema.yml entry."""
         try:
-            schema_entry: FlextTypes.Dict = {
+            schema_entry: dict[str, object] = {
                 "name": self.name,
                 "description": self.description,
                 "columns": [
@@ -94,7 +94,7 @@ class FlextDbtLdifModels(FlextModels):
     @classmethod
     def create_generator(
         cls,
-        config: FlextTypes.Dict,
+        config: dict[str, object],
     ) -> FlextDbtLdifModels.ModelGenerator:
         """Create a model generator instance."""
         return cls.ModelGenerator(config)
@@ -105,13 +105,13 @@ class FlextDbtLdifModels(FlextModels):
         @override
         def __init__(
             self,
-            config: FlextTypes.Dict,
+            config: dict[str, object],
         ) -> None:
             """Initialize the LDIF model generator."""
             self.config = config
 
         def generate_staging_models(
-            self, ldif_sources: FlextTypes.StringList
+            self, ldif_sources: list[str]
         ) -> FlextResult[list[FlextDbtLdifModels]]:
             """Generate staging models from LDIF sources."""
             staging_models: list[FlextDbtLdifModels] = []
@@ -150,7 +150,7 @@ class FlextDbtLdifModels(FlextModels):
                 sql_content = f"""
     select *
     from {{{{ source('ldif', '{ldif_source}') }}}}
-    """
+    """  # noqa: S608
 
                 staging_model = FlextDbtLdifModels(
                     name=f"stg_ldif_{ldif_source.replace('.', '_')}",
@@ -185,7 +185,7 @@ class FlextDbtLdifModels(FlextModels):
         *,
         current_timestamp as analytics_timestamp
     from {{{{ ref('{staging_model.name}') }}}}
-    """
+    """  # noqa: S608
 
                 analytics_model = FlextDbtLdifModels(
                     name=analytics_name,
