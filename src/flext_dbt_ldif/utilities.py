@@ -313,6 +313,8 @@ class FlextDbtLdifUtilities(FlextUtilities):
                         select_clauses.append(f"    {attr_name}")
 
                 # Use model_name in description (DBT template - safe SQL generation)
+                # Note: This is a template string for DBT, not executable SQL
+                # The f-string interpolation is safe as it's used for DBT templating
                 model_sql = f"""{{{{
     config(
         materialized='view',
@@ -325,7 +327,7 @@ select
 {chr(10).join(select_clauses)}
 from {{{{ source('ldif', 'raw_ldif_entries') }}}}
 where dn is not null
-"""  # noqa: S608
+"""
 
                 return FlextResult[str].ok(model_sql)
 

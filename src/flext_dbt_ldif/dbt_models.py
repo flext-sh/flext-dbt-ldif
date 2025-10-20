@@ -560,7 +560,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             # Generate DBT template string (not executable SQL)
             # Note: This is a template string for DBT, not executable SQL
             # The f-string interpolation is safe as it's used for DBT templating
-            return f"SELECT * FROM {{ ref('{table_name}') }}"  # noqa: S608
+            return f"SELECT * FROM {{ ref('{table_name}') }}"
 
         @staticmethod
         def _generate_generic_sql(model: FlextDbtLdifUnifiedService) -> str:
