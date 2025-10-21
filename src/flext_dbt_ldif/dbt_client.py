@@ -37,7 +37,7 @@ class FlextDbtLdifClient:
         """Initialize DBT LDIF client.
 
         Args:
-            config: Configuration for LDIF and DBT operations
+        config: Configuration for LDIF and DBT operations
 
         """
         self.config: dict[str, object] = (
@@ -65,10 +65,10 @@ class FlextDbtLdifClient:
         """Parse LDIF file for DBT processing.
 
         Args:
-            file_path: Path to LDIF file (defaults to config path)
+        file_path: Path to LDIF file (defaults to config path)
 
         Returns:
-            FlextResult containing list of LDIF entries
+        FlextResult containing list of LDIF entries
 
         """
         try:
@@ -100,9 +100,9 @@ class FlextDbtLdifClient:
         """Validate LDIF data quality for DBT processing.
 
         Args:
-            entries: List of LDIF entries to validate
+        entries: List of LDIF entries to validate
         Returns:
-            FlextResult containing validation metrics
+        FlextResult containing validation metrics
 
         """
         try:
@@ -154,11 +154,11 @@ class FlextDbtLdifClient:
         """Transform LDIF data using DBT models.
 
         Args:
-            entries: LDIF entries to transform
-            model_names: Specific DBT models to run (None = all)
+        entries: LDIF entries to transform
+        model_names: Specific DBT models to run (None = all)
 
         Returns:
-            FlextResult containing transformation results
+        FlextResult containing transformation results
 
         """
         try:
@@ -217,10 +217,10 @@ class FlextDbtLdifClient:
         """Run complete LDIF to DBT transformation pipeline.
 
         Args:
-            file_path: LDIF file path
-            model_names: DBT models to run
+        file_path: LDIF file path
+        model_names: DBT models to run
         Returns:
-            FlextResult containing complete pipeline results
+        FlextResult containing complete pipeline results
 
         """
         logger.info("Starting full LDIF-to-DBT pipeline")
@@ -261,9 +261,9 @@ class FlextDbtLdifClient:
         maximum composition with flext-ldif functionality.
 
         Args:
-            entries: List of LDIF entries
+        entries: List of LDIF entries
         Returns:
-            FlextResult containing prepared data for DBT
+        FlextResult containing prepared data for DBT
 
         """
         try:

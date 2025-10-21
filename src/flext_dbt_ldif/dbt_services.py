@@ -42,8 +42,8 @@ class FlextDbtLdifService:
         """Initialize DBT LDIF service.
 
         Args:
-            config: Configuration for LDIF and DBT operations
-            project_dir: DBT project directory
+        config: Configuration for LDIF and DBT operations
+        project_dir: DBT project directory
 
         """
         self.config: dict[str, object] = (
@@ -72,13 +72,13 @@ class FlextDbtLdifService:
         """Run complete LDIF-to-DBT workflow.
 
         Args:
-            ldif_file: Path to LDIF file
-            generate_models: Whether to generate DBT models
-            run_transformations: Whether to run DBT transformations
-            model_names: Specific models to run (None = all)
+        ldif_file: Path to LDIF file
+        generate_models: Whether to generate DBT models
+        run_transformations: Whether to run DBT transformations
+        model_names: Specific models to run (None = all)
 
         Returns:
-            FlextResult containing complete workflow results
+        FlextResult containing complete workflow results
 
         """
         logger.info(
@@ -156,10 +156,10 @@ class FlextDbtLdifService:
         """Parse and validate LDIF file.
 
         Args:
-            ldif_file: Path to LDIF file
+        ldif_file: Path to LDIF file
 
         Returns:
-            FlextResult containing parsing and validation results
+        FlextResult containing parsing and validation results
 
         """
         logger.info("Parsing and validating LDIF file: %s", ldif_file)
@@ -205,11 +205,11 @@ class FlextDbtLdifService:
         """Generate and write DBT models for LDIF entries.
 
         Args:
-            entries: List of LDIF entries
-            overwrite: Whether to overwrite existing models
+        entries: List of LDIF entries
+        overwrite: Whether to overwrite existing models
 
         Returns:
-            FlextResult containing model generation results
+        FlextResult containing model generation results
 
         """
         logger.info("Generating and writing DBT models for %d entries", len(entries))
@@ -271,13 +271,13 @@ class FlextDbtLdifService:
         self,
         ldif_file: Path | str,
     ) -> FlextResult[dict[str, object]]:
-        """Run comprehensive data quality assessment on LDIF file.
+        """Run complete data quality assessment on LDIF file.
 
         Args:
-            ldif_file: Path to LDIF file
+        ldif_file: Path to LDIF file
 
         Returns:
-            FlextResult containing comprehensive quality assessment
+        FlextResult containing complete quality assessment
 
         """
         logger.info("Running data quality assessment: %s", ldif_file)
@@ -306,7 +306,7 @@ class FlextDbtLdifService:
             )
             schema_info = (schema_result.value if schema_result.success else {}) or {}
 
-            # Compile comprehensive assessment
+            # Compile complete assessment
             quality_assessment = {
                 "file_info": {
                     "path": str(ldif_file),
@@ -355,10 +355,10 @@ class FlextDbtLdifService:
         """Generate documentation for DBT models based on LDIF analysis.
 
         Args:
-            entries: List of LDIF entries
+        entries: List of LDIF entries
 
         Returns:
-            FlextResult containing model documentation
+        FlextResult containing model documentation
 
         """
         logger.info("Generating model documentation for %d entries", len(entries))

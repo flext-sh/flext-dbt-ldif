@@ -60,10 +60,10 @@ class FlextDbtLdifModels(FlextModels):
         try:
             config_block = f"""
 {{{{
-  config(
-    materialized='{self.materialization}',
-    alias='{self.name}'
-  )
+ config(
+ materialized='{self.materialization}',
+ alias='{self.name}'
+ )
 }}}}"""
             content = f"{config_block}\n\n{self.sql_content}"
             return FlextResult[str].ok(content)
@@ -148,9 +148,9 @@ class FlextDbtLdifModels(FlextModels):
                 # Note: This is a template string for DBT, not executable SQL
                 # The f-string interpolation is safe as it's used for DBT templating
                 sql_content = f"""
-    select *
-    from {{{{ source('ldif', '{ldif_source}') }}}}
-    """
+ select *
+ from {{{{ source('ldif', '{ldif_source}') }}}}
+ """
 
                 staging_model = FlextDbtLdifModels(
                     name=f"stg_ldif_{ldif_source.replace('.', '_')}",
@@ -182,11 +182,11 @@ class FlextDbtLdifModels(FlextModels):
                 # The f-string interpolation is safe as it's used for DBT templating
 
                 sql_content = f"""
-    select
-        *,
-        current_timestamp as analytics_timestamp
-    from {{{{ ref('{staging_model.name}') }}}}
-    """
+ select
+ *,
+ current_timestamp as analytics_timestamp
+ from {{{{ ref('{staging_model.name}') }}}}
+ """
 
                 analytics_model = FlextDbtLdifModels(
                     name=analytics_name,
@@ -215,10 +215,10 @@ class FlextDbtLdifModels(FlextModels):
                 )
 
 
-# ZERO TOLERANCE CONSOLIDATION - FlextDbtLdifUtilities moved to utilities.py
+# Zero Tolerance CONSOLIDATION - FlextDbtLdifUtilities moved to utilities.py
 #
-# CRITICAL: FlextDbtLdifUtilities was DUPLICATED between models.py and utilities.py.
-# This was a ZERO TOLERANCE violation of the user's explicit requirements.
+# Critical: FlextDbtLdifUtilities was DUPLICATED between models.py and utilities.py.
+# This was a Zero Tolerance violation of the user's explicit requirements.
 #
 # RESOLUTION: Import from utilities.py to eliminate duplication completely.
 

@@ -46,13 +46,13 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         """Initialize unified LDIF DBT service with model configuration.
 
         Args:
-            name: Model name
-            description: Model description
-            materialization: DBT materialization type
-            columns: Model column definitions
-            meta: Model metadata
-            config: Configuration for LDIF and DBT operations
-            project_dir: Path to the DBT project directory
+        name: Model name
+        description: Model description
+        materialization: DBT materialization type
+        columns: Model column definitions
+        meta: Model metadata
+        config: Configuration for LDIF and DBT operations
+        project_dir: Path to the DBT project directory
 
         """
         # Model definition properties
@@ -76,7 +76,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         """Execute the DBT model service.
 
         Returns:
-            FlextResult[dict[str, object]]: Execution result
+        FlextResult[dict[str, object]]: Execution result
 
         """
         try:
@@ -100,10 +100,10 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Convert model to YAML configuration format.
 
             Args:
-                model_instance: The parent model instance
+            model_instance: The parent model instance
 
             Returns:
-                Dictionary representing YAML configuration
+            Dictionary representing YAML configuration
 
             """
             return {
@@ -119,10 +119,10 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Convert model to dictionary representation.
 
             Args:
-                model_instance: The parent model instance
+            model_instance: The parent model instance
 
             Returns:
-                Dictionary representation of the model
+            Dictionary representation of the model
 
             """
             return {
@@ -144,11 +144,11 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Analyze LDIF entries to determine schema structure.
 
             Args:
-                service_instance: The parent service instance
-                entries: List of LDIF entries to analyze
+            service_instance: The parent service instance
+            entries: List of LDIF entries to analyze
 
             Returns:
-                FlextResult containing schema analysis
+            FlextResult containing schema analysis
 
             """
             try:
@@ -181,11 +181,11 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Generate staging layer DBT models for LDIF data.
 
             Args:
-                service_instance: The parent service instance
-                entries: LDIF entries to generate models for
+            service_instance: The parent service instance
+            entries: LDIF entries to generate models for
 
             Returns:
-                FlextResult containing list of staging models
+            FlextResult containing list of staging models
 
             """
             try:
@@ -230,10 +230,10 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Generate analytics layer DBT models.
 
             Args:
-                staging_models: List of staging models to build upon
+            staging_models: List of staging models to build upon
 
             Returns:
-                FlextResult containing list of analytics models
+            FlextResult containing list of analytics models
 
             """
             try:
@@ -444,12 +444,12 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Write generated DBT models to disk.
 
             Args:
-                service_instance: The parent service instance
-                models: List of models to write
-                overwrite: Whether to overwrite existing files
+            service_instance: The parent service instance
+            models: List of models to write
+            overwrite: Whether to overwrite existing files
 
             Returns:
-                FlextResult containing write operation results
+            FlextResult containing write operation results
 
             """
             try:

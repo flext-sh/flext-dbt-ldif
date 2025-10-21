@@ -22,7 +22,7 @@ class FlextDbtLdifVersion:
         """Initialize version from metadata.
 
         Args:
-            metadata: Project metadata from flext-core
+        metadata: Project metadata from flext-core
 
         """
         self.metadata = metadata
@@ -82,7 +82,7 @@ def _create_version() -> FlextResult[FlextDbtLdifVersion]:
     """Create version instance from package metadata.
 
     Returns:
-        FlextResult[FlextDbtLdifVersion]: Version instance or error
+    FlextResult[FlextDbtLdifVersion]: Version instance or error
 
     """
     try:
