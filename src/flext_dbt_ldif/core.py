@@ -34,10 +34,10 @@ class FlextDbtLdifCore:
             """Initialize the model generator.
 
             Args:
-                project_dir: Path to the dbt project directory (defaults to current)
+            project_dir: Path to the dbt project directory (defaults to current)
 
             Returns:
-                object: Description of return value.
+            object: Description of return value.
 
             """
             self.project_dir = project_dir if project_dir is not None else Path.cwd()
@@ -47,7 +47,7 @@ class FlextDbtLdifCore:
             """Generate staging layer models for LDIF data.
 
             Returns:
-                List of generated model configurations
+            List of generated model configurations
 
             """
             logger.info("Generating staging models for LDIF data")
@@ -83,7 +83,7 @@ class FlextDbtLdifCore:
             """Generate analytics layer models.
 
             Returns:
-                List of analytics model configurations
+            List of analytics model configurations
 
             """
             logger.info("Generating analytics models")
@@ -122,10 +122,10 @@ class FlextDbtLdifCore:
             """Convert dictionary data to FlextLdifModels.Entry objects using flext-ldif factory.
 
             Args:
-                ldif_data: List of LDIF entry dictionaries
+            ldif_data: List of LDIF entry dictionaries
 
             Returns:
-                List of valid FlextLdifModels.Entry objects
+            List of valid FlextLdifModels.Entry objects
 
             """
             entries: list[FlextLdifModels.Entry] = []
@@ -185,10 +185,10 @@ class FlextDbtLdifCore:
             """Analyze patterns in LDIF entries using flext-ldif infrastructure.
 
             Args:
-                ldif_data: List of LDIF entry dictionaries
+            ldif_data: List of LDIF entry dictionaries
 
             Returns:
-                FlextResult with analysis results or error
+            FlextResult with analysis results or error
 
             """
             logger.info(
@@ -271,10 +271,10 @@ class FlextDbtLdifCore:
             """Generate data quality metrics using flext-ldif validation.
 
             Args:
-                entries: List of LDIF entries as dictionaries
+            entries: List of LDIF entries as dictionaries
 
             Returns:
-                FlextResult with quality metrics or error
+            FlextResult with quality metrics or error
 
             """
             if not entries:
@@ -344,10 +344,10 @@ class FlextDbtLdifCore:
             """Get statistics formatted for dbt model generation.
 
             Args:
-                entries: List of LDIF entry dictionaries
+            entries: List of LDIF entry dictionaries
 
             Returns:
-                FlextResult with dbt-compatible statistics or error
+            FlextResult with dbt-compatible statistics or error
 
             """
             try:

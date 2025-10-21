@@ -40,11 +40,11 @@ class FlextDbtLdifProtocols:
                 """Run DBT models with LDIF data sources.
 
                 Args:
-                    models: Specific models to run, or None for all models
-                    config: DBT configuration parameters
+                models: Specific models to run, or None for all models
+                config: DBT configuration parameters
 
                 Returns:
-                    FlextResult[dict[str, object]]: DBT run results or error
+                FlextResult[dict[str, object]]: DBT run results or error
 
                 """
 
@@ -56,11 +56,11 @@ class FlextDbtLdifProtocols:
                 """Test DBT models with LDIF data validation.
 
                 Args:
-                    models: Specific models to test, or None for all models
-                    config: DBT test configuration
+                models: Specific models to test, or None for all models
+                config: DBT test configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: DBT test results or error
+                FlextResult[dict[str, object]]: DBT test results or error
 
                 """
 
@@ -72,11 +72,11 @@ class FlextDbtLdifProtocols:
                 """Compile DBT models for LDIF data processing.
 
                 Args:
-                    models: Specific models to compile, or None for all models
-                    config: DBT compilation configuration
+                models: Specific models to compile, or None for all models
+                config: DBT compilation configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: DBT compilation results or error
+                FlextResult[dict[str, object]]: DBT compilation results or error
 
                 """
 
@@ -84,7 +84,7 @@ class FlextDbtLdifProtocols:
                 """Get DBT manifest with LDIF model definitions.
 
                 Returns:
-                    FlextResult[dict[str, object]]: DBT manifest or error
+                FlextResult[dict[str, object]]: DBT manifest or error
 
                 """
 
@@ -92,10 +92,10 @@ class FlextDbtLdifProtocols:
                 """Validate DBT project configuration for LDIF integration.
 
                 Args:
-                    project_path: Path to DBT project directory
+                project_path: Path to DBT project directory
 
                 Returns:
-                    FlextResult[bool]: Validation status or error
+                FlextResult[bool]: Validation status or error
 
                 """
 
@@ -109,11 +109,11 @@ class FlextDbtLdifProtocols:
                 """Parse LDIF file for DBT processing.
 
                 Args:
-                    ldif_file_path: Path to LDIF file
-                    parsing_config: LDIF parsing configuration
+                ldif_file_path: Path to LDIF file
+                parsing_config: LDIF parsing configuration
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Parsed LDIF entries or error
+                FlextResult[list[dict[str, object]]]: Parsed LDIF entries or error
 
                 """
 
@@ -125,11 +125,11 @@ class FlextDbtLdifProtocols:
                 """Transform LDIF data to DBT-compatible format.
 
                 Args:
-                    ldif_data: Raw LDIF data
-                    transformation_config: Transformation parameters
+                ldif_data: Raw LDIF data
+                transformation_config: Transformation parameters
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Transformed data or error
+                FlextResult[list[dict[str, object]]]: Transformed data or error
 
                 """
 
@@ -141,11 +141,11 @@ class FlextDbtLdifProtocols:
                 """Validate LDIF data quality for DBT processing.
 
                 Args:
-                    data: LDIF data to validate
-                    quality_rules: Data quality validation rules
+                data: LDIF data to validate
+                quality_rules: Data quality validation rules
 
                 Returns:
-                    FlextResult[dict[str, object]]: Quality validation results or error
+                FlextResult[dict[str, object]]: Quality validation results or error
 
                 """
 
@@ -157,11 +157,11 @@ class FlextDbtLdifProtocols:
                 """Export LDIF data to data warehouse for DBT processing.
 
                 Args:
-                    ldif_data: LDIF data to export
-                    warehouse_config: Data warehouse configuration
+                ldif_data: LDIF data to export
+                warehouse_config: Data warehouse configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Export operation results or error
+                FlextResult[dict[str, object]]: Export operation results or error
 
                 """
 
@@ -177,11 +177,11 @@ class FlextDbtLdifProtocols:
                 """Create entry dimension model from LDIF entry data.
 
                 Args:
-                    ldif_entries: LDIF entry data
-                    dimension_config: Dimension modeling configuration
+                ldif_entries: LDIF entry data
+                dimension_config: Dimension modeling configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Entry dimension model or error
+                FlextResult[dict[str, object]]: Entry dimension model or error
 
                 """
 
@@ -193,11 +193,11 @@ class FlextDbtLdifProtocols:
                 """Create attribute dimension model from LDIF attribute data.
 
                 Args:
-                    ldif_attributes: LDIF attribute data
-                    dimension_config: Dimension modeling configuration
+                ldif_attributes: LDIF attribute data
+                dimension_config: Dimension modeling configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Attribute dimension model or error
+                FlextResult[dict[str, object]]: Attribute dimension model or error
 
                 """
 
@@ -209,11 +209,11 @@ class FlextDbtLdifProtocols:
                 """Create change tracking model from LDIF change data.
 
                 Args:
-                    ldif_changes: LDIF change data
-                    tracking_config: Change tracking configuration
+                ldif_changes: LDIF change data
+                tracking_config: Change tracking configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Change tracking model or error
+                FlextResult[dict[str, object]]: Change tracking model or error
 
                 """
 
@@ -225,11 +225,11 @@ class FlextDbtLdifProtocols:
                 """Generate fact tables from LDIF dimensions.
 
                 Args:
-                    dimensions: LDIF dimension models
-                    fact_config: Fact table configuration
+                dimensions: LDIF dimension models
+                fact_config: Fact table configuration
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Generated fact tables or error
+                FlextResult[list[dict[str, object]]]: Generated fact tables or error
 
                 """
 
@@ -245,11 +245,11 @@ class FlextDbtLdifProtocols:
                 """Normalize LDIF attributes for consistent data processing.
 
                 Args:
-                    ldif_entries: Raw LDIF entries
-                    normalization_rules: Attribute normalization rules
+                ldif_entries: Raw LDIF entries
+                normalization_rules: Attribute normalization rules
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Normalized LDIF data or error
+                FlextResult[list[dict[str, object]]]: Normalized LDIF data or error
 
                 """
 
@@ -261,11 +261,11 @@ class FlextDbtLdifProtocols:
                 """Process LDIF changeset data for analytics.
 
                 Args:
-                    ldif_changes: LDIF changeset data
-                    processing_config: Changeset processing configuration
+                ldif_changes: LDIF changeset data
+                processing_config: Changeset processing configuration
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Processed changeset data or error
+                FlextResult[list[dict[str, object]]]: Processed changeset data or error
 
                 """
 
@@ -277,11 +277,11 @@ class FlextDbtLdifProtocols:
                 """Apply business rules to LDIF data transformations.
 
                 Args:
-                    data: LDIF data to transform
-                    business_rules: Business transformation rules
+                data: LDIF data to transform
+                business_rules: Business transformation rules
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Transformed data or error
+                FlextResult[list[dict[str, object]]]: Transformed data or error
 
                 """
 
@@ -293,11 +293,11 @@ class FlextDbtLdifProtocols:
                 """Generate derived attributes from LDIF base attributes.
 
                 Args:
-                    ldif_data: Base LDIF data
-                    derivation_config: Attribute derivation configuration
+                ldif_data: Base LDIF data
+                derivation_config: Attribute derivation configuration
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Data with derived attributes or error
+                FlextResult[list[dict[str, object]]]: Data with derived attributes or error
 
                 """
 
@@ -311,10 +311,10 @@ class FlextDbtLdifProtocols:
                 """Generate DBT macro for LDIF data sources.
 
                 Args:
-                    source_config: LDIF source configuration
+                source_config: LDIF source configuration
 
                 Returns:
-                    FlextResult[str]: Generated DBT macro or error
+                FlextResult[str]: Generated DBT macro or error
 
                 """
 
@@ -324,10 +324,10 @@ class FlextDbtLdifProtocols:
                 """Create DBT test macro for LDIF data validation.
 
                 Args:
-                    test_config: LDIF test configuration
+                test_config: LDIF test configuration
 
                 Returns:
-                    FlextResult[str]: Generated test macro or error
+                FlextResult[str]: Generated test macro or error
 
                 """
 
@@ -337,10 +337,10 @@ class FlextDbtLdifProtocols:
                 """Generate DBT transformation macro for LDIF data.
 
                 Args:
-                    transformation_config: Transformation configuration
+                transformation_config: Transformation configuration
 
                 Returns:
-                    FlextResult[str]: Generated transformation macro or error
+                FlextResult[str]: Generated transformation macro or error
 
                 """
 
@@ -350,10 +350,10 @@ class FlextDbtLdifProtocols:
                 """Create DBT snapshot macro for LDIF data versioning.
 
                 Args:
-                    snapshot_config: Snapshot configuration
+                snapshot_config: Snapshot configuration
 
                 Returns:
-                    FlextResult[str]: Generated snapshot macro or error
+                FlextResult[str]: Generated snapshot macro or error
 
                 """
 
@@ -369,11 +369,11 @@ class FlextDbtLdifProtocols:
                 """Validate LDIF data against format compliance rules.
 
                 Args:
-                    ldif_data: LDIF data to validate
-                    format_rules: Format compliance rules
+                ldif_data: LDIF data to validate
+                format_rules: Format compliance rules
 
                 Returns:
-                    FlextResult[dict[str, object]]: Format validation results or error
+                FlextResult[dict[str, object]]: Format validation results or error
 
                 """
 
@@ -385,11 +385,11 @@ class FlextDbtLdifProtocols:
                 """Check LDIF data completeness for DBT processing.
 
                 Args:
-                    data: LDIF data to check
-                    completeness_config: Completeness validation configuration
+                data: LDIF data to check
+                completeness_config: Completeness validation configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Completeness check results or error
+                FlextResult[dict[str, object]]: Completeness check results or error
 
                 """
 
@@ -401,11 +401,11 @@ class FlextDbtLdifProtocols:
                 """Detect anomalies in LDIF data for quality assurance.
 
                 Args:
-                    data: LDIF data to analyze
-                    anomaly_config: Anomaly detection configuration
+                data: LDIF data to analyze
+                anomaly_config: Anomaly detection configuration
 
                 Returns:
-                    FlextResult[list[dict[str, object]]]: Detected anomalies or error
+                FlextResult[list[dict[str, object]]]: Detected anomalies or error
 
                 """
 
@@ -417,11 +417,11 @@ class FlextDbtLdifProtocols:
                 """Generate data quality report for LDIF DBT processing.
 
                 Args:
-                    quality_results: Quality validation results
-                    report_config: Report generation configuration
+                quality_results: Quality validation results
+                report_config: Report generation configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Quality report or error
+                FlextResult[dict[str, object]]: Quality report or error
 
                 """
 
@@ -437,11 +437,11 @@ class FlextDbtLdifProtocols:
                 """Optimize DBT models for LDIF data processing performance.
 
                 Args:
-                    model_config: DBT model configuration
-                    performance_metrics: Current performance metrics
+                model_config: DBT model configuration
+                performance_metrics: Current performance metrics
 
                 Returns:
-                    FlextResult[dict[str, object]]: Optimization recommendations or error
+                FlextResult[dict[str, object]]: Optimization recommendations or error
 
                 """
 
@@ -453,11 +453,11 @@ class FlextDbtLdifProtocols:
                 """Cache LDIF parsing operations for improved performance.
 
                 Args:
-                    parsing_config: LDIF parsing configuration
-                    cache_config: Caching configuration
+                parsing_config: LDIF parsing configuration
+                cache_config: Caching configuration
 
                 Returns:
-                    FlextResult[bool]: Caching setup success status
+                FlextResult[bool]: Caching setup success status
 
                 """
 
@@ -467,10 +467,10 @@ class FlextDbtLdifProtocols:
                 """Monitor DBT performance with LDIF data processing.
 
                 Args:
-                    run_results: DBT run results
+                run_results: DBT run results
 
                 Returns:
-                    FlextResult[dict[str, object]]: Performance metrics or error
+                FlextResult[dict[str, object]]: Performance metrics or error
 
                 """
 
@@ -480,10 +480,10 @@ class FlextDbtLdifProtocols:
                 """Optimize LDIF parsing operations for DBT data processing.
 
                 Args:
-                    parsing_config: LDIF parsing configuration
+                parsing_config: LDIF parsing configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Parsing optimization results or error
+                FlextResult[dict[str, object]]: Parsing optimization results or error
 
                 """
 
@@ -497,11 +497,11 @@ class FlextDbtLdifProtocols:
                 """Track DBT run metrics for LDIF data processing.
 
                 Args:
-                    run_id: DBT run identifier
-                    metrics: Run metrics data
+                run_id: DBT run identifier
+                metrics: Run metrics data
 
                 Returns:
-                    FlextResult[bool]: Metric tracking success status
+                FlextResult[bool]: Metric tracking success status
 
                 """
 
@@ -511,10 +511,10 @@ class FlextDbtLdifProtocols:
                 """Monitor LDIF data freshness for DBT processing.
 
                 Args:
-                    freshness_config: Data freshness monitoring configuration
+                freshness_config: Data freshness monitoring configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Data freshness status or error
+                FlextResult[dict[str, object]]: Data freshness status or error
 
                 """
 
@@ -522,7 +522,7 @@ class FlextDbtLdifProtocols:
                 """Get DBT LDIF integration health status.
 
                 Returns:
-                    FlextResult[dict[str, object]]: Health status or error
+                FlextResult[dict[str, object]]: Health status or error
 
                 """
 
@@ -532,10 +532,10 @@ class FlextDbtLdifProtocols:
                 """Create monitoring dashboard for DBT LDIF operations.
 
                 Args:
-                    dashboard_config: Dashboard configuration
+                dashboard_config: Dashboard configuration
 
                 Returns:
-                    FlextResult[dict[str, object]]: Dashboard creation result or error
+                FlextResult[dict[str, object]]: Dashboard creation result or error
 
                 """
 

@@ -28,20 +28,20 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
     This is the single unified class for the flext-dbt-ldif domain providing
     access to all DBT LDIF domain functionality with centralized patterns.
 
-    **UNIFIED CLASS PATTERN**: One class per module with nested helpers only.
-    **CENTRALIZED APPROACH**: All operations follow centralized patterns:
+    UNIFIED CLASS PATTERN: One class per module with nested helpers only.
+    CENTRALIZED APPROACH: All operations follow centralized patterns:
     - FlextDbtLdif.* for DBT LDIF-specific operations
     - Centralized validation through FlextDbtLdifService
     - No wrappers, aliases, or fallbacks
     - Direct use of flext-core centralized services
 
-    **FLEXT INTEGRATION**: Complete integration with flext-core patterns:
+    FLEXT INTEGRATION: Complete integration with flext-core patterns:
     - FlextContainer for dependency injection
     - FlextContext for operation context
     - FlextLogger for structured logging
     - FlextResult for railway-oriented error handling
 
-    **PYTHON 3.13+ COMPATIBILITY**: Uses modern patterns and latest type features.
+    PYTHON 3.13+ COMPATIBILITY: Uses modern patterns and latest type features.
     """
 
     def __init__(self, config: FlextDbtLdifConfig | None = None) -> None:
@@ -87,13 +87,13 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         """Process an LDIF file with DBT using railway pattern.
 
         Args:
-            ldif_file: Path to LDIF file
-            project_dir: DBT project directory (optional)
-            generate_models: Whether to generate DBT models
-            run_transformations: Whether to run transformations
+        ldif_file: Path to LDIF file
+        project_dir: DBT project directory (optional)
+        generate_models: Whether to generate DBT models
+        run_transformations: Whether to run transformations
 
         Returns:
-            FlextResult containing processing results
+        FlextResult containing processing results
 
         """
         try:
@@ -120,10 +120,10 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         """Validate LDIF data quality using railway pattern.
 
         Args:
-            ldif_file: Path to LDIF file
+        ldif_file: Path to LDIF file
 
         Returns:
-            FlextResult containing quality assessment
+        FlextResult containing quality assessment
 
         """
         try:
@@ -144,12 +144,12 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         """Generate DBT models from LDIF using railway pattern.
 
         Args:
-            ldif_file: Path to LDIF file
-            project_dir: DBT project directory (optional)
-            overwrite: Whether to overwrite existing models
+        ldif_file: Path to LDIF file
+        project_dir: DBT project directory (optional)
+        overwrite: Whether to overwrite existing models
 
         Returns:
-            FlextResult containing model generation results
+        FlextResult containing model generation results
 
         """
         try:

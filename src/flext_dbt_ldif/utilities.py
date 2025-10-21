@@ -25,7 +25,7 @@ __all__: list[str] = ["FlextDbtLdifUtilities"]
 class FlextDbtLdifUtilities(FlextUtilities):
     """Single unified utilities class for DBT LDIF data transformation operations.
 
-    Provides comprehensive DBT LDIF utilities for LDIF data transformation, DBT model generation,
+    Provides complete DBT LDIF utilities for LDIF data transformation, DBT model generation,
     and LDIF-specific data processing without duplicating functionality.
     Uses FlextDbtLdifModels for all domain-specific data structures.
 
@@ -52,7 +52,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
         """Execute the main DBT LDIF service operation.
 
         Returns:
-            FlextResult[dict[str, object]]: Service status and capabilities.
+        FlextResult[dict[str, object]]: Service status and capabilities.
 
         """
         return FlextResult[dict[str, object]].ok({
@@ -89,11 +89,11 @@ class FlextDbtLdifUtilities(FlextUtilities):
             """Parse LDIF file and extract records for DBT processing.
 
             Args:
-                file_path: Path to the LDIF file
-                batch_size: Number of records to process per batch
+            file_path: Path to the LDIF file
+            batch_size: Number of records to process per batch
 
             Returns:
-                FlextResult containing parsed LDIF data or error
+            FlextResult containing parsed LDIF data or error
 
             """
             try:
@@ -196,10 +196,10 @@ class FlextDbtLdifUtilities(FlextUtilities):
             """Validate LDIF data structure for DBT compatibility.
 
             Args:
-                ldif_data: Parsed LDIF data structure
+            ldif_data: Parsed LDIF data structure
 
             Returns:
-                FlextResult containing validation results or error
+            FlextResult containing validation results or error
 
             """
             try:
@@ -280,11 +280,11 @@ class FlextDbtLdifUtilities(FlextUtilities):
             """Generate DBT staging model for LDIF data.
 
             Args:
-                ldif_schema: LDIF schema information
-                model_name: Name of the DBT model
+            ldif_schema: LDIF schema information
+            model_name: Name of the DBT model
 
             Returns:
-                FlextResult containing DBT model SQL or error
+            FlextResult containing DBT model SQL or error
 
             """
             try:
@@ -316,11 +316,11 @@ class FlextDbtLdifUtilities(FlextUtilities):
                 # Note: This is a template string for DBT, not executable SQL
                 # The f-string interpolation is safe as it's used for DBT templating
                 model_sql = f"""{{{{
-    config(
-        materialized='view',
-        tags=['ldif', 'staging'],
-        description='Staging model for LDIF entries: {model_name}'
-    )
+ config(
+ materialized='view',
+ tags=['ldif', 'staging'],
+ description='Staging model for LDIF entries: {model_name}'
+ )
 }}}}
 
 select
@@ -344,11 +344,11 @@ where dn is not null
             """Generate dimensional model for LDIF data.
 
             Args:
-                model_type: Type of dimension (users, groups, organizational_units)
-                ldif_schema: LDIF schema information
+            model_type: Type of dimension (users, groups, organizational_units)
+            ldif_schema: LDIF schema information
 
             Returns:
-                FlextResult containing dimensional model SQL or error
+            FlextResult containing dimensional model SQL or error
 
             """
             try:
@@ -359,83 +359,83 @@ where dn is not null
 
                 if model_type == "users":
                     model_sql = """{{
-    config(
-        materialized='table',
-        tags=['ldif', 'dimension', 'users'],
-        description='User dimension from LDIF data'
-    )
+ config(
+ materialized='table',
+ tags=['ldif', 'dimension', 'users'],
+ description='User dimension from LDIF data'
+ )
 }}}}
 
 select
-    {{ dbt_utils.surrogate_key(['dn']) }} as user_sk,
-    dn as user_dn,
-    coalesce(cn, uid, samaccountname) as username,
-    givenname as first_name,
-    sn as last_name,
-    mail as email,
-    telephonenumber as phone,
-    title as job_title,
-    department,
-    manager,
-    case
-        when useraccountcontrol is not null then
-            case when useraccountcontrol::int & 2 = 0 then true else false end
-        else true
-    end as is_active,
-    created_timestamp,
-    current_timestamp as updated_timestamp
+ {{ dbt_utils.surrogate_key(['dn']) }} as user_sk,
+ dn as user_dn,
+ coalesce(cn, uid, samaccountname) as username,
+ givenname as first_name,
+ sn as last_name,
+ mail as email,
+ telephonenumber as phone,
+ title as job_title,
+ department,
+ manager,
+ case
+ when useraccountcontrol is not null then
+ case when useraccountcontrol::int & 2 = 0 then true else false end
+ else true
+ end as is_active,
+ created_timestamp,
+ current_timestamp as updated_timestamp
 from {{ ref('stg_ldif_entries') }}
 where array_to_string(objectclass_array, ',') ilike '%person%'
-   or array_to_string(objectclass_array, ',') ilike '%user%'
+ or array_to_string(objectclass_array, ',') ilike '%user%'
 """
 
                 elif model_type == "groups":
                     model_sql = """{{
-    config(
-        materialized='table',
-        tags=['ldif', 'dimension', 'groups'],
-        description='Group dimension from LDIF data'
-    )
+ config(
+ materialized='table',
+ tags=['ldif', 'dimension', 'groups'],
+ description='Group dimension from LDIF data'
+ )
 }}}}
 
 select
-    {{ dbt_utils.surrogate_key(['dn']) }} as group_sk,
-    dn as group_dn,
-    cn as group_name,
-    description as group_description,
-    case
-        when array_to_string(objectclass_array, ',') ilike '%security%' then 'security'
-        when array_to_string(objectclass_array, ',') ilike '%distribution%' then 'distribution'
-        else 'other'
-    end as group_type,
-    member_array as members,
-    created_timestamp,
-    current_timestamp as updated_timestamp
+ {{ dbt_utils.surrogate_key(['dn']) }} as group_sk,
+ dn as group_dn,
+ cn as group_name,
+ description as group_description,
+ case
+ when array_to_string(objectclass_array, ',') ilike '%security%' then 'security'
+ when array_to_string(objectclass_array, ',') ilike '%distribution%' then 'distribution'
+ else 'other'
+ end as group_type,
+ member_array as members,
+ created_timestamp,
+ current_timestamp as updated_timestamp
 from {{ ref('stg_ldif_entries') }}
 where array_to_string(objectclass_array, ',') ilike '%group%'
 """
 
                 elif model_type == "organizational_units":
                     model_sql = """{{
-    config(
-        materialized='table',
-        tags=['ldif', 'dimension', 'organizational_units'],
-        description='Organizational Unit dimension from LDIF data'
-    )
+ config(
+ materialized='table',
+ tags=['ldif', 'dimension', 'organizational_units'],
+ description='Organizational Unit dimension from LDIF data'
+ )
 }}}}
 
 select
-    {{ dbt_utils.surrogate_key(['dn']) }} as ou_sk,
-    dn as ou_dn,
-    ou as ou_name,
-    description as ou_description,
-    street as address,
-    l as city,
-    st as state,
-    postalcode as postal_code,
-    c as country,
-    created_timestamp,
-    current_timestamp as updated_timestamp
+ {{ dbt_utils.surrogate_key(['dn']) }} as ou_sk,
+ dn as ou_dn,
+ ou as ou_name,
+ description as ou_description,
+ street as address,
+ l as city,
+ st as state,
+ postalcode as postal_code,
+ c as country,
+ created_timestamp,
+ current_timestamp as updated_timestamp
 from {{ ref('stg_ldif_entries') }}
 where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 """
@@ -460,10 +460,10 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
             """Analyze LDIF data to extract schema information.
 
             Args:
-                ldif_data: Parsed LDIF data
+            ldif_data: Parsed LDIF data
 
             Returns:
-                FlextResult containing schema analysis or error
+            FlextResult containing schema analysis or error
 
             """
             try:
@@ -563,11 +563,11 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
             """Generate DBT source definition for LDIF data.
 
             Args:
-                schema_analysis: LDIF schema analysis results
-                source_name: Name for the DBT source
+            schema_analysis: LDIF schema analysis results
+            source_name: Name for the DBT source
 
             Returns:
-                FlextResult containing DBT source definition or error
+            FlextResult containing DBT source definition or error
 
             """
             try:
@@ -643,7 +643,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
             """Create DBT macros for LDIF data parsing.
 
             Returns:
-                FlextResult containing macro definitions or error
+            FlextResult containing macro definitions or error
 
             """
             try:
@@ -674,12 +674,12 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     "extract_ldif_multivalue"
                 ] = """-- Extract first value from LDIF multi-valued attribute
 {% macro extract_ldif_multivalue(column_name, index=1) %}
-    case
-        when {{ column_name }} is null then null
-        when array_length({{ column_name }}, 1) is null then {{ column_name }}
-        when array_length({{ column_name }}, 1) >= {{ index }} then {{ column_name }}[{{ index }}]
-        else null
-    end
+ case
+ when {{ column_name }} is null then null
+ when array_length({{ column_name }}, 1) is null then {{ column_name }}
+ when array_length({{ column_name }}, 1) >= {{ index }} then {{ column_name }}[{{ index }}]
+ else null
+ end
 {% endmacro %}"""
 
                 # LDIF timestamp normalization
@@ -687,18 +687,18 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     "normalize_ldif_timestamp"
                 ] = """-- Normalize LDIF timestamp to standard format
 {% macro normalize_ldif_timestamp(timestamp_column) %}
-    case
-        when {{ timestamp_column }} is null then null
-        when length({{ timestamp_column }}) = 14 then
-            -- LDIF GeneralizedTime format: YYYYMMDDHHMMSSZ
-            to_timestamp(
-                substring({{ timestamp_column }} from 1 for 14),
-                'YYYYMMDDHH24MISS'
-            )
-        else
-            -- Try standard timestamp parsing
-            try_cast({{ timestamp_column }} as timestamp)
-    end
+ case
+ when {{ timestamp_column }} is null then null
+ when length({{ timestamp_column }}) = 14 then
+ -- LDIF GeneralizedTime format: YYYYMMDDHHMMSSZ
+ to_timestamp(
+ substring({{ timestamp_column }} from 1 for 14),
+ 'YYYYMMDDHH24MISS'
+ )
+ else
+ -- Try standard timestamp parsing
+ try_cast({{ timestamp_column }} as timestamp)
+ end
 {% endmacro %}"""
 
                 return FlextResult[dict[str, str]].ok(macros)
@@ -718,10 +718,10 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
             """Optimize LDIF processing performance based on statistics.
 
             Args:
-                processing_stats: LDIF processing statistics
+            processing_stats: LDIF processing statistics
 
             Returns:
-                FlextResult containing optimization recommendations or error
+            FlextResult containing optimization recommendations or error
 
             """
             try:

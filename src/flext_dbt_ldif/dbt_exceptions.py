@@ -54,9 +54,9 @@ class FlextDbtLdifError(FlextExceptions.Error):
         """Initialize LDIF DBT error with error code and context.
 
         Args:
-            message: Human-readable error message
-            error_code: Specific error code for this error type
-            **context: Additional context information
+        message: Human-readable error message
+        error_code: Specific error code for this error type
+        **context: Additional context information
 
         """
         # Add error code to context
