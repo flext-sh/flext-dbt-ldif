@@ -17,7 +17,6 @@ from pydantic import Field, field_validator, model_validator
 from pydantic_settings import SettingsConfigDict
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 logger = FlextLogger(__name__)
 
@@ -87,14 +86,14 @@ class FlextDbtLdifConfig(FlextConfig):
     )
 
     # LDIF-specific DBT Settings
-    ldif_schema_mapping: ClassVar[FlextDbtLdifTypes.Core.Dict] = {
+    ldif_schema_mapping: ClassVar[dict[str, str]] = {
         "persons": "stg_persons",
         "groups": "stg_groups",
         "org_units": "stg_org_units",
         "domains": "stg_domains",
     }
 
-    ldif_attribute_mapping: ClassVar[FlextDbtLdifTypes.Core.Dict] = {
+    ldif_attribute_mapping: ClassVar[dict[str, str]] = {
         "cn": "common_name",
         "uid": "user_id",
         "mail": "email",
@@ -108,7 +107,7 @@ class FlextDbtLdifConfig(FlextConfig):
     min_quality_threshold: float = Field(
         default=0.8, ge=0.0, le=1.0, description="Minimum data quality threshold"
     )
-    required_attributes: ClassVar[FlextDbtLdifTypes.Core.List] = [
+    required_attributes: ClassVar[list[str]] = [
         "dn",
         "objectClass",
     ]
@@ -124,7 +123,7 @@ class FlextDbtLdifConfig(FlextConfig):
     )
 
     # LDIF Entry Type Mapping
-    entry_type_mapping: ClassVar[FlextDbtLdifTypes.Core.Dict] = {
+    entry_type_mapping: ClassVar[dict[str, str]] = {
         "person": "persons",
         "organizationalPerson": "persons",
         "inetOrgPerson": "persons",
@@ -230,15 +229,16 @@ class FlextDbtLdifConfig(FlextConfig):
         """Get LDIF configuration for flext-ldif integration."""
         return FlextLdifConfig(
             ldif_max_entries=20000,
-            ldif_max_file_size_mb=self.ldif_max_file_size // (1024 * 1024),
             ldif_strict_validation=self.ldif_validate_syntax,
-            ldif_encoding=self.ldif_encoding,
+            ldif_encoding=cast(
+                "FlextLdifConstants.LiteralTypes.EncodingType", self.ldif_encoding
+            ),
         )
 
     def get_meltano_config(self) -> FlextMeltanoConfig:
         """Get Meltano configuration for flext-meltano integration."""
         # Convert string to proper Environment string value
-        environment_mapping: dict[str, FlextDbtLdifTypes.Config.Environment] = {
+        environment_mapping: dict[str, str] = {
             "dev": "development",
             "development": "development",
             "staging": "staging",
@@ -258,7 +258,7 @@ class FlextDbtLdifConfig(FlextConfig):
             environment=environment_value,
         )
 
-    def get_ldif_quality_config(self) -> FlextDbtLdifTypes.Core.Dict:
+    def get_ldif_quality_config(self) -> dict[str, object]:
         """Get data quality configuration for LDIF validation."""
         return {
             "min_quality_threshold": self.min_quality_threshold,
@@ -280,19 +280,17 @@ class FlextDbtLdifConfig(FlextConfig):
         cls, environment: str, **overrides: object
     ) -> FlextDbtLdifConfig:
         """Create configuration for specific environment using enhanced singleton pattern."""
-        return cls.get_or_create_shared_instance(
-            project_name="flext-dbt-ldif", environment=environment, **overrides
-        )
+        return cls.get_global_instance()
 
     @classmethod
     def create_default(cls) -> FlextDbtLdifConfig:
         """Create default configuration instance using enhanced singleton pattern."""
-        return cls.get_or_create_shared_instance(project_name="flext-dbt-ldif")
+        return cls.get_global_instance(project_name="flext-dbt-ldif")
 
     @classmethod
     def create_for_development(cls) -> FlextDbtLdifConfig:
         """Create configuration optimized for development using enhanced singleton pattern."""
-        return cls.get_or_create_shared_instance(
+        return cls.get_global_instance(
             project_name="flext-dbt-ldif",
             ldif_validate_syntax=False,
             dbt_target="dev",
@@ -304,7 +302,7 @@ class FlextDbtLdifConfig(FlextConfig):
     @classmethod
     def create_for_production(cls) -> FlextDbtLdifConfig:
         """Create configuration optimized for production using enhanced singleton pattern."""
-        return cls.get_or_create_shared_instance(
+        return cls.get_global_instance(
             project_name="flext-dbt-ldif",
             ldif_validate_syntax=True,
             ldif_validate_schemas=True,
@@ -317,7 +315,7 @@ class FlextDbtLdifConfig(FlextConfig):
     @classmethod
     def create_for_testing(cls) -> FlextDbtLdifConfig:
         """Create configuration optimized for testing using enhanced singleton pattern."""
-        return cls.get_or_create_shared_instance(
+        return cls.get_global_instance(
             project_name="flext-dbt-ldif",
             ldif_file_path="./test_data/sample.ldif",
             ldif_encoding="utf-8",
@@ -332,7 +330,7 @@ class FlextDbtLdifConfig(FlextConfig):
     @classmethod
     def get_global_instance(cls) -> FlextDbtLdifConfig:
         """Get the global singleton instance using enhanced FlextConfig pattern."""
-        return cls.get_or_create_shared_instance(project_name="flext-dbt-ldif")
+        return cls.get_global_instance(project_name="flext-dbt-ldif")
 
     @classmethod
     def reset_global_instance(cls) -> None:
@@ -341,6 +339,6 @@ class FlextDbtLdifConfig(FlextConfig):
         cls.reset_shared_instance()
 
 
-__all__: FlextDbtLdifTypes.Core.List = [
+__all__: list[str] = [
     "FlextDbtLdifConfig",
 ]

@@ -131,52 +131,92 @@ class FlextDbtLdifCore:
             entries: list[FlextLdifModels.Entry] = []
             for data in ldif_data:
                 try:
-                    # Extract required data from dict[str, object] with proper type checking
-                    str(data.get("dn", ""))
-                    attributes: dict[str, object] = data.get("attributes", {})
-                    # Note: changetype is not used (Entry constructor only needs dn and attributes)
+                    # Extract and validate DN
+                    dn = self._extract_dn_from_dict(data)
+                    if not dn:
+                        continue
 
-                    formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList] = {}
-                    if isinstance(attributes, dict) and attributes:
-                        # Ensure attributes are in the right format (dict[str, FlextDbtLdifTypes.Core.StringList])
-                        for key, value in attributes.items():
-                            if isinstance(value, list):
-                                formatted_attrs[str(key)] = [str(v) for v in value]
-                            else:
-                                formatted_attrs[str(key)] = [str(value)]
-                    else:
-                        # Build attributes from top-level keys when 'attributes' is absent
-                        for key, value in data.items():
-                            if key in {"dn", "changetype", "attributes"}:
-                                continue
-                            if isinstance(value, list):
-                                formatted_attrs[str(key)] = [str(v) for v in value]
-                            else:
-                                formatted_attrs[str(key)] = [str(value)]
-
+                    # Extract and format attributes
+                    formatted_attrs = self._extract_attributes_from_dict(data)
                     if not formatted_attrs:
                         logger.warning(
-                            "Invalid attributes type or empty, skipping entry",
+                            "Invalid attributes type or empty, skipping entry"
                         )
                         continue
 
-                    # Note: changetype is not used in Entry constructor - Entry is for parsed entries only
-
-                    # Use direct Entry.create() method for proper type construction
-                    entry_result = FlextLdifModels.Entry.create({
-                        "dn": "dn",
-                        "attributes": "formatted_attrs",
-                    })
-
-                    if entry_result.success and entry_result.value:
-                        entries.append(entry_result.value)
+                    # Create entry object
+                    entry = self._create_entry_from_data(dn, formatted_attrs)
+                    if entry:
+                        entries.append(entry)
                     else:
-                        logger.warning("Failed to create entry: %s", entry_result.error)
+                        logger.warning("Failed to create entry for DN: %s", dn)
 
                 except Exception as e:
                     logger.warning("Skipping invalid entry: %s", e)
 
             return entries
+
+        def _extract_dn_from_dict(self, data: dict[str, object]) -> str | None:
+            """Extract DN from LDIF data dictionary."""
+            dn = data.get("dn", "")
+            return str(dn) if dn else None
+
+        def _extract_attributes_from_dict(
+            self, data: dict[str, object]
+        ) -> dict[str, FlextDbtLdifTypes.Core.StringList] | None:
+            """Extract and format attributes from LDIF data dictionary."""
+            attributes: dict[str, object] = data.get("attributes", {})
+
+            formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList] = {}
+            if isinstance(attributes, dict) and attributes:
+                # Standard attributes format
+                self._format_attribute_dict(attributes, formatted_attrs)
+            else:
+                # Fallback: build from top-level keys
+                self._build_attributes_from_top_level(data, formatted_attrs)
+
+            return formatted_attrs or None
+
+        def _format_attribute_dict(
+            self,
+            attributes: dict[str, object],
+            formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList],
+        ) -> None:
+            """Format attribute dictionary to proper types."""
+            for key, value in attributes.items():
+                if isinstance(value, list):
+                    formatted_attrs[str(key)] = [str(v) for v in value]
+                else:
+                    formatted_attrs[str(key)] = [str(value)]
+
+        def _build_attributes_from_top_level(
+            self,
+            data: dict[str, object],
+            formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList],
+        ) -> None:
+            """Build attributes from top-level dictionary keys."""
+            for key, value in data.items():
+                if key in {"dn", "changetype", "attributes"}:
+                    continue
+                if isinstance(value, list):
+                    formatted_attrs[str(key)] = [str(v) for v in value]
+                else:
+                    formatted_attrs[str(key)] = [str(value)]
+
+        def _create_entry_from_data(
+            self, dn: str, formatted_attrs: dict[str, FlextDbtLdifTypes.Core.StringList]
+        ) -> FlextLdifModels.Entry | None:
+            """Create Entry object from DN and formatted attributes."""
+            entry_result = FlextLdifModels.Entry.create({
+                "dn": dn,
+                "attributes": formatted_attrs,
+            })
+
+            return (
+                entry_result.value
+                if entry_result.success and entry_result.value
+                else None
+            )
 
         def analyze_entry_patterns(
             self,

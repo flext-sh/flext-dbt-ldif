@@ -530,27 +530,30 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             # Note: This is a template string for DBT, not executable SQL
             # The f-string interpolation is safe as it's used for DBT templating
             # This generates DBT SQL templates, not executable queries
-            return (
-                "-- Staging model for LDIF data\n"
-                "-- Generated automatically by flext-dbt-ldif\n\n"
-                f"{{{{ config(materialized='{materialized}') }}}}\n\n"
-                "with source_data as (\n"
-                "    select\n"
-                f"        {column_list},\n"
-                "        current_timestamp as processed_at\n"
-                "    from {{{{ source('ldif', 'raw_ldif_entries') }}}}\n"
-                "),\n\n"
-                "validated_data as (\n"
-                "    select *,\n"
-                "        case\n"
-                "            when dn is not null and length(dn) > 0 then true\n"
-                "            else false\n"
-                "        end as is_valid_dn,\n"
-                "        array_length(string_to_array(dn, ','), 1) as dn_depth\n"
-                "    from source_data\n"
-                ")\n\n"
-                "select * from validated_data\n"
-            )
+            return f"""-- Staging model for LDIF data
+-- Generated automatically by flext-dbt-ldif
+
+{{{{ config(materialized='{materialized}') }}}}
+
+with source_data as (
+    select
+        {column_list},
+        current_timestamp as processed_at
+    from {{{{ source('ldif', 'raw_ldif_entries') }}}}
+),
+
+validated_data as (
+    select *,
+        case
+            when dn is not null and length(dn) > 0 then true
+            else false
+        end as is_valid_dn,
+        array_length(string_to_array(dn, ','), 1) as dn_depth
+    from source_data
+)
+
+select * from validated_data
+"""
 
         @staticmethod
         def _generate_analytics_sql(model: FlextDbtLdifUnifiedService) -> str:

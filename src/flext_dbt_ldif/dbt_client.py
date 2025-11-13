@@ -100,9 +100,10 @@ class FlextDbtLdifClient:
         """Validate LDIF data quality for DBT processing.
 
         Args:
-        entries: List of LDIF entries to validate
+            entries: List of LDIF entries to validate
+
         Returns:
-        FlextResult containing validation metrics
+            FlextResult containing validation metrics
 
         """
         try:
@@ -217,10 +218,11 @@ class FlextDbtLdifClient:
         """Run complete LDIF to DBT transformation pipeline.
 
         Args:
-        file_path: LDIF file path
-        model_names: DBT models to run
+            file_path: LDIF file path
+            model_names: DBT models to run
+
         Returns:
-        FlextResult containing complete pipeline results
+            FlextResult containing complete pipeline results
 
         """
         logger.info("Starting full LDIF-to-DBT pipeline")
@@ -261,9 +263,10 @@ class FlextDbtLdifClient:
         maximum composition with flext-ldif functionality.
 
         Args:
-        entries: List of LDIF entries
+            entries: List of LDIF entries
+
         Returns:
-        FlextResult containing prepared data for DBT
+            FlextResult containing prepared data for DBT
 
         """
         try:
