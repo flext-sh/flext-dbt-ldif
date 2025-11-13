@@ -82,39 +82,117 @@ class FlextDbtLdifUtilities(FlextUtilities):
         """LDIF file processing and parsing utilities."""
 
         @staticmethod
-        def parse_ldif_file(
+        def _validate_ldif_file(file_path: Path) -> FlextResult[None]:
+            """Validate LDIF file exists and has correct extension."""
+            if not file_path.exists():
+                return FlextResult[None].fail(f"LDIF file not found: {file_path}")
+            if file_path.suffix.lower() != ".ldif":
+                return FlextResult[None].fail(
+                    f"Invalid LDIF file extension: {file_path}"
+                )
+            return FlextResult[None].ok(None)
+
+        @staticmethod
+        def _initialize_parsed_data(file_path: Path) -> dict[str, object]:
+            """Initialize the parsed data structure."""
+            return {
+                "file_path": str(file_path),
+                "total_records": 0,
+                "entries": [],
+                "schema_info": {},
+                "processing_stats": {},
+            }
+
+        @staticmethod
+        def _process_dn_line(
+            line: str,
+            current_entry: dict[str, object],
+            current_dn: str | None,
+            record_count: int,
+            batch_count: int,
+            batch_size: int,
+            parsed_data: dict[str, object],
+        ) -> tuple[dict[str, object], str | None, int, int]:
+            """Process a DN line and handle entry completion."""
+            # Save previous entry if exists
+            if current_entry and current_dn:
+                parsed_data["entries"].append({
+                    "dn": current_dn,
+                    "attributes": current_entry,
+                    "record_number": record_count,
+                    "batch_number": batch_count // batch_size,
+                })
+                record_count += 1
+
+                # Process in batches for memory efficiency
+                if record_count % batch_size == 0:
+                    batch_count += batch_size
+
+            # Start new entry
+            current_dn = line[3:].strip()
+            current_entry = {}
+
+            return current_entry, current_dn, record_count, batch_count
+
+        @staticmethod
+        def _process_attribute_line(
+            line: str,
+            current_entry: dict[str, object],
+        ) -> dict[str, object]:
+            """Process an attribute line."""
+            attr_name, attr_value = line.split(":", 1)
+            attr_name = attr_name.strip()
+            attr_value = attr_value.strip()
+
+            # Handle multi-valued attributes
+            if attr_name in current_entry:
+                if not isinstance(current_entry[attr_name], list):
+                    current_entry[attr_name] = [current_entry[attr_name]]
+                current_entry[attr_name].append(attr_value)
+            else:
+                current_entry[attr_name] = attr_value
+
+            return current_entry
+
+        @staticmethod
+        def _finalize_last_entry(
+            current_entry: dict[str, object],
+            current_dn: str | None,
+            record_count: int,
+            parsed_data: dict[str, object],
+        ) -> int:
+            """Finalize the last entry in the file."""
+            if current_entry and current_dn:
+                parsed_data["entries"].append({
+                    "dn": current_dn,
+                    "attributes": current_entry,
+                    "record_number": record_count,
+                })
+                record_count += 1
+
+            return record_count
+
+        @staticmethod
+        def _calculate_processing_stats(
             file_path: Path,
-            batch_size: int = 5000,
-        ) -> FlextResult[dict[str, object]]:
-            """Parse LDIF file and extract records for DBT processing.
+            line_num: int,
+            record_count: int,
+        ) -> dict[str, object]:
+            """Calculate processing statistics."""
+            return {
+                "lines_processed": line_num,
+                "entries_found": record_count,
+                "file_size_bytes": file_path.stat().st_size,
+            }
 
-            Args:
-            file_path: Path to the LDIF file
-            batch_size: Number of records to process per batch
-
-            Returns:
-            FlextResult containing parsed LDIF data or error
-
-            """
+        @staticmethod
+        def _process_ldif_file(
+            file_path: Path,
+            parsed_data: dict[str, object],
+            batch_size: int,
+        ) -> FlextResult[None]:
+            """Process the LDIF file content and populate parsed_data."""
             try:
-                if not file_path.exists():
-                    return FlextResult[dict[str, object]].fail(
-                        f"LDIF file not found: {file_path}"
-                    )
-
-                if file_path.suffix.lower() != ".ldif":
-                    return FlextResult[dict[str, object]].fail(
-                        f"Invalid LDIF file extension: {file_path}"
-                    )
-
-                parsed_data = {
-                    "file_path": str(file_path),
-                    "total_records": 0,
-                    "entries": [],
-                    "schema_info": {},
-                    "processing_stats": {},
-                }
-
                 with file_path.open("r", encoding="utf-8") as ldif_file:
                     current_entry = {}
                     current_dn = None
@@ -132,55 +210,86 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                         # Process DN lines
                         if line.startswith("dn:"):
-                            # Save previous entry if exists
-                            if current_entry and current_dn:
-                                parsed_data["entries"].append({
-                                    "dn": current_dn,
-                                    "attributes": current_entry,
-                                    "record_number": record_count,
-                                    "batch_number": batch_count // batch_size,
-                                })
-                                record_count += 1
-
-                                # Process in batches for memory efficiency
-                                if record_count % batch_size == 0:
-                                    batch_count += batch_size
-
-                            # Start new entry
-                            current_dn = line[3:].strip()
-                            current_entry = {}
+                            (
+                                current_entry,
+                                current_dn,
+                                record_count,
+                                batch_count,
+                            ) = FlextDbtLdifUtilities.LdifFileProcessing._process_dn_line(
+                                line,
+                                current_entry,
+                                current_dn,
+                                record_count,
+                                batch_count,
+                                batch_size,
+                                parsed_data,
+                            )
 
                         # Process attribute lines
                         elif ":" in line:
-                            attr_name, attr_value = line.split(":", 1)
-                            attr_name = attr_name.strip()
-                            attr_value = attr_value.strip()
-
-                            # Handle multi-valued attributes
-                            if attr_name in current_entry:
-                                if not isinstance(current_entry[attr_name], list):
-                                    current_entry[attr_name] = [
-                                        current_entry[attr_name]
-                                    ]
-                                current_entry[attr_name].append(attr_value)
-                            else:
-                                current_entry[attr_name] = attr_value
+                            current_entry = FlextDbtLdifUtilities.LdifFileProcessing._process_attribute_line(
+                                line, current_entry
+                            )
 
                     # Process last entry
-                    if current_entry and current_dn:
-                        parsed_data["entries"].append({
-                            "dn": current_dn,
-                            "attributes": current_entry,
-                            "record_number": record_count,
-                        })
-                        record_count += 1
+                    record_count = (
+                        FlextDbtLdifUtilities.LdifFileProcessing._finalize_last_entry(
+                            current_entry, current_dn, record_count, parsed_data
+                        )
+                    )
 
                 parsed_data["total_records"] = record_count
-                parsed_data["processing_stats"] = {
-                    "lines_processed": line_num,
-                    "entries_found": record_count,
-                    "file_size_bytes": file_path.stat().st_size,
-                }
+                parsed_data["processing_stats"] = (
+                    FlextDbtLdifUtilities.LdifFileProcessing._calculate_processing_stats(
+                        file_path, line_num, record_count
+                    )
+                )
+
+                return FlextResult[None].ok(None)
+
+            except Exception as e:
+                return FlextResult[None].fail(f"LDIF file processing failed: {e}")
+
+        @staticmethod
+        def parse_ldif_file(
+            file_path: Path,
+            batch_size: int = 5000,
+        ) -> FlextResult[dict[str, object]]:
+            """Parse LDIF file and extract records for DBT processing.
+
+            Args:
+                file_path: Path to the LDIF file
+                batch_size: Number of records to process per batch
+
+            Returns:
+                FlextResult containing parsed LDIF data or error
+
+            """
+            try:
+                # Validate file
+                validation_result = (
+                    FlextDbtLdifUtilities.LdifFileProcessing._validate_ldif_file(
+                        file_path
+                    )
+                )
+                if not validation_result.success:
+                    return FlextResult[dict[str, object]].fail(validation_result.error)
+
+                # Initialize data structure
+                parsed_data = (
+                    FlextDbtLdifUtilities.LdifFileProcessing._initialize_parsed_data(
+                        file_path
+                    )
+                )
+
+                # Process file
+                processing_result = (
+                    FlextDbtLdifUtilities.LdifFileProcessing._process_ldif_file(
+                        file_path, parsed_data, batch_size
+                    )
+                )
+                if not processing_result.success:
+                    return FlextResult[dict[str, object]].fail(processing_result.error)
 
                 return FlextResult[dict[str, object]].ok(parsed_data)
 
@@ -454,7 +563,74 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
         """LDIF schema mapping and analysis utilities."""
 
         @staticmethod
+        def _initialize_schema_analysis() -> dict[str, object]:
+            """Initialize the schema analysis structure."""
+            return {
+                "object_classes": {},
+                "attributes": {},
+                "dn_patterns": {},
+                "data_quality": {},
+            }
+
+        def _analyze_object_classes(
+            self,
+            schema_analysis: dict[str, object],
+            attributes: dict[str, object],
+            dn: str,
+        ) -> None:
+            """Analyze object classes in the entry."""
+            object_classes = attributes.get("objectclass", [])
+            if not isinstance(object_classes, list):
+                object_classes = [object_classes]
+
+            for obj_class in object_classes:
+                if obj_class not in schema_analysis["object_classes"]:
+                    schema_analysis["object_classes"][obj_class] = {
+                        "count": 0,
+                        "example_dn": dn,
+                        "common_attributes": set(),
+                    }
+                schema_analysis["object_classes"][obj_class]["count"] += 1
+                schema_analysis["object_classes"][obj_class][
+                    "common_attributes"
+                ].update(attributes.keys())
+
+        def _analyze_dn_patterns(
+            self, schema_analysis: dict[str, object], dn: str
+        ) -> None:
+            """Analyze DN patterns."""
+            dn_components = dn.split(",")
+            if dn_components:
+                root_component = (
+                    dn_components[0].split("=")[0]
+                    if "=" in dn_components[0]
+                    else "unknown"
+                )
+                if root_component not in schema_analysis["dn_patterns"]:
+                    schema_analysis["dn_patterns"][root_component] = 0
+                schema_analysis["dn_patterns"][root_component] += 1
+
+        def _analyze_attributes(
+            self, schema_analysis: dict[str, object], attributes: dict[str, object]
+        ) -> None:
+            """Analyze attributes in the entry."""
+            for attr_name, attr_value in attributes.items():
+                if attr_name not in schema_analysis["attributes"]:
+                    schema_analysis["attributes"][attr_name] = {
+                        "count": 0,
+                        "multi_valued_count": 0,
+                        "data_types": set(),
+                        "sample_values": [],
+                    }
+
+                attr_info = schema_analysis["attributes"][attr_name]
+                attr_info["count"] += 1
+
+                if isinstance(attr_value, list):
+                    attr_info["multi_valued_count"] += 1
+
         def analyze_ldif_schema(
+            self,
             ldif_data: dict[str, object],
         ) -> FlextResult[dict[str, object]]:
             """Analyze LDIF data to extract schema information.
@@ -467,86 +643,19 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
             """
             try:
-                schema_analysis = {
-                    "object_classes": {},
-                    "attributes": {},
-                    "dn_patterns": {},
-                    "data_quality": {},
-                }
+                schema_analysis = self._initialize_schema_analysis()
 
                 # Analyze entries
                 for entry in ldif_data.get("entries", []):
                     dn = entry.get("dn", "")
                     attributes = entry.get("attributes", {})
 
-                    # Analyze object classes
-                    object_classes = attributes.get("objectclass", [])
-                    if not isinstance(object_classes, list):
-                        object_classes = [object_classes]
+                    self._analyze_object_classes(schema_analysis, attributes, dn)
+                    self._analyze_dn_patterns(schema_analysis, dn)
+                    self._analyze_attributes(schema_analysis, attributes)
 
-                    for obj_class in object_classes:
-                        if obj_class not in schema_analysis["object_classes"]:
-                            schema_analysis["object_classes"][obj_class] = {
-                                "count": 0,
-                                "example_dn": dn,
-                                "common_attributes": set(),
-                            }
-                        schema_analysis["object_classes"][obj_class]["count"] += 1
-                        schema_analysis["object_classes"][obj_class][
-                            "common_attributes"
-                        ].update(attributes.keys())
-
-                    # Analyze DN patterns
-                    dn_components = dn.split(",")
-                    if dn_components:
-                        root_component = (
-                            dn_components[0].split("=")[0]
-                            if "=" in dn_components[0]
-                            else "unknown"
-                        )
-                        if root_component not in schema_analysis["dn_patterns"]:
-                            schema_analysis["dn_patterns"][root_component] = 0
-                        schema_analysis["dn_patterns"][root_component] += 1
-
-                    # Analyze attributes
-                    for attr_name, attr_value in attributes.items():
-                        if attr_name not in schema_analysis["attributes"]:
-                            schema_analysis["attributes"][attr_name] = {
-                                "count": 0,
-                                "multi_valued_count": 0,
-                                "data_types": set(),
-                                "sample_values": [],
-                            }
-
-                        attr_info = schema_analysis["attributes"][attr_name]
-                        attr_info["count"] += 1
-
-                        if isinstance(attr_value, list):
-                            attr_info["multi_valued_count"] += 1
-                            for val in attr_value[:3]:  # Sample first 3 values
-                                attr_info["sample_values"].append(str(val))
-                                attr_info["data_types"].add(type(val).__name__)
-                        else:
-                            attr_info["sample_values"].append(str(attr_value))
-                            attr_info["data_types"].add(type(attr_value).__name__)
-
-                        # Limit sample values
-                        if (
-                            len(attr_info["sample_values"])
-                            > FlextDbtLdifConstants.MAX_SAMPLE_VALUES
-                        ):
-                            attr_info["sample_values"] = attr_info["sample_values"][
-                                : FlextDbtLdifConstants.MAX_SAMPLE_VALUES
-                            ]
-
-                # Convert sets to lists for JSON serialization
-                for obj_class_info in schema_analysis["object_classes"].values():
-                    obj_class_info["common_attributes"] = list(
-                        obj_class_info["common_attributes"]
-                    )
-
-                for attr_info in schema_analysis["attributes"].values():
-                    attr_info["data_types"] = list(attr_info["data_types"])
+                # Finalize schema analysis
+                self._finalize_schema_analysis(schema_analysis)
 
                 return FlextResult[dict[str, object]].ok(schema_analysis)
 
@@ -554,6 +663,20 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 return FlextResult[dict[str, object]].fail(
                     f"LDIF schema analysis failed: {e}"
                 )
+
+        def _finalize_schema_analysis(self, schema_analysis: dict[str, object]) -> None:
+            """Finalize schema analysis by converting sets to lists and cleaning up."""
+            # Convert sets to lists for JSON serialization
+            for obj_class_info in schema_analysis["object_classes"].values():
+                if isinstance(obj_class_info.get("common_attributes"), set):
+                    obj_class_info["common_attributes"] = list(
+                        obj_class_info["common_attributes"]
+                    )
+
+            # Convert data_types sets to lists
+            for attr_info in schema_analysis["attributes"].values():
+                if isinstance(attr_info.get("data_types"), set):
+                    attr_info["data_types"] = list(attr_info["data_types"])
 
         @staticmethod
         def generate_dbt_source_definition(

@@ -1,4 +1,4 @@
-"""FLEXT DBT LDIF - Version information with Flextpatterns.
+"""FLEXT DBT LDIF - Version information with Flext patterns.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -7,107 +7,88 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any as FlextProjectMetadata, Final
+from importlib.metadata import metadata
 
-from flext_core import FlextResult, FlextTypes
+# Extract metadata from package
+_metadata = metadata("flext-dbt-ldif")
 
-if TYPE_CHECKING:
-    from typing import Any as FlextProjectPerson
+# Version information
+__version__ = _metadata["Version"]
+__version_info__ = tuple(
+    int(part) if part.isdigit() else part for part in __version__.split(".")
+)
+
+# Package metadata
+__title__ = _metadata["Name"]
+__description__ = _metadata.get("Summary", "")
+__author__ = _metadata.get("Author", "")
+__author_email__ = _metadata.get("Author-Email", "")
+__license__ = _metadata.get("License", "")
+__url__ = _metadata.get("Home-Page", "")
 
 
+# Simplified version class for backward compatibility
 class FlextDbtLdifVersion:
     """Version information for flext-dbt-ldif package."""
-
-    def __init__(self, metadata: FlextProjectMetadata) -> None:
-        """Initialize version from metadata.
-
-        Args:
-        metadata: Project metadata from flext-core
-
-        """
-        self.metadata = metadata
 
     @property
     def version(self) -> str:
         """Get version string."""
-        return self.metadata.version
+        return __version__
 
     @property
     def version_info(self) -> tuple[int | str, ...]:
         """Get version info tuple."""
-        return self.metadata.version_info
+        return __version_info__
 
     @property
     def version_tuple(self) -> tuple[int | str, ...]:
         """Alias for version_info."""
-        return self.version_info
+        return __version_info__
 
     @property
-    def author(self) -> FlextProjectPerson | None:
+    def author(self) -> str:
         """Get primary author."""
-        return self.metadata.authors[0] if self.metadata.authors else None
+        return __author__
 
     @property
-    def maintainer(self) -> FlextProjectPerson | None:
-        """Get primary maintainer."""
-        return self.metadata.maintainers[0] if self.metadata.maintainers else None
+    def author_email(self) -> str:
+        """Get primary author email."""
+        return __author_email__
 
     @property
-    def author_name(self) -> str | None:
-        """Get author name."""
-        return self.author.name if self.author else None
+    def description(self) -> str:
+        """Get package description."""
+        return __description__
 
     @property
-    def maintainer_name(self) -> str | None:
-        """Get maintainer name."""
-        return self.maintainer.name if self.maintainer else None
+    def license(self) -> str:
+        """Get package license."""
+        return __license__
 
     @property
-    def authors(self) -> list[FlextProjectPerson]:
-        """Get all authors."""
-        return self.metadata.authors
+    def url(self) -> str:
+        """Get package URL."""
+        return __url__
 
     @property
-    def maintainers(self) -> list[FlextProjectPerson]:
-        """Get all maintainers."""
-        return self.metadata.maintainers
-
-    @property
-    def urls(self) -> FlextTypes.Mapping:
-        """Get project URLs."""
-        return self.metadata.urls
-
-
-def _create_version() -> FlextResult[FlextDbtLdifVersion]:
-    """Create version instance from package metadata.
-
-    Returns:
-    FlextResult[FlextDbtLdifVersion]: Version instance or error
-
-    """
-    try:
-        metadata_result = FlextProjectMetadata.from_package("flext-dbt-ldif")
-        if metadata_result.is_failure:
-            return FlextResult[FlextDbtLdifVersion].fail(
-                f"Failed to load metadata: {metadata_result.error}"
-            )
-
-        version = FlextDbtLdifVersion(metadata_result.unwrap())
-        return FlextResult[FlextDbtLdifVersion].ok(version)
-
-    except Exception as e:
-        return FlextResult[FlextDbtLdifVersion].fail(f"Version creation failed: {e}")
+    def name(self) -> str:
+        """Get package name."""
+        return __title__
 
 
 # Global version instance
-_version_result = _create_version()
-if _version_result.is_failure:
-    error_msg = f"Failed to initialize version: {_version_result.error}"
-    raise RuntimeError(error_msg)
-
-VERSION: Final[FlextDbtLdifVersion] = _version_result.unwrap()
+VERSION = FlextDbtLdifVersion()
 
 __all__ = [
     "VERSION",
     "FlextDbtLdifVersion",
+    "__author__",
+    "__author_email__",
+    "__description__",
+    "__license__",
+    "__title__",
+    "__url__",
+    "__version__",
+    "__version_info__",
 ]

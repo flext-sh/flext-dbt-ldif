@@ -18,9 +18,14 @@ from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
-from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
+from flext_dbt_ldif.dbt_models import (
+    FlextDbtLdifUnifiedService as FlextDbtLdifModelGenerator,
+)
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif.models import (
+    FlextDbtLdifModels,
+    FlextDbtLdifModels as FlextLdifDbtModel,
+)
 from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
 from flext_dbt_ldif.simple_api import (
     FlextDbtLdif,
@@ -36,19 +41,22 @@ from flext_dbt_ldif.version import VERSION, FlextDbtLdifVersion
 PROJECT_VERSION: Final[FlextDbtLdifVersion] = VERSION
 
 
-__all__: FlextDbtLdifTypes.Core.StringList = [
+__all__: list[str] = [
     "FlextDbtLdif",
     "FlextDbtLdifAPI",
     "FlextDbtLdifClient",
     "FlextDbtLdifConfig",
     "FlextDbtLdifCore",
     "FlextDbtLdifError",
+    "FlextDbtLdifModelGenerator",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifService",
+    "FlextDbtLdifTypes",
     "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
     "FlextLdif",
+    "FlextLdifDbtModel",
     "FlextResult",
     "__version__",
     "__version_info__",
