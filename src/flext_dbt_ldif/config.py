@@ -8,39 +8,57 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import ClassVar, Literal, Self
+from typing import ClassVar, Literal, Self, cast
 
 from flext_core import FlextConfig, FlextLogger, FlextResult
 from flext_ldif import FlextLdifConfig
+from flext_ldif.constants import FlextLdifConstants
 from flext_meltano.config import FlextMeltanoConfig
-from pydantic import Field, field_validator, model_validator
-from pydantic_settings import SettingsConfigDict
+from pydantic import ConfigDict, Field, field_validator, model_validator
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 
 logger = FlextLogger(__name__)
 
 
-class FlextDbtLdifConfig(FlextConfig):
-    """Single Pydantic 2 Settings class for flext-dbt-ldif extending FlextConfig.
+@FlextConfig.auto_register("dbt_ldif")
+class FlextDbtLdifConfig(FlextConfig.AutoConfig):
+    """Single Pydantic 2 BaseModel class for flext-dbt-ldif using AutoConfig pattern.
+
+    **ARCHITECTURAL PATTERN**: Zero-Boilerplate Auto-Registration
+
+    This class uses FlextConfig.AutoConfig for automatic:
+    - Singleton pattern (thread-safe)
+    - Namespace registration (accessible via config.dbt_ldif)
+    - Test reset capability (_reset_instance)
 
     Follows standardized pattern:
-    - Extends FlextConfig from flext-core
+    - Extends FlextConfig.AutoConfig (BaseModel) for nested config pattern
     - No nested classes within Config
     - All defaults from FlextDbtLdifConstants
-    - Uses enhanced singleton pattern with inverse dependency injection
     - Uses Pydantic 2.11+ features (field_validator, model_validator)
+
+    **Usage**:
+        # Get singleton instance
+        config = FlextDbtLdifConfig.get_instance()
+
+        # Or via FlextConfig namespace
+        from flext_core import FlextConfig
+        config = FlextConfig.get_global_instance()
+        dbt_ldif_config = config.dbt_ldif
     """
 
-    model_config = SettingsConfigDict(
-        env_prefix="FLEXT_DBT_LDIF_",
+    model_config = ConfigDict(
         case_sensitive=False,
         extra="allow",
         validate_assignment=True,
         str_strip_whitespace=True,
+        validate_default=True,
+        frozen=False,
+        arbitrary_types_allowed=True,
         json_schema_extra={
             "title": "FLEXT DBT LDIF Configuration",
-            "description": "DBT LDIF configuration extending FlextConfig",
+            "description": "DBT LDIF configuration using AutoConfig pattern",
         },
     )
 
@@ -203,27 +221,27 @@ class FlextDbtLdifConfig(FlextConfig):
 
         return self
 
-    def validate_business_rules(self) -> FlextResult[None]:
+    def validate_business_rules(self) -> FlextResult[bool]:
         """Validate DBT LDIF specific business rules."""
         try:
             # Validate LDIF configuration
             if self.ldif_file_path and Path(self.ldif_file_path).suffix != ".ldif":
-                return FlextResult[None].fail("LDIF file must have .ldif extension")
+                return FlextResult[bool].fail("LDIF file must have .ldif extension")
 
             # Validate DBT configuration
             if not self.dbt_project_dir:
-                return FlextResult[None].fail("DBT project directory is required")
+                return FlextResult[bool].fail("DBT project directory is required")
 
             # Validate file size limits
             if self.ldif_max_file_size < FlextDbtLdifConstants.MIN_FILE_SIZE_KB:
-                return FlextResult[None].fail("LDIF max file size must be at least 1KB")
+                return FlextResult[bool].fail("LDIF max file size must be at least 1KB")
 
             if self.ldif_max_file_size > FlextDbtLdifConstants.MAX_FILE_SIZE_GB:
-                return FlextResult[None].fail("LDIF max file size cannot exceed 1GB")
+                return FlextResult[bool].fail("LDIF max file size cannot exceed 1GB")
 
-            return FlextResult[None].ok(None)
+            return FlextResult[bool].ok(True)
         except Exception as e:
-            return FlextResult[None].fail(f"Business rules validation failed: {e}")
+            return FlextResult[bool].fail(f"Business rules validation failed: {e}")
 
     def get_ldif_config(self) -> FlextLdifConfig:
         """Get LDIF configuration for flext-ldif integration."""
@@ -277,66 +295,72 @@ class FlextDbtLdifConfig(FlextConfig):
 
     @classmethod
     def create_for_environment(
-        cls, environment: str, **overrides: object
+        cls, environment: str | None = None, **overrides: object
     ) -> FlextDbtLdifConfig:
-        """Create configuration for specific environment using enhanced singleton pattern."""
-        return cls.get_global_instance()
+        """Create configuration for specific environment using AutoConfig singleton pattern.
+        
+        Args:
+            environment: Environment name (unused, kept for API compatibility)
+            **overrides: Configuration overrides (unused, kept for API compatibility)
+            
+        Returns:
+            FlextDbtLdifConfig singleton instance
+
+        """
+        _ = environment  # Unused parameter kept for API compatibility
+        _ = overrides  # Unused parameter kept for API compatibility
+        return cls.get_instance()
 
     @classmethod
     def create_default(cls) -> FlextDbtLdifConfig:
-        """Create default configuration instance using enhanced singleton pattern."""
-        return cls.get_global_instance(project_name="flext-dbt-ldif")
+        """Create default configuration instance using AutoConfig singleton pattern."""
+        return cls.get_instance()
 
     @classmethod
     def create_for_development(cls) -> FlextDbtLdifConfig:
-        """Create configuration optimized for development using enhanced singleton pattern."""
-        return cls.get_global_instance(
-            project_name="flext-dbt-ldif",
-            ldif_validate_syntax=False,
-            dbt_target="dev",
-            dbt_threads=1,
-            dbt_log_level="debug",
-            ldif_max_file_size=10 * 1024 * 1024,  # 10MB for dev
-        )
+        """Create configuration optimized for development using AutoConfig singleton pattern."""
+        instance = cls.get_instance()
+        # Update instance with dev defaults if needed
+        instance.ldif_validate_syntax = False
+        instance.dbt_target = "dev"
+        instance.dbt_threads = 1
+        instance.dbt_log_level = "debug"
+        instance.ldif_max_file_size = 10 * 1024 * 1024  # 10MB for dev
+        return instance
 
     @classmethod
     def create_for_production(cls) -> FlextDbtLdifConfig:
-        """Create configuration optimized for production using enhanced singleton pattern."""
-        return cls.get_global_instance(
-            project_name="flext-dbt-ldif",
-            ldif_validate_syntax=True,
-            ldif_validate_schemas=True,
-            dbt_target="production",
-            dbt_threads=8,
-            dbt_log_level="info",
-            ldif_max_file_size=500 * 1024 * 1024,  # 500MB for prod
-        )
+        """Create configuration optimized for production using AutoConfig singleton pattern."""
+        instance = cls.get_instance()
+        # Update instance with prod defaults if needed
+        instance.ldif_validate_syntax = True
+        instance.ldif_validate_schemas = True
+        instance.dbt_target = "production"
+        instance.dbt_threads = 8
+        instance.dbt_log_level = "info"
+        instance.ldif_max_file_size = 500 * 1024 * 1024  # 500MB for prod
+        return instance
 
     @classmethod
     def create_for_testing(cls) -> FlextDbtLdifConfig:
-        """Create configuration optimized for testing using enhanced singleton pattern."""
-        return cls.get_global_instance(
-            project_name="flext-dbt-ldif",
-            ldif_file_path="./test_data/sample.ldif",
-            ldif_encoding="utf-8",
-            ldif_validate_syntax=True,
-            dbt_target="test",
-            dbt_threads=1,
-            dbt_log_level="debug",
-            ldif_max_file_size=1024 * 1024,  # 1MB for tests
-            min_quality_threshold=0.5,
-        )
-
-    @classmethod
-    def get_global_instance(cls) -> FlextDbtLdifConfig:
-        """Get the global singleton instance using enhanced FlextConfig pattern."""
-        return cls.get_global_instance(project_name="flext-dbt-ldif")
+        """Create configuration optimized for testing using AutoConfig singleton pattern."""
+        instance = cls.get_instance()
+        # Update instance with test defaults if needed
+        instance.ldif_file_path = "./test_data/sample.ldif"
+        instance.ldif_encoding = "utf-8"
+        instance.ldif_validate_syntax = True
+        instance.dbt_target = "test"
+        instance.dbt_threads = 1
+        instance.dbt_log_level = "debug"
+        instance.ldif_max_file_size = 1024 * 1024  # 1MB for tests
+        instance.min_quality_threshold = 0.5
+        return instance
 
     @classmethod
     def reset_global_instance(cls) -> None:
         """Reset the global FlextDbtLdifConfig instance (mainly for testing)."""
-        # Use the enhanced FlextConfig reset mechanism
-        cls.reset_shared_instance()
+        # Use the AutoConfig reset mechanism
+        cls._reset_instance()
 
 
 __all__: list[str] = [

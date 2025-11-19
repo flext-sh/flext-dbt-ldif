@@ -27,25 +27,25 @@ class FlextDbtLdifModels(FlextModels):
     description: str
     dependencies: list[str]
 
-    def validate_business_rules(self) -> FlextResult[None]:
+    def validate_business_rules(self) -> FlextResult[bool]:
         """Validate DBT LDIF model business rules."""
         try:
             if not self.name.strip():
-                return FlextResult[None].fail("Model name cannot be empty")
+                return FlextResult[bool].fail("Model name cannot be empty")
             if self.dbt_model_type not in {
                 "staging",
                 "intermediate",
                 "marts",
                 "analytics",
             }:
-                return FlextResult[None].fail("Invalid model_type")
+                return FlextResult[bool].fail("Invalid model_type")
             if not self.ldif_source.strip():
-                return FlextResult[None].fail("LDIF source cannot be empty")
+                return FlextResult[bool].fail("LDIF source cannot be empty")
             if not self.sql_content.strip():
-                return FlextResult[None].fail("SQL content cannot be empty")
-            return FlextResult[None].ok(None)
+                return FlextResult[bool].fail("SQL content cannot be empty")
+            return FlextResult[bool].ok(True)
         except Exception as e:
-            return FlextResult[None].fail(f"Business rule validation failed: {e}")
+            return FlextResult[bool].fail(f"Business rule validation failed: {e}")
 
     def get_file_path(self) -> str:
         """Get the file path for this DBT LDIF model."""
