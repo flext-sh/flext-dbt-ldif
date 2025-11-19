@@ -82,15 +82,15 @@ class FlextDbtLdifUtilities(FlextUtilities):
         """LDIF file processing and parsing utilities."""
 
         @staticmethod
-        def _validate_ldif_file(file_path: Path) -> FlextResult[None]:
+        def _validate_ldif_file(file_path: Path) -> FlextResult[bool]:
             """Validate LDIF file exists and has correct extension."""
             if not file_path.exists():
-                return FlextResult[None].fail(f"LDIF file not found: {file_path}")
+                return FlextResult[bool].fail(f"LDIF file not found: {file_path}")
             if file_path.suffix.lower() != ".ldif":
-                return FlextResult[None].fail(
+                return FlextResult[bool].fail(
                     f"Invalid LDIF file extension: {file_path}"
                 )
-            return FlextResult[None].ok(None)
+            return FlextResult[bool].ok(True)
 
         @staticmethod
         def _initialize_parsed_data(file_path: Path) -> dict[str, object]:
@@ -190,7 +190,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
             file_path: Path,
             parsed_data: dict[str, object],
             batch_size: int,
-        ) -> FlextResult[None]:
+        ) -> FlextResult[bool]:
             """Process the LDIF file content and populate parsed_data."""
             try:
                 with file_path.open("r", encoding="utf-8") as ldif_file:
@@ -215,7 +215,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
                                 current_dn,
                                 record_count,
                                 batch_count,
-                            ) = FlextDbtLdifUtilities.LdifFileProcessing._process_dn_line(
+                            ) = FlextDbtLdifUtilities.LdifFileProcessing._process_dn_line(  # noqa: SLF001
                                 line,
                                 current_entry,
                                 current_dn,
@@ -227,28 +227,28 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                         # Process attribute lines
                         elif ":" in line:
-                            current_entry = FlextDbtLdifUtilities.LdifFileProcessing._process_attribute_line(
+                            current_entry = FlextDbtLdifUtilities.LdifFileProcessing._process_attribute_line(  # noqa: SLF001
                                 line, current_entry
                             )
 
                     # Process last entry
                     record_count = (
-                        FlextDbtLdifUtilities.LdifFileProcessing._finalize_last_entry(
+                        FlextDbtLdifUtilities.LdifFileProcessing._finalize_last_entry(  # noqa: SLF001
                             current_entry, current_dn, record_count, parsed_data
                         )
                     )
 
                 parsed_data["total_records"] = record_count
                 parsed_data["processing_stats"] = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._calculate_processing_stats(
+                    FlextDbtLdifUtilities.LdifFileProcessing._calculate_processing_stats(  # noqa: SLF001
                         file_path, line_num, record_count
                     )
                 )
 
-                return FlextResult[None].ok(None)
+                return FlextResult[bool].ok(True)
 
             except Exception as e:
-                return FlextResult[None].fail(f"LDIF file processing failed: {e}")
+                return FlextResult[bool].fail(f"LDIF file processing failed: {e}")
 
         @staticmethod
         def parse_ldif_file(
@@ -268,7 +268,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
             try:
                 # Validate file
                 validation_result = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._validate_ldif_file(
+                    FlextDbtLdifUtilities.LdifFileProcessing._validate_ldif_file(  # noqa: SLF001
                         file_path
                     )
                 )
@@ -277,14 +277,14 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                 # Initialize data structure
                 parsed_data = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._initialize_parsed_data(
+                    FlextDbtLdifUtilities.LdifFileProcessing._initialize_parsed_data(  # noqa: SLF001
                         file_path
                     )
                 )
 
                 # Process file
                 processing_result = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._process_ldif_file(
+                    FlextDbtLdifUtilities.LdifFileProcessing._process_ldif_file(  # noqa: SLF001
                         file_path, parsed_data, batch_size
                     )
                 )

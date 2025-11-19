@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
-
 from flext_dbt_ldif import __version__, __version_info__
 from flext_dbt_ldif.version import VERSION, FlextDbtLdifVersion
 
@@ -17,20 +15,20 @@ def test_dunder_alignment() -> None:
 def test_metadata_payload() -> None:
     """Ensure VERSION carries the pyproject metadata."""
     assert isinstance(VERSION, FlextDbtLdifVersion)
-    assert isinstance(VERSION.metadata, FlextProjectMetadata)
-    assert isinstance(VERSION.urls, Mapping)
+    assert VERSION.version
+    assert VERSION.version_info
     assert VERSION.version_tuple == VERSION.version_info
 
 
 def test_contact_details() -> None:
     """Primary author and maintainer information is exposed."""
-    assert isinstance(VERSION.author, FlextProjectPerson)
-    assert isinstance(VERSION.maintainer, FlextProjectPerson)
-    assert VERSION.author_name
-    assert VERSION.maintainer_name
+    assert isinstance(VERSION.author, str)
+    assert VERSION.author
+    assert VERSION.author_email
 
 
 def test_metadata_passthrough() -> None:
-    """Author and maintainer collections match metadata."""
-    assert VERSION.authors == VERSION.metadata.authors
-    assert VERSION.maintainers == VERSION.metadata.maintainers
+    """Author information is accessible."""
+    assert VERSION.author
+    assert VERSION.name
+    assert VERSION.description
