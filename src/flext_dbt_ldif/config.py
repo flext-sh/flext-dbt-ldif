@@ -298,11 +298,11 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         cls, environment: str | None = None, **overrides: object
     ) -> FlextDbtLdifConfig:
         """Create configuration for specific environment using AutoConfig singleton pattern.
-        
+
         Args:
             environment: Environment name (unused, kept for API compatibility)
             **overrides: Configuration overrides (unused, kept for API compatibility)
-            
+
         Returns:
             FlextDbtLdifConfig singleton instance
 
