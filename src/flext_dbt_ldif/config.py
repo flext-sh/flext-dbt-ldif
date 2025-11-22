@@ -11,9 +11,8 @@ from pathlib import Path
 from typing import ClassVar, Literal, Self, cast
 
 from flext_core import FlextConfig, FlextLogger, FlextResult
-from flext_ldif import FlextLdifConfig
-from flext_ldif.constants import FlextLdifConstants
-from flext_meltano.config import FlextMeltanoConfig
+from flext_ldif import FlextLdifConfig, FlextLdifConstants
+from flext_meltano import FlextMeltanoConfig
 from pydantic import ConfigDict, Field, field_validator, model_validator
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
