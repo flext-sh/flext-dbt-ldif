@@ -215,7 +215,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
                                 current_dn,
                                 record_count,
                                 batch_count,
-                            ) = FlextDbtLdifUtilities.LdifFileProcessing._process_dn_line(  # noqa: SLF001
+                            ) = FlextDbtLdifUtilities.LdifFileProcessing._process_dn_line(
                                 line,
                                 current_entry,
                                 current_dn,
@@ -227,20 +227,20 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                         # Process attribute lines
                         elif ":" in line:
-                            current_entry = FlextDbtLdifUtilities.LdifFileProcessing._process_attribute_line(  # noqa: SLF001
+                            current_entry = FlextDbtLdifUtilities.LdifFileProcessing._process_attribute_line(
                                 line, current_entry
                             )
 
                     # Process last entry
                     record_count = (
-                        FlextDbtLdifUtilities.LdifFileProcessing._finalize_last_entry(  # noqa: SLF001
+                        FlextDbtLdifUtilities.LdifFileProcessing._finalize_last_entry(
                             current_entry, current_dn, record_count, parsed_data
                         )
                     )
 
                 parsed_data["total_records"] = record_count
                 parsed_data["processing_stats"] = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._calculate_processing_stats(  # noqa: SLF001
+                    FlextDbtLdifUtilities.LdifFileProcessing._calculate_processing_stats(
                         file_path, line_num, record_count
                     )
                 )
@@ -268,7 +268,7 @@ class FlextDbtLdifUtilities(FlextUtilities):
             try:
                 # Validate file
                 validation_result = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._validate_ldif_file(  # noqa: SLF001
+                    FlextDbtLdifUtilities.LdifFileProcessing._validate_ldif_file(
                         file_path
                     )
                 )
@@ -277,14 +277,14 @@ class FlextDbtLdifUtilities(FlextUtilities):
 
                 # Initialize data structure
                 parsed_data = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._initialize_parsed_data(  # noqa: SLF001
+                    FlextDbtLdifUtilities.LdifFileProcessing._initialize_parsed_data(
                         file_path
                     )
                 )
 
                 # Process file
                 processing_result = (
-                    FlextDbtLdifUtilities.LdifFileProcessing._process_ldif_file(  # noqa: SLF001
+                    FlextDbtLdifUtilities.LdifFileProcessing._process_ldif_file(
                         file_path, parsed_data, batch_size
                     )
                 )
