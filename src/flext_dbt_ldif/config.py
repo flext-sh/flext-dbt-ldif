@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from pathlib import Path
-from typing import ClassVar, Literal, Self, cast
+from typing import ClassVar, Self, cast
 
 from flext_core import FlextConfig, FlextLogger, FlextResult
 from flext_ldif import FlextLdifConfig, FlextLdifConstants
@@ -98,7 +98,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         le=16,
         description="Number of DBT threads",
     )
-    dbt_log_level: Literal["debug", "info", "warn", "error", "none"] = Field(
+    dbt_log_level: FlextDbtLdifConstants.Literals.DbtLogLevelLiteral = Field(
         default="info", description="DBT log level"
     )
 

@@ -7,7 +7,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import ClassVar
+from enum import StrEnum
+from typing import ClassVar, Literal
 
 from flext_core import FlextConstants
 
@@ -49,6 +50,28 @@ class FlextDbtLdifConstants(FlextConstants):
     # Entry Count Thresholds
     LARGE_DATASET_THRESHOLD = 1000000  # 1M entries threshold for optimizations
 
+    class LdifOperations(StrEnum):
+        """LDIF operation types."""
+
+        ADD = "add"
+        MODIFY = "modify"
+        DELETE = "delete"
+        REPLACE = "replace"
+
+    class OutputFormats(StrEnum):
+        """Supported output formats."""
+
+        POSTGRESQL = "postgresql"
+        DUCKDB = "duckdb"
+        PARQUET = "parquet"
+
+    class DbtTargets(StrEnum):
+        """DBT target environments."""
+
+        DEV = "dev"
+        STAGING = "staging"
+        PROD = "prod"
+
     # Size Thresholds
     LARGE_ENTRY_SIZE_BYTES = 10240  # 10KB per entry threshold
 
@@ -59,6 +82,28 @@ class FlextDbtLdifConstants(FlextConstants):
     PERFORMANCE_THRESHOLD_MODEL_RUNTIME_SECONDS = 60
     PERFORMANCE_THRESHOLD_MODEL_COUNT_INCREMENTAL = 20
     PERFORMANCE_THRESHOLD_MODEL_RUNTIME_PARTITIONING = 300
+
+    class Literals:
+        """Type-safe string literals for DBT LDIF operations.
+
+        Python 3.13+ best practice: Use TypeAlias for better type checking.
+        """
+
+        # DBT log level literal - matches DBT log levels
+        type DbtLogLevelLiteral = Literal["debug", "info", "warn", "error", "none"]
+        """DBT log level literal."""
+
+        # DBT target literal - matches DBT_ALLOWED_TARGETS
+        type DbtTargetLiteral = Literal["dev", "staging", "prod"]
+        """DBT target literal."""
+
+        # Output format literal - matches SUPPORTED_OUTPUT_FORMATS
+        type OutputFormatLiteral = Literal["postgresql", "duckdb", "parquet"]
+        """Output format literal."""
+
+        # LDIF operation literal - matches LdifOperations StrEnum
+        type LdifOperationLiteral = Literal["add", "modify", "delete", "replace"]
+        """LDIF operation literal."""
 
 
 __all__ = ["FlextDbtLdifConstants"]
