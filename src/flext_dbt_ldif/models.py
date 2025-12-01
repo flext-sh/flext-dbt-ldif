@@ -1,13 +1,75 @@
 """Models for LDIF DBT operations.
 
 This module provides data models for LDIF DBT operations.
+Uses types from typings.py and constants.py, no dict[str, object].
+Uses Python 3.13+ PEP 695 syntax and FlextModels patterns.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+
 """
 
 from __future__ import annotations
 
-from typing import override
+from collections.abc import Sequence
+from typing import Literal, TypedDict, override
 
-from flext_core import FlextModels, FlextResult
+from flext_core import FlextModels, FlextResult, FlextTypes
+
+from flext_dbt_ldif.constants import FlextDbtLdifConstants
+from flext_dbt_ldif.typings import FlextDbtLdifTypes
+
+# =============================================================================
+# TYPEDDICT DEFINITIONS - Type-safe column and model definitions
+# =============================================================================
+
+
+class ColumnDefinition(TypedDict, total=False):
+    """Type-safe column definition for DBT models."""
+
+    name: str
+    """Column name."""
+    description: str
+    """Column description."""
+    data_type: str
+    """Column data type."""
+
+
+class ModelDefinition(TypedDict, total=True):
+    """Type-safe model definition structure."""
+
+    name: str
+    """Model name."""
+    description: str
+    """Model description."""
+    columns: Sequence[ColumnDefinition]
+    """Model columns."""
+
+
+# =============================================================================
+# MODEL TYPES - Using Literals from constants
+# =============================================================================
+
+type DbtModelType = Literal[
+    "staging",
+    "intermediate",
+    "marts",
+    "analytics",
+]
+"""DBT model type literal."""
+
+type MaterializationType = Literal[
+    "view",
+    "table",
+    "incremental",
+    "ephemeral",
+]
+"""DBT materialization type literal."""
+
+
+# =============================================================================
+# MAIN MODEL CLASS
+# =============================================================================
 
 
 class FlextDbtLdifModels(FlextModels):
@@ -15,17 +77,35 @@ class FlextDbtLdifModels(FlextModels):
 
     Immutable representation of a generated DBT model with LDIF-specific metadata
     and integrated analytics functionality following FLEXT unified class pattern.
+    Uses types from typings.py and constants.py - no dict[str, object].
     """
 
     name: str
-    dbt_model_type: str  # staging, intermediate, marts, analytics
+    """DBT model name."""
+
+    dbt_model_type: DbtModelType
+    """DBT model type: staging, intermediate, marts, or analytics."""
+
     ldif_source: str
-    change_types: list[str]
-    columns: list[dict[str, object]]
-    materialization: str
+    """LDIF source identifier."""
+
+    change_types: Sequence[FlextDbtLdifConstants.Literals.LdifOperationLiteral]
+    """LDIF change types supported by this model."""
+
+    columns: Sequence[ColumnDefinition]
+    """Model column definitions."""
+
+    materialization: MaterializationType
+    """DBT materialization type."""
+
     sql_content: str
+    """SQL content for the DBT model."""
+
     description: str
-    dependencies: list[str]
+    """Model description."""
+
+    dependencies: Sequence[str]
+    """Model dependencies (other model names)."""
 
     def validate_business_rules(self) -> FlextResult[bool]:
         """Validate DBT LDIF model business rules."""
@@ -70,50 +150,80 @@ class FlextDbtLdifModels(FlextModels):
         except Exception as e:
             return FlextResult[str].fail(f"SQL file generation failed: {e}")
 
-    def to_schema_entry(self) -> FlextResult[dict[str, object]]:
-        """Convert model to schema.yml entry."""
+    def to_schema_entry(self) -> FlextResult[FlextTypes.JsonDict]:
+        """Convert model to schema.yml entry.
+
+        Returns:
+            FlextResult[FlextTypes.JsonDict]: Schema entry as JSON-compatible dict
+
+        """
         try:
-            schema_entry: dict[str, object] = {
+            schema_entry: FlextTypes.JsonDict = {
                 "name": self.name,
                 "description": self.description,
                 "columns": [
                     {
-                        "name": col["name"],
+                        "name": col.get("name", ""),
                         "description": col.get("description", ""),
                         "data_type": col.get("data_type", ""),
                     }
                     for col in self.columns
                 ],
             }
-            return FlextResult[dict["str", "object"]].ok(schema_entry)
+            return FlextResult[FlextTypes.JsonDict].ok(schema_entry)
         except Exception as e:
-            return FlextResult[dict["str", "object"]].fail(
+            return FlextResult[FlextTypes.JsonDict].fail(
                 f"Schema entry generation failed: {e}"
             )
 
     @classmethod
     def create_generator(
         cls,
-        config: dict[str, object],
+        config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
     ) -> FlextDbtLdifModels.ModelGenerator:
-        """Create a model generator instance."""
+        """Create a model generator instance.
+
+        Args:
+            config: Model generator configuration
+
+        Returns:
+            ModelGenerator instance
+
+        """
         return cls.ModelGenerator(config)
 
     class ModelGenerator:
-        """Internal model generator class for DBT LDIF models."""
+        """Internal model generator class for DBT LDIF models.
+
+        Uses types from typings.py - no dict[str, object].
+        """
 
         @override
         def __init__(
             self,
-            config: dict[str, object],
+            config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
         ) -> None:
-            """Initialize the LDIF model generator."""
+            """Initialize the LDIF model generator.
+
+            Args:
+                config: Model generator configuration
+
+            """
             self.config = config
 
         def generate_staging_models(
-            self, ldif_sources: list[str]
-        ) -> FlextResult[list[FlextDbtLdifModels]]:
-            """Generate staging models from LDIF sources."""
+            self,
+            ldif_sources: Sequence[str],
+        ) -> FlextResult[Sequence[FlextDbtLdifModels]]:
+            """Generate staging models from LDIF sources.
+
+            Args:
+                ldif_sources: List of LDIF source identifiers
+
+            Returns:
+                FlextResult[Sequence[FlextDbtLdifModels]]: Generated staging models
+
+            """
             staging_models: list[FlextDbtLdifModels] = []
 
             for ldif_source in ldif_sources:
@@ -123,12 +233,21 @@ class FlextDbtLdifModels(FlextModels):
 
                 staging_models.append(model_result.unwrap())
 
-            return FlextResult[list[FlextDbtLdifModels]].ok(staging_models)
+            return FlextResult[Sequence[FlextDbtLdifModels]].ok(staging_models)
 
         def generate_analytics_models(
-            self, staging_models: list[FlextDbtLdifModels]
-        ) -> FlextResult[list[FlextDbtLdifModels]]:
-            """Generate analytics models from staging models."""
+            self,
+            staging_models: Sequence[FlextDbtLdifModels],
+        ) -> FlextResult[Sequence[FlextDbtLdifModels]]:
+            """Generate analytics models from staging models.
+
+            Args:
+                staging_models: List of staging models
+
+            Returns:
+                FlextResult[Sequence[FlextDbtLdifModels]]: Generated analytics models
+
+            """
             analytics_models: list[FlextDbtLdifModels] = []
 
             for staging_model in staging_models:
@@ -138,25 +257,38 @@ class FlextDbtLdifModels(FlextModels):
 
                 analytics_models.append(model_result.unwrap())
 
-            return FlextResult[list[FlextDbtLdifModels]].ok(analytics_models)
+            return FlextResult[Sequence[FlextDbtLdifModels]].ok(analytics_models)
 
         def _create_staging_model(
-            self, ldif_source: str
+            self,
+            ldif_source: str,
         ) -> FlextResult[FlextDbtLdifModels]:
-            """Create a staging model from LDIF source."""
+            """Create a staging model from LDIF source.
+
+            Args:
+                ldif_source: LDIF source identifier
+
+            Returns:
+                FlextResult[FlextDbtLdifModels]: Created staging model
+
+            """
             try:
                 # Note: This is a template string for DBT, not executable SQL
                 # The f-string interpolation is safe as it's used for DBT templating
                 sql_content = f"""
- select *
- from {{{{ source('ldif', '{ldif_source}') }}}}
- """
+select *
+from {{{{ source('ldif', '{ldif_source}') }}}}
+"""
 
                 staging_model = FlextDbtLdifModels(
                     name=f"stg_ldif_{ldif_source.replace('.', '_')}",
                     dbt_model_type="staging",
                     ldif_source=ldif_source,
-                    change_types=["add", "modify", "delete"],
+                    change_types=[
+                        FlextDbtLdifConstants.LdifOperations.ADD,
+                        FlextDbtLdifConstants.LdifOperations.MODIFY,
+                        FlextDbtLdifConstants.LdifOperations.DELETE,
+                    ],
                     columns=[],
                     materialization="view",
                     sql_content=sql_content.strip(),
@@ -172,9 +304,18 @@ class FlextDbtLdifModels(FlextModels):
                 )
 
         def _create_analytics_model(
-            self, staging_model: FlextDbtLdifModels
+            self,
+            staging_model: FlextDbtLdifModels,
         ) -> FlextResult[FlextDbtLdifModels]:
-            """Create an analytics model from staging model."""
+            """Create an analytics model from staging model.
+
+            Args:
+                staging_model: Source staging model
+
+            Returns:
+                FlextResult[FlextDbtLdifModels]: Created analytics model
+
+            """
             try:
                 analytics_name = staging_model.name.replace("stg_", "analytics_")
 
@@ -182,11 +323,11 @@ class FlextDbtLdifModels(FlextModels):
                 # The f-string interpolation is safe as it's used for DBT templating
 
                 sql_content = f"""
- select
- *,
- current_timestamp as analytics_timestamp
- from {{{{ ref('{staging_model.name}') }}}}
- """
+select
+*,
+current_timestamp as analytics_timestamp
+from {{{{ ref('{staging_model.name}') }}}}
+"""
 
                 analytics_model = FlextDbtLdifModels(
                     name=analytics_name,
@@ -195,11 +336,11 @@ class FlextDbtLdifModels(FlextModels):
                     change_types=staging_model.change_types,
                     columns=[
                         *staging_model.columns,
-                        {
-                            "name": "analytics_timestamp",
-                            "description": "Analytics processing timestamp",
-                            "data_type": "TIMESTAMP",
-                        },
+                        ColumnDefinition(
+                            name="analytics_timestamp",
+                            description="Analytics processing timestamp",
+                            data_type="TIMESTAMP",
+                        ),
                     ],
                     materialization="table",
                     sql_content=sql_content.strip(),
@@ -215,15 +356,10 @@ class FlextDbtLdifModels(FlextModels):
                 )
 
 
-# Zero Tolerance CONSOLIDATION - FlextDbtLdifUtilities moved to utilities.py
-#
-# Critical: FlextDbtLdifUtilities was DUPLICATED between models.py and utilities.py.
-# This was a Zero Tolerance violation of the user's explicit requirements.
-#
-# RESOLUTION: Import from utilities.py to eliminate duplication completely.
-
-
-# Note: This import ensures backward compatibility while eliminating duplication
-
-
-__all__ = ["FlextDbtLdifModels"]
+__all__: list[str] = [
+    "ColumnDefinition",
+    "DbtModelType",
+    "FlextDbtLdifModels",
+    "MaterializationType",
+    "ModelDefinition",
+]

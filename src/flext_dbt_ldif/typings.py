@@ -4,8 +4,10 @@ This module provides DBT LDIF-specific type definitions extending FlextTypes.
 Follows FLEXT standards:
 - Domain-specific complex types only
 - No simple aliases to primitive types
-- Python 3.13+ syntax
+- Python 3.13+ PEP 695 syntax
 - Extends FlextTypes properly
+- Uses Mapping instead of dict for read-only interfaces
+- No dict[str, object] or Any types
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -14,6 +16,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from typing import Literal
 
 from flext_core import FlextTypes
@@ -29,58 +32,119 @@ class FlextDbtLdifTypes(FlextTypes):
 
     Domain-specific type system for DBT LDIF data transformation operations.
     Contains ONLY complex DBT LDIF-specific types, no simple aliases.
-    Uses Python 3.13+ type syntax and patterns.
+    Uses Python 3.13+ PEP 695 type syntax and patterns.
+    All types use FlextTypes.GeneralValueType as base for consistency.
     """
+
+    # =========================================================================
+    # CORE TYPE ALIASES - Reusable base types for DBT LDIF domain
+    # =========================================================================
+
+    # String list type - commonly used for LDIF attributes (defined at class level)
+    type StringList = Sequence[str]
+    """Sequence of strings for multi-valued LDIF attributes."""
+
+    class Core:
+        """Core DBT LDIF type aliases using FlextTypes as foundation."""
+
+        # Attribute value type - single or multi-valued
+        type AttributeValue = str | FlextDbtLdifTypes.StringList | bytes
+        """LDIF attribute value: single string, list of strings, or bytes."""
+
+        # Entry attributes mapping
+        type AttributesMapping = Mapping[str, AttributeValue]
+        """Mapping of attribute names to values."""
 
     # =========================================================================
     # LDIF DATA TYPES - LDIF file format and record types
     # =========================================================================
 
     class LdifData:
-        """LDIF data complex types.
+        """LDIF data complex types using PEP 695 syntax."""
 
-        Python 3.13+ best practice: Use TypeAlias for better type checking.
-        """
-
-        LdifRecord: type = dict[
+        # LDIF record - complete LDIF entry with DN and attributes
+        type LdifRecord = Mapping[
             str,
-            str | list[str] | bytes | dict[str, FlextTypes.JsonValue],
+            str | FlextDbtLdifTypes.StringList | bytes | Mapping[str, FlextTypes.JsonValue],
         ]
-        """LDIF record type."""
-        LdifEntry: type = dict[str, FlextTypes.JsonValue | list[str]]
-        """LDIF entry type."""
-        LdifChangeRecord: type = dict[str, str | list[dict[str, FlextTypes.JsonValue]]]
-        """LDIF change record type."""
-        LdifAttributes: type = dict[str, str | list[str] | bytes]
-        """LDIF attributes type."""
-        LdifModification: type = dict[str, str | dict[str, FlextTypes.JsonValue]]
-        """LDIF modification type."""
-        LdifOperation: type = dict[str, str | dict[str, object]]
-        """LDIF operation type."""
+        """LDIF record type: DN and attributes mapping."""
+
+        # LDIF entry - structured entry data
+        type LdifEntry = Mapping[str, FlextTypes.JsonValue | FlextDbtLdifTypes.StringList]
+        """LDIF entry type: structured entry data."""
+
+        # LDIF change record - modification operations
+        type LdifChangeRecord = Mapping[
+            str,
+            str | Sequence[Mapping[str, FlextTypes.JsonValue]],
+        ]
+        """LDIF change record type: modification operations."""
+
+        # LDIF attributes - attribute name to value mapping
+        type LdifAttributes = Mapping[str, str | FlextDbtLdifTypes.StringList | bytes]
+        """LDIF attributes type: attribute name to value mapping."""
+
+        # LDIF modification - single modification operation
+        type LdifModification = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.JsonValue],
+        ]
+        """LDIF modification type: single modification operation."""
+
+        # LDIF operation - complete operation with metadata
+        type LdifOperation = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.GeneralValueType],
+        ]
+        """LDIF operation type: complete operation with metadata."""
 
     # =========================================================================
     # DBT LDIF TRANSFORMATION TYPES - LDIF to analytical data transformation
     # =========================================================================
 
     class DbtLdifTransformation:
-        """DBT LDIF transformation complex types.
+        """DBT LDIF transformation complex types using PEP 695 syntax."""
 
-        Python 3.13+ best practice: Use TypeAlias for better type checking.
-        """
-
-        TransformationConfig: type = dict[str, FlextTypes.JsonValue | dict[str, object]]
+        # Transformation configuration
+        type TransformationConfig = Mapping[
+            str,
+            FlextTypes.JsonValue | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """DBT LDIF transformation configuration type."""
-        LdifToTableMapping: type = dict[str, str | dict[str, FlextTypes.JsonValue]]
+
+        # LDIF to table mapping
+        type LdifToTableMapping = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.JsonValue],
+        ]
         """LDIF to table mapping type."""
-        AttributeMapping: type = dict[str, str | list[str] | dict[str, object]]
+
+        # Attribute mapping configuration
+        type AttributeMapping = Mapping[
+            str,
+            str | FlextDbtLdifTypes.StringList | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """Attribute mapping type."""
-        DataNormalization: type = dict[
-            str, str | bool | dict[str, FlextTypes.JsonValue]
+
+        # Data normalization configuration
+        type DataNormalization = Mapping[
+            str,
+            str | bool | Mapping[str, FlextTypes.JsonValue],
         ]
         """Data normalization type."""
-        SchemaGeneration: type = dict[str, str | list[dict[str, object]]]
+
+        # Schema generation configuration
+        type SchemaGeneration = Mapping[
+            str,
+            str | Sequence[Mapping[str, FlextTypes.GeneralValueType]],
+        ]
         """Schema generation type."""
-        OutputConfiguration: type = dict[str, object | dict[str, object]]
+
+        # Output configuration
+        type OutputConfiguration = Mapping[
+            str,
+            FlextTypes.GeneralValueType | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """Output configuration type."""
 
     # =========================================================================
@@ -88,25 +152,48 @@ class FlextDbtLdifTypes(FlextTypes):
     # =========================================================================
 
     class LdifParsing:
-        """LDIF parsing complex types.
+        """LDIF parsing complex types using PEP 695 syntax."""
 
-        Python 3.13+ best practice: Use TypeAlias for better type checking.
-        """
-
-        ParserConfiguration: type = dict[str, bool | str | int | dict[str, object]]
-        """LDIF parser configuration type."""
-        ValidationRules: type = dict[
+        # Parser configuration
+        type ParserConfiguration = Mapping[
             str,
-            bool | list[str] | dict[str, FlextTypes.JsonValue],
+            bool | str | int | Mapping[str, FlextTypes.GeneralValueType],
+        ]
+        """LDIF parser configuration type."""
+
+        # Validation rules
+        type ValidationRules = Mapping[
+            str,
+            bool | FlextDbtLdifTypes.StringList | Mapping[str, FlextTypes.JsonValue],
         ]
         """LDIF validation rules type."""
-        ErrorHandling: type = dict[str, str | bool | dict[str, object]]
+
+        # Error handling configuration
+        type ErrorHandling = Mapping[
+            str,
+            str | bool | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF error handling type."""
-        ParsedData: type = dict[str, list[dict[str, FlextTypes.JsonValue]]]
+
+        # Parsed data structure
+        type ParsedData = Mapping[
+            str,
+            Sequence[Mapping[str, FlextTypes.JsonValue]],
+        ]
         """LDIF parsed data type."""
-        ParsingMetrics: type = dict[str, int | float | str | dict[str, object]]
+
+        # Parsing metrics
+        type ParsingMetrics = Mapping[
+            str,
+            int | float | str | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF parsing metrics type."""
-        FileProcessing: type = dict[str, str | int | bool | dict[str, object]]
+
+        # File processing configuration
+        type FileProcessing = Mapping[
+            str,
+            str | int | bool | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF file processing type."""
 
     # =========================================================================
@@ -114,22 +201,48 @@ class FlextDbtLdifTypes(FlextTypes):
     # =========================================================================
 
     class DbtLdifModel:
-        """DBT LDIF model complex types.
+        """DBT LDIF model complex types using PEP 695 syntax."""
 
-        Python 3.13+ best practice: Use TypeAlias for better type checking.
-        """
-
-        ModelDefinition: type = dict[str, str | dict[str, FlextTypes.JsonValue]]
+        # Model definition
+        type ModelDefinition = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.JsonValue],
+        ]
         """DBT LDIF model definition type."""
-        LdifModelConfig: type = dict[str, object | dict[str, object]]
+
+        # LDIF model configuration
+        type LdifModelConfig = Mapping[
+            str,
+            FlextTypes.GeneralValueType | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF model configuration type."""
-        DimensionalModel: type = dict[str, str | list[dict[str, FlextTypes.JsonValue]]]
+
+        # Dimensional model
+        type DimensionalModel = Mapping[
+            str,
+            str | Sequence[Mapping[str, FlextTypes.JsonValue]],
+        ]
         """DBT dimensional model type."""
-        FactModel: type = dict[str, str | dict[str, FlextTypes.JsonValue]]
+
+        # Fact model
+        type FactModel = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.JsonValue],
+        ]
         """DBT fact model type."""
-        StagingModel: type = dict[str, str | dict[str, object]]
+
+        # Staging model
+        type StagingModel = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """DBT staging model type."""
-        ModelDocumentation: type = dict[str, str | dict[str, FlextTypes.JsonValue]]
+
+        # Model documentation
+        type ModelDocumentation = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.JsonValue],
+        ]
         """DBT model documentation type."""
 
     # =========================================================================
@@ -137,26 +250,49 @@ class FlextDbtLdifTypes(FlextTypes):
     # =========================================================================
 
     class LdifProcessing:
-        """LDIF processing complex types.
+        """LDIF processing complex types using PEP 695 syntax."""
 
-        Python 3.13+ best practice: Use TypeAlias for better type checking.
-        """
-
-        ProcessingPipeline: type = dict[
-            str, list[dict[str, FlextTypes.JsonValue]] | dict[str, object]
+        # Processing pipeline configuration
+        type ProcessingPipeline = Mapping[
+            str,
+            Sequence[Mapping[str, FlextTypes.JsonValue]]
+            | Mapping[str, FlextTypes.GeneralValueType],
         ]
         """LDIF processing pipeline type."""
-        BatchProcessing: type = dict[str, int | str | bool | dict[str, object]]
+
+        # Batch processing configuration
+        type BatchProcessing = Mapping[
+            str,
+            int | str | bool | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF batch processing type."""
-        StreamProcessing: type = dict[str, int | bool | dict[str, FlextTypes.JsonValue]]
+
+        # Stream processing configuration
+        type StreamProcessing = Mapping[
+            str,
+            int | bool | Mapping[str, FlextTypes.JsonValue],
+        ]
         """LDIF stream processing type."""
-        ErrorRecovery: type = dict[str, str | bool | list[str] | dict[str, object]]
+
+        # Error recovery configuration
+        type ErrorRecovery = Mapping[
+            str,
+            str | bool | FlextDbtLdifTypes.StringList | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF error recovery type."""
-        QualityValidation: type = dict[
-            str, bool | str | dict[str, FlextTypes.JsonValue]
+
+        # Quality validation configuration
+        type QualityValidation = Mapping[
+            str,
+            bool | str | Mapping[str, FlextTypes.JsonValue],
         ]
         """LDIF quality validation type."""
-        ProcessingMetrics: type = dict[str, int | float | dict[str, object]]
+
+        # Processing metrics
+        type ProcessingMetrics = Mapping[
+            str,
+            int | float | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF processing metrics type."""
 
     # =========================================================================
@@ -164,29 +300,55 @@ class FlextDbtLdifTypes(FlextTypes):
     # =========================================================================
 
     class LdifExport:
-        """LDIF export complex types.
+        """LDIF export complex types using PEP 695 syntax."""
 
-        Python 3.13+ best practice: Use TypeAlias for better type checking.
-        """
-
-        ExportConfiguration: type = dict[str, object | dict[str, object]]
+        # Export configuration
+        type ExportConfiguration = Mapping[
+            str,
+            FlextTypes.GeneralValueType | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF export configuration type."""
-        OutputFormat: type = dict[str, str | dict[str, FlextTypes.JsonValue]]
+
+        # Output format configuration
+        type OutputFormat = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.JsonValue],
+        ]
         """LDIF output format type."""
-        DataSerialization: type = dict[str, str | dict[str, object]]
+
+        # Data serialization configuration
+        type DataSerialization = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF data serialization type."""
-        CompressionSettings: type = dict[str, str | bool | int | dict[str, object]]
+
+        # Compression settings
+        type CompressionSettings = Mapping[
+            str,
+            str | bool | int | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF compression settings type."""
-        ExportValidation: type = dict[str, bool | str | dict[str, FlextTypes.JsonValue]]
+
+        # Export validation configuration
+        type ExportValidation = Mapping[
+            str,
+            bool | str | Mapping[str, FlextTypes.JsonValue],
+        ]
         """LDIF export validation type."""
-        DeliveryConfiguration: type = dict[str, str | dict[str, object]]
+
+        # Delivery configuration
+        type DeliveryConfiguration = Mapping[
+            str,
+            str | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF delivery configuration type."""
 
     # =========================================================================
     # DBT LDIF PROJECT TYPES - Domain-specific project types extending FlextTypes
     # =========================================================================
 
-    class Project(FlextTypes):
+    class Project:
         """DBT LDIF-specific project types extending FlextTypes.
 
         Adds DBT LDIF analytics-specific project types while inheriting
@@ -194,9 +356,8 @@ class FlextDbtLdifTypes(FlextTypes):
         DBT LDIF domain owns LDIF analytics and transformation-specific types.
         """
 
-        # DBT LDIF-specific project types extending the generic ones
-        # Python 3.13+ best practice: Use TypeAlias for better type checking
-        ProjectType: type = Literal[
+        # DBT LDIF-specific project type literal
+        type ProjectType = Literal[
             # Generic types inherited from FlextTypes
             "library",
             "application",
@@ -222,13 +383,19 @@ class FlextDbtLdifTypes(FlextTypes):
         """DBT LDIF project type literal."""
 
         # DBT LDIF-specific project configurations
-        DbtLdifProjectConfig: type = dict[str, object]
+        type DbtLdifProjectConfig = Mapping[str, FlextTypes.GeneralValueType]
         """DBT LDIF project configuration type."""
-        LdifAnalyticsConfig: type = dict[str, str | int | bool | list[str]]
+
+        type LdifAnalyticsConfig = Mapping[str, str | int | bool | FlextDbtLdifTypes.StringList]
         """LDIF analytics configuration type."""
-        LdifTransformConfig: type = dict[str, bool | str | dict[str, object]]
+
+        type LdifTransformConfig = Mapping[
+            str,
+            bool | str | Mapping[str, FlextTypes.GeneralValueType],
+        ]
         """LDIF transformation configuration type."""
-        DbtLdifPipelineConfig: type = dict[str, object]
+
+        type DbtLdifPipelineConfig = Mapping[str, FlextTypes.GeneralValueType]
         """DBT LDIF pipeline configuration type."""
 
 

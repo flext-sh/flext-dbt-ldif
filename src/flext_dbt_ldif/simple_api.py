@@ -1,9 +1,12 @@
 """FLEXT DBT LDIF API - Unified facade for DBT LDIF operations.
 
+This module provides unified facade for DBT LDIF operations.
+Uses types from typings.py and FlextTypes, no dict[str, object].
+Uses Python 3.13+ PEP 695 syntax and direct API calls.
+
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 
-Unified facade for FLEXT DBT LDIF operations with complete FLEXT integration.
 """
 
 from __future__ import annotations
@@ -16,6 +19,7 @@ from flext_core import (
     FlextLogger,
     FlextResult,
     FlextService,
+    FlextTypes,
 )
 
 from flext_dbt_ldif.config import FlextDbtLdifConfig
@@ -42,12 +46,17 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
     - FlextResult for railway-oriented error handling
 
     PYTHON 3.13+ COMPATIBILITY: Uses modern patterns and latest type features.
+    Uses types from typings.py - no dict[str, object].
     """
 
     def __init__(self, config: FlextDbtLdifConfig | None = None) -> None:
-        """Initialize the unified DBT LDIF service."""
+        """Initialize the unified DBT LDIF service.
+
+        Args:
+            config: Optional configuration instance
+        """
         super().__init__()
-        self._config = config or FlextDbtLdifConfig()
+        self._config = config or FlextDbtLdifConfig.get_instance()
         self._service: FlextDbtLdifService | None = None
 
         # Complete FLEXT ecosystem integration
@@ -57,19 +66,31 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
     @classmethod
     def create(cls) -> FlextDbtLdif:
-        """Create a new FlextDbtLdif instance (factory method)."""
+        """Create a new FlextDbtLdif instance (factory method).
+
+        Returns:
+            FlextDbtLdif: New instance
+        """
         return cls()
 
     @property
     def service(self) -> FlextDbtLdifService:
-        """Get the DBT LDIF service instance."""
+        """Get the DBT LDIF service instance.
+
+        Returns:
+            FlextDbtLdifService: Service instance
+        """
         if self._service is None:
-            self._service = FlextDbtLdifService(project_dir=self._config.project_dir)
+            self._service = FlextDbtLdifService(project_dir=self._config.dbt_project_dir)
         return self._service
 
     @property
     def config(self) -> FlextDbtLdifConfig:
-        """Get the current configuration."""
+        """Get the current configuration.
+
+        Returns:
+            FlextDbtLdifConfig: Current configuration
+        """
         return self._config
 
     # =============================================================================
@@ -83,24 +104,23 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.JsonDict]:
         """Process an LDIF file with DBT using railway pattern.
 
         Args:
-        ldif_file: Path to LDIF file
-        project_dir: DBT project directory (optional)
-        generate_models: Whether to generate DBT models
-        run_transformations: Whether to run transformations
+            ldif_file: Path to LDIF file
+            project_dir: DBT project directory (optional)
+            generate_models: Whether to generate DBT models
+            run_transformations: Whether to run transformations
 
         Returns:
-        FlextResult containing processing results
-
+            FlextResult[FlextTypes.JsonDict]: Processing results
         """
         try:
             self.logger.info("Processing LDIF file: %s", ldif_file)
 
             # Use provided project_dir or fall back to config
-            proj_path = Path(project_dir) if project_dir else self._config.project_dir
+            proj_path = Path(project_dir) if project_dir else Path(self._config.dbt_project_dir)
             if proj_path:
                 service = FlextDbtLdifService(project_dir=proj_path)
             else:
@@ -112,25 +132,25 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
                 run_transformations=run_transformations,
             )
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"LDIF processing failed: {e}")
+            return FlextResult[FlextTypes.JsonDict].fail(f"LDIF processing failed: {e}")
 
     def validate_ldif_quality(
-        self, ldif_file: Path | str
-    ) -> FlextResult[dict[str, object]]:
+        self,
+        ldif_file: Path | str,
+    ) -> FlextResult[FlextTypes.JsonDict]:
         """Validate LDIF data quality using railway pattern.
 
         Args:
-        ldif_file: Path to LDIF file
+            ldif_file: Path to LDIF file
 
         Returns:
-        FlextResult containing quality assessment
-
+            FlextResult[FlextTypes.JsonDict]: Quality assessment
         """
         try:
             self.logger.info("Validating LDIF quality: %s", ldif_file)
             return self.service.run_data_quality_assessment(ldif_file)
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(
+            return FlextResult[FlextTypes.JsonDict].fail(
                 f"LDIF quality validation failed: {e}"
             )
 
@@ -140,23 +160,22 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[FlextTypes.JsonDict]:
         """Generate DBT models from LDIF using railway pattern.
 
         Args:
-        ldif_file: Path to LDIF file
-        project_dir: DBT project directory (optional)
-        overwrite: Whether to overwrite existing models
+            ldif_file: Path to LDIF file
+            project_dir: DBT project directory (optional)
+            overwrite: Whether to overwrite existing models
 
         Returns:
-        FlextResult containing model generation results
-
+            FlextResult[FlextTypes.JsonDict]: Model generation results
         """
         try:
             self.logger.info("Generating LDIF models: %s", ldif_file)
 
             # Use provided project_dir or fall back to config
-            proj_path = Path(project_dir) if project_dir else self._config.project_dir
+            proj_path = Path(project_dir) if project_dir else Path(self._config.dbt_project_dir)
             if proj_path:
                 service = FlextDbtLdifService(project_dir=proj_path)
             else:
@@ -165,20 +184,20 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             # Parse file first
             parse_result = service.parse_and_validate_ldif(ldif_file)
             if not parse_result.success:
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.JsonDict].fail(
                     f"LDIF parsing failed: {parse_result.error}"
                 )
 
             parse_data = parse_result.value or {}
-            entries: list[object] = parse_data.get("entries", [])
+            entries = parse_data.get("entries", [])
             if not isinstance(entries, list):
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[FlextTypes.JsonDict].fail(
                     "Invalid entries data format"
                 )
 
             return service.generate_and_write_models(entries, overwrite=overwrite)
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"Model generation failed: {e}")
+            return FlextResult[FlextTypes.JsonDict].fail(f"Model generation failed: {e}")
 
 
 # Backward compatibility aliases
@@ -192,8 +211,18 @@ def process_ldif_file(
     *,
     generate_models: bool = True,
     run_transformations: bool = False,
-) -> FlextResult[dict[str, object]]:
-    """Legacy function wrapper - use FlextDbtLdif.process_ldif_file() instead."""
+) -> FlextResult[FlextTypes.JsonDict]:
+    """Legacy function wrapper - use FlextDbtLdif.process_ldif_file() instead.
+
+    Args:
+        ldif_file: Path to LDIF file
+        project_dir: DBT project directory (optional)
+        generate_models: Whether to generate DBT models
+        run_transformations: Whether to run transformations
+
+    Returns:
+        FlextResult[FlextTypes.JsonDict]: Processing results
+    """
     api = FlextDbtLdif()
     return api.process_ldif_file(
         ldif_file,
@@ -205,8 +234,15 @@ def process_ldif_file(
 
 def validate_ldif_quality(
     ldif_file: Path | str,
-) -> FlextResult[dict[str, object]]:
-    """Legacy function wrapper - use FlextDbtLdif.validate_ldif_quality() instead."""
+) -> FlextResult[FlextTypes.JsonDict]:
+    """Legacy function wrapper - use FlextDbtLdif.validate_ldif_quality() instead.
+
+    Args:
+        ldif_file: Path to LDIF file
+
+    Returns:
+        FlextResult[FlextTypes.JsonDict]: Quality assessment
+    """
     api = FlextDbtLdif()
     return api.validate_ldif_quality(ldif_file)
 
@@ -216,13 +252,22 @@ def generate_ldif_models(
     project_dir: Path | str | None = None,
     *,
     overwrite: bool = False,
-) -> FlextResult[dict[str, object]]:
-    """Legacy function wrapper - use FlextDbtLdif.generate_ldif_models() instead."""
+) -> FlextResult[FlextTypes.JsonDict]:
+    """Legacy function wrapper - use FlextDbtLdif.generate_ldif_models() instead.
+
+    Args:
+        ldif_file: Path to LDIF file
+        project_dir: DBT project directory (optional)
+        overwrite: Whether to overwrite existing models
+
+    Returns:
+        FlextResult[FlextTypes.JsonDict]: Model generation results
+    """
     api = FlextDbtLdif()
     return api.generate_ldif_models(ldif_file, project_dir, overwrite=overwrite)
 
 
-__all__ = [
+__all__: list[str] = [
     "FlextDbtLdif",
     "FlextDbtLdifAPI",
     "generate_ldif_models",  # Backward compatibility
