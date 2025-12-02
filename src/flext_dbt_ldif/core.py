@@ -11,14 +11,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
 from flext_core import FlextLogger, FlextResult, FlextTypes
 from flext_ldif import FlextLdif, FlextLdifModels
 
-from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 logger = FlextLogger(__name__)
@@ -47,6 +46,7 @@ class FlextDbtLdifCore:
 
             Args:
                 project_dir: Path to the dbt project directory (defaults to current)
+
             """
             self.project_dir = project_dir if project_dir is not None else Path.cwd()
             self.models_dir = self.project_dir / "models"
@@ -58,6 +58,7 @@ class FlextDbtLdifCore:
 
             Returns:
                 Sequence of generated model definitions
+
             """
             logger.info("Generating staging models for LDIF data")
 
@@ -114,6 +115,7 @@ class FlextDbtLdifCore:
 
             Returns:
                 Sequence of analytics model definitions
+
             """
             logger.info("Generating analytics models")
 
@@ -149,6 +151,7 @@ class FlextDbtLdifCore:
 
             Returns:
                 FlextResult[FlextTypes.JsonDict]: Analysis results or error
+
             """
             logger.info(
                 "Analyzing patterns in %d LDIF entries using flext-ldif",
@@ -230,6 +233,7 @@ class FlextDbtLdifCore:
 
             Returns:
                 FlextResult[FlextTypes.FloatDict]: Quality metrics or error
+
             """
             if not entries:
                 return FlextResult[FlextTypes.FloatDict].ok({
@@ -246,7 +250,9 @@ class FlextDbtLdifCore:
                 valid_entries = len(valid_result.value or [])
 
                 # Calculate metrics based on flext-ldif operations
-                completeness = 100.0  # All entries are complete if they're Entry objects
+                completeness = (
+                    100.0  # All entries are complete if they're Entry objects
+                )
                 validity = (
                     (valid_entries / total_entries) * 100.0
                     if total_entries > 0
@@ -287,6 +293,7 @@ class FlextDbtLdifCore:
 
             Returns:
                 FlextResult[FlextTypes.JsonDict]: DBT-compatible statistics or error
+
             """
             try:
                 # Use flext-ldif API for all statistics

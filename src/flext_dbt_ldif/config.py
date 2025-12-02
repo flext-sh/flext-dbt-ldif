@@ -189,7 +189,8 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
     """Validate LDIF distinguished names."""
 
     max_dn_depth: int = Field(
-        default=FlextDbtLdifConstants.PERFORMANCE_THRESHOLD_MODEL_COUNT_INCREMENTAL // 2,
+        default=FlextDbtLdifConstants.PERFORMANCE_THRESHOLD_MODEL_COUNT_INCREMENTAL
+        // 2,
         ge=1,
         le=50,
         description="Maximum DN depth for validation",
