@@ -50,7 +50,8 @@ class FlextDbtLdifProtocols:
             def run_dbt_models(
                 self,
                 models: Sequence[str] | None = None,
-                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig | None = None,
+                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
+                | None = None,
             ) -> FlextResult[FlextTypes.JsonDict]:
                 """Run DBT models with LDIF data sources.
 
@@ -66,7 +67,8 @@ class FlextDbtLdifProtocols:
             def test_dbt_models(
                 self,
                 models: Sequence[str] | None = None,
-                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig | None = None,
+                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
+                | None = None,
             ) -> FlextResult[FlextTypes.JsonDict]:
                 """Test DBT models with LDIF data validation.
 
@@ -82,7 +84,8 @@ class FlextDbtLdifProtocols:
             def compile_dbt_models(
                 self,
                 models: Sequence[str] | None = None,
-                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig | None = None,
+                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
+                | None = None,
             ) -> FlextResult[FlextTypes.JsonDict]:
                 """Compile DBT models for LDIF data processing.
 
@@ -452,7 +455,9 @@ class FlextDbtLdifProtocols:
 
             def generate_quality_report(
                 self,
-                quality_results: Sequence[FlextDbtLdifTypes.LdifProcessing.QualityValidation],
+                quality_results: Sequence[
+                    FlextDbtLdifTypes.LdifProcessing.QualityValidation
+                ],
                 report_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
             ) -> FlextResult[FlextTypes.JsonDict]:
                 """Generate data quality report for LDIF DBT processing.

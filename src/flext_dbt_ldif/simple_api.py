@@ -54,6 +54,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Args:
             config: Optional configuration instance
+
         """
         super().__init__()
         self._config = config or FlextDbtLdifConfig.get_instance()
@@ -70,6 +71,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Returns:
             FlextDbtLdif: New instance
+
         """
         return cls()
 
@@ -79,9 +81,12 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Returns:
             FlextDbtLdifService: Service instance
+
         """
         if self._service is None:
-            self._service = FlextDbtLdifService(project_dir=self._config.dbt_project_dir)
+            self._service = FlextDbtLdifService(
+                project_dir=self._config.dbt_project_dir
+            )
         return self._service
 
     @property
@@ -90,6 +95,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Returns:
             FlextDbtLdifConfig: Current configuration
+
         """
         return self._config
 
@@ -115,12 +121,15 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Returns:
             FlextResult[FlextTypes.JsonDict]: Processing results
+
         """
         try:
             self.logger.info("Processing LDIF file: %s", ldif_file)
 
             # Use provided project_dir or fall back to config
-            proj_path = Path(project_dir) if project_dir else Path(self._config.dbt_project_dir)
+            proj_path = (
+                Path(project_dir) if project_dir else Path(self._config.dbt_project_dir)
+            )
             if proj_path:
                 service = FlextDbtLdifService(project_dir=proj_path)
             else:
@@ -145,6 +154,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Returns:
             FlextResult[FlextTypes.JsonDict]: Quality assessment
+
         """
         try:
             self.logger.info("Validating LDIF quality: %s", ldif_file)
@@ -170,12 +180,15 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         Returns:
             FlextResult[FlextTypes.JsonDict]: Model generation results
+
         """
         try:
             self.logger.info("Generating LDIF models: %s", ldif_file)
 
             # Use provided project_dir or fall back to config
-            proj_path = Path(project_dir) if project_dir else Path(self._config.dbt_project_dir)
+            proj_path = (
+                Path(project_dir) if project_dir else Path(self._config.dbt_project_dir)
+            )
             if proj_path:
                 service = FlextDbtLdifService(project_dir=proj_path)
             else:
@@ -197,7 +210,9 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
             return service.generate_and_write_models(entries, overwrite=overwrite)
         except Exception as e:
-            return FlextResult[FlextTypes.JsonDict].fail(f"Model generation failed: {e}")
+            return FlextResult[FlextTypes.JsonDict].fail(
+                f"Model generation failed: {e}"
+            )
 
 
 # Backward compatibility aliases
@@ -222,6 +237,7 @@ def process_ldif_file(
 
     Returns:
         FlextResult[FlextTypes.JsonDict]: Processing results
+
     """
     api = FlextDbtLdif()
     return api.process_ldif_file(
@@ -242,6 +258,7 @@ def validate_ldif_quality(
 
     Returns:
         FlextResult[FlextTypes.JsonDict]: Quality assessment
+
     """
     api = FlextDbtLdif()
     return api.validate_ldif_quality(ldif_file)
@@ -262,6 +279,7 @@ def generate_ldif_models(
 
     Returns:
         FlextResult[FlextTypes.JsonDict]: Model generation results
+
     """
     api = FlextDbtLdif()
     return api.generate_ldif_models(ldif_file, project_dir, overwrite=overwrite)

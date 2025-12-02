@@ -166,9 +166,9 @@ class FlextDbtLdifUtilities(FlextUtilities):
                 if not entries:
                     validation_results["errors"].append("No LDIF entries found")
                     validation_results["is_valid"] = False
-                    return FlextResult[FlextDbtLdifTypes.LdifProcessing.QualityValidation].ok(
-                        validation_results
-                    )
+                    return FlextResult[
+                        FlextDbtLdifTypes.LdifProcessing.QualityValidation
+                    ].ok(validation_results)
 
                 # Validate entries using flext-ldif validation
                 unique_dns: set[str] = set()
@@ -191,14 +191,14 @@ class FlextDbtLdifUtilities(FlextUtilities):
                 validation_results["statistics"]["valid_entries"] = valid_count
                 validation_results["statistics"]["unique_dns"] = len(unique_dns)
 
-                return FlextResult[FlextDbtLdifTypes.LdifProcessing.QualityValidation].ok(
-                    validation_results
-                )
+                return FlextResult[
+                    FlextDbtLdifTypes.LdifProcessing.QualityValidation
+                ].ok(validation_results)
 
             except Exception as e:
-                return FlextResult[FlextDbtLdifTypes.LdifProcessing.QualityValidation].fail(
-                    f"LDIF validation failed: {e}"
-                )
+                return FlextResult[
+                    FlextDbtLdifTypes.LdifProcessing.QualityValidation
+                ].fail(f"LDIF validation failed: {e}")
 
     class DbtModelGeneration:
         """DBT model generation utilities for LDIF data.
@@ -479,8 +479,8 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
             """
             try:
                 # Analyze schema first
-                schema_result = FlextDbtLdifUtilities.LdifSchemaMapping.analyze_ldif_schema(
-                    entries
+                schema_result = (
+                    FlextDbtLdifUtilities.LdifSchemaMapping.analyze_ldif_schema(entries)
                 )
                 if not schema_result.success:
                     return FlextResult[FlextTypes.JsonDict].fail(schema_result.error)
@@ -489,7 +489,9 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
                 # Build columns from attribute analysis
                 columns: list[ColumnDefinition] = []
-                for attr_name, attr_info in schema_analysis.get("attributes", {}).items():
+                for attr_name, attr_info in schema_analysis.get(
+                    "attributes", {}
+                ).items():
                     column_def: ColumnDefinition = {
                         "name": attr_name.lower().replace("-", "_"),
                         "description": f"LDIF {attr_name} attribute",
@@ -649,7 +651,9 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
             """
             try:
                 entry_count = len(entries)
-                file_size = file_path.stat().st_size if file_path and file_path.exists() else 0
+                file_size = (
+                    file_path.stat().st_size if file_path and file_path.exists() else 0
+                )
 
                 optimizations: FlextDbtLdifTypes.LdifProcessing.BatchProcessing = {
                     "batch_size": FlextDbtLdifConstants.DEFAULT_BATCH_SIZE,
@@ -690,6 +694,6 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 )
 
             except Exception as e:
-                return FlextResult[FlextDbtLdifTypes.LdifProcessing.BatchProcessing].fail(
-                    f"LDIF performance optimization failed: {e}"
-                )
+                return FlextResult[
+                    FlextDbtLdifTypes.LdifProcessing.BatchProcessing
+                ].fail(f"LDIF performance optimization failed: {e}")

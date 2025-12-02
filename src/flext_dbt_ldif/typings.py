@@ -65,12 +65,17 @@ class FlextDbtLdifTypes(FlextTypes):
         # LDIF record - complete LDIF entry with DN and attributes
         type LdifRecord = Mapping[
             str,
-            str | FlextDbtLdifTypes.StringList | bytes | Mapping[str, FlextTypes.JsonValue],
+            str
+            | FlextDbtLdifTypes.StringList
+            | bytes
+            | Mapping[str, FlextTypes.JsonValue],
         ]
         """LDIF record type: DN and attributes mapping."""
 
         # LDIF entry - structured entry data
-        type LdifEntry = Mapping[str, FlextTypes.JsonValue | FlextDbtLdifTypes.StringList]
+        type LdifEntry = Mapping[
+            str, FlextTypes.JsonValue | FlextDbtLdifTypes.StringList
+        ]
         """LDIF entry type: structured entry data."""
 
         # LDIF change record - modification operations
@@ -122,7 +127,9 @@ class FlextDbtLdifTypes(FlextTypes):
         # Attribute mapping configuration
         type AttributeMapping = Mapping[
             str,
-            str | FlextDbtLdifTypes.StringList | Mapping[str, FlextTypes.GeneralValueType],
+            str
+            | FlextDbtLdifTypes.StringList
+            | Mapping[str, FlextTypes.GeneralValueType],
         ]
         """Attribute mapping type."""
 
@@ -277,7 +284,10 @@ class FlextDbtLdifTypes(FlextTypes):
         # Error recovery configuration
         type ErrorRecovery = Mapping[
             str,
-            str | bool | FlextDbtLdifTypes.StringList | Mapping[str, FlextTypes.GeneralValueType],
+            str
+            | bool
+            | FlextDbtLdifTypes.StringList
+            | Mapping[str, FlextTypes.GeneralValueType],
         ]
         """LDIF error recovery type."""
 
@@ -386,7 +396,9 @@ class FlextDbtLdifTypes(FlextTypes):
         type DbtLdifProjectConfig = Mapping[str, FlextTypes.GeneralValueType]
         """DBT LDIF project configuration type."""
 
-        type LdifAnalyticsConfig = Mapping[str, str | int | bool | FlextDbtLdifTypes.StringList]
+        type LdifAnalyticsConfig = Mapping[
+            str, str | int | bool | FlextDbtLdifTypes.StringList
+        ]
         """LDIF analytics configuration type."""
 
         type LdifTransformConfig = Mapping[
