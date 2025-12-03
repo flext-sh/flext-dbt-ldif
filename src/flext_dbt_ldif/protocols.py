@@ -1,7 +1,7 @@
 """DBT LDIF protocols for FLEXT ecosystem.
 
 This module provides protocol definitions for DBT operations with LDIF data.
-Protocols use types from typings.py and FlextTypes - NO imports of Models/Config.
+Protocols use types from typings.py and t - NO imports of Models/Config.
 Uses Python 3.13+ PEP 695 syntax and Mapping types instead of dict[str, object].
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -14,13 +14,13 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
-from flext_core import FlextProtocols, FlextResult, FlextTypes
+from flext_core import FlextResult, p, t
 
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 
 class FlextDbtLdifProtocols:
-    """DBT LDIF protocols with explicit re-exports from FlextProtocols foundation.
+    """DBT LDIF protocols with explicit re-exports from p foundation.
 
     This class provides protocol definitions for DBT operations with LDIF data integration,
     data transformation, modeling, and enterprise LDIF analytics patterns.
@@ -40,10 +40,10 @@ class FlextDbtLdifProtocols:
         """DBT LDIF domain protocols for LDIF data transformation and analytics."""
 
         @runtime_checkable
-        class DbtProtocol(FlextProtocols.Service, Protocol):
+        class DbtProtocol(p.Service, Protocol):
             """Protocol for DBT operations with LDIF data.
 
-            Uses types from FlextDbtLdifTypes and FlextTypes.
+            Uses types from FlextDbtLdifTypes and t.
             NO imports of Models/Config per protocol rules.
             """
 
@@ -52,7 +52,7 @@ class FlextDbtLdifProtocols:
                 models: Sequence[str] | None = None,
                 config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
                 | None = None,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Run DBT models with LDIF data sources.
 
                 Args:
@@ -60,7 +60,7 @@ class FlextDbtLdifProtocols:
                     config: DBT configuration parameters
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: DBT run results or error
+                    FlextResult[t.JsonDict]: DBT run results or error
 
                 """
 
@@ -69,7 +69,7 @@ class FlextDbtLdifProtocols:
                 models: Sequence[str] | None = None,
                 config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
                 | None = None,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Test DBT models with LDIF data validation.
 
                 Args:
@@ -77,7 +77,7 @@ class FlextDbtLdifProtocols:
                     config: DBT test configuration
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: DBT test results or error
+                    FlextResult[t.JsonDict]: DBT test results or error
 
                 """
 
@@ -86,7 +86,7 @@ class FlextDbtLdifProtocols:
                 models: Sequence[str] | None = None,
                 config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
                 | None = None,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Compile DBT models for LDIF data processing.
 
                 Args:
@@ -94,15 +94,15 @@ class FlextDbtLdifProtocols:
                     config: DBT compilation configuration
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: DBT compilation results or error
+                    FlextResult[t.JsonDict]: DBT compilation results or error
 
                 """
 
-            def get_dbt_manifest(self) -> FlextResult[FlextTypes.JsonDict]:
+            def get_dbt_manifest(self) -> FlextResult[t.JsonDict]:
                 """Get DBT manifest with LDIF model definitions.
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: DBT manifest or error
+                    FlextResult[t.JsonDict]: DBT manifest or error
 
                 """
 
@@ -118,7 +118,7 @@ class FlextDbtLdifProtocols:
                 """
 
         @runtime_checkable
-        class LdifIntegrationProtocol(FlextProtocols.Service, Protocol):
+        class LdifIntegrationProtocol(p.Service, Protocol):
             """Protocol for LDIF data integration operations.
 
             Uses types from FlextDbtLdifTypes.LdifData.
@@ -177,7 +177,7 @@ class FlextDbtLdifProtocols:
                 self,
                 ldif_data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
                 warehouse_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Export LDIF data to data warehouse for DBT processing.
 
                 Args:
@@ -185,12 +185,12 @@ class FlextDbtLdifProtocols:
                     warehouse_config: Data warehouse configuration
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: Export operation results or error
+                    FlextResult[t.JsonDict]: Export operation results or error
 
                 """
 
         @runtime_checkable
-        class ModelingProtocol(FlextProtocols.Service, Protocol):
+        class ModelingProtocol(p.Service, Protocol):
             """Protocol for LDIF data modeling operations.
 
             Uses types from FlextDbtLdifTypes.DbtLdifModel.
@@ -262,7 +262,7 @@ class FlextDbtLdifProtocols:
                 """
 
         @runtime_checkable
-        class TransformationProtocol(FlextProtocols.Service, Protocol):
+        class TransformationProtocol(p.Service, Protocol):
             """Protocol for LDIF data transformation operations.
 
             Uses types from FlextDbtLdifTypes.DbtLdifTransformation.
@@ -334,7 +334,7 @@ class FlextDbtLdifProtocols:
                 """
 
         @runtime_checkable
-        class MacroProtocol(FlextProtocols.Service, Protocol):
+        class MacroProtocol(p.Service, Protocol):
             """Protocol for DBT macro operations with LDIF data.
 
             Uses types from FlextDbtLdifTypes.
@@ -398,7 +398,7 @@ class FlextDbtLdifProtocols:
                 """
 
         @runtime_checkable
-        class QualityProtocol(FlextProtocols.Service, Protocol):
+        class QualityProtocol(p.Service, Protocol):
             """Protocol for LDIF data quality operations.
 
             Uses types from FlextDbtLdifTypes.LdifProcessing.
@@ -459,7 +459,7 @@ class FlextDbtLdifProtocols:
                     FlextDbtLdifTypes.LdifProcessing.QualityValidation
                 ],
                 report_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Generate data quality report for LDIF DBT processing.
 
                 Args:
@@ -467,12 +467,12 @@ class FlextDbtLdifProtocols:
                     report_config: Report generation configuration
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: Quality report or error
+                    FlextResult[t.JsonDict]: Quality report or error
 
                 """
 
         @runtime_checkable
-        class PerformanceProtocol(FlextProtocols.Service, Protocol):
+        class PerformanceProtocol(p.Service, Protocol):
             """Protocol for DBT LDIF performance optimization operations.
 
             Uses types from FlextDbtLdifTypes.LdifProcessing.
@@ -483,7 +483,7 @@ class FlextDbtLdifProtocols:
                 self,
                 model_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
                 performance_metrics: FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Optimize DBT models for LDIF data processing performance.
 
                 Args:
@@ -491,7 +491,7 @@ class FlextDbtLdifProtocols:
                     performance_metrics: Current performance metrics
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: Optimization recommendations or error
+                    FlextResult[t.JsonDict]: Optimization recommendations or error
 
                 """
 
@@ -513,7 +513,7 @@ class FlextDbtLdifProtocols:
 
             def monitor_dbt_performance(
                 self,
-                run_results: FlextTypes.JsonDict,
+                run_results: t.JsonDict,
             ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics]:
                 """Monitor DBT performance with LDIF data processing.
 
@@ -540,7 +540,7 @@ class FlextDbtLdifProtocols:
                 """
 
         @runtime_checkable
-        class MonitoringProtocol(FlextProtocols.Service, Protocol):
+        class MonitoringProtocol(p.Service, Protocol):
             """Protocol for DBT LDIF monitoring operations.
 
             Uses types from FlextDbtLdifTypes.LdifProcessing.
@@ -577,25 +577,25 @@ class FlextDbtLdifProtocols:
 
                 """
 
-            def get_health_status(self) -> FlextResult[FlextTypes.JsonDict]:
+            def get_health_status(self) -> FlextResult[t.JsonDict]:
                 """Get DBT LDIF integration health status.
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: Health status or error
+                    FlextResult[t.JsonDict]: Health status or error
 
                 """
 
             def create_monitoring_dashboard(
                 self,
                 dashboard_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
-            ) -> FlextResult[FlextTypes.JsonDict]:
+            ) -> FlextResult[t.JsonDict]:
                 """Create monitoring dashboard for DBT LDIF operations.
 
                 Args:
                     dashboard_config: Dashboard configuration
 
                 Returns:
-                    FlextResult[FlextTypes.JsonDict]: Dashboard creation result or error
+                    FlextResult[t.JsonDict]: Dashboard creation result or error
 
                 """
 

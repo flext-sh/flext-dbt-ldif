@@ -1,7 +1,7 @@
 """FlextDbtLdifUtilities - Unified DBT LDIF utilities service.
 
 This module provides DBT LDIF utilities using flext-ldif APIs directly.
-Uses types from typings.py and FlextTypes, no dict[str, object].
+Uses types from typings.py and t, no dict[str, object].
 Uses Python 3.13+ PEP 695 syntax and direct API calls.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -19,8 +19,8 @@ from flext_core import (
     FlextContainer,
     FlextLogger,
     FlextResult,
-    FlextTypes,
-    FlextUtilities,
+    t,
+    u,
 )
 from flext_ldif import FlextLdif, FlextLdifModels
 
@@ -31,7 +31,7 @@ from flext_dbt_ldif.typings import FlextDbtLdifTypes
 __all__: list[str] = ["FlextDbtLdifUtilities"]
 
 
-class FlextDbtLdifUtilities(FlextUtilities):
+class FlextDbtLdifUtilities(u):
     """Single unified utilities class for DBT LDIF data transformation operations.
 
     Provides complete DBT LDIF utilities for LDIF data transformation, DBT model generation,
@@ -58,14 +58,14 @@ class FlextDbtLdifUtilities(FlextUtilities):
         self._logger = FlextLogger(__name__)
         self._ldif_api = FlextLdif()
 
-    def execute(self) -> FlextResult[FlextTypes.JsonDict]:
+    def execute(self) -> FlextResult[t.JsonDict]:
         """Execute the main DBT LDIF service operation.
 
         Returns:
-            FlextResult[FlextTypes.JsonDict]: Service status and capabilities
+            FlextResult[t.JsonDict]: Service status and capabilities
 
         """
-        return FlextResult[FlextTypes.JsonDict].ok({
+        return FlextResult[t.JsonDict].ok({
             "status": "operational",
             "service": "flext-dbt-ldif-utilities",
             "capabilities": [
@@ -466,7 +466,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
         def generate_dbt_source_definition(
             entries: Sequence[FlextLdifModels.Entry],
             source_name: str = "ldif",
-        ) -> FlextResult[FlextTypes.JsonDict]:
+        ) -> FlextResult[t.JsonDict]:
             """Generate DBT source definition for LDIF data.
 
             Args:
@@ -474,7 +474,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 source_name: Name for the DBT source
 
             Returns:
-                FlextResult[FlextTypes.JsonDict]: DBT source definition or error
+                FlextResult[t.JsonDict]: DBT source definition or error
 
             """
             try:
@@ -483,7 +483,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     FlextDbtLdifUtilities.LdifSchemaMapping.analyze_ldif_schema(entries)
                 )
                 if not schema_result.success:
-                    return FlextResult[FlextTypes.JsonDict].fail(schema_result.error)
+                    return FlextResult[t.JsonDict].fail(schema_result.error)
 
                 schema_analysis = schema_result.value
 
@@ -527,7 +527,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     },
                 ]
 
-                source_definition: FlextTypes.JsonDict = {
+                source_definition: t.JsonDict = {
                     "version": 2,
                     "sources": [
                         {
@@ -551,10 +551,10 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     ],
                 }
 
-                return FlextResult[FlextTypes.JsonDict].ok(source_definition)
+                return FlextResult[t.JsonDict].ok(source_definition)
 
             except Exception as e:
-                return FlextResult[FlextTypes.JsonDict].fail(
+                return FlextResult[t.JsonDict].fail(
                     f"DBT source definition generation failed: {e}"
                 )
 
