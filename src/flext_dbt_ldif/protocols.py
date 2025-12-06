@@ -600,42 +600,81 @@ class FlextDbtLdifProtocols:
                 """
 
     # ============================================================================
-    # BACKWARD COMPATIBILITY ALIASES (100% COMPATIBILITY)
+    # BACKWARD COMPATIBILITY - Real Inheritance Protocol Classes
     # ============================================================================
 
-    # DBT operations
-    DbtProtocol = DbtLdif.DbtProtocol
+    # DBT operations - real inheritance (DbtLdif.DbtProtocol already inherits Protocol)
+    @runtime_checkable
+    class DbtProtocol(DbtLdif.DbtProtocol):
+        """DBT Protocol - real inheritance."""
 
-    # LDIF integration
-    LdifIntegrationProtocol = DbtLdif.LdifIntegrationProtocol
+    # LDIF integration - real inheritance
+    @runtime_checkable
+    class LdifIntegrationProtocol(DbtLdif.LdifIntegrationProtocol):
+        """LDIF Integration Protocol - real inheritance."""
 
-    # Data modeling
-    ModelingProtocol = DbtLdif.ModelingProtocol
+    # Data modeling - real inheritance
+    @runtime_checkable
+    class ModelingProtocol(DbtLdif.ModelingProtocol):
+        """Modeling Protocol - real inheritance."""
 
-    # Transformations
-    TransformationProtocol = DbtLdif.TransformationProtocol
+    # Transformations - real inheritance
+    @runtime_checkable
+    class TransformationProtocol(DbtLdif.TransformationProtocol):
+        """Transformation Protocol - real inheritance."""
 
-    # DBT macros
-    MacroProtocol = DbtLdif.MacroProtocol
+    # DBT macros - real inheritance
+    @runtime_checkable
+    class MacroProtocol(DbtLdif.MacroProtocol):
+        """Macro Protocol - real inheritance."""
 
-    # Data quality
-    QualityProtocol = DbtLdif.QualityProtocol
+    # Data quality - real inheritance
+    @runtime_checkable
+    class QualityProtocol(DbtLdif.QualityProtocol):
+        """Quality Protocol - real inheritance."""
 
-    # Performance optimization
-    PerformanceProtocol = DbtLdif.PerformanceProtocol
+    # Performance optimization - real inheritance
+    @runtime_checkable
+    class PerformanceProtocol(DbtLdif.PerformanceProtocol):
+        """Performance Protocol - real inheritance."""
 
-    # Monitoring
-    MonitoringProtocol = DbtLdif.MonitoringProtocol
+    # Monitoring - real inheritance
+    @runtime_checkable
+    class MonitoringProtocol(DbtLdif.MonitoringProtocol):
+        """Monitoring Protocol - real inheritance."""
 
-    # Convenience aliases for downstream usage
-    DbtLdifProtocol = DbtLdif.DbtProtocol
-    DbtLdifIntegrationProtocol = DbtLdif.LdifIntegrationProtocol
-    DbtLdifModelingProtocol = DbtLdif.ModelingProtocol
-    DbtLdifTransformationProtocol = DbtLdif.TransformationProtocol
-    DbtLdifMacroProtocol = DbtLdif.MacroProtocol
-    DbtLdifQualityProtocol = DbtLdif.QualityProtocol
-    DbtLdifPerformanceProtocol = DbtLdif.PerformanceProtocol
-    DbtLdifMonitoringProtocol = DbtLdif.MonitoringProtocol
+    # Convenience aliases for downstream usage - real inheritance
+    @runtime_checkable
+    class DbtLdifProtocol(DbtLdif.DbtProtocol):
+        """DBT LDIF Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifIntegrationProtocol(DbtLdif.LdifIntegrationProtocol):
+        """DBT LDIF Integration Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifModelingProtocol(DbtLdif.ModelingProtocol):
+        """DBT LDIF Modeling Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifTransformationProtocol(DbtLdif.TransformationProtocol):
+        """DBT LDIF Transformation Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifMacroProtocol(DbtLdif.MacroProtocol):
+        """DBT LDIF Macro Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifQualityProtocol(DbtLdif.QualityProtocol):
+        """DBT LDIF Quality Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifPerformanceProtocol(DbtLdif.PerformanceProtocol):
+        """DBT LDIF Performance Protocol - real inheritance."""
+
+    @runtime_checkable
+    class DbtLdifMonitoringProtocol(DbtLdif.MonitoringProtocol):
+        """DBT LDIF Monitoring Protocol - real inheritance."""
 
 
 __all__: list[str] = [

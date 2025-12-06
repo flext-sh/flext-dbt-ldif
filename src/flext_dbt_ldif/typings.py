@@ -389,7 +389,8 @@ class FlextDbtLdifTypes(t):
         """DBT LDIF project configuration type."""
 
         type LdifAnalyticsConfig = Mapping[
-            str, str | int | bool | FlextDbtLdifTypes.StringList
+            str,
+            str | int | bool | FlextDbtLdifTypes.StringList,
         ]
         """LDIF analytics configuration type."""
 

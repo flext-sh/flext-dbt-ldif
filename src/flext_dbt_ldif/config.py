@@ -256,7 +256,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
             valid_targets_str = ", ".join(sorted(valid_targets))
             msg = f"Invalid DBT target: {v}. Must be one of: {valid_targets_str}"
             raise ValueError(msg)
-        return v  # type: ignore[return-value]
+        return v
 
     @field_validator("ldif_encoding")
     @classmethod
@@ -331,7 +331,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         return FlextLdifConfig(
             ldif_max_entries=20000,
             ldif_strict_validation=self.ldif_validate_syntax,
-            ldif_encoding=self.ldif_encoding,  # type: ignore[arg-type]
+            ldif_encoding=self.ldif_encoding,
         )
 
     def get_meltano_config(self) -> FlextMeltanoConfig:
@@ -416,9 +416,9 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         instance = cls.get_instance()
         # Update instance with dev defaults if needed
         instance.ldif_validate_syntax = False
-        instance.dbt_target = "dev"  # type: ignore[assignment]
+        instance.dbt_target = "dev"
         instance.dbt_threads = 1
-        instance.dbt_log_level = "debug"  # type: ignore[assignment]
+        instance.dbt_log_level = "debug"
         instance.ldif_max_file_size = 10 * 1024 * 1024  # 10MB for dev
         return instance
 
@@ -429,9 +429,9 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         # Update instance with prod defaults if needed
         instance.ldif_validate_syntax = True
         instance.ldif_validate_schemas = True
-        instance.dbt_target = "production"  # type: ignore[assignment]
+        instance.dbt_target = "production"
         instance.dbt_threads = 8
-        instance.dbt_log_level = "info"  # type: ignore[assignment]
+        instance.dbt_log_level = "info"
         instance.ldif_max_file_size = 500 * 1024 * 1024  # 500MB for prod
         return instance
 
@@ -443,9 +443,9 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         instance.ldif_file_path = "./test_data/sample.ldif"
         instance.ldif_encoding = "utf-8"
         instance.ldif_validate_syntax = True
-        instance.dbt_target = "test"  # type: ignore[assignment]
+        instance.dbt_target = "test"
         instance.dbt_threads = 1
-        instance.dbt_log_level = "debug"  # type: ignore[assignment]
+        instance.dbt_log_level = "debug"
         instance.ldif_max_file_size = 1024 * 1024  # 1MB for tests
         instance.min_quality_threshold = 0.5
         return instance

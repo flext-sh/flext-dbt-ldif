@@ -85,7 +85,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         """
         if self._service is None:
             self._service = FlextDbtLdifService(
-                project_dir=self._config.dbt_project_dir
+                project_dir=self._config.dbt_project_dir,
             )
         return self._service
 
@@ -196,7 +196,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
             parse_result = service.parse_and_validate_ldif(ldif_file)
             if not parse_result.success:
                 return FlextResult[t.JsonDict].fail(
-                    f"LDIF parsing failed: {parse_result.error}"
+                    f"LDIF parsing failed: {parse_result.error}",
                 )
 
             parse_data = parse_result.value or {}

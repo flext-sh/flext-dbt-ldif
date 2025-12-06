@@ -176,7 +176,7 @@ class FlextDbtLdifService:
 
             # Validate entries
             validation_result: FlextResult[object] = self.client.validate_ldif_data(
-                entries
+                entries,
             )
             if not validation_result.is_success:
                 return validation_result
@@ -294,7 +294,7 @@ class FlextDbtLdifService:
 
             # Run validation
             validation_result: FlextResult[object] = self.client.validate_ldif_data(
-                entries
+                entries,
             )
             validation_metrics = (
                 validation_result.value if validation_result.success else {}

@@ -70,7 +70,7 @@ class FlextDbtLdifCliService:
                             service_instance,
                         )
                     else:
-                        logger.error(f"Unknown command: {command}")
+                        logger.error("Unknown command: %s", command)
                         sys.exit(1)
 
                 sys.exit(0)
