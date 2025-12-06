@@ -11,7 +11,8 @@ import sys
 from typing import NoReturn
 
 from flext_cli import FlextCliConfig, FlextCliOutput
-from flext_core import FlextLogger, FlextResult
+from flext_core import r
+from flext_core.loggings import FlextLogger
 
 logger = FlextLogger(__name__)
 
@@ -37,14 +38,14 @@ class FlextDbtLdifCliService:
         @staticmethod
         def handle_generate_command(service_instance: FlextDbtLdifCliService) -> None:
             """Handle generate command execution."""
-            result: FlextResult[str] = service_instance.display_generate_message()
+            result: r[str] = service_instance.display_generate_message()
             if result.is_failure:
                 logger.error(f"Generate command failed: {result.error}")
 
         @staticmethod
         def handle_validate_command(service_instance: FlextDbtLdifCliService) -> None:
             """Handle validate command execution."""
-            result: FlextResult[str] = service_instance.display_validate_message()
+            result: r[str] = service_instance.display_validate_message()
             if result.is_failure:
                 logger.error(f"Validate command failed: {result.error}")
 
@@ -82,7 +83,7 @@ class FlextDbtLdifCliService:
                 logger.exception("CLI error")
                 sys.exit(1)
 
-    def display_info(self) -> FlextResult[str]:
+    def display_info(self) -> r[str]:
         """Display package info using flext-cli."""
         info_data = {
             "name": "FLEXT dbt LDIF",
@@ -100,12 +101,12 @@ class FlextDbtLdifCliService:
         try:
             display_result = self._output.display_data(info_data, "json")
             if display_result.is_success:
-                return FlextResult[str].ok("Package information displayed successfully")
-            return FlextResult[str].fail("Package information display failed")
+                return r[str].ok("Package information displayed successfully")
+            return r[str].fail("Package information display failed")
         except Exception as e:
-            return FlextResult[str].fail(f"Package info display failed: {e}")
+            return r[str].fail(f"Package info display failed: {e}")
 
-    def display_generate_message(self) -> FlextResult[str]:
+    def display_generate_message(self) -> r[str]:
         """Display generate message using flext-cli."""
         try:
             display_result = self._output.display_data(
@@ -113,12 +114,12 @@ class FlextDbtLdifCliService:
                 "json",
             )
             if display_result.is_success:
-                return FlextResult[str].ok("Generate message displayed")
-            return FlextResult[str].fail("Generate message display failed")
+                return r[str].ok("Generate message displayed")
+            return r[str].fail("Generate message display failed")
         except Exception as e:
-            return FlextResult[str].fail(f"Generate message display failed: {e}")
+            return r[str].fail(f"Generate message display failed: {e}")
 
-    def display_validate_message(self) -> FlextResult[str]:
+    def display_validate_message(self) -> r[str]:
         """Display validate message using flext-cli."""
         try:
             display_result = self._output.display_data(
@@ -126,10 +127,10 @@ class FlextDbtLdifCliService:
                 "json",
             )
             if display_result.is_success:
-                return FlextResult[str].ok("Validate message displayed")
-            return FlextResult[str].fail("Validate message display failed")
+                return r[str].ok("Validate message displayed")
+            return r[str].fail("Validate message display failed")
         except Exception as e:
-            return FlextResult[str].fail(f"Validate message display failed: {e}")
+            return r[str].fail(f"Validate message display failed: {e}")
 
     def info(self) -> None:
         """Show package information."""
