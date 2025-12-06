@@ -117,7 +117,7 @@ class FlextDbtLdifClient:
                 )
             # Get statistics using flext-ldif API
             stats_result: FlextResult[object] = self._ldif_api.get_entry_statistics(
-                entries
+                entries,
             )
             if not stats_result.success:
                 return FlextResult[dict[str, object]].fail(
@@ -170,7 +170,7 @@ class FlextDbtLdifClient:
             )
             # Prepare LDIF data for DBT using flext-ldif API
             prepared_result: FlextResult[object] = self._prepare_ldif_data_for_dbt(
-                entries
+                entries,
             )
             if not prepared_result.success:
                 return FlextResult[dict[str, object]].fail(
@@ -185,7 +185,7 @@ class FlextDbtLdifClient:
                     "data": "transformed_data",
                 }
                 result: FlextResult[object] = FlextResult[dict[str, object]].ok(
-                    specific_result_data
+                    specific_result_data,
                 )
             else:
                 # Run all models - return proper Dict type
@@ -194,7 +194,7 @@ class FlextDbtLdifClient:
                     "data": "transformed_data",
                 }
                 result: FlextResult[object] = FlextResult[dict[str, object]].ok(
-                    all_result_data
+                    all_result_data,
                 )
 
             if result.success:
@@ -239,7 +239,8 @@ class FlextDbtLdifClient:
             return validate_result
         # Step 3: Transform with DBT
         transform_result: FlextResult[object] = self.transform_with_dbt(
-            entries, model_names
+            entries,
+            model_names,
         )
         if not transform_result.success:
             return transform_result
@@ -280,30 +281,7 @@ class FlextDbtLdifClient:
             #     )
             # Apply schema mapping from config - simple transformation approach
             for entry in entries:
-                # Get object classes using the entry's method
-                object_classes = entry.get_object_classes()
-                if object_classes:
-                    # Find the primary object class
-                    primary_class = object_classes[0] if object_classes else "unknown"
-                    entry_type = (
-                        self.config.get_entry_type_for_object_class(primary_class)
-                        or "unknown"
-                    )
-                    schema_name = self.config.get_schema_for_entry_type(entry_type)
-                    if schema_name:
-                        if schema_name not in prepared_data:
-                            prepared_data[schema_name] = []
-                        # Convert entry to dict[str, object] format
-                        if hasattr(entry, "dn") and hasattr(entry, "attributes"):
-                            # Convert LDIF entry to a plain dict[str, object] for DBT mapping
-                            entry_dict: dict[str, object] = {"dn": entry.dn.value}
-                            # Use the attributes data property to access the underlying dict
-                            attrs = entry.attributes.data
-                            if isinstance(attrs, dict):
-                                for k, v in attrs.items():
-                                    entry_dict[str(k)] = v  # preserve original values
-                            mapped_entry = self._map_entry_attributes(entry_dict)
-                            prepared_data[schema_name].append(mapped_entry)
+                self._process_entry_for_dbt(entry, prepared_data)
             logger.debug(
                 "Prepared LDIF data for DBT: %s",
                 {
@@ -317,6 +295,64 @@ class FlextDbtLdifClient:
             return FlextResult[dict[str, object]].fail(
                 f"Data preparation error: {e}",
             )
+
+    def _process_entry_for_dbt(
+        self,
+        entry: object,
+        prepared_data: dict[str, list[dict[str, object]]],
+    ) -> None:
+        """Process a single entry and add it to prepared_data if valid.
+
+        Args:
+            entry: LDIF entry to process
+            prepared_data: Dictionary to accumulate processed entries by schema
+
+        """
+        # Get object classes using the entry's method
+        object_classes = entry.get_object_classes()
+        if not object_classes:
+            return
+
+        # Find the primary object class
+        primary_class = object_classes[0] if object_classes else "unknown"
+        entry_type = (
+            self.config.get_entry_type_for_object_class(primary_class) or "unknown"
+        )
+        schema_name = self.config.get_schema_for_entry_type(entry_type)
+        if not schema_name:
+            return
+
+        if schema_name not in prepared_data:
+            prepared_data[schema_name] = []
+
+        # Convert entry to dict[str, object] format
+        entry_dict = self._convert_entry_to_dict(entry)
+        if entry_dict:
+            mapped_entry = self._map_entry_attributes(entry_dict)
+            prepared_data[schema_name].append(mapped_entry)
+
+    def _convert_entry_to_dict(
+        self,
+        entry: object,
+    ) -> dict[str, object] | None:
+        """Convert LDIF entry to a plain dict[str, object] for DBT mapping.
+
+        Args:
+            entry: LDIF entry to convert
+
+        Returns:
+            Dictionary representation of entry or None if invalid
+
+        """
+        if not (hasattr(entry, "dn") and hasattr(entry, "attributes")):
+            return None
+
+        entry_dict: dict[str, object] = {"dn": entry.dn.value}
+        attrs = entry.attributes.data
+        if isinstance(attrs, dict):
+            for k, v in attrs.items():
+                entry_dict[str(k)] = v  # preserve original values
+        return entry_dict
 
     def _map_entry_attributes(
         self,

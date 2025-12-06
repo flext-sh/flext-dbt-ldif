@@ -167,7 +167,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             except Exception as e:
                 logger.exception("Error analyzing LDIF schema")
                 return FlextResult[dict[str, object]].fail(
-                    f"Schema analysis error: {e}"
+                    f"Schema analysis error: {e}",
                 )
 
     class ModelGeneration:
@@ -190,10 +190,12 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """
             try:
                 logger.info(
-                    "Generating staging models for %d LDIF entries", len(entries)
+                    "Generating staging models for %d LDIF entries",
+                    len(entries),
                 )
                 schema_result = service_instance._SchemaAnalysis.analyze_ldif_schema(
-                    service_instance, entries
+                    service_instance,
+                    entries,
                 )
                 if not schema_result.is_success:
                     return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
@@ -204,7 +206,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                 models = []
                 for entry_type, type_entries in grouped_entries.items():
                     schema_name = service_instance.config.get_schema_for_entry_type(
-                        entry_type
+                        entry_type,
                     )
                     if not schema_name:
                         continue
@@ -220,7 +222,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             except Exception as e:
                 logger.exception("Error generating staging models")
                 return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
-                    f"Staging model generation error: {e}"
+                    f"Staging model generation error: {e}",
                 )
 
         @staticmethod
@@ -287,8 +289,8 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                                 "not_null",
                                 {
                                     "accepted_values": {
-                                        "values": ["low", "medium", "high"]
-                                    }
+                                        "values": ["low", "medium", "high"],
+                                    },
                                 },
                             ],
                         },
@@ -355,12 +357,12 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                 analytics_models.append(hierarchy_model)
                 logger.info("Generated %d analytics models", len(analytics_models))
                 return FlextResult[list[FlextDbtLdifUnifiedService]].ok(
-                    analytics_models
+                    analytics_models,
                 )
             except Exception as e:
                 logger.exception("Error generating analytics models")
                 return FlextResult[list[FlextDbtLdifUnifiedService]].fail(
-                    f"Analytics model generation error: {e}"
+                    f"Analytics model generation error: {e}",
                 )
 
         @staticmethod
@@ -462,7 +464,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                 written_files = []
                 for model in models:
                     sql_content = service_instance.SQLGeneration.generate_sql_for_model(
-                        model
+                        model,
                     )
                     sql_file = service_instance.models_dir / f"{model.name}.sql"
                     if not overwrite and sql_file.exists():
@@ -472,11 +474,11 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                     written_files.append(str(sql_file))
 
                     yaml_config = service_instance._ModelDefinition.to_yaml_config(
-                        model
+                        model,
                     )
                     yaml_file = service_instance.models_dir / f"{model.name}.yml"
                     yaml_content = service_instance.SQLGeneration.generate_basic_yaml(
-                        yaml_config
+                        yaml_config,
                     )
                     yaml_file.write_text(yaml_content)
                     written_files.append(str(yaml_file))
@@ -500,11 +502,11 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             """Generate SQL content for DBT model using flext-meltano patterns."""
             if model.name.startswith("stg_"):
                 return FlextDbtLdifUnifiedService.SQLGeneration.generate_staging_sql(
-                    model
+                    model,
                 )
             if model.name.startswith("analytics_"):
                 return FlextDbtLdifUnifiedService.SQLGeneration.generate_analytics_sql(
-                    model
+                    model,
                 )
             return FlextDbtLdifUnifiedService.SQLGeneration.generate_generic_sql(model)
 
@@ -650,7 +652,9 @@ select * from validated_data
     ) -> FlextResult[dict[str, object]]:
         """Write generated DBT models to disk."""
         return self._FileOperations.write_models_to_disk(
-            self, models, overwrite=overwrite
+            self,
+            models,
+            overwrite=overwrite,
         )
 
 

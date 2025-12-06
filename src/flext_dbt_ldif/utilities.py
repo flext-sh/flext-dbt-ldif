@@ -110,13 +110,13 @@ class FlextDbtLdifUtilities(u):
                 # Validate file exists
                 if not file_path.exists():
                     return FlextResult[Sequence[FlextLdifModels.Entry]].fail(
-                        f"LDIF file not found: {file_path}"
+                        f"LDIF file not found: {file_path}",
                     )
 
                 # Validate extension
                 if file_path.suffix.lower() != ".ldif":
                     return FlextResult[Sequence[FlextLdifModels.Entry]].fail(
-                        f"Invalid LDIF file extension: {file_path}"
+                        f"Invalid LDIF file extension: {file_path}",
                     )
 
                 # Use flext-ldif API directly - NO manual parsing
@@ -125,16 +125,16 @@ class FlextDbtLdifUtilities(u):
 
                 if not parse_result.success:
                     return FlextResult[Sequence[FlextLdifModels.Entry]].fail(
-                        parse_result.error or "LDIF parsing failed"
+                        parse_result.error or "LDIF parsing failed",
                     )
 
                 return FlextResult[Sequence[FlextLdifModels.Entry]].ok(
-                    parse_result.value or []
+                    parse_result.value or [],
                 )
 
             except Exception as e:
                 return FlextResult[Sequence[FlextLdifModels.Entry]].fail(
-                    f"LDIF file parsing failed: {e}"
+                    f"LDIF file parsing failed: {e}",
                 )
 
         @staticmethod
@@ -267,7 +267,7 @@ where dn is not null
 
             except Exception as e:
                 return FlextResult[str].fail(
-                    f"LDIF staging model generation failed: {e}"
+                    f"LDIF staging model generation failed: {e}",
                 )
 
         @staticmethod
@@ -376,7 +376,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
             except Exception as e:
                 return FlextResult[str].fail(
-                    f"LDIF dimension model generation failed: {e}"
+                    f"LDIF dimension model generation failed: {e}",
                 )
 
     class LdifSchemaMapping:
@@ -454,12 +454,12 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                             attr_info["multi_valued_count"] += 1
 
                 return FlextResult[FlextDbtLdifTypes.LdifParsing.ParsedData].ok(
-                    schema_analysis
+                    schema_analysis,
                 )
 
             except Exception as e:
                 return FlextResult[FlextDbtLdifTypes.LdifParsing.ParsedData].fail(
-                    f"LDIF schema analysis failed: {e}"
+                    f"LDIF schema analysis failed: {e}",
                 )
 
         @staticmethod
@@ -490,7 +490,8 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 # Build columns from attribute analysis
                 columns: list[ColumnDefinition] = []
                 for attr_name, attr_info in schema_analysis.get(
-                    "attributes", {}
+                    "attributes",
+                    {},
                 ).items():
                     column_def: ColumnDefinition = {
                         "name": attr_name.lower().replace("-", "_"),
@@ -545,9 +546,9 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                                         }
                                         for col in standard_columns + columns
                                     ],
-                                }
+                                },
                             ],
-                        }
+                        },
                     ],
                 }
 
@@ -555,7 +556,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
             except Exception as e:
                 return FlextResult[t.JsonDict].fail(
-                    f"DBT source definition generation failed: {e}"
+                    f"DBT source definition generation failed: {e}",
                 )
 
     class MacroGeneration:
@@ -628,7 +629,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
             except Exception as e:
                 return FlextResult[Mapping[str, str]].fail(
-                    f"LDIF macro generation failed: {e}"
+                    f"LDIF macro generation failed: {e}",
                 )
 
     class PerformanceOptimization:
@@ -666,31 +667,31 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 if file_size > 100 * 1024 * 1024:  # 100MB
                     optimizations["batch_size"] = 10000
                     optimizations["recommendations"].append(
-                        "Use larger batch size for large files"
+                        "Use larger batch size for large files",
                     )
 
                 if file_size > 1024 * 1024 * 1024:  # 1GB
                     optimizations["parallel_processing"] = True
                     optimizations["memory_limit"] = "4GB"
                     optimizations["recommendations"].append(
-                        "Enable parallel processing for very large files"
+                        "Enable parallel processing for very large files",
                     )
 
                 # Optimize based on entry count
                 if entry_count > FlextDbtLdifConstants.LARGE_DATASET_THRESHOLD:
                     optimizations["recommendations"].append(
-                        "Consider incremental loading for large datasets"
+                        "Consider incremental loading for large datasets",
                     )
 
                 # Memory optimization
                 avg_entry_size = file_size / entry_count if entry_count > 0 else 0
                 if avg_entry_size > FlextDbtLdifConstants.LARGE_ENTRY_SIZE_BYTES:
                     optimizations["recommendations"].append(
-                        "Large entries detected - consider streaming processing"
+                        "Large entries detected - consider streaming processing",
                     )
 
                 return FlextResult[FlextDbtLdifTypes.LdifProcessing.BatchProcessing].ok(
-                    optimizations
+                    optimizations,
                 )
 
             except Exception as e:

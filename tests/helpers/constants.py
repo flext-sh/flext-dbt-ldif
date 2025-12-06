@@ -11,8 +11,10 @@ from __future__ import annotations
 
 from typing import Final
 
+from flext_dbt_ldif.constants import FlextDbtLdifConstants
 
-class TestConstants:
+
+class TestsConstants(FlextDbtLdifConstants):
     """Centralized test constants following flext-core nested class pattern."""
 
     class Paths:
@@ -50,3 +52,8 @@ class TestConstants:
         }
         TEST_BATCH_SIZE: Final[int] = 1000
         TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
+
+
+# Standardized short name for use in tests
+c = TestsConstants
+__all__ = ["TestsConstants", "c"]

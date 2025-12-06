@@ -298,7 +298,7 @@ from {{{{ source('ldif', '{ldif_source}') }}}}
 
             except Exception as e:
                 return FlextResult[FlextDbtLdifModels].fail(
-                    f"Failed to create staging model: {e}"
+                    f"Failed to create staging model: {e}",
                 )
 
         def _create_analytics_model(
@@ -350,7 +350,7 @@ from {{{{ ref('{staging_model.name}') }}}}
 
             except Exception as e:
                 return FlextResult[FlextDbtLdifModels].fail(
-                    f"Failed to create analytics model: {e}"
+                    f"Failed to create analytics model: {e}",
                 )
 
 
