@@ -14,22 +14,24 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
-from flext_core import FlextResult, p, t
+from flext_ldif.protocols import FlextLdifProtocols as p_ldif
+from flext_meltano.protocols import FlextMeltanoProtocols as p_meltano
 
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.typings import t
 
 
-class FlextDbtLdifProtocols:
-    """DBT LDIF protocols with explicit re-exports from p foundation.
+class FlextDbtLdifProtocols(p_meltano, p_ldif):
+    """DBT LDIF protocols extending LDIF and Meltano protocols.
 
-    This class provides protocol definitions for DBT operations with LDIF data integration,
-    data transformation, modeling, and enterprise LDIF analytics patterns.
+    Extends both FlextLdifProtocols and FlextMeltanoProtocols via multiple inheritance
+    to inherit all LDIF protocols, Meltano protocols, and foundation protocols.
 
-    Domain Extension Pattern:
-    - Explicit re-export of foundation protocols (not inheritance)
-    - Domain-specific protocols organized in DbtLdif namespace
+    Architecture:
+    - EXTENDS: FlextLdifProtocols (inherits .Ldif.* protocols)
+    - EXTENDS: FlextMeltanoProtocols (inherits .Meltano.* protocols)
+    - ADDS: DBT LDIF-specific protocols in DbtLdif namespace
+    - PROVIDES: Root-level alias `p` for convenient access
     - Uses types from typings.py - NO imports of Models/Config
-    - 100% backward compatibility through aliases
     """
 
     # ============================================================================
@@ -40,19 +42,18 @@ class FlextDbtLdifProtocols:
         """DBT LDIF domain protocols for LDIF data transformation and analytics."""
 
         @runtime_checkable
-        class DbtProtocol(p.Service, Protocol):
+        class DbtProtocol(p_ldif.Service[object], Protocol):
             """Protocol for DBT operations with LDIF data.
 
-            Uses types from FlextDbtLdifTypes and t.
+            Uses types from t.
             NO imports of Models/Config per protocol rules.
             """
 
             def run_dbt_models(
                 self,
                 models: Sequence[str] | None = None,
-                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
-                | None = None,
-            ) -> FlextResult[t.JsonDict]:
+                config: t.DbtLdifTransformation.TransformationConfig | None = None,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Run DBT models with LDIF data sources.
 
                 Args:
@@ -60,16 +61,16 @@ class FlextDbtLdifProtocols:
                     config: DBT configuration parameters
 
                 Returns:
-                    FlextResult[t.JsonDict]: DBT run results or error
+                    r[t.JsonDict]: DBT run results or error
 
                 """
+                ...
 
             def test_dbt_models(
                 self,
                 models: Sequence[str] | None = None,
-                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
-                | None = None,
-            ) -> FlextResult[t.JsonDict]:
+                config: t.DbtLdifTransformation.TransformationConfig | None = None,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Test DBT models with LDIF data validation.
 
                 Args:
@@ -77,16 +78,16 @@ class FlextDbtLdifProtocols:
                     config: DBT test configuration
 
                 Returns:
-                    FlextResult[t.JsonDict]: DBT test results or error
+                    r[t.JsonDict]: DBT test results or error
 
                 """
+                ...
 
             def compile_dbt_models(
                 self,
                 models: Sequence[str] | None = None,
-                config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig
-                | None = None,
-            ) -> FlextResult[t.JsonDict]:
+                config: t.DbtLdifTransformation.TransformationConfig | None = None,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Compile DBT models for LDIF data processing.
 
                 Args:
@@ -94,42 +95,45 @@ class FlextDbtLdifProtocols:
                     config: DBT compilation configuration
 
                 Returns:
-                    FlextResult[t.JsonDict]: DBT compilation results or error
+                    r[t.JsonDict]: DBT compilation results or error
 
                 """
+                ...
 
-            def get_dbt_manifest(self) -> FlextResult[t.JsonDict]:
+            def get_dbt_manifest(self) -> p_meltano.Result[t.JsonDict]:
                 """Get DBT manifest with LDIF model definitions.
 
                 Returns:
-                    FlextResult[t.JsonDict]: DBT manifest or error
+                    r[t.JsonDict]: DBT manifest or error
 
                 """
+                ...
 
-            def validate_dbt_project(self, project_path: str) -> FlextResult[bool]:
+            def validate_dbt_project(self, project_path: str) -> p_meltano.Result[bool]:
                 """Validate DBT project configuration for LDIF integration.
 
                 Args:
                     project_path: Path to DBT project directory
 
                 Returns:
-                    FlextResult[bool]: Validation status or error
+                    r[bool]: Validation status or error
 
                 """
+                ...
 
         @runtime_checkable
-        class LdifIntegrationProtocol(p.Service, Protocol):
+        class LdifIntegrationProtocol(p_ldif.Service[object], Protocol):
             """Protocol for LDIF data integration operations.
 
-            Uses types from FlextDbtLdifTypes.LdifData.
+            Uses types from t.LdifData.
             NO imports of Models/Config per protocol rules.
             """
 
             def parse_ldif_file(
                 self,
                 ldif_file_path: str,
-                parsing_config: FlextDbtLdifTypes.LdifParsing.ParserConfiguration,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifEntry]]:
+                parsing_config: t.LdifParsing.ParserConfiguration,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifEntry]]:
                 """Parse LDIF file for DBT processing.
 
                 Args:
@@ -137,15 +141,16 @@ class FlextDbtLdifProtocols:
                     parsing_config: LDIF parsing configuration
 
                 Returns:
-                    FlextResult[Sequence[LdifEntry]]: Parsed LDIF entries or error
+                    r[Sequence[LdifEntry]]: Parsed LDIF entries or error
 
                 """
+                ...
 
             def transform_ldif_to_dbt_format(
                 self,
-                ldif_data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                transformation_config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifEntry]]:
+                ldif_data: Sequence[t.LdifData.LdifEntry],
+                transformation_config: t.DbtLdifTransformation.TransformationConfig,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifEntry]]:
                 """Transform LDIF data to DBT-compatible format.
 
                 Args:
@@ -153,15 +158,16 @@ class FlextDbtLdifProtocols:
                     transformation_config: Transformation parameters
 
                 Returns:
-                    FlextResult[Sequence[LdifEntry]]: Transformed data or error
+                    r[Sequence[LdifEntry]]: Transformed data or error
 
                 """
+                ...
 
             def validate_ldif_data_quality(
                 self,
-                data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                quality_rules: FlextDbtLdifTypes.LdifParsing.ValidationRules,
-            ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.QualityValidation]:
+                data: Sequence[t.LdifData.LdifEntry],
+                quality_rules: t.LdifParsing.ValidationRules,
+            ) -> p_meltano.Result[t.LdifProcessing.QualityValidation]:
                 """Validate LDIF data quality for DBT processing.
 
                 Args:
@@ -169,15 +175,16 @@ class FlextDbtLdifProtocols:
                     quality_rules: Data quality validation rules
 
                 Returns:
-                    FlextResult[QualityValidation]: Quality validation results or error
+                    r[QualityValidation]: Quality validation results or error
 
                 """
+                ...
 
             def export_ldif_to_warehouse(
                 self,
-                ldif_data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                warehouse_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
-            ) -> FlextResult[t.JsonDict]:
+                ldif_data: Sequence[t.LdifData.LdifEntry],
+                warehouse_config: t.LdifExport.ExportConfiguration,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Export LDIF data to data warehouse for DBT processing.
 
                 Args:
@@ -185,23 +192,24 @@ class FlextDbtLdifProtocols:
                     warehouse_config: Data warehouse configuration
 
                 Returns:
-                    FlextResult[t.JsonDict]: Export operation results or error
+                    r[t.JsonDict]: Export operation results or error
 
                 """
+                ...
 
         @runtime_checkable
-        class ModelingProtocol(p.Service, Protocol):
+        class ModelingProtocol(p_ldif.Service[object], Protocol):
             """Protocol for LDIF data modeling operations.
 
-            Uses types from FlextDbtLdifTypes.DbtLdifModel.
+            Uses types from t.DbtLdifModel.
             NO imports of Models/Config per protocol rules.
             """
 
             def create_entry_dimension(
                 self,
-                ldif_entries: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                dimension_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
-            ) -> FlextResult[FlextDbtLdifTypes.DbtLdifModel.DimensionalModel]:
+                ldif_entries: Sequence[t.LdifData.LdifEntry],
+                dimension_config: t.DbtLdifModel.LdifModelConfig,
+            ) -> p_meltano.Result[t.DbtLdifModel.DimensionalModel]:
                 """Create entry dimension model from LDIF entry data.
 
                 Args:
@@ -209,15 +217,16 @@ class FlextDbtLdifProtocols:
                     dimension_config: Dimension modeling configuration
 
                 Returns:
-                    FlextResult[DimensionalModel]: Entry dimension model or error
+                    r[DimensionalModel]: Entry dimension model or error
 
                 """
+                ...
 
             def create_attribute_dimension(
                 self,
-                ldif_attributes: Sequence[FlextDbtLdifTypes.LdifData.LdifAttributes],
-                dimension_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
-            ) -> FlextResult[FlextDbtLdifTypes.DbtLdifModel.DimensionalModel]:
+                ldif_attributes: Sequence[t.LdifData.LdifAttributes],
+                dimension_config: t.DbtLdifModel.LdifModelConfig,
+            ) -> p_meltano.Result[t.DbtLdifModel.DimensionalModel]:
                 """Create attribute dimension model from LDIF attribute data.
 
                 Args:
@@ -225,15 +234,16 @@ class FlextDbtLdifProtocols:
                     dimension_config: Dimension modeling configuration
 
                 Returns:
-                    FlextResult[DimensionalModel]: Attribute dimension model or error
+                    r[DimensionalModel]: Attribute dimension model or error
 
                 """
+                ...
 
             def create_change_tracking_model(
                 self,
-                ldif_changes: Sequence[FlextDbtLdifTypes.LdifData.LdifChangeRecord],
-                tracking_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
-            ) -> FlextResult[FlextDbtLdifTypes.DbtLdifModel.FactModel]:
+                ldif_changes: Sequence[t.LdifData.LdifChangeRecord],
+                tracking_config: t.DbtLdifModel.LdifModelConfig,
+            ) -> p_meltano.Result[t.DbtLdifModel.FactModel]:
                 """Create change tracking model from LDIF change data.
 
                 Args:
@@ -241,15 +251,16 @@ class FlextDbtLdifProtocols:
                     tracking_config: Change tracking configuration
 
                 Returns:
-                    FlextResult[FactModel]: Change tracking model or error
+                    r[FactModel]: Change tracking model or error
 
                 """
+                ...
 
             def generate_fact_tables(
                 self,
-                dimensions: Sequence[FlextDbtLdifTypes.DbtLdifModel.DimensionalModel],
-                fact_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.DbtLdifModel.FactModel]]:
+                dimensions: Sequence[t.DbtLdifModel.DimensionalModel],
+                fact_config: t.DbtLdifModel.LdifModelConfig,
+            ) -> p_meltano.Result[Sequence[t.DbtLdifModel.FactModel]]:
                 """Generate fact tables from LDIF dimensions.
 
                 Args:
@@ -257,23 +268,24 @@ class FlextDbtLdifProtocols:
                     fact_config: Fact table configuration
 
                 Returns:
-                    FlextResult[Sequence[FactModel]]: Generated fact tables or error
+                    r[Sequence[FactModel]]: Generated fact tables or error
 
                 """
+                ...
 
         @runtime_checkable
-        class TransformationProtocol(p.Service, Protocol):
+        class TransformationProtocol(p_ldif.Service[object], Protocol):
             """Protocol for LDIF data transformation operations.
 
-            Uses types from FlextDbtLdifTypes.DbtLdifTransformation.
+            Uses types from t.DbtLdifTransformation.
             NO imports of Models/Config per protocol rules.
             """
 
             def normalize_ldif_attributes(
                 self,
-                ldif_entries: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                normalization_rules: FlextDbtLdifTypes.DbtLdifTransformation.DataNormalization,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifEntry]]:
+                ldif_entries: Sequence[t.LdifData.LdifEntry],
+                normalization_rules: t.DbtLdifTransformation.DataNormalization,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifEntry]]:
                 """Normalize LDIF attributes for consistent data processing.
 
                 Args:
@@ -281,15 +293,16 @@ class FlextDbtLdifProtocols:
                     normalization_rules: Attribute normalization rules
 
                 Returns:
-                    FlextResult[Sequence[LdifEntry]]: Normalized LDIF data or error
+                    r[Sequence[LdifEntry]]: Normalized LDIF data or error
 
                 """
+                ...
 
             def process_ldif_changesets(
                 self,
-                ldif_changes: Sequence[FlextDbtLdifTypes.LdifData.LdifChangeRecord],
-                processing_config: FlextDbtLdifTypes.LdifProcessing.BatchProcessing,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifChangeRecord]]:
+                ldif_changes: Sequence[t.LdifData.LdifChangeRecord],
+                processing_config: t.LdifProcessing.BatchProcessing,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifChangeRecord]]:
                 """Process LDIF changeset data for analytics.
 
                 Args:
@@ -297,15 +310,16 @@ class FlextDbtLdifProtocols:
                     processing_config: Changeset processing configuration
 
                 Returns:
-                    FlextResult[Sequence[LdifChangeRecord]]: Processed changeset data or error
+                    r[Sequence[LdifChangeRecord]]: Processed changeset data or error
 
                 """
+                ...
 
             def apply_business_rules(
                 self,
-                data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                business_rules: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifEntry]]:
+                data: Sequence[t.LdifData.LdifEntry],
+                business_rules: t.DbtLdifTransformation.TransformationConfig,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifEntry]]:
                 """Apply business rules to LDIF data transformations.
 
                 Args:
@@ -313,15 +327,16 @@ class FlextDbtLdifProtocols:
                     business_rules: Business transformation rules
 
                 Returns:
-                    FlextResult[Sequence[LdifEntry]]: Transformed data or error
+                    r[Sequence[LdifEntry]]: Transformed data or error
 
                 """
+                ...
 
             def generate_derived_attributes(
                 self,
-                ldif_data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                derivation_config: FlextDbtLdifTypes.DbtLdifTransformation.AttributeMapping,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifEntry]]:
+                ldif_data: Sequence[t.LdifData.LdifEntry],
+                derivation_config: t.DbtLdifTransformation.AttributeMapping,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifEntry]]:
                 """Generate derived attributes from LDIF base attributes.
 
                 Args:
@@ -329,87 +344,92 @@ class FlextDbtLdifProtocols:
                     derivation_config: Attribute derivation configuration
 
                 Returns:
-                    FlextResult[Sequence[LdifEntry]]: Data with derived attributes or error
+                    r[Sequence[LdifEntry]]: Data with derived attributes or error
 
                 """
+                ...
 
         @runtime_checkable
-        class MacroProtocol(p.Service, Protocol):
+        class MacroProtocol(p_ldif.Service[object], Protocol):
             """Protocol for DBT macro operations with LDIF data.
 
-            Uses types from FlextDbtLdifTypes.
+            Uses types from t.
             NO imports of Models/Config per protocol rules.
             """
 
             def generate_ldif_source_macro(
                 self,
-                source_config: FlextDbtLdifTypes.DbtLdifModel.ModelDefinition,
-            ) -> FlextResult[str]:
+                source_config: t.DbtLdifModel.ModelDefinition,
+            ) -> p_meltano.Result[str]:
                 """Generate DBT macro for LDIF data sources.
 
                 Args:
                     source_config: LDIF source configuration
 
                 Returns:
-                    FlextResult[str]: Generated DBT macro or error
+                    r[str]: Generated DBT macro or error
 
                 """
+                ...
 
             def create_ldif_test_macro(
                 self,
-                test_config: FlextDbtLdifTypes.LdifParsing.ValidationRules,
-            ) -> FlextResult[str]:
+                test_config: t.LdifParsing.ValidationRules,
+            ) -> p_meltano.Result[str]:
                 """Create DBT test macro for LDIF data validation.
 
                 Args:
                     test_config: LDIF test configuration
 
                 Returns:
-                    FlextResult[str]: Generated test macro or error
+                    r[str]: Generated test macro or error
 
                 """
+                ...
 
             def generate_ldif_transformation_macro(
                 self,
-                transformation_config: FlextDbtLdifTypes.DbtLdifTransformation.TransformationConfig,
-            ) -> FlextResult[str]:
+                transformation_config: t.DbtLdifTransformation.TransformationConfig,
+            ) -> p_meltano.Result[str]:
                 """Generate DBT transformation macro for LDIF data.
 
                 Args:
                     transformation_config: Transformation configuration
 
                 Returns:
-                    FlextResult[str]: Generated transformation macro or error
+                    r[str]: Generated transformation macro or error
 
                 """
+                ...
 
             def create_ldif_snapshot_macro(
                 self,
-                snapshot_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
-            ) -> FlextResult[str]:
+                snapshot_config: t.DbtLdifModel.LdifModelConfig,
+            ) -> p_meltano.Result[str]:
                 """Create DBT snapshot macro for LDIF data versioning.
 
                 Args:
                     snapshot_config: Snapshot configuration
 
                 Returns:
-                    FlextResult[str]: Generated snapshot macro or error
+                    r[str]: Generated snapshot macro or error
 
                 """
+                ...
 
         @runtime_checkable
-        class QualityProtocol(p.Service, Protocol):
+        class QualityProtocol(p_ldif.Service[object], Protocol):
             """Protocol for LDIF data quality operations.
 
-            Uses types from FlextDbtLdifTypes.LdifProcessing.
+            Uses types from t.LdifProcessing.
             NO imports of Models/Config per protocol rules.
             """
 
             def validate_ldif_format_compliance(
                 self,
-                ldif_data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                format_rules: FlextDbtLdifTypes.LdifParsing.ValidationRules,
-            ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.QualityValidation]:
+                ldif_data: Sequence[t.LdifData.LdifEntry],
+                format_rules: t.LdifParsing.ValidationRules,
+            ) -> p_meltano.Result[t.LdifProcessing.QualityValidation]:
                 """Validate LDIF data against format compliance rules.
 
                 Args:
@@ -417,15 +437,16 @@ class FlextDbtLdifProtocols:
                     format_rules: Format compliance rules
 
                 Returns:
-                    FlextResult[QualityValidation]: Format validation results or error
+                    r[QualityValidation]: Format validation results or error
 
                 """
+                ...
 
             def check_data_completeness(
                 self,
-                data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                completeness_config: FlextDbtLdifTypes.LdifParsing.ValidationRules,
-            ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.QualityValidation]:
+                data: Sequence[t.LdifData.LdifEntry],
+                completeness_config: t.LdifParsing.ValidationRules,
+            ) -> p_meltano.Result[t.LdifProcessing.QualityValidation]:
                 """Check LDIF data completeness for DBT processing.
 
                 Args:
@@ -433,15 +454,16 @@ class FlextDbtLdifProtocols:
                     completeness_config: Completeness validation configuration
 
                 Returns:
-                    FlextResult[QualityValidation]: Completeness check results or error
+                    r[QualityValidation]: Completeness check results or error
 
                 """
+                ...
 
             def detect_data_anomalies(
                 self,
-                data: Sequence[FlextDbtLdifTypes.LdifData.LdifEntry],
-                anomaly_config: FlextDbtLdifTypes.LdifParsing.ValidationRules,
-            ) -> FlextResult[Sequence[FlextDbtLdifTypes.LdifData.LdifEntry]]:
+                data: Sequence[t.LdifData.LdifEntry],
+                anomaly_config: t.LdifParsing.ValidationRules,
+            ) -> p_meltano.Result[Sequence[t.LdifData.LdifEntry]]:
                 """Detect anomalies in LDIF data for quality assurance.
 
                 Args:
@@ -449,17 +471,16 @@ class FlextDbtLdifProtocols:
                     anomaly_config: Anomaly detection configuration
 
                 Returns:
-                    FlextResult[Sequence[LdifEntry]]: Detected anomalies or error
+                    r[Sequence[LdifEntry]]: Detected anomalies or error
 
                 """
+                ...
 
             def generate_quality_report(
                 self,
-                quality_results: Sequence[
-                    FlextDbtLdifTypes.LdifProcessing.QualityValidation
-                ],
-                report_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
-            ) -> FlextResult[t.JsonDict]:
+                quality_results: Sequence[t.LdifProcessing.QualityValidation],
+                report_config: t.LdifExport.ExportConfiguration,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Generate data quality report for LDIF DBT processing.
 
                 Args:
@@ -467,23 +488,24 @@ class FlextDbtLdifProtocols:
                     report_config: Report generation configuration
 
                 Returns:
-                    FlextResult[t.JsonDict]: Quality report or error
+                    r[t.JsonDict]: Quality report or error
 
                 """
+                ...
 
         @runtime_checkable
-        class PerformanceProtocol(p.Service, Protocol):
+        class PerformanceProtocol(p_ldif.Service[object], Protocol):
             """Protocol for DBT LDIF performance optimization operations.
 
-            Uses types from FlextDbtLdifTypes.LdifProcessing.
+            Uses types from t.LdifProcessing.
             NO imports of Models/Config per protocol rules.
             """
 
             def optimize_dbt_models(
                 self,
-                model_config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
-                performance_metrics: FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics,
-            ) -> FlextResult[t.JsonDict]:
+                model_config: t.DbtLdifModel.LdifModelConfig,
+                performance_metrics: t.LdifProcessing.ProcessingMetrics,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Optimize DBT models for LDIF data processing performance.
 
                 Args:
@@ -491,15 +513,16 @@ class FlextDbtLdifProtocols:
                     performance_metrics: Current performance metrics
 
                 Returns:
-                    FlextResult[t.JsonDict]: Optimization recommendations or error
+                    r[t.JsonDict]: Optimization recommendations or error
 
                 """
+                ...
 
             def cache_ldif_parsing(
                 self,
-                parsing_config: FlextDbtLdifTypes.LdifParsing.ParserConfiguration,
-                cache_config: FlextDbtLdifTypes.LdifProcessing.BatchProcessing,
-            ) -> FlextResult[bool]:
+                parsing_config: t.LdifParsing.ParserConfiguration,
+                cache_config: t.LdifProcessing.BatchProcessing,
+            ) -> p_meltano.Result[bool]:
                 """Cache LDIF parsing operations for improved performance.
 
                 Args:
@@ -507,51 +530,54 @@ class FlextDbtLdifProtocols:
                     cache_config: Caching configuration
 
                 Returns:
-                    FlextResult[bool]: Caching setup success status
+                    r[bool]: Caching setup success status
 
                 """
+                ...
 
             def monitor_dbt_performance(
                 self,
                 run_results: t.JsonDict,
-            ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics]:
+            ) -> p_meltano.Result[t.LdifProcessing.ProcessingMetrics]:
                 """Monitor DBT performance with LDIF data processing.
 
                 Args:
                     run_results: DBT run results
 
                 Returns:
-                    FlextResult[ProcessingMetrics]: Performance metrics or error
+                    r[ProcessingMetrics]: Performance metrics or error
 
                 """
+                ...
 
             def optimize_ldif_parsing(
                 self,
-                parsing_config: FlextDbtLdifTypes.LdifParsing.ParserConfiguration,
-            ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics]:
+                parsing_config: t.LdifParsing.ParserConfiguration,
+            ) -> p_meltano.Result[t.LdifProcessing.ProcessingMetrics]:
                 """Optimize LDIF parsing operations for DBT data processing.
 
                 Args:
                     parsing_config: LDIF parsing configuration
 
                 Returns:
-                    FlextResult[ProcessingMetrics]: Parsing optimization results or error
+                    r[ProcessingMetrics]: Parsing optimization results or error
 
                 """
+                ...
 
         @runtime_checkable
-        class MonitoringProtocol(p.Service, Protocol):
+        class MonitoringProtocol(p_ldif.Service[object], Protocol):
             """Protocol for DBT LDIF monitoring operations.
 
-            Uses types from FlextDbtLdifTypes.LdifProcessing.
+            Uses types from t.LdifProcessing.
             NO imports of Models/Config per protocol rules.
             """
 
             def track_dbt_run_metrics(
                 self,
                 run_id: str,
-                metrics: FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics,
-            ) -> FlextResult[bool]:
+                metrics: t.LdifProcessing.ProcessingMetrics,
+            ) -> p_meltano.Result[bool]:
                 """Track DBT run metrics for LDIF data processing.
 
                 Args:
@@ -559,124 +585,54 @@ class FlextDbtLdifProtocols:
                     metrics: Run metrics data
 
                 Returns:
-                    FlextResult[bool]: Metric tracking success status
+                    r[bool]: Metric tracking success status
 
                 """
+                ...
 
             def monitor_ldif_data_freshness(
                 self,
-                freshness_config: FlextDbtLdifTypes.LdifProcessing.BatchProcessing,
-            ) -> FlextResult[FlextDbtLdifTypes.LdifProcessing.ProcessingMetrics]:
+                freshness_config: t.LdifProcessing.BatchProcessing,
+            ) -> p_meltano.Result[t.LdifProcessing.ProcessingMetrics]:
                 """Monitor LDIF data freshness for DBT processing.
 
                 Args:
                     freshness_config: Data freshness monitoring configuration
 
                 Returns:
-                    FlextResult[ProcessingMetrics]: Data freshness status or error
+                    r[ProcessingMetrics]: Data freshness status or error
 
                 """
+                ...
 
-            def get_health_status(self) -> FlextResult[t.JsonDict]:
+            def get_health_status(self) -> p_meltano.Result[t.JsonDict]:
                 """Get DBT LDIF integration health status.
 
                 Returns:
-                    FlextResult[t.JsonDict]: Health status or error
+                    r[t.JsonDict]: Health status or error
 
                 """
+                ...
 
             def create_monitoring_dashboard(
                 self,
-                dashboard_config: FlextDbtLdifTypes.LdifExport.ExportConfiguration,
-            ) -> FlextResult[t.JsonDict]:
+                dashboard_config: t.LdifExport.ExportConfiguration,
+            ) -> p_meltano.Result[t.JsonDict]:
                 """Create monitoring dashboard for DBT LDIF operations.
 
                 Args:
                     dashboard_config: Dashboard configuration
 
                 Returns:
-                    FlextResult[t.JsonDict]: Dashboard creation result or error
+                    r[t.JsonDict]: Dashboard creation result or error
 
                 """
 
-    # ============================================================================
-    # BACKWARD COMPATIBILITY - Real Inheritance Protocol Classes
-    # ============================================================================
 
-    # DBT operations - real inheritance (DbtLdif.DbtProtocol already inherits Protocol)
-    @runtime_checkable
-    class DbtProtocol(DbtLdif.DbtProtocol):
-        """DBT Protocol - real inheritance."""
-
-    # LDIF integration - real inheritance
-    @runtime_checkable
-    class LdifIntegrationProtocol(DbtLdif.LdifIntegrationProtocol):
-        """LDIF Integration Protocol - real inheritance."""
-
-    # Data modeling - real inheritance
-    @runtime_checkable
-    class ModelingProtocol(DbtLdif.ModelingProtocol):
-        """Modeling Protocol - real inheritance."""
-
-    # Transformations - real inheritance
-    @runtime_checkable
-    class TransformationProtocol(DbtLdif.TransformationProtocol):
-        """Transformation Protocol - real inheritance."""
-
-    # DBT macros - real inheritance
-    @runtime_checkable
-    class MacroProtocol(DbtLdif.MacroProtocol):
-        """Macro Protocol - real inheritance."""
-
-    # Data quality - real inheritance
-    @runtime_checkable
-    class QualityProtocol(DbtLdif.QualityProtocol):
-        """Quality Protocol - real inheritance."""
-
-    # Performance optimization - real inheritance
-    @runtime_checkable
-    class PerformanceProtocol(DbtLdif.PerformanceProtocol):
-        """Performance Protocol - real inheritance."""
-
-    # Monitoring - real inheritance
-    @runtime_checkable
-    class MonitoringProtocol(DbtLdif.MonitoringProtocol):
-        """Monitoring Protocol - real inheritance."""
-
-    # Convenience aliases for downstream usage - real inheritance
-    @runtime_checkable
-    class DbtLdifProtocol(DbtLdif.DbtProtocol):
-        """DBT LDIF Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifIntegrationProtocol(DbtLdif.LdifIntegrationProtocol):
-        """DBT LDIF Integration Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifModelingProtocol(DbtLdif.ModelingProtocol):
-        """DBT LDIF Modeling Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifTransformationProtocol(DbtLdif.TransformationProtocol):
-        """DBT LDIF Transformation Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifMacroProtocol(DbtLdif.MacroProtocol):
-        """DBT LDIF Macro Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifQualityProtocol(DbtLdif.QualityProtocol):
-        """DBT LDIF Quality Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifPerformanceProtocol(DbtLdif.PerformanceProtocol):
-        """DBT LDIF Performance Protocol - real inheritance."""
-
-    @runtime_checkable
-    class DbtLdifMonitoringProtocol(DbtLdif.MonitoringProtocol):
-        """DBT LDIF Monitoring Protocol - real inheritance."""
-
+# Runtime alias for simplified usage
+p = FlextDbtLdifProtocols
 
 __all__: list[str] = [
     "FlextDbtLdifProtocols",
+    "p",
 ]

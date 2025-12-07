@@ -15,10 +15,10 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextLogger, FlextResult, t
+from flext_core import FlextLogger, r
 from flext_ldif import FlextLdif, FlextLdifModels
 
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.typings import t
 
 logger = FlextLogger(__name__)
 
@@ -53,7 +53,7 @@ class FlextDbtLdifCore:
 
         def generate_staging_models(
             self,
-        ) -> Sequence[FlextDbtLdifTypes.DbtLdifModel.ModelDefinition]:
+        ) -> Sequence[t.DbtLdifModel.ModelDefinition]:
             """Generate staging layer models for LDIF data.
 
             Returns:
@@ -65,7 +65,7 @@ class FlextDbtLdifCore:
             # This is where the sophisticated model generation logic would go
             # Based on the manifest.json analysis, we know these models exist:
             return [
-                FlextDbtLdifTypes.DbtLdifModel.ModelDefinition(
+                t.DbtLdifModel.ModelDefinition(
                     name="stg_ldif_entries",
                     description="Staging model for LDIF entries with data quality checks",
                     columns=[
@@ -110,7 +110,7 @@ class FlextDbtLdifCore:
 
         def generate_analytics_models(
             self,
-        ) -> Sequence[FlextDbtLdifTypes.DbtLdifModel.ModelDefinition]:
+        ) -> Sequence[t.DbtLdifModel.ModelDefinition]:
             """Generate analytics layer models.
 
             Returns:
@@ -120,7 +120,7 @@ class FlextDbtLdifCore:
             logger.info("Generating analytics models")
 
             return [
-                FlextDbtLdifTypes.DbtLdifModel.ModelDefinition(
+                t.DbtLdifModel.ModelDefinition(
                     name="analytics_ldif_insights",
                     description="Advanced analytics model with sophisticated SQL patterns",
                     columns=[],
@@ -143,14 +143,14 @@ class FlextDbtLdifCore:
         def analyze_entry_patterns(
             self,
             entries: Sequence[FlextLdifModels.Entry],
-        ) -> FlextResult[t.JsonDict]:
+        ) -> r[t.JsonDict]:
             """Analyze patterns in LDIF entries using flext-ldif infrastructure.
 
             Args:
                 entries: Sequence of FlextLdifModels.Entry objects
 
             Returns:
-                FlextResult[t.JsonDict]: Analysis results or error
+                r[t.JsonDict]: Analysis results or error
 
             """
             logger.info(
@@ -162,7 +162,7 @@ class FlextDbtLdifCore:
                 # Use flext-ldif API for statistics - NO local logic
                 stats_result = self._ldif_api.get_entry_statistics(entries)
                 if not stats_result.success:
-                    return FlextResult[t.JsonDict].fail(
+                    return r[t.JsonDict].fail(
                         f"Statistics generation failed: {stats_result.error}",
                     )
 
@@ -201,7 +201,7 @@ class FlextDbtLdifCore:
                 ):
                     pass
 
-                return FlextResult[t.JsonDict].ok(
+                return r[t.JsonDict].ok(
                     {
                         "total_entries": stats.get("total_entries", 0),
                         "persons": stats.get("person_entries", 0),
@@ -220,23 +220,23 @@ class FlextDbtLdifCore:
 
             except Exception as e:
                 logger.exception("Entry pattern analysis failed")
-                return FlextResult[t.JsonDict].fail(f"Analysis failed: {e}")
+                return r[t.JsonDict].fail(f"Analysis failed: {e}")
 
         def generate_quality_metrics(
             self,
             entries: Sequence[FlextLdifModels.Entry],
-        ) -> FlextResult[t.FloatDict]:
+        ) -> r[t.FloatDict]:
             """Generate data quality metrics using flext-ldif validation.
 
             Args:
                 entries: Sequence of FlextLdifModels.Entry objects
 
             Returns:
-                FlextResult[t.FloatDict]: Quality metrics or error
+                r[t.FloatDict]: Quality metrics or error
 
             """
             if not entries:
-                return FlextResult[t.FloatDict].ok({
+                return r[t.FloatDict].ok({
                     "completeness": 0.0,
                     "validity": 0.0,
                     "consistency": 0.0,
@@ -270,7 +270,7 @@ class FlextDbtLdifCore:
                             stats.get("valid", 0) / stats.get("total", 1)
                         ) * 100.0
 
-                return FlextResult[t.FloatDict].ok({
+                return r[t.FloatDict].ok({
                     "completeness": round(completeness, 2),
                     "validity": round(validity, 2),
                     "consistency": round(consistency, 2),
@@ -278,38 +278,38 @@ class FlextDbtLdifCore:
 
             except Exception as e:
                 logger.exception("Quality metrics generation failed")
-                return FlextResult[t.FloatDict].fail(
+                return r[t.FloatDict].fail(
                     f"Quality metrics failed: {e}",
                 )
 
         def get_statistics_for_dbt(
             self,
             entries: Sequence[FlextLdifModels.Entry],
-        ) -> FlextResult[t.JsonDict]:
+        ) -> r[t.JsonDict]:
             """Get statistics formatted for dbt model generation.
 
             Args:
                 entries: Sequence of FlextLdifModels.Entry objects
 
             Returns:
-                FlextResult[t.JsonDict]: DBT-compatible statistics or error
+                r[t.JsonDict]: DBT-compatible statistics or error
 
             """
             try:
                 # Use flext-ldif API for all statistics
                 stats_result = self._ldif_api.get_entry_statistics(entries)
                 if not stats_result.success:
-                    return FlextResult[t.JsonDict].fail(
+                    return r[t.JsonDict].fail(
                         f"dbt statistics failed: {stats_result.error}",
                     )
 
-                return FlextResult[t.JsonDict].ok(
+                return r[t.JsonDict].ok(
                     stats_result.value or {},
                 )
 
             except Exception as e:
                 logger.exception("dbt statistics generation failed")
-                return FlextResult[t.JsonDict].fail(
+                return r[t.JsonDict].fail(
                     f"dbt statistics error: {e}",
                 )
 

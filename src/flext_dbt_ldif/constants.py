@@ -33,8 +33,7 @@ class FlextDbtLdifConstants(FlextConstants):
     """Default LDIF file encoding."""
 
     # Batch processing configuration (reusing flext-core constants)
-    DEFAULT_BATCH_SIZE: int = FlextConstants.Performance.BatchProcessing.DEFAULT_SIZE
-    """Default batch size for LDIF processing."""
+    # Note: DEFAULT_BATCH_SIZE inherited from FlextConstants (Final, cannot override)
     MAX_BATCH_SIZE: int = FlextConstants.Performance.BatchProcessing.MAX_ITEMS
     """Maximum batch size for LDIF processing."""
 
@@ -47,7 +46,7 @@ class FlextDbtLdifConstants(FlextConstants):
     """Default DBT profiles directory path."""
 
     # DBT target environment (will be set after enum definition)
-    DEFAULT_DBT_TARGET: str = "dev"
+    DEFAULT_DBT_TARGET: ClassVar[str]
     """Default DBT target environment."""
 
     # =========================================================================
@@ -59,7 +58,7 @@ class FlextDbtLdifConstants(FlextConstants):
     """Default DBT schema name for LDIF analytics."""
 
     # Default output format (will be set after enum definition)
-    DEFAULT_OUTPUT_FORMAT: str = "postgresql"
+    DEFAULT_OUTPUT_FORMAT: ClassVar[str]
     """Default output format for DBT models."""
 
     # =========================================================================
@@ -109,7 +108,12 @@ class FlextDbtLdifConstants(FlextConstants):
     # =========================================================================
 
     class LdifOperations(StrEnum):
-        """LDIF operation types using StrEnum for type safety."""
+        """LDIF operation types using StrEnum for type safety.
+
+        DRY Pattern:
+            StrEnum is the single source of truth. Use LdifOperations.ADD.value
+            or LdifOperations.ADD directly - no base strings needed.
+        """
 
         ADD = "add"
         MODIFY = "modify"
@@ -117,21 +121,36 @@ class FlextDbtLdifConstants(FlextConstants):
         REPLACE = "replace"
 
     class OutputFormats(StrEnum):
-        """Supported output formats using StrEnum for type safety."""
+        """Supported output formats using StrEnum for type safety.
+
+        DRY Pattern:
+            StrEnum is the single source of truth. Use OutputFormats.POSTGRESQL.value
+            or OutputFormats.POSTGRESQL directly - no base strings needed.
+        """
 
         POSTGRESQL = "postgresql"
         DUCKDB = "duckdb"
         PARQUET = "parquet"
 
     class DbtTargets(StrEnum):
-        """DBT target environments using StrEnum for type safety."""
+        """DBT target environments using StrEnum for type safety.
+
+        DRY Pattern:
+            StrEnum is the single source of truth. Use DbtTargets.DEV.value
+            or DbtTargets.DEV directly - no base strings needed.
+        """
 
         DEV = "dev"
         STAGING = "staging"
         PROD = "prod"
 
     class DbtLogLevels(StrEnum):
-        """DBT log levels using StrEnum for type safety."""
+        """DBT log levels using StrEnum for type safety.
+
+        DRY Pattern:
+            StrEnum is the single source of truth. Use DbtLogLevels.DEBUG.value
+            or DbtLogLevels.DEBUG directly - no base strings needed.
+        """
 
         DEBUG = "debug"
         INFO = "info"
@@ -142,48 +161,39 @@ class FlextDbtLdifConstants(FlextConstants):
     # =========================================================================
     # TYPE-SAFE LITERALS - PEP 695 syntax for type checking
     # =========================================================================
+    # All Literal types reference StrEnum members - NO string duplication!
+    # Note: These are defined at FlextDbtLdifConstants level to reference StrEnum classes
 
-    class Literals:
-        """Type-safe string literals for DBT LDIF operations.
+    type DbtLogLevelLiteral = Literal[
+        DbtLogLevels.DEBUG,
+        DbtLogLevels.INFO,
+        DbtLogLevels.WARN,
+        DbtLogLevels.ERROR,
+        DbtLogLevels.NONE,
+    ]
+    """DBT log level literal - references DbtLogLevels StrEnum members."""
 
-        Uses Python 3.13+ PEP 695 type syntax for better type checking.
-        All literals match corresponding StrEnum values for consistency.
-        """
+    type DbtTargetLiteral = Literal[
+        DbtTargets.DEV,
+        DbtTargets.STAGING,
+        DbtTargets.PROD,
+    ]
+    """DBT target literal - references DbtTargets StrEnum members."""
 
-        # DBT log level literal - matches DbtLogLevels StrEnum
-        type DbtLogLevelLiteral = Literal[
-            "debug",
-            "info",
-            "warn",
-            "error",
-            "none",
-        ]
-        """DBT log level literal type."""
+    type OutputFormatLiteral = Literal[
+        OutputFormats.POSTGRESQL,
+        OutputFormats.DUCKDB,
+        OutputFormats.PARQUET,
+    ]
+    """Output format literal - references OutputFormats StrEnum members."""
 
-        # DBT target literal - matches DbtTargets StrEnum
-        type DbtTargetLiteral = Literal[
-            "dev",
-            "staging",
-            "prod",
-        ]
-        """DBT target literal type."""
-
-        # Output format literal - matches OutputFormats StrEnum
-        type OutputFormatLiteral = Literal[
-            "postgresql",
-            "duckdb",
-            "parquet",
-        ]
-        """Output format literal type."""
-
-        # LDIF operation literal - matches LdifOperations StrEnum
-        type LdifOperationLiteral = Literal[
-            "add",
-            "modify",
-            "delete",
-            "replace",
-        ]
-        """LDIF operation literal type."""
+    type LdifOperationLiteral = Literal[
+        LdifOperations.ADD,
+        LdifOperations.MODIFY,
+        LdifOperations.DELETE,
+        LdifOperations.REPLACE,
+    ]
+    """LDIF operation literal - references LdifOperations StrEnum members."""
 
     # =========================================================================
     # MAPPING CONSTANTS - Type-safe mappings for configuration
@@ -193,48 +203,64 @@ class FlextDbtLdifConstants(FlextConstants):
         """Type-safe mapping constants for DBT LDIF operations.
 
         Uses Mapping type for read-only configuration mappings.
+        Generated from StrEnum members (DRY principle) - will be set after enum definitions.
         """
 
-        # DBT allowed targets mapping - using string values for compatibility
-        DBT_ALLOWED_TARGETS: ClassVar[list[str]] = [
-            "dev",
-            "staging",
-            "prod",
-        ]
-        """List of allowed DBT target environment names."""
+        # DBT allowed targets mapping - generated from DbtTargets StrEnum
+        DBT_ALLOWED_TARGETS: ClassVar[list[str]]
+        """List of allowed DBT target environment names - generated from DbtTargets StrEnum."""
 
-        # Supported output formats mapping - using string values for compatibility
-        SUPPORTED_OUTPUT_FORMATS: ClassVar[list[str]] = [
-            "postgresql",
-            "duckdb",
-            "parquet",
-        ]
-        """List of supported output format names."""
+        # Supported output formats mapping - generated from OutputFormats StrEnum
+        SUPPORTED_OUTPUT_FORMATS: ClassVar[list[str]]
+        """List of supported output format names - generated from OutputFormats StrEnum."""
 
-        # LDIF operations mapping - using string values for compatibility
-        LDIF_OPERATIONS: ClassVar[list[str]] = [
-            "add",
-            "modify",
-            "delete",
-            "replace",
-        ]
-        """List of LDIF operation names."""
+        # LDIF operations mapping - generated from LdifOperations StrEnum
+        LDIF_OPERATIONS: ClassVar[list[str]]
+        """List of LDIF operation names - generated from LdifOperations StrEnum."""
 
-        # DBT log levels mapping - using string values for compatibility
-        DBT_LOG_LEVELS: ClassVar[list[str]] = [
-            "debug",
-            "info",
-            "warn",
-            "error",
-            "none",
-        ]
-        """List of DBT log level names."""
+        # DBT log levels mapping - generated from DbtLogLevels StrEnum
+        DBT_LOG_LEVELS: ClassVar[list[str]]
+        """List of DBT log level names - generated from DbtLogLevels StrEnum."""
+
+
+# Set DEFAULT_DBT_TARGET and DEFAULT_OUTPUT_FORMAT after enum definitions
+FlextDbtLdifConstants.DEFAULT_DBT_TARGET = FlextDbtLdifConstants.DbtTargets.DEV
+"""Default DBT target environment - references DbtTargets.DEV."""
+
+FlextDbtLdifConstants.DEFAULT_OUTPUT_FORMAT = (
+    FlextDbtLdifConstants.OutputFormats.POSTGRESQL
+)
+"""Default output format - references OutputFormats.POSTGRESQL."""
+
+# Generate Mappings from StrEnum members (DRY principle)
+FlextDbtLdifConstants.Mappings.DBT_ALLOWED_TARGETS = [
+    member.value for member in FlextDbtLdifConstants.DbtTargets.__members__.values()
+]
+"""List of allowed DBT target environment names - generated from DbtTargets StrEnum."""
+
+FlextDbtLdifConstants.Mappings.SUPPORTED_OUTPUT_FORMATS = [
+    member.value for member in FlextDbtLdifConstants.OutputFormats.__members__.values()
+]
+"""List of supported output format names - generated from OutputFormats StrEnum."""
+
+FlextDbtLdifConstants.Mappings.LDIF_OPERATIONS = [
+    member.value for member in FlextDbtLdifConstants.LdifOperations.__members__.values()
+]
+"""List of LDIF operation names - generated from LdifOperations StrEnum."""
+
+FlextDbtLdifConstants.Mappings.DBT_LOG_LEVELS = [
+    member.value for member in FlextDbtLdifConstants.DbtLogLevels.__members__.values()
+]
+"""List of DBT log level names - generated from DbtLogLevels StrEnum."""
 
 
 # =============================================================================
 # PUBLIC API EXPORTS
 # =============================================================================
 
+c = FlextDbtLdifConstants
+
 __all__: list[str] = [
     "FlextDbtLdifConstants",
+    "c",
 ]

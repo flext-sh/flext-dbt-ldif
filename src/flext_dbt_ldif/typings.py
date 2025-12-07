@@ -19,7 +19,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Literal
 
-from flext_core import FlextTypes, t
+from flext_core import FlextTypes
 
 # =============================================================================
 # DBT LDIF-SPECIFIC TYPE VARIABLES - Domain-specific TypeVars for DBT LDIF operations
@@ -27,7 +27,7 @@ from flext_core import FlextTypes, t
 
 
 # DBT LDIF domain TypeVars
-class FlextDbtLdifTypes(t):
+class FlextDbtLdifTypes(FlextTypes):
     """DBT LDIF-specific type definitions extending t.
 
     Domain-specific type system for DBT LDIF data transformation operations.

@@ -16,7 +16,7 @@ from flext_ldif import FlextLdifModels
 from flext_dbt_ldif.config import FlextDbtLdifConfig
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.typings import t
 
 logger = FlextLogger(__name__)
 # Quality assessment thresholds
@@ -67,7 +67,7 @@ class FlextDbtLdifService:
         *,
         generate_models: bool = True,
         run_transformations: bool = True,
-        model_names: FlextDbtLdifTypes.Core.StringList | None = None,
+        model_names: t.Core.StringList | None = None,
     ) -> FlextResult[dict[str, object]]:
         """Run complete LDIF-to-DBT workflow.
 
@@ -430,7 +430,7 @@ class FlextDbtLdifService:
         self,
         validation_metrics: dict[str, object],
         schema_info: dict[str, object],
-    ) -> FlextDbtLdifTypes.Core.StringList:
+    ) -> t.Core.StringList:
         """Generate quality improvement recommendations."""
         recommendations: list[str] = []
 
@@ -584,6 +584,6 @@ class FlextDbtLdifService:
         return self._WorkflowManager(self)
 
 
-__all__: FlextDbtLdifTypes.Core.StringList = [
+__all__: list[str] = [
     "FlextDbtLdifService",
 ]
