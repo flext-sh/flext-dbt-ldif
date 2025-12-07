@@ -21,7 +21,7 @@ from flext_meltano import FlextMeltanoConfig
 from pydantic import ConfigDict, Field, field_validator, model_validator
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.typings import t
 
 logger = FlextLogger(__name__)
 
@@ -121,7 +121,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
     )
     """DBT profiles directory path."""
 
-    dbt_target: FlextDbtLdifConstants.Literals.DbtTargetLiteral = Field(
+    dbt_target: FlextDbtLdifConstants.DbtTargetLiteral = Field(
         default=FlextDbtLdifConstants.DEFAULT_DBT_TARGET,
         description="DBT target environment",
     )
@@ -135,7 +135,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
     )
     """Number of DBT threads."""
 
-    dbt_log_level: FlextDbtLdifConstants.Literals.DbtLogLevelLiteral = Field(
+    dbt_log_level: FlextDbtLdifConstants.DbtLogLevelLiteral = Field(
         default=FlextDbtLdifConstants.DbtLogLevels.INFO,
         description="DBT log level",
     )
@@ -241,7 +241,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
     def validate_dbt_target(
         cls,
         v: str,
-    ) -> FlextDbtLdifConstants.Literals.DbtTargetLiteral:
+    ) -> FlextDbtLdifConstants.DbtTargetLiteral:
         """Validate DBT target environment."""
         valid_targets = {
             "dev",
@@ -359,7 +359,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
 
     def get_ldif_quality_config(
         self,
-    ) -> FlextDbtLdifTypes.LdifParsing.ValidationRules:
+    ) -> t.LdifParsing.ValidationRules:
         """Get data quality configuration for LDIF validation.
 
         Returns:

@@ -17,7 +17,6 @@ from flext_core import FlextLogger, FlextResult, FlextService
 from flext_ldif import FlextLdif, FlextLdifModels
 
 from flext_dbt_ldif.config import FlextDbtLdifConfig
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
 
 # Use the real typed class for precise type checking
 logger = FlextLogger(__name__)
@@ -658,6 +657,6 @@ select * from validated_data
         )
 
 
-__all__: FlextDbtLdifTypes.Core.StringList = [
+__all__: list[str] = [
     "FlextDbtLdifUnifiedService",
 ]

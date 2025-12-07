@@ -17,7 +17,7 @@ from typing import Literal, TypedDict, override
 from flext_core import FlextModels, FlextResult, t
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.typings import t
 
 # =============================================================================
 # TYPEDDICT DEFINITIONS - Type-safe column and model definitions
@@ -89,7 +89,7 @@ class FlextDbtLdifModels(FlextModels):
     ldif_source: str
     """LDIF source identifier."""
 
-    change_types: Sequence[FlextDbtLdifConstants.Literals.LdifOperationLiteral]
+    change_types: Sequence[FlextDbtLdifConstants.LdifOperationLiteral]
     """LDIF change types supported by this model."""
 
     columns: Sequence[ColumnDefinition]
@@ -177,7 +177,7 @@ class FlextDbtLdifModels(FlextModels):
     @classmethod
     def create_generator(
         cls,
-        config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
+        config: t.DbtLdifModel.LdifModelConfig,
     ) -> FlextDbtLdifModels.ModelGenerator:
         """Create a model generator instance.
 
@@ -199,7 +199,7 @@ class FlextDbtLdifModels(FlextModels):
         @override
         def __init__(
             self,
-            config: FlextDbtLdifTypes.DbtLdifModel.LdifModelConfig,
+            config: t.DbtLdifModel.LdifModelConfig,
         ) -> None:
             """Initialize the LDIF model generator.
 
