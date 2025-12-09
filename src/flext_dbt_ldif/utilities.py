@@ -64,20 +64,18 @@ class FlextDbtLdifUtilities(u):
             r[t.JsonDict]: Service status and capabilities
 
         """
-        return r[t.JsonDict].ok(
-            {
-                "status": "operational",
-                "service": "flext-dbt-ldif-utilities",
-                "capabilities": [
-                    "ldif_file_processing",
-                    "dbt_model_generation",
-                    "ldif_schema_mapping",
-                    "data_transformation",
-                    "macro_generation",
-                    "performance_optimization",
-                ],
-            }
-        )
+        return r[t.JsonDict].ok({
+            "status": "operational",
+            "service": "flext-dbt-ldif-utilities",
+            "capabilities": [
+                "ldif_file_processing",
+                "dbt_model_generation",
+                "ldif_schema_mapping",
+                "data_transformation",
+                "macro_generation",
+                "performance_optimization",
+            ],
+        })
 
     @property
     def logger(self) -> FlextLogger:
@@ -238,12 +236,10 @@ class FlextDbtLdifUtilities(u):
 
                     # Check if multi-valued (using flext-ldif Entry methods)
                     # For now, assume all can be multi-valued
-                    select_clauses.extend(
-                        (
-                            f"    {attr_name} as {attr_name}_array",
-                            f"    array_to_string({attr_name}, ',') as {attr_name}_text",
-                        )
-                    )
+                    select_clauses.extend((
+                        f"    {attr_name} as {attr_name}_array",
+                        f"    array_to_string({attr_name}, ',') as {attr_name}_text",
+                    ))
 
                 # Use model_name in description (DBT template - safe SQL generation)
                 # Note: This is a template string for DBT, not executable SQL
