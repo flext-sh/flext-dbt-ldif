@@ -236,13 +236,11 @@ class FlextDbtLdifCore:
 
             """
             if not entries:
-                return r[t.FloatDict].ok(
-                    {
-                        "completeness": 0.0,
-                        "validity": 0.0,
-                        "consistency": 0.0,
-                    }
-                )
+                return r[t.FloatDict].ok({
+                    "completeness": 0.0,
+                    "validity": 0.0,
+                    "consistency": 0.0,
+                })
 
             try:
                 total_entries = len(entries)
@@ -272,13 +270,11 @@ class FlextDbtLdifCore:
                             stats.get("valid", 0) / stats.get("total", 1)
                         ) * 100.0
 
-                return r[t.FloatDict].ok(
-                    {
-                        "completeness": round(completeness, 2),
-                        "validity": round(validity, 2),
-                        "consistency": round(consistency, 2),
-                    }
-                )
+                return r[t.FloatDict].ok({
+                    "completeness": round(completeness, 2),
+                    "validity": round(validity, 2),
+                    "consistency": round(consistency, 2),
+                })
 
             except Exception as e:
                 logger.exception("Quality metrics generation failed")
