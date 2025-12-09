@@ -41,13 +41,13 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
     service: p.Service[str]
 
     # LDIF protocols (inherited)
-    entry: p.Ldif.Models.EntryProtocol
+    entry: p.Models.EntryProtocol
 
     # Meltano protocols (inherited)
     dbt: p.Meltano.DbtProtocol
 
     # DBT LDIF-specific protocols
-    dbt_protocol: p.Dbt.Ldif.DbtProtocol
+    dbt_protocol: p.Dbt.DbtProtocol
     """
 
     # ============================================================================
