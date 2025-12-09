@@ -14,7 +14,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Literal, TypedDict, override
 
-from flext_core import FlextModels, FlextResult, t
+from flext_core import FlextModels, FlextResult
+from flext_core.utilities import u
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import t
@@ -77,8 +78,17 @@ class FlextDbtLdifModels(FlextModels):
 
     Immutable representation of a generated DBT model with LDIF-specific metadata
     and integrated analytics functionality following FLEXT unified class pattern.
+
     Uses types from typings.py and constants.py - no dict[str, object].
     """
+
+    def __init_subclass__(cls, **kwargs: object) -> None:
+        """Warn when FlextDbtLdifModels is subclassed directly."""
+        super().__init_subclass__(**kwargs)
+        u.Deprecation.warn_once(
+            f"subclass:{cls.__name__}",
+            "Subclassing FlextDbtLdifModels is deprecated. Use FlextModels.DbtLdif instead.",
+        )
 
     name: str
     """DBT model name."""
@@ -354,10 +364,16 @@ from {{{{ ref('{staging_model.name}') }}}}
                 )
 
 
+# Short aliases
+m = FlextDbtLdifModels
+m_dbt_ldif = FlextDbtLdifModels
+
 __all__: list[str] = [
     "ColumnDefinition",
     "DbtModelType",
     "FlextDbtLdifModels",
     "MaterializationType",
     "ModelDefinition",
+    "m",
+    "m_dbt_ldif",
 ]
