@@ -86,7 +86,7 @@ class FlextDbtLdifTypes(FlextTypes):
         """LDIF change record type: modification operations."""
 
         # LDIF attributes - attribute name to value mapping
-        type LdifAttributes = Mapping[str, str | FlextDbtLdifTypes.StringList | bytes]
+        type Attributes = Mapping[str, str | FlextDbtLdifTypes.StringList | bytes]
         """LDIF attributes type: attribute name to value mapping."""
 
         # LDIF modification - single modification operation
