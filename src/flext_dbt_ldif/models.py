@@ -239,7 +239,7 @@ class FlextDbtLdifModels(FlextModels):
                 if model_result.is_failure:
                     continue
 
-                staging_models.append(model_result.unwrap())
+                staging_models.append(model_result.value)
 
             return FlextResult[Sequence[FlextDbtLdifModels]].ok(staging_models)
 
@@ -263,7 +263,7 @@ class FlextDbtLdifModels(FlextModels):
                 if model_result.is_failure:
                     continue
 
-                analytics_models.append(model_result.unwrap())
+                analytics_models.append(model_result.value)
 
             return FlextResult[Sequence[FlextDbtLdifModels]].ok(analytics_models)
 
