@@ -245,7 +245,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
 
                 def create_attribute_dimension(
                     self,
-                    ldif_attributes: Sequence[t.LdifData.LdifAttributes],
+                    ldif_attributes: Sequence[t.LdifData.Attributes],
                     dimension_config: t.DbtLdifModel.LdifModelConfig,
                 ) -> p_meltano.Result[t.DbtLdifModel.DimensionalModel]:
                     """Create attribute dimension model from LDIF attribute data.
