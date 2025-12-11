@@ -10,7 +10,7 @@ from __future__ import annotations
 import sys
 from typing import NoReturn
 
-from flext_cli import FlextCliConfig, FlextCliOutput
+from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import r
 from flext_core.loggings import FlextLogger
 
@@ -23,7 +23,7 @@ class FlextDbtLdifCliService:
     def __init__(self) -> None:
         """Initialize CLI service with flext-cli patterns."""
         self._output = FlextCliOutput()
-        self._config = FlextCliConfig.get_global_instance()
+        self._config = FlextCliSettings.get_global_instance()
 
     class _CommandHandlers:
         """Nested helper class for command handling operations."""

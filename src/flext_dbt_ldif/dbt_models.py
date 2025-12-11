@@ -16,7 +16,7 @@ import yaml
 from flext_core import FlextLogger, FlextResult, FlextService
 from flext_ldif import FlextLdif, FlextLdifModels
 
-from flext_dbt_ldif.config import FlextDbtLdifConfig
+from flext_dbt_ldif.config import FlextDbtLdifSettings
 
 # Use the real typed class for precise type checking
 logger = FlextLogger(__name__)
@@ -39,7 +39,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         materialization: str = "view",
         columns: list[dict[str, object]] | None = None,
         meta: dict[str, object] | None = None,
-        config: FlextDbtLdifConfig | None = None,
+        config: FlextDbtLdifSettings | None = None,
         project_dir: Path | None = None,
     ) -> None:
         """Initialize unified LDIF DBT service with model configuration.
@@ -62,8 +62,8 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         self.meta = meta or {}
 
         # Generation service properties
-        self.config: FlextDbtLdifConfig = (
-            config or FlextDbtLdifConfig.get_global_instance()
+        self.config: FlextDbtLdifSettings = (
+            config or FlextDbtLdifSettings.get_global_instance()
         )
         self.project_dir = project_dir if project_dir is not None else Path.cwd()
         self.models_dir = self.project_dir / "models"
@@ -407,14 +407,14 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                 },
             ]
 
-            for ldif_attr in FlextDbtLdifConfig.ldif_attribute_mapping:
+            for ldif_attr in FlextDbtLdifSettings.ldif_attribute_mapping:
                 if ldif_attr != "dn":
                     column_def: dict[str, object] = {
                         "name": "mapped_attr",
                         "type": "varchar",
                         "description": f"LDIF {ldif_attr} attribute",
                     }
-                    if ldif_attr in FlextDbtLdifConfig.required_attributes:
+                    if ldif_attr in FlextDbtLdifSettings.required_attributes:
                         column_def["tests"] = ["not_null"]
                     common_attrs.append(column_def)
 

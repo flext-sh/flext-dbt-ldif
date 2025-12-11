@@ -22,11 +22,11 @@ from flext_core import (
     t,
 )
 
-from flext_dbt_ldif.config import FlextDbtLdifConfig
+from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 
 
-class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
+class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
     """Unified DBT LDIF facade with complete FLEXT ecosystem integration.
 
     This is the single unified class for the flext-dbt-ldif domain providing
@@ -49,7 +49,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
     Uses types from typings.py - no dict[str, object].
     """
 
-    def __init__(self, config: FlextDbtLdifConfig | None = None) -> None:
+    def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
         """Initialize the unified DBT LDIF service.
 
         Args:
@@ -57,7 +57,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
 
         """
         super().__init__()
-        self._config = config or FlextDbtLdifConfig.get_instance()
+        self._config = config or FlextDbtLdifSettings.get_instance()
         self._service: FlextDbtLdifService | None = None
 
         # Complete FLEXT ecosystem integration
@@ -90,11 +90,11 @@ class FlextDbtLdif(FlextService[FlextDbtLdifConfig]):
         return self._service
 
     @property
-    def config(self) -> FlextDbtLdifConfig:
+    def config(self) -> FlextDbtLdifSettings:
         """Get the current configuration.
 
         Returns:
-            FlextDbtLdifConfig: Current configuration
+            FlextDbtLdifSettings: Current configuration
 
         """
         return self._config

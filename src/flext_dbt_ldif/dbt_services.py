@@ -13,7 +13,7 @@ from typing import override
 from flext_core import FlextLogger, FlextResult
 from flext_ldif import FlextLdifModels
 
-from flext_dbt_ldif.config import FlextDbtLdifConfig
+from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.typings import t
@@ -36,7 +36,7 @@ class FlextDbtLdifService:
     @override
     def __init__(
         self,
-        config: FlextDbtLdifConfig | None = None,
+        config: FlextDbtLdifSettings | None = None,
         project_dir: Path | None = None,
     ) -> None:
         """Initialize DBT LDIF service.
@@ -47,7 +47,7 @@ class FlextDbtLdifService:
 
         """
         self.config: dict[str, object] = (
-            config or FlextDbtLdifConfig.get_global_instance()
+            config or FlextDbtLdifSettings.get_global_instance()
         )
         self.project_dir = project_dir or Path.cwd()
 

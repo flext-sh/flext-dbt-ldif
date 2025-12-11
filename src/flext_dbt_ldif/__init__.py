@@ -14,7 +14,7 @@ from flext_ldif import FlextLdif
 
 from flext_dbt_ldif.__version__ import __version__, __version_info__
 from flext_dbt_ldif.cli import main
-from flext_dbt_ldif.config import FlextDbtLdifConfig
+from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
@@ -45,13 +45,13 @@ __all__: list[str] = [
     "FlextDbtLdif",
     "FlextDbtLdifAPI",
     "FlextDbtLdifClient",
-    "FlextDbtLdifConfig",
     "FlextDbtLdifCore",
     "FlextDbtLdifError",
     "FlextDbtLdifModelGenerator",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifService",
+    "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
