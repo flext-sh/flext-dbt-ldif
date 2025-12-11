@@ -13,13 +13,13 @@ from typing import cast
 import pytest
 from flext_core import FlextResult
 
-from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifConfig
+from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
 
 
 @pytest.fixture
 def client() -> FlextDbtLdifClient:
     """Create a test client."""
-    return FlextDbtLdifClient(FlextDbtLdifConfig())
+    return FlextDbtLdifClient(FlextDbtLdifSettings())
 
 
 def test_parse_ldif_file_ok(

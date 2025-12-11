@@ -15,9 +15,9 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_core import FlextConfig, FlextLogger, FlextResult
-from flext_ldif import FlextLdifConfig
-from flext_meltano import FlextMeltanoConfig
+from flext_core import FlextLogger, FlextResult, FlextSettings
+from flext_ldif import FlextLdifSettings
+from flext_meltano import FlextMeltanoSettings
 from pydantic import ConfigDict, Field, field_validator, model_validator
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
@@ -26,19 +26,19 @@ from flext_dbt_ldif.typings import t
 logger = FlextLogger(__name__)
 
 
-@FlextConfig.auto_register("dbt_ldif")
-class FlextDbtLdifConfig(FlextConfig.AutoConfig):
+@FlextSettings.auto_register("dbt_ldif")
+class FlextDbtLdifSettings(FlextSettings.AutoConfig):
     """Single Pydantic 2 BaseModel class for flext-dbt-ldif using AutoConfig pattern.
 
     **ARCHITECTURAL PATTERN**: Zero-Boilerplate Auto-Registration
 
-    This class uses FlextConfig.AutoConfig for automatic:
+    This class uses FlextSettings.AutoConfig for automatic:
     - Singleton pattern (thread-safe)
     - Namespace registration (accessible via config.dbt_ldif)
     - Test reset capability (_reset_instance)
 
     Follows standardized pattern:
-    - Extends FlextConfig.AutoConfig (BaseModel) for nested config pattern
+    - Extends FlextSettings.AutoConfig (BaseModel) for nested config pattern
     - No nested classes within Config
     - All defaults from FlextDbtLdifConstants
     - Uses Pydantic 2.11+ features (field_validator, model_validator)
@@ -47,11 +47,11 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
 
     **Usage**:
         # Get singleton instance
-        config = FlextDbtLdifConfig.get_instance()
+        config = FlextDbtLdifSettings.get_instance()
 
-        # Or via FlextConfig namespace
-        from flext_core import FlextConfig
-        config = FlextConfig.get_global_instance()
+        # Or via FlextSettings namespace
+        from flext_core import FlextSettings
+        config = FlextSettings.get_global_instance()
         dbt_ldif_config = config.dbt_ldif
     """
 
@@ -326,15 +326,15 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
     # INTEGRATION METHODS - Return typed configurations
     # =========================================================================
 
-    def get_ldif_config(self) -> FlextLdifConfig:
+    def get_ldif_config(self) -> FlextLdifSettings:
         """Get LDIF configuration for flext-ldif integration."""
-        return FlextLdifConfig(
+        return FlextLdifSettings(
             ldif_max_entries=20000,
             ldif_strict_validation=self.ldif_validate_syntax,
             ldif_encoding=self.ldif_encoding,
         )
 
-    def get_meltano_config(self) -> FlextMeltanoConfig:
+    def get_meltano_config(self) -> FlextMeltanoSettings:
         """Get Meltano configuration for flext-meltano integration."""
         # Convert string to proper Environment string value
         environment_mapping: Mapping[str, str] = {
@@ -352,7 +352,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
             "development",
         )
 
-        return FlextMeltanoConfig(
+        return FlextMeltanoSettings(
             project_root=Path(self.dbt_project_dir),
             environment=environment_value,
         )
@@ -390,7 +390,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         cls,
         environment: str | None = None,
         **overrides: object,
-    ) -> FlextDbtLdifConfig:
+    ) -> FlextDbtLdifSettings:
         """Create configuration for specific environment using AutoConfig singleton pattern.
 
         Args:
@@ -398,7 +398,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
             **overrides: Configuration overrides (unused, kept for API compatibility)
 
         Returns:
-            FlextDbtLdifConfig singleton instance
+            FlextDbtLdifSettings singleton instance
 
         """
         _ = environment  # Unused parameter kept for API compatibility
@@ -406,12 +406,12 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         return cls.get_instance()
 
     @classmethod
-    def create_default(cls) -> FlextDbtLdifConfig:
+    def create_default(cls) -> FlextDbtLdifSettings:
         """Create default configuration instance using AutoConfig singleton pattern."""
         return cls.get_instance()
 
     @classmethod
-    def create_for_development(cls) -> FlextDbtLdifConfig:
+    def create_for_development(cls) -> FlextDbtLdifSettings:
         """Create configuration optimized for development using AutoConfig singleton pattern."""
         instance = cls.get_instance()
         # Update instance with dev defaults if needed
@@ -423,7 +423,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         return instance
 
     @classmethod
-    def create_for_production(cls) -> FlextDbtLdifConfig:
+    def create_for_production(cls) -> FlextDbtLdifSettings:
         """Create configuration optimized for production using AutoConfig singleton pattern."""
         instance = cls.get_instance()
         # Update instance with prod defaults if needed
@@ -436,7 +436,7 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
         return instance
 
     @classmethod
-    def create_for_testing(cls) -> FlextDbtLdifConfig:
+    def create_for_testing(cls) -> FlextDbtLdifSettings:
         """Create configuration optimized for testing using AutoConfig singleton pattern."""
         instance = cls.get_instance()
         # Update instance with test defaults if needed
@@ -452,11 +452,11 @@ class FlextDbtLdifConfig(FlextConfig.AutoConfig):
 
     @classmethod
     def reset_global_instance(cls) -> None:
-        """Reset the global FlextDbtLdifConfig instance (mainly for testing)."""
+        """Reset the global FlextDbtLdifSettings instance (mainly for testing)."""
         # Use the AutoConfig reset mechanism
         cls._reset_instance()
 
 
 __all__: list[str] = [
-    "FlextDbtLdifConfig",
+    "FlextDbtLdifSettings",
 ]

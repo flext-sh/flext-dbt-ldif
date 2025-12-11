@@ -13,8 +13,8 @@ from flext_core import FlextResult
 
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
-    FlextDbtLdifConfig,
     FlextDbtLdifService,
+    FlextDbtLdifSettings,
     FlextLdif,
     __version__,
     generate_ldif_models,
@@ -27,8 +27,8 @@ def test_api_imports() -> None:
     """Test API imports."""  # Test version import
     assert isinstance(__version__, str)
     # Instantiate light-touch objects to bump coverage
-    _ = FlextDbtLdifClient(FlextDbtLdifConfig())
-    _ = FlextDbtLdifService(FlextDbtLdifConfig())
+    _ = FlextDbtLdifClient(FlextDbtLdifSettings())
+    _ = FlextDbtLdifService(FlextDbtLdifSettings())
 
     # Test aliased functions
     assert callable(generate_ldif_models)
