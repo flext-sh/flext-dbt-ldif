@@ -22,8 +22,8 @@ from flext_core import (
     t,
 )
 
+from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
-from flext_dbt_ldif.settings import FlextDbtLdifSettings
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
