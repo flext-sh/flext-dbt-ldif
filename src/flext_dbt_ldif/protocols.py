@@ -14,8 +14,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
-from flext_ldif.protocols import p_ldif
-from flext_meltano.protocols import p_meltano
+from flext_ldif.protocols import FlextLdifProtocols as p_ldif
+from flext_meltano.protocols import FlextMeltanoProtocols as p_meltano
 
 from flext_dbt_ldif.typings import t
 
