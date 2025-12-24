@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from typing import Final
 
+from flext_core import FlextResult
 from flext_ldif import FlextLdif
 
-from flext import FlextResult
 from flext_dbt_ldif.__version__ import __version__, __version_info__
 from flext_dbt_ldif.cli import main
 from flext_dbt_ldif.config import FlextDbtLdifSettings
