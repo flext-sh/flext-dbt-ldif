@@ -1,10 +1,17 @@
-"""Tests for FLEXT DBT LDIF.
+"""FLEXT DBT LDIF Tests - Test infrastructure and utilities.
 
-This module is part of the FLEXT ecosystem. Docstrings follow PEP 257 and Google style.
+Provides TestsFlextDbtLdif classes extending FlextTests and FlextDbtLdif for comprehensive testing.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
+
+from tests.constants import TestsFlextDbtLdifConstants, c, tc
+
+__all__ = [
+    "TestsFlextDbtLdifConstants",
+    "c",
+    "tc",
+]
