@@ -11,8 +11,9 @@ import sys
 from typing import NoReturn
 
 from flext_cli import FlextCliOutput, FlextCliSettings
-from flext_core import r
 from flext_core.loggings import FlextLogger
+
+from flext import r
 
 logger = FlextLogger(__name__)
 

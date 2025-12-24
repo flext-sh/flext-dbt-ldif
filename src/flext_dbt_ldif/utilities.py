@@ -15,12 +15,10 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import (
-    FlextContainer,
+from flext import FlextContainer,
     FlextLogger,
     r,
-    u,
-)
+    u
 from flext_ldif import FlextLdif, FlextLdifModels
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
@@ -192,7 +190,7 @@ class FlextDbtLdifUtilities(u):
 
             except Exception as e:
                 return r[t.LdifProcessing.QualityValidation].fail(
-                    f"LDIF validation failed: {e}"
+                    f"LDIF validation failed: {e}",
                 )
 
     class DbtModelGeneration:
@@ -691,5 +689,5 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
 
             except Exception as e:
                 return r[t.LdifProcessing.BatchProcessing].fail(
-                    f"LDIF performance optimization failed: {e}"
+                    f"LDIF performance optimization failed: {e}",
                 )

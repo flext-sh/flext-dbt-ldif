@@ -19,7 +19,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Literal
 
-from flext_core import FlextTypes
+from flext import FlextTypes
 
 # =============================================================================
 # DBT LDIF-SPECIFIC TYPE VARIABLES - Domain-specific TypeVars for DBT LDIF operations
@@ -74,7 +74,7 @@ class FlextDbtLdifTypes(FlextTypes):
 
         # LDIF entry - structured entry data
         type LdifEntry = Mapping[
-            str, FlextTypes.JsonValue | FlextDbtLdifTypes.StringList
+            str, FlextTypes.JsonValue | FlextDbtLdifTypes.StringList,
         ]
         """LDIF entry type: structured entry data."""
 

@@ -10,11 +10,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextLogger, r
 from flext_ldif import FlextLdif
 from flext_ldif.models import FlextLdifModels
 from flext_meltano.services import FlextMeltanoService
 
+from flext import FlextLogger, r
 from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.typings import t
 

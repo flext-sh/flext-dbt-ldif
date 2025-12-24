@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext_core import FlextResult
+from flext import FlextResult
 
 from flext_dbt_ldif import (
     FlextDbtLdifService,

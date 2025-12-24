@@ -13,9 +13,9 @@ from pathlib import Path
 from typing import override
 
 import yaml
-from flext_core import FlextLogger, FlextResult, FlextService
 from flext_ldif import FlextLdif, FlextLdifModels
 
+from flext import FlextLogger, FlextResult, FlextService
 from flext_dbt_ldif.config import FlextDbtLdifSettings
 
 # Use the real typed class for precise type checking

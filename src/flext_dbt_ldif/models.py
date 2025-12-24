@@ -14,9 +14,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Literal, TypedDict, override
 
-from flext_core import FlextModels, FlextResult
 from flext_core.utilities import u
 
+from flext import FlextModels, FlextResult
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import t
 

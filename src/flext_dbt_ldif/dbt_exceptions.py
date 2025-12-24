@@ -10,10 +10,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import override
 
-from flext_core import FlextExceptions
+from flext import FlextExceptions
+from flext_dbt_ldif.constants import c
+
+# Alias for backward compatibility - ErrorCode is now centralized in constants.py
+ErrorCode = c.ErrorCode
 
 
 class FlextDbtLdifError(FlextExceptions.BaseError):
@@ -23,23 +26,8 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     through error codes instead of multiple exception classes.
     """
 
-    class ErrorCode(StrEnum):
-        """Error codes for LDIF DBT operations."""
-
-        # General errors
-        DBT_LDIF_ERROR = "DBT_LDIF_ERROR"
-        VALIDATION_ERROR = "DBT_LDIF_VALIDATION_ERROR"
-        CONFIGURATION_ERROR = "DBT_LDIF_CONFIGURATION_ERROR"
-        CONNECTION_ERROR = "DBT_LDIF_CONNECTION_ERROR"
-        PROCESSING_ERROR = "DBT_LDIF_PROCESSING_ERROR"
-        AUTHENTICATION_ERROR = "DBT_LDIF_AUTHENTICATION_ERROR"
-        TIMEOUT_ERROR = "DBT_LDIF_TIMEOUT_ERROR"
-
-        # Domain-specific errors
-        PARSE_ERROR = "DBT_LDIF_PARSE_ERROR"
-        MODEL_ERROR = "DBT_LDIF_MODEL_ERROR"
-        TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
-        TEST_ERROR = "DBT_LDIF_TEST_ERROR"
+    # Class-level reference to ErrorCode for internal usage
+    ErrorCode = c.ErrorCode
 
     @override
     def __init__(

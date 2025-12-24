@@ -15,6 +15,7 @@
 **Python**: 3.13+
 
 **CRITICAL INTEGRATION DEPENDENCIES**:
+
 - **flext-meltano**: MANDATORY for ALL DBT operations (ZERO TOLERANCE for direct dbt imports)
 - **flext-ldif**: MANDATORY for ALL LDIF operations (ZERO TOLERANCE for direct LDIF parsing imports)
 - **flext-core**: Foundation patterns (FlextResult, FlextService, FlextContainer)
@@ -62,6 +63,7 @@ if result.is_success:
 ### ZERO TOLERANCE Policies
 
 **ABSOLUTELY FORBIDDEN**:
+
 - ❌ Direct dbt imports (use flext-meltano)
 - ❌ Direct LDIF parsing imports (use flext-ldif)
 - ❌ Direct click/rich imports (use flext-cli)
@@ -69,6 +71,7 @@ if result.is_success:
 - ❌ Type ignores or `Any` types
 
 **MANDATORY**:
+
 - ✅ Use `FlextResult[T]` for all operations
 - ✅ Use flext-meltano for DBT operations
 - ✅ Use flext-ldif for LDIF operations
@@ -79,6 +82,7 @@ if result.is_success:
 ---
 
 **See Also**:
+
 - [Workspace Standards](../CLAUDE.md)
 - [flext-core Patterns](../flext-core/CLAUDE.md)
 - [flext-ldif Patterns](../flext-ldif/CLAUDE.md)

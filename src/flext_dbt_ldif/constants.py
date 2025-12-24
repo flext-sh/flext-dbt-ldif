@@ -14,7 +14,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import ClassVar, Literal
 
-from flext_core import FlextConstants
+from flext import FlextConstants
 
 
 class FlextDbtLdifConstants(FlextConstants):
@@ -157,6 +157,29 @@ class FlextDbtLdifConstants(FlextConstants):
         WARN = "warn"
         ERROR = "error"
         NONE = "none"
+
+    class ErrorCode(StrEnum):
+        """Error codes for LDIF DBT operations.
+
+        DRY Pattern:
+            StrEnum is the single source of truth. Use ErrorCode.DBT_LDIF_ERROR.value
+            or ErrorCode.DBT_LDIF_ERROR directly - no base strings needed.
+        """
+
+        # General errors
+        DBT_LDIF_ERROR = "DBT_LDIF_ERROR"
+        VALIDATION_ERROR = "DBT_LDIF_VALIDATION_ERROR"
+        CONFIGURATION_ERROR = "DBT_LDIF_CONFIGURATION_ERROR"
+        CONNECTION_ERROR = "DBT_LDIF_CONNECTION_ERROR"
+        PROCESSING_ERROR = "DBT_LDIF_PROCESSING_ERROR"
+        AUTHENTICATION_ERROR = "DBT_LDIF_AUTHENTICATION_ERROR"
+        TIMEOUT_ERROR = "DBT_LDIF_TIMEOUT_ERROR"
+
+        # Domain-specific errors
+        PARSE_ERROR = "DBT_LDIF_PARSE_ERROR"
+        MODEL_ERROR = "DBT_LDIF_MODEL_ERROR"
+        TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
+        TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
     # =========================================================================
     # TYPE-SAFE LITERALS - PEP 695 syntax for type checking
