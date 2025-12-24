@@ -10,9 +10,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import override
 
+from flext_core import FlextLogger, FlextResult
 from flext_ldif import FlextLdifModels
 
-from flext import FlextLogger, FlextResult
 from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService

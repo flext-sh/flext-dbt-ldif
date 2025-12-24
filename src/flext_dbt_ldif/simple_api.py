@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext import FlextContainer,
+from flext_core import  FlextContainer,
     FlextContext,
     FlextLogger,
     FlextResult,

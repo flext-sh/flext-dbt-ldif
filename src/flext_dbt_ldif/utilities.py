@@ -15,7 +15,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from flext import FlextContainer,
+from flext_core import  FlextContainer,
     FlextLogger,
     r,
     u

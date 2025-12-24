@@ -15,9 +15,9 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
+from flext_core import FlextLogger, r
 from flext_ldif import FlextLdif, FlextLdifModels
 
-from flext import FlextLogger, r
 from flext_dbt_ldif.typings import t
 
 logger = FlextLogger(__name__)

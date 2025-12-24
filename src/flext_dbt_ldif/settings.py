@@ -15,11 +15,11 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
+from flext_core import FlextLogger, FlextResult, FlextSettings
 from flext_ldif import FlextLdifSettings
 from flext_meltano import FlextMeltanoSettings
 from pydantic import ConfigDict, Field, field_validator, model_validator
 
-from flext import FlextLogger, FlextResult, FlextSettings
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import t
 
@@ -50,7 +50,7 @@ class FlextDbtLdifSettings(FlextSettings.AutoConfig):
         config = FlextDbtLdifSettings.get_instance()
 
         # Or via FlextSettings namespace
-        from flext import FlextSettings
+        from flext_core import  FlextSettings
         config = FlextSettings.get_global_instance()
         dbt_ldif_config = config.dbt_ldif
     """
