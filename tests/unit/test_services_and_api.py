@@ -11,9 +11,10 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-from flext import FlextResult
+from flext_core import FlextResult
 
-from flext_dbt_ldif import (
+
+
     FlextDbtLdifService,
     generate_ldif_models,
     process_ldif_file,

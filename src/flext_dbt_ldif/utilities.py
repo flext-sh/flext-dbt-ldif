@@ -15,10 +15,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar
 
-from flext_core import  FlextContainer,
-    FlextLogger,
-    r,
-    u
+from flext_core import FlextContainer, FlextLogger, r
+from flext_core.utilities import FlextUtilities as u
 from flext_ldif import FlextLdif, FlextLdifModels
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants

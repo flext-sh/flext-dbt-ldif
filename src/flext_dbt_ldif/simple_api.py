@@ -13,15 +13,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import  FlextContainer,
+from flext_core import (
+    FlextContainer,
     FlextContext,
     FlextLogger,
     FlextResult,
     FlextService,
-    t
+    t,
+)
 
-from flext_dbt_ldif.config import FlextDbtLdifSettings
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
+from flext_dbt_ldif.settings import FlextDbtLdifSettings
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
