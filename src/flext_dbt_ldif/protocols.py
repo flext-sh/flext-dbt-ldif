@@ -129,7 +129,8 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     ...
 
                 def validate_dbt_project(
-                    self, project_path: str,
+                    self,
+                    project_path: str,
                 ) -> p_meltano.Result[bool]:
                     """Validate DBT project configuration for LDIF integration.
 
