@@ -1,7 +1,7 @@
 """FLEXT DBT LDIF API - Unified facade for DBT LDIF operations.
 
 This module provides unified facade for DBT LDIF operations.
-Uses types from typings.py and t, no dict[str, object].
+Uses types from typings.py and t, no dict[str, t.GeneralValueType].
 Uses Python 3.13+ PEP 695 syntax and direct API calls.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -46,7 +46,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
     - FlextResult for railway-oriented error handling
 
     PYTHON 3.13+ COMPATIBILITY: Uses modern patterns and latest type features.
-    Uses types from typings.py - no dict[str, object].
+    Uses types from typings.py - no dict[str, t.GeneralValueType].
     """
 
     def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:

@@ -1,7 +1,7 @@
 """Core functionality for FLEXT dbt LDIF.
 
 This module provides core DBT LDIF functionality using flext-ldif APIs directly.
-Uses types from typings.py and t, no dict[str, object].
+Uses types from typings.py and t, no dict[str, t.GeneralValueType].
 Uses Python 3.13+ PEP 695 syntax and direct API calls.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -31,13 +31,13 @@ class FlextDbtLdifCore:
     """Unified DBT LDIF core functionality with nested service classes.
 
     Uses flext-ldif APIs directly - no wrappers or unnecessary conversions.
-    Uses types from typings.py - no dict[str, object].
+    Uses types from typings.py - no dict[str, t.GeneralValueType].
     """
 
     class ModelGenerator:
         """Generates dbt models programmatically for LDIF analytics.
 
-        Uses types from typings.py - no dict[str, object].
+        Uses types from typings.py - no dict[str, t.GeneralValueType].
         """
 
         @override

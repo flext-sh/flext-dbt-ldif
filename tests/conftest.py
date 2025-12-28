@@ -12,6 +12,7 @@ import tempfile
 from collections.abc import Generator
 
 import pytest
+from flext_core import FlextTypes as t
 from flext_tests import FlextTestsDocker
 
 
@@ -75,7 +76,7 @@ def ensure_shared_docker_container(shared_ldap_container: object) -> None:
 
 # dbt LDIF configuration fixtures
 @pytest.fixture
-def dbt_ldif_profile() -> dict[str, object]:
+def dbt_ldif_profile() -> dict[str, t.GeneralValueType]:
     """Dbt LDIF profile configuration for testing."""
     return {
         "config": {
@@ -106,7 +107,7 @@ def dbt_ldif_profile() -> dict[str, object]:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> dict[str, object]:
+def dbt_ldif_project_config() -> dict[str, t.GeneralValueType]:
     """Dbt LDIF project configuration for testing."""
     return {
         "name": "flext_dbt_ldif_test",
@@ -142,7 +143,7 @@ def dbt_ldif_project_config() -> dict[str, object]:
 
 # LDIF source fixtures
 @pytest.fixture
-def ldif_source_config(shared_ldap_config: dict) -> dict[str, object]:
+def ldif_source_config(shared_ldap_config: dict) -> dict[str, t.GeneralValueType]:
     """LDIF source configuration for testing using shared container."""
     _ = shared_ldap_config  # Acknowledge parameter usage
     return {
@@ -159,7 +160,7 @@ def ldif_source_config(shared_ldap_config: dict) -> dict[str, object]:
 
 
 @pytest.fixture
-def sample_ldif_entries() -> list[dict[str, object]]:
+def sample_ldif_entries() -> list[dict[str, t.GeneralValueType]]:
     """Sample LDIF entries for testing using shared container domain."""
     return [
         {
