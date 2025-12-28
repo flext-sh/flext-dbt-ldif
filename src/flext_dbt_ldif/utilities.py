@@ -1,7 +1,7 @@
 """FlextDbtLdifUtilities - Unified DBT LDIF utilities service.
 
 This module provides DBT LDIF utilities using flext-ldif APIs directly.
-Uses types from typings.py and t, no dict[str, object].
+Uses types from typings.py and t, no dict[str, t.GeneralValueType].
 Uses Python 3.13+ PEP 695 syntax and direct API calls.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.

@@ -2,7 +2,7 @@
 
 This module provides protocol definitions for DBT operations with LDIF data.
 Protocols use types from typings.py and t - NO imports of Models/Config.
-Uses Python 3.13+ PEP 695 syntax and Mapping types instead of dict[str, object].
+Uses Python 3.13+ PEP 695 syntax and Mapping types instead of dict[str, t.GeneralValueType].
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT

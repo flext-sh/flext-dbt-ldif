@@ -1,7 +1,7 @@
 """Models for LDIF DBT operations.
 
 This module provides data models for LDIF DBT operations.
-Uses types from typings.py and constants.py, no dict[str, object].
+Uses types from typings.py and constants.py, no dict[str, t.GeneralValueType].
 Uses Python 3.13+ PEP 695 syntax and FlextModels patterns.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -79,7 +79,7 @@ class FlextDbtLdifModels(FlextModels):
     Immutable representation of a generated DBT model with LDIF-specific metadata
     and integrated analytics functionality following FLEXT unified class pattern.
 
-    Uses types from typings.py and constants.py - no dict[str, object].
+    Uses types from typings.py and constants.py - no dict[str, t.GeneralValueType].
     """
 
     def __init_subclass__(cls, **kwargs: object) -> None:
@@ -203,7 +203,7 @@ class FlextDbtLdifModels(FlextModels):
     class ModelGenerator:
         """Internal model generator class for DBT LDIF models.
 
-        Uses types from typings.py - no dict[str, object].
+        Uses types from typings.py - no dict[str, t.GeneralValueType].
         """
 
         @override

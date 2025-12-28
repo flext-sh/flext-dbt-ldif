@@ -1,7 +1,7 @@
 """FLEXT DBT LDIF Configuration Module.
 
 This module provides DBT LDIF configuration using Pydantic 2 BaseModel.
-Uses types from constants.py and typings.py, no dict[str, object].
+Uses types from constants.py and typings.py, no dict[str, t.GeneralValueType].
 Uses Python 3.13+ PEP 695 syntax and Pydantic 2 advanced features.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -21,7 +21,6 @@ from flext_meltano import FlextMeltanoSettings
 from pydantic import ConfigDict, Field, field_validator, model_validator
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
-from flext_dbt_ldif.typings import t
 
 logger = FlextLogger(__name__)
 
@@ -43,7 +42,7 @@ class FlextDbtLdifSettings(FlextSettings.AutoConfig):
     - All defaults from FlextDbtLdifConstants
     - Uses Pydantic 2.11+ features (field_validator, model_validator)
     - Uses types from constants.py and typings.py
-    - NO dict[str, object] - uses specific types
+    - NO dict[str, t.GeneralValueType] - uses specific types
 
     **Usage**:
         # Get singleton instance
@@ -359,7 +358,7 @@ class FlextDbtLdifSettings(FlextSettings.AutoConfig):
 
     def get_ldif_quality_config(
         self,
-    ) -> t.LdifParsing.ValidationRules:
+    ) -> dict[str, bool | float | int | list[str]]:
         """Get data quality configuration for LDIF validation.
 
         Returns:

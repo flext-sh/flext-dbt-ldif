@@ -17,12 +17,13 @@ from flext_core import FlextLogger, FlextResult, FlextService
 from flext_ldif import FlextLdif, FlextLdifModels
 
 from flext_dbt_ldif.settings import FlextDbtLdifSettings
+from flext_dbt_ldif.typings import t
 
 # Use the real typed class for precise type checking
 logger = FlextLogger(__name__)
 
 
-class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
+class FlextDbtLdifUnifiedService(FlextService[t.JsonDict]):
     """Unified DBT LDIF service class consolidating model definition and generation.
 
     This unified service follows the mandatory single-class-per-module pattern,
@@ -37,8 +38,8 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         name: str,
         description: str = "",
         materialization: str = "view",
-        columns: list[dict[str, object]] | None = None,
-        meta: dict[str, object] | None = None,
+        columns: list[t.JsonDict] | None = None,
+        meta: t.JsonDict | None = None,
         config: FlextDbtLdifSettings | None = None,
         project_dir: Path | None = None,
     ) -> None:
@@ -71,23 +72,23 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         logger.info("Initialized unified LDIF DBT service: %s", self.project_dir)
 
     @override
-    def execute(self) -> FlextResult[dict[str, object]]:
+    def execute(self) -> FlextResult[t.JsonDict]:
         """Execute the DBT model service.
 
         Returns:
-        FlextResult[dict[str, object]]: Execution result
+        FlextResult[t.JsonDict]: Execution result
 
         """
         try:
             # Basic execution logic - can be extended based on requirements
-            result_data: dict[str, object] = {
+            result_data: t.JsonDict = {
                 "model_name": self.name,
                 "status": "executed",
                 "timestamp": "2025-01-01T00:00:00Z",  # Placeholder
             }
-            return FlextResult[dict[str, object]].ok(result_data)
+            return FlextResult[t.JsonDict].ok(result_data)
         except Exception as e:
-            return FlextResult[dict[str, object]].fail(f"Execution failed: {e}")
+            return FlextResult[t.JsonDict].fail(f"Execution failed: {e}")
 
     class _ModelDefinition:
         """Nested helper class for model definition operations."""
@@ -95,7 +96,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         @staticmethod
         def to_yaml_config(
             model_instance: FlextDbtLdifUnifiedService,
-        ) -> dict[str, object]:
+        ) -> t.JsonDict:
             """Convert model to YAML configuration format.
 
             Args:
@@ -114,7 +115,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             }
 
         @staticmethod
-        def to_dict(model_instance: FlextDbtLdifUnifiedService) -> dict[str, object]:
+        def to_dict(model_instance: FlextDbtLdifUnifiedService) -> t.JsonDict:
             """Convert model to dictionary representation.
 
             Args:
@@ -139,7 +140,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
         def analyze_ldif_schema(
             service_instance: FlextDbtLdifUnifiedService,
             entries: list[FlextLdifModels.Entry],
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[t.JsonDict]:
             """Analyze LDIF entries to determine schema structure.
 
             Args:
@@ -154,18 +155,18 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                 logger.info("Analyzing LDIF schema from %d entries", len(entries))
                 stats_result = service_instance._ldif_api.entry_statistics(entries)
                 if not stats_result.is_success:
-                    return FlextResult[dict[str, object]].fail(
+                    return FlextResult[t.JsonDict].fail(
                         f"Schema analysis failed: {stats_result.error}",
                     )
                 base_stats = stats_result.value or {}
-                schema_info: dict[str, object] = dict[str, object](base_stats.items())
+                schema_info: t.JsonDict = dict(base_stats.items())
                 schema_info["total_entries"] = len(entries)
                 schema_info["has_entries"] = len(entries) > 0
                 logger.info("LDIF schema analysis completed")
-                return FlextResult[dict[str, object]].ok(schema_info)
+                return FlextResult[t.JsonDict].ok(schema_info)
             except Exception as e:
                 logger.exception("Error analyzing LDIF schema")
-                return FlextResult[dict[str, object]].fail(
+                return FlextResult[t.JsonDict].fail(
                     f"Schema analysis error: {e}",
                 )
 
@@ -369,7 +370,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             entry_type: str,
             schema_name: str,
             entries: list[FlextLdifModels.Entry],
-            schema_info: dict[str, object],
+            schema_info: t.JsonDict,
         ) -> FlextDbtLdifUnifiedService:
             """Generate a staging model for a specific entry type."""
             if not entries:
@@ -382,7 +383,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             )
             _ = declared_total
 
-            common_attrs: list[dict[str, object]] = [
+            common_attrs: list[t.JsonDict] = [
                 {
                     "name": "dn",
                     "type": "varchar",
@@ -409,7 +410,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
 
             for ldif_attr in FlextDbtLdifSettings.ldif_attribute_mapping:
                 if ldif_attr != "dn":
-                    column_def: dict[str, object] = {
+                    column_def: t.JsonDict = {
                         "name": "mapped_attr",
                         "type": "varchar",
                         "description": f"LDIF {ldif_attr} attribute",
@@ -441,7 +442,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
             models: list[FlextDbtLdifUnifiedService],
             *,
             overwrite: bool = False,
-        ) -> FlextResult[dict[str, object]]:
+        ) -> FlextResult[t.JsonDict]:
             """Write generated DBT models to disk.
 
             Args:
@@ -482,7 +483,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                     yaml_file.write_text(yaml_content)
                     written_files.append(str(yaml_file))
                 logger.info("Successfully wrote %d files", len(written_files))
-                return FlextResult[dict[str, object]].ok(
+                return FlextResult[t.JsonDict].ok(
                     {
                         "written_files": "written_files",
                         "models_count": len(models),
@@ -491,7 +492,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, object]]):
                 )
             except Exception as e:
                 logger.exception("Error writing models to disk")
-                return FlextResult[dict[str, object]].fail(f"Model writing error: {e}")
+                return FlextResult[t.JsonDict].fail(f"Model writing error: {e}")
 
     class SQLGeneration:
         """Nested helper class for SQL generation operations."""
@@ -590,7 +591,7 @@ select * from validated_data
             )
 
         @staticmethod
-        def _generate_basic_yaml(yaml_config: dict[str, object]) -> str:
+        def _generate_basic_yaml(yaml_config: t.JsonDict) -> str:
             """Generate basic YAML content for DBT model."""
             schema_content = {"version": 2, "models": [yaml_config]}
             return yaml.dump(schema_content, default_flow_style=False, indent=2)
@@ -599,7 +600,7 @@ select * from validated_data
         """Nested helper class for column type determination."""
 
         @staticmethod
-        def _determine_column_type(attr_info: dict[str, object]) -> str:
+        def _determine_column_type(attr_info: t.JsonDict) -> str:
             """Determine appropriate column type based on attribute analysis."""
             max_varchar_length = 255
             if attr_info.get("is_numeric"):
@@ -614,18 +615,18 @@ select * from validated_data
             return "varchar"
 
     # Public interface methods (delegate to nested classes)
-    def to_yaml_config(self) -> dict[str, object]:
+    def to_yaml_config(self) -> t.JsonDict:
         """Convert model to YAML configuration format."""
         return self._ModelDefinition.to_yaml_config(self)
 
-    def to_dict(self) -> dict[str, object]:
+    def to_dict(self) -> t.JsonDict:
         """Convert model to dictionary representation."""
         return self._ModelDefinition.to_dict(self)
 
     def analyze_ldif_schema(
         self,
         entries: list[FlextLdifModels.Entry],
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[t.JsonDict]:
         """Analyze LDIF entries to determine schema structure."""
         return self._SchemaAnalysis.analyze_ldif_schema(self, entries)
 
@@ -648,7 +649,7 @@ select * from validated_data
         models: list[FlextDbtLdifUnifiedService],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, object]]:
+    ) -> FlextResult[t.JsonDict]:
         """Write generated DBT models to disk."""
         return self._FileOperations.write_models_to_disk(
             self,

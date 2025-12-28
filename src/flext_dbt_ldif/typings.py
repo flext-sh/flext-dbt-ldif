@@ -7,7 +7,7 @@ Follows FLEXT standards:
 - Python 3.13+ PEP 695 syntax
 - Extends t properly
 - Uses Mapping instead of dict for read-only interfaces
-- No dict[str, object] or Any types
+- No dict[str, t.GeneralValueType] or Any types
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -33,7 +33,7 @@ class FlextDbtLdifTypes(FlextTypes):
     Domain-specific type system for DBT LDIF data transformation operations.
     Contains ONLY complex DBT LDIF-specific types, no simple aliases.
     Uses Python 3.13+ PEP 695 type syntax and patterns.
-    All types use FlextTypes.GeneralValueType as base for consistency.
+    All types use t.GeneralValueType as base for consistency.
     """
 
     # =========================================================================
@@ -65,24 +65,21 @@ class FlextDbtLdifTypes(FlextTypes):
         # LDIF record - complete LDIF entry with DN and attributes
         type LdifRecord = Mapping[
             str,
-            str
-            | FlextDbtLdifTypes.StringList
-            | bytes
-            | Mapping[str, FlextTypes.JsonValue],
+            str | FlextDbtLdifTypes.StringList | bytes | Mapping[str, t.JsonValue],
         ]
         """LDIF record type: DN and attributes mapping."""
 
         # LDIF entry - structured entry data
         type LdifEntry = Mapping[
             str,
-            FlextTypes.JsonValue | FlextDbtLdifTypes.StringList,
+            t.JsonValue | FlextDbtLdifTypes.StringList,
         ]
         """LDIF entry type: structured entry data."""
 
         # LDIF change record - modification operations
         type LdifChangeRecord = Mapping[
             str,
-            str | Sequence[Mapping[str, FlextTypes.JsonValue]],
+            str | Sequence[Mapping[str, t.JsonValue]],
         ]
         """LDIF change record type: modification operations."""
 
@@ -93,14 +90,14 @@ class FlextDbtLdifTypes(FlextTypes):
         # LDIF modification - single modification operation
         type LdifModification = Mapping[
             str,
-            str | Mapping[str, FlextTypes.JsonValue],
+            str | Mapping[str, t.JsonValue],
         ]
         """LDIF modification type: single modification operation."""
 
         # LDIF operation - complete operation with metadata
         type LdifOperation = Mapping[
             str,
-            str | Mapping[str, FlextTypes.GeneralValueType],
+            str | Mapping[str, t.GeneralValueType],
         ]
         """LDIF operation type: complete operation with metadata."""
 
@@ -114,44 +111,42 @@ class FlextDbtLdifTypes(FlextTypes):
         # Transformation configuration
         type TransformationConfig = Mapping[
             str,
-            FlextTypes.JsonValue | Mapping[str, FlextTypes.GeneralValueType],
+            t.JsonValue | Mapping[str, t.GeneralValueType],
         ]
         """DBT LDIF transformation configuration type."""
 
         # LDIF to table mapping
         type LdifToTableMapping = Mapping[
             str,
-            str | Mapping[str, FlextTypes.JsonValue],
+            str | Mapping[str, t.JsonValue],
         ]
         """LDIF to table mapping type."""
 
         # Attribute mapping configuration
         type AttributeMapping = Mapping[
             str,
-            str
-            | FlextDbtLdifTypes.StringList
-            | Mapping[str, FlextTypes.GeneralValueType],
+            str | FlextDbtLdifTypes.StringList | Mapping[str, t.GeneralValueType],
         ]
         """Attribute mapping type."""
 
         # Data normalization configuration
         type DataNormalization = Mapping[
             str,
-            str | bool | Mapping[str, FlextTypes.JsonValue],
+            str | bool | Mapping[str, t.JsonValue],
         ]
         """Data normalization type."""
 
         # Schema generation configuration
         type SchemaGeneration = Mapping[
             str,
-            str | Sequence[Mapping[str, FlextTypes.GeneralValueType]],
+            str | Sequence[Mapping[str, t.GeneralValueType]],
         ]
         """Schema generation type."""
 
         # Output configuration
         type OutputConfiguration = Mapping[
             str,
-            FlextTypes.GeneralValueType | Mapping[str, FlextTypes.GeneralValueType],
+            t.GeneralValueType | Mapping[str, t.GeneralValueType],
         ]
         """Output configuration type."""
 
@@ -165,42 +160,42 @@ class FlextDbtLdifTypes(FlextTypes):
         # Parser configuration
         type ParserConfiguration = Mapping[
             str,
-            bool | str | int | Mapping[str, FlextTypes.GeneralValueType],
+            bool | str | int | Mapping[str, t.GeneralValueType],
         ]
         """LDIF parser configuration type."""
 
         # Validation rules
         type ValidationRules = Mapping[
             str,
-            bool | FlextDbtLdifTypes.StringList | Mapping[str, FlextTypes.JsonValue],
+            bool | FlextDbtLdifTypes.StringList | Mapping[str, t.JsonValue],
         ]
         """LDIF validation rules type."""
 
         # Error handling configuration
         type ErrorHandling = Mapping[
             str,
-            str | bool | Mapping[str, FlextTypes.GeneralValueType],
+            str | bool | Mapping[str, t.GeneralValueType],
         ]
         """LDIF error handling type."""
 
         # Parsed data structure
         type ParsedData = Mapping[
             str,
-            Sequence[Mapping[str, FlextTypes.JsonValue]],
+            Sequence[Mapping[str, t.JsonValue]],
         ]
         """LDIF parsed data type."""
 
         # Parsing metrics
         type ParsingMetrics = Mapping[
             str,
-            int | float | str | Mapping[str, FlextTypes.GeneralValueType],
+            int | float | str | Mapping[str, t.GeneralValueType],
         ]
         """LDIF parsing metrics type."""
 
         # File processing configuration
         type FileProcessing = Mapping[
             str,
-            str | int | bool | Mapping[str, FlextTypes.GeneralValueType],
+            str | int | bool | Mapping[str, t.GeneralValueType],
         ]
         """LDIF file processing type."""
 
@@ -214,42 +209,42 @@ class FlextDbtLdifTypes(FlextTypes):
         # Model definition
         type ModelDefinition = Mapping[
             str,
-            str | Mapping[str, FlextTypes.JsonValue],
+            str | Mapping[str, t.JsonValue],
         ]
         """DBT LDIF model definition type."""
 
         # LDIF model configuration
         type LdifModelConfig = Mapping[
             str,
-            FlextTypes.GeneralValueType | Mapping[str, FlextTypes.GeneralValueType],
+            t.GeneralValueType | Mapping[str, t.GeneralValueType],
         ]
         """LDIF model configuration type."""
 
         # Dimensional model
         type DimensionalModel = Mapping[
             str,
-            str | Sequence[Mapping[str, FlextTypes.JsonValue]],
+            str | Sequence[Mapping[str, t.JsonValue]],
         ]
         """DBT dimensional model type."""
 
         # Fact model
         type FactModel = Mapping[
             str,
-            str | Mapping[str, FlextTypes.JsonValue],
+            str | Mapping[str, t.JsonValue],
         ]
         """DBT fact model type."""
 
         # Staging model
         type StagingModel = Mapping[
             str,
-            str | Mapping[str, FlextTypes.GeneralValueType],
+            str | Mapping[str, t.GeneralValueType],
         ]
         """DBT staging model type."""
 
         # Model documentation
         type ModelDocumentation = Mapping[
             str,
-            str | Mapping[str, FlextTypes.JsonValue],
+            str | Mapping[str, t.JsonValue],
         ]
         """DBT model documentation type."""
 
@@ -263,22 +258,21 @@ class FlextDbtLdifTypes(FlextTypes):
         # Processing pipeline configuration
         type ProcessingPipeline = Mapping[
             str,
-            Sequence[Mapping[str, FlextTypes.JsonValue]]
-            | Mapping[str, FlextTypes.GeneralValueType],
+            Sequence[Mapping[str, t.JsonValue]] | Mapping[str, t.GeneralValueType],
         ]
         """LDIF processing pipeline type."""
 
         # Batch processing configuration
         type BatchProcessing = Mapping[
             str,
-            int | str | bool | Mapping[str, FlextTypes.GeneralValueType],
+            int | str | bool | Mapping[str, t.GeneralValueType],
         ]
         """LDIF batch processing type."""
 
         # Stream processing configuration
         type StreamProcessing = Mapping[
             str,
-            int | bool | Mapping[str, FlextTypes.JsonValue],
+            int | bool | Mapping[str, t.JsonValue],
         ]
         """LDIF stream processing type."""
 
@@ -288,21 +282,21 @@ class FlextDbtLdifTypes(FlextTypes):
             str
             | bool
             | FlextDbtLdifTypes.StringList
-            | Mapping[str, FlextTypes.GeneralValueType],
+            | Mapping[str, t.GeneralValueType],
         ]
         """LDIF error recovery type."""
 
         # Quality validation configuration
         type QualityValidation = Mapping[
             str,
-            bool | str | Mapping[str, FlextTypes.JsonValue],
+            bool | str | Mapping[str, t.JsonValue],
         ]
         """LDIF quality validation type."""
 
         # Processing metrics
         type ProcessingMetrics = Mapping[
             str,
-            int | float | Mapping[str, FlextTypes.GeneralValueType],
+            int | float | Mapping[str, t.GeneralValueType],
         ]
         """LDIF processing metrics type."""
 
@@ -316,42 +310,42 @@ class FlextDbtLdifTypes(FlextTypes):
         # Export configuration
         type ExportConfiguration = Mapping[
             str,
-            FlextTypes.GeneralValueType | Mapping[str, FlextTypes.GeneralValueType],
+            t.GeneralValueType | Mapping[str, t.GeneralValueType],
         ]
         """LDIF export configuration type."""
 
         # Output format configuration
         type OutputFormat = Mapping[
             str,
-            str | Mapping[str, FlextTypes.JsonValue],
+            str | Mapping[str, t.JsonValue],
         ]
         """LDIF output format type."""
 
         # Data serialization configuration
         type DataSerialization = Mapping[
             str,
-            str | Mapping[str, FlextTypes.GeneralValueType],
+            str | Mapping[str, t.GeneralValueType],
         ]
         """LDIF data serialization type."""
 
         # Compression settings
         type CompressionSettings = Mapping[
             str,
-            str | bool | int | Mapping[str, FlextTypes.GeneralValueType],
+            str | bool | int | Mapping[str, t.GeneralValueType],
         ]
         """LDIF compression settings type."""
 
         # Export validation configuration
         type ExportValidation = Mapping[
             str,
-            bool | str | Mapping[str, FlextTypes.JsonValue],
+            bool | str | Mapping[str, t.JsonValue],
         ]
         """LDIF export validation type."""
 
         # Delivery configuration
         type DeliveryConfiguration = Mapping[
             str,
-            str | Mapping[str, FlextTypes.GeneralValueType],
+            str | Mapping[str, t.GeneralValueType],
         ]
         """LDIF delivery configuration type."""
 
@@ -394,7 +388,7 @@ class FlextDbtLdifTypes(FlextTypes):
         """DBT LDIF project type literal."""
 
         # DBT LDIF-specific project configurations
-        type DbtLdifProjectConfig = Mapping[str, FlextTypes.GeneralValueType]
+        type DbtLdifProjectConfig = Mapping[str, t.GeneralValueType]
         """DBT LDIF project configuration type."""
 
         type LdifAnalyticsConfig = Mapping[
@@ -405,11 +399,11 @@ class FlextDbtLdifTypes(FlextTypes):
 
         type LdifTransformConfig = Mapping[
             str,
-            bool | str | Mapping[str, FlextTypes.GeneralValueType],
+            bool | str | Mapping[str, t.GeneralValueType],
         ]
         """LDIF transformation configuration type."""
 
-        type DbtLdifPipelineConfig = Mapping[str, FlextTypes.GeneralValueType]
+        type DbtLdifPipelineConfig = Mapping[str, t.GeneralValueType]
         """DBT LDIF pipeline configuration type."""
 
     class DbtLdif:
