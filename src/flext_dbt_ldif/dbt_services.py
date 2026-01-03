@@ -243,7 +243,7 @@ class FlextDbtLdifService:
                 all_models,
                 overwrite=overwrite,
             )
-            if not write_result.success:
+            if not write_result.is_success:
                 return write_result
 
             write_info = write_result.value or {}
@@ -295,14 +295,16 @@ class FlextDbtLdifService:
                 entries,
             )
             validation_metrics = (
-                validation_result.value if validation_result.success else {}
+                validation_result.value if validation_result.is_success else {}
             ) or {}
 
             # Analyze schema using model generator
             schema_result: FlextResult[object] = (
                 self.model_generator.analyze_ldif_schema(entries)
             )
-            schema_info = (schema_result.value if schema_result.success else {}) or {}
+            schema_info = (
+                schema_result.value if schema_result.is_success else {}
+            ) or {}
 
             # Compile complete assessment
             quality_assessment = {
@@ -366,7 +368,7 @@ class FlextDbtLdifService:
             schema_result: FlextResult[object] = (
                 self.model_generator.analyze_ldif_schema(entries)
             )
-            if not schema_result.success:
+            if not schema_result.is_success:
                 return schema_result
 
             # Generate models for analysis
@@ -536,7 +538,7 @@ class FlextDbtLdifService:
                         ldif_file=file_path,
                     )
 
-                    if result.success:
+                    if result.is_success:
                         current_success = batch_results.get("successful", 0)
                         if isinstance(current_success, int):
                             batch_results["successful"] = current_success + 1
@@ -553,10 +555,10 @@ class FlextDbtLdifService:
                         batch_results["results"].append(
                             {
                                 "file": str(file_path),
-                                "status": "success" if result.success else "failed",
-                                "data": result.value if result.success else None,
+                                "status": "success" if result.is_success else "failed",
+                                "data": result.value if result.is_success else None,
                                 "error": str(result.error)
-                                if not result.success
+                                if not result.is_success
                                 else None,
                             },
                         )
@@ -579,7 +581,7 @@ class FlextDbtLdifService:
 
             return FlextResult[t.JsonDict].ok(batch_results)
 
-    def get_workflow_manager(self: object) -> _WorkflowManager:
+    def get_workflow_manager(self) -> _WorkflowManager:
         """Get workflow manager for batch processing operations."""
         return self._WorkflowManager(self)
 

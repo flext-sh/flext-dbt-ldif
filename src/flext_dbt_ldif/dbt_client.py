@@ -46,7 +46,7 @@ class FlextDbtLdifClient:
         logger.info("Initialized DBT LDIF client with config: %s", self.config)
 
     @property
-    def dbt_service(self: object) -> FlextMeltanoService:
+    def dbt_service(self) -> FlextMeltanoService:
         """Get or create DBT service instance."""
         if self._dbt_service is None:
             # Enhanced dbt service configuration with meltano_config integration planned
@@ -76,7 +76,7 @@ class FlextDbtLdifClient:
             logger.info("Parsing LDIF file: %s", ldif_path)
             # Use flext-ldif API for parsing
             result: r[object] = self._ldif_api.parse_file(ldif_path)
-            if result.success:
+            if result.is_success:
                 entries = result.value or []
                 logger.info("Successfully parsed %d LDIF entries", len(entries))
             else:
@@ -108,7 +108,7 @@ class FlextDbtLdifClient:
             logger.info("Validating %d LDIF entries for data quality", len(entries))
             # Use flext-ldif API for validation
             validation_result: r[object] = self._ldif_api.validate(entries)
-            if not validation_result.success:
+            if not validation_result.is_success:
                 logger.error("LDIF validation failed: %s", validation_result.error)
                 return r[t.JsonDict].fail(
                     f"LDIF validation failed: {validation_result.error}",
@@ -117,7 +117,7 @@ class FlextDbtLdifClient:
             stats_result: r[object] = self._ldif_api.get_entry_statistics(
                 entries,
             )
-            if not stats_result.success:
+            if not stats_result.is_success:
                 return r[t.JsonDict].fail(
                     f"Statistics generation failed: {stats_result.error}",
                 )
@@ -170,7 +170,7 @@ class FlextDbtLdifClient:
             prepared_result: r[object] = self._prepare_ldif_data_for_dbt(
                 entries,
             )
-            if not prepared_result.success:
+            if not prepared_result.is_success:
                 return r[t.JsonDict].fail(
                     f"Data preparation failed: {prepared_result.error}",
                 )
@@ -195,7 +195,7 @@ class FlextDbtLdifClient:
                     all_result_data,
                 )
 
-            if result.success:
+            if result.is_success:
                 logger.info("DBT transformation completed successfully")
                 return result
             logger.error("DBT transformation failed: %s", result.error)
@@ -226,21 +226,21 @@ class FlextDbtLdifClient:
         logger.info("Starting full LDIF-to-DBT pipeline")
         # Step 1: Parse LDIF data
         parse_result: r[object] = self.parse_ldif_file(file_path)
-        if not parse_result.success:
+        if not parse_result.is_success:
             return r[t.JsonDict].fail(
                 f"Parse failed: {parse_result.error}",
             )
         entries = parse_result.value or []
         # Step 2: Validate data quality
         validate_result: r[object] = self.validate_ldif_data(entries)
-        if not validate_result.success:
+        if not validate_result.is_success:
             return validate_result
         # Step 3: Transform with DBT
         transform_result: r[object] = self.transform_with_dbt(
             entries,
             model_names,
         )
-        if not transform_result.success:
+        if not transform_result.is_success:
             return transform_result
         # Combine results
         pipeline_results = {
