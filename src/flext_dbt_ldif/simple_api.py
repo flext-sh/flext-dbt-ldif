@@ -14,9 +14,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import (
-    FlextContainer,
-    FlextContext,
-    FlextLogger,
     FlextResult,
     FlextService,
     t,
@@ -39,11 +36,8 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
     - No wrappers, aliases, or fallbacks
     - Direct use of flext-core centralized services
 
-    FLEXT INTEGRATION: Complete integration with flext-core patterns:
-    - FlextContainer for dependency injection
-    - FlextContext for operation context
-    - FlextLogger for structured logging
-    - FlextResult for railway-oriented error handling
+    FLEXT INTEGRATION: Complete integration with flext-core patterns via
+    FlextService base class (automatic container, context, logger, config).
 
     PYTHON 3.13+ COMPATIBILITY: Uses modern patterns and latest type features.
     Uses types from typings.py - no dict[str, t.GeneralValueType].
@@ -59,11 +53,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         super().__init__()
         self._config = config or FlextDbtLdifSettings.get_instance()
         self._service: FlextDbtLdifService | None = None
-
-        # Complete FLEXT ecosystem integration
-        self._container = FlextContainer.get_global().clear()().get_or_create()
-        self._context = FlextContext()
-        self.logger = FlextLogger(__name__)
+        # Note: container, context, and logger are provided automatically by FlextService
 
     @classmethod
     def create(cls) -> FlextDbtLdif:
@@ -194,7 +184,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
 
             # Parse file first
             parse_result = service.parse_and_validate_ldif(ldif_file)
-            if not parse_result.success:
+            if not parse_result.is_success:
                 return FlextResult[t.JsonDict].fail(
                     f"LDIF parsing failed: {parse_result.error}",
                 )

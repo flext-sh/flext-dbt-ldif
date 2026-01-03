@@ -118,7 +118,7 @@ class FlextDbtLdifUtilities(u):
                 ldif_api = FlextLdif()
                 parse_result = ldif_api.parse(file_path, encoding=encoding)
 
-                if not parse_result.success:
+                if not parse_result.is_success:
                     return r[Sequence[FlextLdifModels.Entry]].fail(
                         parse_result.error or "LDIF parsing failed",
                     )
@@ -178,7 +178,7 @@ class FlextDbtLdifUtilities(u):
 
                     # Use flext-ldif validation
                     validation_result = entry.validate_business_rules()
-                    if validation_result.success:
+                    if validation_result.is_success:
                         valid_count += 1
 
                 validation_results["statistics"]["valid_entries"] = valid_count
@@ -473,7 +473,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 schema_result = (
                     FlextDbtLdifUtilities.LdifSchemaMapping.analyze_ldif_schema(entries)
                 )
-                if not schema_result.success:
+                if not schema_result.is_success:
                     return r[t.JsonDict].fail(schema_result.error)
 
                 schema_analysis = schema_result.value

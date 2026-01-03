@@ -161,7 +161,7 @@ class FlextDbtLdifCore:
             try:
                 # Use flext-ldif API for statistics - NO local logic
                 stats_result = self._ldif_api.get_entry_statistics(entries)
-                if not stats_result.success:
+                if not stats_result.is_success:
                     return r[t.JsonDict].fail(
                         f"Statistics generation failed: {stats_result.error}",
                     )
@@ -178,7 +178,7 @@ class FlextDbtLdifCore:
                 # Use flext-ldif hierarchical sorting for depth analysis
                 sorted_result = self._ldif_api.sort_hierarchically(entries)
                 dn_depth_distribution: t.IntDict = {}
-                if sorted_result.success and sorted_result.value:
+                if sorted_result.is_success and sorted_result.value:
                     for entry in sorted_result.value:
                         depth = entry.dn.get_depth()
                         depth_key = f"depth_{depth}"
@@ -262,7 +262,7 @@ class FlextDbtLdifCore:
                 # Consistency check using flext-ldif entry statistics
                 stats_result = self._ldif_api.get_entry_statistics(entries)
                 consistency = 100.0  # Default high consistency
-                if stats_result.success and stats_result.value:
+                if stats_result.is_success and stats_result.value:
                     stats = stats_result.value
                     # Check consistency based on valid vs total ratio
                     if stats.get("total", 0) > 0:
@@ -298,7 +298,7 @@ class FlextDbtLdifCore:
             try:
                 # Use flext-ldif API for all statistics
                 stats_result = self._ldif_api.get_entry_statistics(entries)
-                if not stats_result.success:
+                if not stats_result.is_success:
                     return r[t.JsonDict].fail(
                         f"dbt statistics failed: {stats_result.error}",
                     )
