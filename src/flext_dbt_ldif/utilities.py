@@ -83,7 +83,7 @@ class FlextDbtLdifUtilities(u):
         """Get container instance."""
         return self._container
 
-    class LdifFileProcessing:
+    class DbtLdif:
         """LDIF file processing using flext-ldif APIs directly."""
 
         @staticmethod

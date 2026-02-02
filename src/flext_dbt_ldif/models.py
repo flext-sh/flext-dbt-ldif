@@ -200,7 +200,7 @@ class FlextDbtLdifModels(FlextModels):
         """
         return cls.ModelGenerator(config)
 
-    class ModelGenerator:
+    class DbtLdif:
         """Internal model generator class for DBT LDIF models.
 
         Uses types from typings.py - no dict[str, t.GeneralValueType].

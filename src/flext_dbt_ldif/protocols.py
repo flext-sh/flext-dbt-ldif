@@ -54,7 +54,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
     # DBT LDIF-SPECIFIC PROTOCOLS (DOMAIN NAMESPACE)
     # ============================================================================
 
-    class Dbt:
+    class DbtLdif:
         """DBT domain protocols."""
 
         class Ldif:

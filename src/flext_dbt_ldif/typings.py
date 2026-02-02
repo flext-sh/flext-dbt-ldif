@@ -44,7 +44,7 @@ class FlextDbtLdifTypes(FlextTypes):
     type StringList = Sequence[str]
     """Sequence of strings for multi-valued LDIF attributes."""
 
-    class DbtLdifCore:
+    class DbtLdif:
         """Core DBT LDIF type aliases using t as foundation."""
 
         # Attribute value type - single or multi-valued
@@ -405,23 +405,6 @@ class FlextDbtLdifTypes(FlextTypes):
 
         type DbtLdifPipelineConfig = Mapping[str, t.GeneralValueType]
         """DBT LDIF pipeline configuration type."""
-
-    class DbtLdif:
-        """DBT LDIF types namespace for cross-project access.
-
-        Provides organized access to all DBT LDIF types for other FLEXT projects.
-        Usage: Other projects can reference `t.DbtLdif.LdifData.*`, `t.DbtLdif.Project.*`, etc.
-        This enables consistent namespace patterns for cross-project type access.
-
-        Examples:
-            from flext_dbt_ldif.typings import t
-            record: t.DbtLdif.LdifData.LdifRecord = ...
-            config: t.DbtLdif.Project.DbtLdifProjectConfig = ...
-
-        Note: Namespace composition via inheritance - no aliases needed.
-        Access parent namespaces directly through inheritance.
-
-        """
 
 
 # Alias for simplified usage

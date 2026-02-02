@@ -222,7 +222,7 @@ class FlextDbtLdifConstants(FlextConstants):
     # MAPPING CONSTANTS - Type-safe mappings for configuration
     # =========================================================================
 
-    class Mappings:
+    class DbtLdif:
         """Type-safe mapping constants for DBT LDIF operations.
 
         Uses Mapping type for read-only configuration mappings.
