@@ -12,32 +12,33 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Literal, TypedDict, override
+from typing import Literal, override
 
 from flext_core import FlextModels, FlextResult
 from flext_core.utilities import u
+from pydantic import BaseModel, ConfigDict, Field
 
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import t
 
-# =============================================================================
-# TYPEDDICT DEFINITIONS - Type-safe column and model definitions
-# =============================================================================
 
-
-class ColumnDefinition(TypedDict, total=False):
+class ColumnDefinition(BaseModel):
     """Type-safe column definition for DBT models."""
 
-    name: str
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
+    name: str | None = Field(default=None)
     """Column name."""
-    description: str
+    description: str | None = Field(default=None)
     """Column description."""
-    data_type: str
+    data_type: str | None = Field(default=None)
     """Column data type."""
 
 
-class ModelDefinition(TypedDict, total=True):
+class ModelDefinition(BaseModel):
     """Type-safe model definition structure."""
+
+    model_config = ConfigDict(frozen=False, extra="forbid")
 
     name: str
     """Model name."""
@@ -173,9 +174,9 @@ class FlextDbtLdifModels(FlextModels):
                 "description": self.description,
                 "columns": [
                     {
-                        "name": col.get("name", ""),
-                        "description": col.get("description", ""),
-                        "data_type": col.get("data_type", ""),
+                        "name": col.name or "",
+                        "description": col.description or "",
+                        "data_type": col.data_type or "",
                     }
                     for col in self.columns
                 ],
