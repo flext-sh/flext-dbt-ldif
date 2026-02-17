@@ -6,6 +6,8 @@
 
 **FLEXT-DBT-LDIF** specializes in advanced analytics for LDAP Data Interchange Format (LDIF) sources. It offers programmatic dbt model generation and anomaly detection for LDIF exports, providing a robust pipeline for directory audits and data quality assessment.
 
+Part of the [FLEXT](https://github.com/flext/flext) ecosystem.
+
 ## 🚀 Key Features
 
 - **Programmatic Model Generation**: Automatically generates dbt models from LDIF schemas (`make generate-models`), ensuring up-to-date transformations.
