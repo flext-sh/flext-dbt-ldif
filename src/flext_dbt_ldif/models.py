@@ -134,7 +134,7 @@ class FlextDbtLdifModels(FlextModels):
                 return FlextResult[bool].fail("LDIF source cannot be empty")
             if not self.sql_content.strip():
                 return FlextResult[bool].fail("SQL content cannot be empty")
-            return FlextResult[bool].ok(True)
+            return FlextResult[bool].ok(value=True)
         except Exception as e:
             return FlextResult[bool].fail(f"Business rule validation failed: {e}")
 

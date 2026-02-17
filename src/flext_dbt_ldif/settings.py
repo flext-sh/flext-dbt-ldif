@@ -317,7 +317,7 @@ class FlextDbtLdifSettings(FlextSettings.AutoConfig):
             if self.ldif_max_file_size > FlextDbtLdifConstants.MAX_FILE_SIZE_GB:
                 return FlextResult[bool].fail("LDIF max file size cannot exceed 1GB")
 
-            return FlextResult[bool].ok(True)
+            return FlextResult[bool].ok(value=True)
         except Exception as e:
             return FlextResult[bool].fail(f"Business rules validation failed: {e}")
 
