@@ -131,7 +131,9 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
                 run_transformations=run_transformations,
             )
         except Exception as e:
-            return FlextResult[dict[str, t.JsonValue]].fail(f"LDIF processing failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(
+                f"LDIF processing failed: {e}"
+            )
 
     def validate_ldif_quality(
         self,
@@ -150,7 +152,9 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             self.logger.info("Validating LDIF quality: %s", ldif_file)
             return self.service.run_data_quality_assessment(ldif_file)
         except Exception as e:
-            return FlextResult[dict[str, t.JsonValue]].fail(f"LDIF quality validation failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(
+                f"LDIF quality validation failed: {e}"
+            )
 
     def generate_ldif_models(
         self,
@@ -192,11 +196,15 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             parse_data = parse_result.value or {}
             entries = parse_data.get("entries", [])
             if not isinstance(entries, list):
-                return FlextResult[dict[str, t.JsonValue]].fail("Invalid entries data format")
+                return FlextResult[dict[str, t.JsonValue]].fail(
+                    "Invalid entries data format"
+                )
 
             return service.generate_and_write_models(entries, overwrite=overwrite)
         except Exception as e:
-            return FlextResult[dict[str, t.JsonValue]].fail(f"Model generation failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(
+                f"Model generation failed: {e}"
+            )
 
 
 # Backward compatibility aliases

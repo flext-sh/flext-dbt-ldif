@@ -115,7 +115,9 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
             }
 
         @staticmethod
-        def to_dict(model_instance: FlextDbtLdifUnifiedService) -> dict[str, t.JsonValue]:
+        def to_dict(
+            model_instance: FlextDbtLdifUnifiedService,
+        ) -> dict[str, t.JsonValue]:
             """Convert model to dictionary representation.
 
             Args:
@@ -492,7 +494,9 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
                 )
             except Exception as e:
                 logger.exception("Error writing models to disk")
-                return FlextResult[dict[str, t.JsonValue]].fail(f"Model writing error: {e}")
+                return FlextResult[dict[str, t.JsonValue]].fail(
+                    f"Model writing error: {e}"
+                )
 
     class SQLGeneration:
         """Nested helper class for SQL generation operations."""

@@ -46,7 +46,9 @@ class FlextDbtLdifService:
         project_dir: DBT project directory
 
         """
-        self.config: dict[str, t.JsonValue] = config or FlextDbtLdifSettings.get_global_instance()
+        self.config: dict[str, t.JsonValue] = (
+            config or FlextDbtLdifSettings.get_global_instance()
+        )
         self.project_dir = project_dir or Path.cwd()
 
         # Initialize components with maximum composition

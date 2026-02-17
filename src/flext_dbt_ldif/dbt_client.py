@@ -40,7 +40,9 @@ class FlextDbtLdifClient:
         config: Configuration for LDIF and DBT operations
 
         """
-        self.config: dict[str, t.JsonValue] = config or FlextDbtLdifSettings.get_global_instance()
+        self.config: dict[str, t.JsonValue] = (
+            config or FlextDbtLdifSettings.get_global_instance()
+        )
         self._ldif_api = FlextLdif()
         self._dbt_service: FlextMeltanoService | None = None
         logger.info("Initialized DBT LDIF client with config: %s", self.config)

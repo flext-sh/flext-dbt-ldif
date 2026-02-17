@@ -183,7 +183,9 @@ class FlextDbtLdifModels(FlextModels):
             }
             return FlextResult[dict[str, t.JsonValue]].ok(schema_entry)
         except Exception as e:
-            return FlextResult[dict[str, t.JsonValue]].fail(f"Schema entry generation failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(
+                f"Schema entry generation failed: {e}"
+            )
 
     @classmethod
     def create_generator(
