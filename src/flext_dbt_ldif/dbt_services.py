@@ -46,7 +46,7 @@ class FlextDbtLdifService:
         project_dir: DBT project directory
 
         """
-        self.config: t.JsonDict = config or FlextDbtLdifSettings.get_global_instance()
+        self.config: dict[str, t.JsonValue] = config or FlextDbtLdifSettings.get_global_instance()
         self.project_dir = project_dir or Path.cwd()
 
         # Initialize components with maximum composition
@@ -66,7 +66,7 @@ class FlextDbtLdifService:
         generate_models: bool = True,
         run_transformations: bool = True,
         model_names: t.Core.StringList | None = None,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Run complete LDIF-to-DBT workflow.
 
         Args:
@@ -86,7 +86,7 @@ class FlextDbtLdifService:
             run_transformations,
         )
 
-        workflow_results: t.JsonDict = {
+        workflow_results: dict[str, t.JsonValue] = {
             "ldif_file": str(ldif_file),
             "workflow_status": "started",
             "steps_completed": [],
@@ -96,7 +96,7 @@ class FlextDbtLdifService:
             # Step 1: Parse and validate LDIF
             parse_result: FlextResult[object] = self.parse_and_validate_ldif(ldif_file)
             if not parse_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"LDIF parsing/validation failed: {parse_result.error}",
                 )
 
@@ -112,7 +112,7 @@ class FlextDbtLdifService:
                     entries if isinstance(entries, list) else [],
                 )
                 if not model_result.is_success:
-                    return FlextResult[t.JsonDict].fail(
+                    return FlextResult[dict[str, t.JsonValue]].fail(
                         f"Model generation failed: {model_result.error}",
                     )
 
@@ -127,7 +127,7 @@ class FlextDbtLdifService:
                     model_names,
                 )
                 if not transform_result.is_success:
-                    return FlextResult[t.JsonDict].fail(
+                    return FlextResult[dict[str, t.JsonValue]].fail(
                         f"DBT transformation failed: {transform_result.error}",
                     )
 
@@ -137,20 +137,20 @@ class FlextDbtLdifService:
 
             workflow_results["workflow_status"] = "completed"
             logger.info("Complete LDIF-to-DBT workflow finished successfully")
-            return FlextResult[t.JsonDict].ok(workflow_results)
+            return FlextResult[dict[str, t.JsonValue]].ok(workflow_results)
 
         except Exception as e:
             logger.exception("Unexpected error in complete workflow")
             workflow_results["workflow_status"] = "failed"
             workflow_results["error"] = str(e)
-            return FlextResult[t.JsonDict].fail(
+            return FlextResult[dict[str, t.JsonValue]].fail(
                 f"Complete workflow error: {e}",
             )
 
     def parse_and_validate_ldif(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Parse and validate LDIF file.
 
         Args:
@@ -166,7 +166,7 @@ class FlextDbtLdifService:
             # Parse LDIF file
             parse_result: FlextResult[object] = self.client.parse_ldif_file(ldif_file)
             if not parse_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"Parse failed: {parse_result.error}",
                 )
 
@@ -179,7 +179,7 @@ class FlextDbtLdifService:
             if not validation_result.is_success:
                 return validation_result
 
-            return FlextResult[t.JsonDict].ok(
+            return FlextResult[dict[str, t.JsonValue]].ok(
                 {
                     "entries": "entries",
                     "entry_count": len(entries),
@@ -190,7 +190,7 @@ class FlextDbtLdifService:
 
         except Exception as e:
             logger.exception("Error in parse and validate")
-            return FlextResult[t.JsonDict].fail(
+            return FlextResult[dict[str, t.JsonValue]].fail(
                 f"Parse/validation error: {e}",
             )
 
@@ -199,7 +199,7 @@ class FlextDbtLdifService:
         entries: list[FlextLdifModels.Entry],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Generate and write DBT models for LDIF entries.
 
         Args:
@@ -218,7 +218,7 @@ class FlextDbtLdifService:
                 self.model_generator.generate_staging_models(entries)
             )
             if not staging_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"Staging generation failed: {staging_result.error}",
                 )
 
@@ -229,7 +229,7 @@ class FlextDbtLdifService:
                 staging_models,
             )
             if not analytics_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"Analytics generation failed: {analytics_result.error}",
                 )
 
@@ -248,7 +248,7 @@ class FlextDbtLdifService:
 
             write_info = write_result.value or {}
 
-            return FlextResult[t.JsonDict].ok(
+            return FlextResult[dict[str, t.JsonValue]].ok(
                 {
                     "staging_models": len(staging_models),
                     "analytics_models": len(analytics_models),
@@ -261,14 +261,14 @@ class FlextDbtLdifService:
 
         except Exception as e:
             logger.exception("Error in generate and write models")
-            return FlextResult[t.JsonDict].fail(
+            return FlextResult[dict[str, t.JsonValue]].fail(
                 f"Model generation error: {e}",
             )
 
     def run_data_quality_assessment(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Run complete data quality assessment on LDIF file.
 
         Args:
@@ -284,7 +284,7 @@ class FlextDbtLdifService:
             # Parse LDIF
             parse_result: FlextResult[object] = self.client.parse_ldif_file(ldif_file)
             if not parse_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"Parse failed: {parse_result.error}",
                 )
 
@@ -340,18 +340,18 @@ class FlextDbtLdifService:
             }
 
             logger.info("Data quality assessment completed")
-            return FlextResult[t.JsonDict].ok(dict(quality_assessment))
+            return FlextResult[dict[str, t.JsonValue]].ok(dict(quality_assessment))
 
         except Exception as e:
             logger.exception("Error in data quality assessment")
-            return FlextResult[t.JsonDict].fail(
+            return FlextResult[dict[str, t.JsonValue]].fail(
                 f"Quality assessment error: {e}",
             )
 
     def generate_model_documentation(
         self,
         entries: list[FlextLdifModels.Entry],
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Generate documentation for DBT models based on LDIF analysis.
 
         Args:
@@ -376,7 +376,7 @@ class FlextDbtLdifService:
                 self.model_generator.generate_staging_models(entries)
             )
             if not staging_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"Staging model generation failed: {staging_result.error}",
                 )
 
@@ -410,11 +410,11 @@ class FlextDbtLdifService:
             }
 
             logger.info("Model documentation generated")
-            return FlextResult[t.JsonDict].ok(documentation)
+            return FlextResult[dict[str, t.JsonValue]].ok(documentation)
 
         except Exception as e:
             logger.exception("Error generating model documentation")
-            return FlextResult[t.JsonDict].fail(
+            return FlextResult[dict[str, t.JsonValue]].fail(
                 f"Documentation generation error: {e}",
             )
 
@@ -428,8 +428,8 @@ class FlextDbtLdifService:
 
     def _generate_quality_recommendations(
         self,
-        validation_metrics: t.JsonDict,
-        schema_info: t.JsonDict,
+        validation_metrics: dict[str, t.JsonValue],
+        schema_info: dict[str, t.JsonValue],
     ) -> t.Core.StringList:
         """Generate quality improvement recommendations."""
         recommendations: list[str] = []
@@ -484,7 +484,7 @@ class FlextDbtLdifService:
     def _generate_lineage_info(
         self,
         models: list[FlextDbtLdifUnifiedService],
-    ) -> t.JsonDict:
+    ) -> dict[str, t.JsonValue]:
         """Generate data lineage information for models."""
         return {
             "source": "ldif_files",
@@ -508,7 +508,7 @@ class FlextDbtLdifService:
         def __init__(self, parent_service: FlextDbtLdifService) -> None:
             """Initialize workflow manager with parent service reference."""
             self.parent_service = parent_service
-            self.config: t.JsonDict = parent_service.config
+            self.config: dict[str, t.JsonValue] = parent_service.config
             self.project_dir = parent_service.project_dir
 
         def process_multiple_files(
@@ -516,7 +516,7 @@ class FlextDbtLdifService:
             file_paths: list[Path],
             *,
             parallel: bool = False,
-        ) -> FlextResult[t.JsonDict]:
+        ) -> FlextResult[dict[str, t.JsonValue]]:
             """Process multiple LDIF files in sequence or parallel."""
             logger.info(
                 "Processing %d files with parallel=%s",
@@ -524,7 +524,7 @@ class FlextDbtLdifService:
                 parallel,
             )
 
-            batch_results: t.JsonDict = {
+            batch_results: dict[str, t.JsonValue] = {
                 "total": len(file_paths),
                 "successful": 0,
                 "failed": 0,
@@ -579,7 +579,7 @@ class FlextDbtLdifService:
                             },
                         )
 
-            return FlextResult[t.JsonDict].ok(batch_results)
+            return FlextResult[dict[str, t.JsonValue]].ok(batch_results)
 
     def get_workflow_manager(self) -> _WorkflowManager:
         """Get workflow manager for batch processing operations."""

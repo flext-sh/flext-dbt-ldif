@@ -161,15 +161,15 @@ class FlextDbtLdifModels(FlextModels):
         except Exception as e:
             return FlextResult[str].fail(f"SQL file generation failed: {e}")
 
-    def to_schema_entry(self) -> FlextResult[t.JsonDict]:
+    def to_schema_entry(self) -> FlextResult[dict[str, t.JsonValue]]:
         """Convert model to schema.yml entry.
 
         Returns:
-            FlextResult[t.JsonDict]: Schema entry as JSON-compatible dict
+            FlextResult[dict[str, t.JsonValue]]: Schema entry as JSON-compatible dict
 
         """
         try:
-            schema_entry: t.JsonDict = {
+            schema_entry: dict[str, t.JsonValue] = {
                 "name": self.name,
                 "description": self.description,
                 "columns": [
@@ -181,9 +181,9 @@ class FlextDbtLdifModels(FlextModels):
                     for col in self.columns
                 ],
             }
-            return FlextResult[t.JsonDict].ok(schema_entry)
+            return FlextResult[dict[str, t.JsonValue]].ok(schema_entry)
         except Exception as e:
-            return FlextResult[t.JsonDict].fail(f"Schema entry generation failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(f"Schema entry generation failed: {e}")
 
     @classmethod
     def create_generator(

@@ -53,14 +53,14 @@ class FlextDbtLdifUtilities(u):
         self._logger = FlextLogger(__name__)
         self._ldif_api = FlextLdif()
 
-    def execute(self) -> r[t.JsonDict]:
+    def execute(self) -> r[dict[str, t.JsonValue]]:
         """Execute the main DBT LDIF service operation.
 
         Returns:
-            r[t.JsonDict]: Service status and capabilities
+            r[dict[str, t.JsonValue]]: Service status and capabilities
 
         """
-        return r[t.JsonDict].ok({
+        return r[dict[str, t.JsonValue]].ok({
             "status": "operational",
             "service": "flext-dbt-ldif-utilities",
             "capabilities": [
@@ -457,7 +457,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
         def generate_dbt_source_definition(
             entries: Sequence[FlextLdifModels.Entry],
             source_name: str = "ldif",
-        ) -> r[t.JsonDict]:
+        ) -> r[dict[str, t.JsonValue]]:
             """Generate DBT source definition for LDIF data.
 
             Args:
@@ -465,7 +465,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                 source_name: Name for the DBT source
 
             Returns:
-                r[t.JsonDict]: DBT source definition or error
+                r[dict[str, t.JsonValue]]: DBT source definition or error
 
             """
             try:
@@ -474,7 +474,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     FlextDbtLdifUtilities.LdifSchemaMapping.analyze_ldif_schema(entries)
                 )
                 if not schema_result.is_success:
-                    return r[t.JsonDict].fail(schema_result.error)
+                    return r[dict[str, t.JsonValue]].fail(schema_result.error)
 
                 schema_analysis = schema_result.value
 
@@ -519,7 +519,7 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     },
                 ]
 
-                source_definition: t.JsonDict = {
+                source_definition: dict[str, t.JsonValue] = {
                     "version": 2,
                     "sources": [
                         {
@@ -543,10 +543,10 @@ where array_to_string(objectclass_array, ',') ilike '%organizationalunit%'
                     ],
                 }
 
-                return r[t.JsonDict].ok(source_definition)
+                return r[dict[str, t.JsonValue]].ok(source_definition)
 
             except Exception as e:
-                return r[t.JsonDict].fail(
+                return r[dict[str, t.JsonValue]].fail(
                     f"DBT source definition generation failed: {e}",
                 )
 

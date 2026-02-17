@@ -72,7 +72,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     self,
                     models: Sequence[str] | None = None,
                     config: t.DbtLdifTransformation.TransformationConfig | None = None,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Run DBT models with LDIF data sources.
 
                     Args:
@@ -80,7 +80,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                         config: DBT configuration parameters
 
                     Returns:
-                        r[t.JsonDict]: DBT run results or error
+                        r[dict[str, t.JsonValue]]: DBT run results or error
 
                     """
                     ...
@@ -89,7 +89,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     self,
                     models: Sequence[str] | None = None,
                     config: t.DbtLdifTransformation.TransformationConfig | None = None,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Test DBT models with LDIF data validation.
 
                     Args:
@@ -97,7 +97,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                         config: DBT test configuration
 
                     Returns:
-                        r[t.JsonDict]: DBT test results or error
+                        r[dict[str, t.JsonValue]]: DBT test results or error
 
                     """
                     ...
@@ -106,7 +106,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     self,
                     models: Sequence[str] | None = None,
                     config: t.DbtLdifTransformation.TransformationConfig | None = None,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Compile DBT models for LDIF data processing.
 
                     Args:
@@ -114,16 +114,16 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                         config: DBT compilation configuration
 
                     Returns:
-                        r[t.JsonDict]: DBT compilation results or error
+                        r[dict[str, t.JsonValue]]: DBT compilation results or error
 
                     """
                     ...
 
-                def get_dbt_manifest(self) -> p_meltano.Result[t.JsonDict]:
+                def get_dbt_manifest(self) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Get DBT manifest with LDIF model definitions.
 
                     Returns:
-                        r[t.JsonDict]: DBT manifest or error
+                        r[dict[str, t.JsonValue]]: DBT manifest or error
 
                     """
                     ...
@@ -206,7 +206,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     self,
                     ldif_data: Sequence[t.LdifData.LdifEntry],
                     warehouse_config: t.LdifExport.ExportConfiguration,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Export LDIF data to data warehouse for DBT processing.
 
                     Args:
@@ -214,7 +214,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                         warehouse_config: Data warehouse configuration
 
                     Returns:
-                        r[t.JsonDict]: Export operation results or error
+                        r[dict[str, t.JsonValue]]: Export operation results or error
 
                     """
                     ...
@@ -502,7 +502,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     self,
                     quality_results: Sequence[t.LdifProcessing.QualityValidation],
                     report_config: t.LdifExport.ExportConfiguration,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Generate data quality report for LDIF DBT processing.
 
                     Args:
@@ -510,7 +510,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                         report_config: Report generation configuration
 
                     Returns:
-                        r[t.JsonDict]: Quality report or error
+                        r[dict[str, t.JsonValue]]: Quality report or error
 
                     """
                     ...
@@ -527,7 +527,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     self,
                     model_config: t.DbtLdifModel.LdifModelConfig,
                     performance_metrics: t.LdifProcessing.ProcessingMetrics,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Optimize DBT models for LDIF data processing performance.
 
                     Args:
@@ -535,7 +535,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                         performance_metrics: Current performance metrics
 
                     Returns:
-                        r[t.JsonDict]: Optimization recommendations or error
+                        r[dict[str, t.JsonValue]]: Optimization recommendations or error
 
                     """
                     ...
@@ -559,7 +559,7 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
 
                 def monitor_dbt_performance(
                     self,
-                    run_results: t.JsonDict,
+                    run_results: dict[str, t.JsonValue],
                 ) -> p_meltano.Result[t.LdifProcessing.ProcessingMetrics]:
                     """Monitor DBT performance with LDIF data processing.
 
@@ -627,11 +627,11 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                     """
                     ...
 
-                def get_health_status(self) -> p_meltano.Result[t.JsonDict]:
+                def get_health_status(self) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Get DBT LDIF integration health status.
 
                     Returns:
-                        r[t.JsonDict]: Health status or error
+                        r[dict[str, t.JsonValue]]: Health status or error
 
                     """
                     ...
@@ -639,14 +639,14 @@ class FlextDbtLdifProtocols(p_meltano, p_ldif):
                 def create_monitoring_dashboard(
                     self,
                     dashboard_config: t.LdifExport.ExportConfiguration,
-                ) -> p_meltano.Result[t.JsonDict]:
+                ) -> p_meltano.Result[dict[str, t.JsonValue]]:
                     """Create monitoring dashboard for DBT LDIF operations.
 
                     Args:
                         dashboard_config: Dashboard configuration
 
                     Returns:
-                        r[t.JsonDict]: Dashboard creation result or error
+                        r[dict[str, t.JsonValue]]: Dashboard creation result or error
 
                     """
                     ...

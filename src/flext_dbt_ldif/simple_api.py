@@ -100,7 +100,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Process an LDIF file with DBT using railway pattern.
 
         Args:
@@ -110,7 +110,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             run_transformations: Whether to run transformations
 
         Returns:
-            FlextResult[t.JsonDict]: Processing results
+            FlextResult[dict[str, t.JsonValue]]: Processing results
 
         """
         try:
@@ -131,26 +131,26 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
                 run_transformations=run_transformations,
             )
         except Exception as e:
-            return FlextResult[t.JsonDict].fail(f"LDIF processing failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(f"LDIF processing failed: {e}")
 
     def validate_ldif_quality(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Validate LDIF data quality using railway pattern.
 
         Args:
             ldif_file: Path to LDIF file
 
         Returns:
-            FlextResult[t.JsonDict]: Quality assessment
+            FlextResult[dict[str, t.JsonValue]]: Quality assessment
 
         """
         try:
             self.logger.info("Validating LDIF quality: %s", ldif_file)
             return self.service.run_data_quality_assessment(ldif_file)
         except Exception as e:
-            return FlextResult[t.JsonDict].fail(f"LDIF quality validation failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(f"LDIF quality validation failed: {e}")
 
     def generate_ldif_models(
         self,
@@ -158,7 +158,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> FlextResult[t.JsonDict]:
+    ) -> FlextResult[dict[str, t.JsonValue]]:
         """Generate DBT models from LDIF using railway pattern.
 
         Args:
@@ -167,7 +167,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             overwrite: Whether to overwrite existing models
 
         Returns:
-            FlextResult[t.JsonDict]: Model generation results
+            FlextResult[dict[str, t.JsonValue]]: Model generation results
 
         """
         try:
@@ -185,18 +185,18 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             # Parse file first
             parse_result = service.parse_and_validate_ldif(ldif_file)
             if not parse_result.is_success:
-                return FlextResult[t.JsonDict].fail(
+                return FlextResult[dict[str, t.JsonValue]].fail(
                     f"LDIF parsing failed: {parse_result.error}",
                 )
 
             parse_data = parse_result.value or {}
             entries = parse_data.get("entries", [])
             if not isinstance(entries, list):
-                return FlextResult[t.JsonDict].fail("Invalid entries data format")
+                return FlextResult[dict[str, t.JsonValue]].fail("Invalid entries data format")
 
             return service.generate_and_write_models(entries, overwrite=overwrite)
         except Exception as e:
-            return FlextResult[t.JsonDict].fail(f"Model generation failed: {e}")
+            return FlextResult[dict[str, t.JsonValue]].fail(f"Model generation failed: {e}")
 
 
 # Backward compatibility aliases
@@ -210,7 +210,7 @@ def process_ldif_file(
     *,
     generate_models: bool = True,
     run_transformations: bool = False,
-) -> FlextResult[t.JsonDict]:
+) -> FlextResult[dict[str, t.JsonValue]]:
     """Legacy function wrapper - use FlextDbtLdif.process_ldif_file() instead.
 
     Args:
@@ -220,7 +220,7 @@ def process_ldif_file(
         run_transformations: Whether to run transformations
 
     Returns:
-        FlextResult[t.JsonDict]: Processing results
+        FlextResult[dict[str, t.JsonValue]]: Processing results
 
     """
     api = FlextDbtLdif()
@@ -234,14 +234,14 @@ def process_ldif_file(
 
 def validate_ldif_quality(
     ldif_file: Path | str,
-) -> FlextResult[t.JsonDict]:
+) -> FlextResult[dict[str, t.JsonValue]]:
     """Legacy function wrapper - use FlextDbtLdif.validate_ldif_quality() instead.
 
     Args:
         ldif_file: Path to LDIF file
 
     Returns:
-        FlextResult[t.JsonDict]: Quality assessment
+        FlextResult[dict[str, t.JsonValue]]: Quality assessment
 
     """
     api = FlextDbtLdif()
@@ -253,7 +253,7 @@ def generate_ldif_models(
     project_dir: Path | str | None = None,
     *,
     overwrite: bool = False,
-) -> FlextResult[t.JsonDict]:
+) -> FlextResult[dict[str, t.JsonValue]]:
     """Legacy function wrapper - use FlextDbtLdif.generate_ldif_models() instead.
 
     Args:
@@ -262,7 +262,7 @@ def generate_ldif_models(
         overwrite: Whether to overwrite existing models
 
     Returns:
-        FlextResult[t.JsonDict]: Model generation results
+        FlextResult[dict[str, t.JsonValue]]: Model generation results
 
     """
     api = FlextDbtLdif()
