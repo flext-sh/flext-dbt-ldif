@@ -16,10 +16,9 @@ from typing import Literal, override
 
 from flext_core import FlextModels, FlextResult
 from flext_core.utilities import u
-from pydantic import BaseModel, ConfigDict, Field
-
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.typings import t
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ColumnDefinition(BaseModel):
@@ -284,8 +283,7 @@ class FlextDbtLdifModels(FlextModels):
 
             """
             try:
-                # Note: This is a template string for DBT, not executable SQL
-                # The f-string interpolation is safe as it's used for DBT templating
+                # nosec B608 - DBT source() template; ldif_source from config
                 sql_content = f"""
 select *
 from {{{{ source('ldif', '{ldif_source}') }}}}
@@ -330,9 +328,7 @@ from {{{{ source('ldif', '{ldif_source}') }}}}
             try:
                 analytics_name = staging_model.name.replace("stg_", "analytics_")
 
-                # Note: This is a template string for DBT, not executable SQL
-                # The f-string interpolation is safe as it's used for DBT templating
-
+                # nosec B608 - DBT ref() template; staging_model.name from internal
                 sql_content = f"""
 select
 *,

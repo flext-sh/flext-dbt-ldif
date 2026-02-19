@@ -16,11 +16,10 @@ from pathlib import Path
 from typing import ClassVar, Self
 
 from flext_core import FlextLogger, FlextResult, FlextSettings
+from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_ldif import FlextLdifSettings
 from flext_meltano import FlextMeltanoSettings
 from pydantic import ConfigDict, Field, field_validator, model_validator
-
-from flext_dbt_ldif.constants import FlextDbtLdifConstants
 
 logger = FlextLogger(__name__)
 

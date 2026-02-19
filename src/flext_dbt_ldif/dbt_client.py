@@ -11,12 +11,11 @@ from pathlib import Path
 from typing import override
 
 from flext_core import FlextLogger, r
+from flext_dbt_ldif.settings import FlextDbtLdifSettings
+from flext_dbt_ldif.typings import t
 from flext_ldif import FlextLdif
 from flext_ldif.models import FlextLdifModels
 from flext_meltano.services import FlextMeltanoService
-
-from flext_dbt_ldif.settings import FlextDbtLdifSettings
-from flext_dbt_ldif.typings import t
 
 logger = FlextLogger(__name__)
 

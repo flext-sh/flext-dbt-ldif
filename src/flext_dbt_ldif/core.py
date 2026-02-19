@@ -16,9 +16,8 @@ from pathlib import Path
 from typing import override
 
 from flext_core import FlextLogger, r
-from flext_ldif import FlextLdif, FlextLdifModels
-
 from flext_dbt_ldif.typings import t
+from flext_ldif import FlextLdif, FlextLdifModels
 
 logger = FlextLogger(__name__)
 

@@ -17,11 +17,10 @@ from typing import ClassVar
 
 from flext_core import FlextContainer, FlextLogger, r
 from flext_core.utilities import FlextUtilities as u
-from flext_ldif import FlextLdif, FlextLdifModels
-
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.models import ColumnDefinition
 from flext_dbt_ldif.typings import t
+from flext_ldif import FlextLdif, FlextLdifModels
 
 __all__: list[str] = ["FlextDbtLdifUtilities"]
 
@@ -237,9 +236,7 @@ class FlextDbtLdifUtilities(u):
                         f"    array_to_string({attr_name}, ',') as {attr_name}_text",
                     ))
 
-                # Use model_name in description (DBT template - safe SQL generation)
-                # Note: This is a template string for DBT, not executable SQL
-                # The f-string interpolation is safe as it's used for DBT templating
+                # nosec B608 - DBT model template; model_name from config
                 model_sql = f"""{{{{
  config(
  materialized='view',

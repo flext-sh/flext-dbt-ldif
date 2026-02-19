@@ -11,12 +11,11 @@ from pathlib import Path
 from typing import override
 
 from flext_core import FlextLogger, FlextResult
-from flext_ldif import FlextLdifModels
-
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.settings import FlextDbtLdifSettings
 from flext_dbt_ldif.typings import t
+from flext_ldif import FlextLdifModels
 
 logger = FlextLogger(__name__)
 # Quality assessment thresholds

@@ -8,6 +8,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from importlib.metadata import metadata
+from typing import Final
 
 # Extract metadata from package
 _metadata = metadata("flext-dbt-ldif")
@@ -79,8 +80,10 @@ class FlextDbtLdifVersion:
 
 # Global version instance
 VERSION = FlextDbtLdifVersion()
+PROJECT_VERSION: Final[FlextDbtLdifVersion] = VERSION
 
 __all__ = [
+    "PROJECT_VERSION",
     "VERSION",
     "FlextDbtLdifVersion",
     "__author__",

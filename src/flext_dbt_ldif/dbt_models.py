@@ -14,10 +14,9 @@ from typing import override
 
 import yaml
 from flext_core import FlextLogger, FlextResult, FlextService
-from flext_ldif import FlextLdif, FlextLdifModels
-
 from flext_dbt_ldif.settings import FlextDbtLdifSettings
 from flext_dbt_ldif.typings import t
+from flext_ldif import FlextLdif, FlextLdifModels
 
 # Use the real typed class for precise type checking
 logger = FlextLogger(__name__)
@@ -532,10 +531,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
                 else "view"
             )
 
-            # Generate DBT template string (not executable SQL)
-            # Note: This is a template string for DBT, not executable SQL
-            # The f-string interpolation is safe as it's used for DBT templating
-            # This generates DBT SQL templates, not executable queries
+            # nosec B608 - DBT Jinja template; materialized/column_list from config
             return f"""-- Staging model for LDIF data
 -- Generated automatically by flext-dbt-ldif
 
@@ -566,9 +562,7 @@ select * from validated_data
             """Generate analytics SQL for DBT model."""
             # Use model configuration for SQL generation
             table_name = getattr(model, "table_name", "analytics_table")
-            # Generate DBT template string (not executable SQL)
-            # Note: This is a template string for DBT, not executable SQL
-            # The f-string interpolation is safe as it's used for DBT templating
+            # nosec B608 - DBT ref() template; table_name from model config
             return f"SELECT * FROM {{ ref('{table_name}') }}"
 
         @staticmethod
@@ -584,6 +578,7 @@ select * from validated_data
 
             column_list: str = ",\n    ".join(columns) if columns else "*"
 
+            # nosec B608 - DBT config template; model fields from config
             return (
                 "-- Generic model for LDIF data\n"
                 f"-- Model: {model.name}\n"

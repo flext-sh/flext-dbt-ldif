@@ -13,7 +13,6 @@ from __future__ import annotations
 from typing import override
 
 from flext_core import FlextExceptions
-
 from flext_dbt_ldif.constants import c
 
 # Alias for backward compatibility - ErrorCode is now centralized in constants.py

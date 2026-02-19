@@ -18,7 +18,6 @@ from flext_core import (
     FlextService,
     t,
 )
-
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 from flext_dbt_ldif.settings import FlextDbtLdifSettings
 
