@@ -1,8 +1,5 @@
 # flext-dbt-ldif - LDIF dbt Package
 PROJECT_NAME := flext-dbt-ldif
-COV_DIR := flext_dbt_ldif
-MIN_COVERAGE := 90
-
 include ../base.mk
 
 # === PROJECT-SPECIFIC TARGETS ===
