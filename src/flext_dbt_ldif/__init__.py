@@ -14,6 +14,7 @@ from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
 from flext_dbt_ldif.dbt_models import (
+    FlextDbtLdifUnifiedService,
     FlextDbtLdifUnifiedService as FlextDbtLdifModelGenerator,
 )
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
