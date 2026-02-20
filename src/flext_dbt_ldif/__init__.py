@@ -15,21 +15,15 @@ from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
 from flext_dbt_ldif.dbt_models import (
     FlextDbtLdifUnifiedService,
-    FlextDbtLdifUnifiedService as FlextDbtLdifModelGenerator,
 )
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
 from flext_dbt_ldif.models import (
     FlextDbtLdifModels,
-    FlextDbtLdifModels as FlextLdifDbtModel,
 )
 from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
 from flext_dbt_ldif.settings import FlextDbtLdifSettings
 from flext_dbt_ldif.simple_api import (
     FlextDbtLdif,
-    FlextDbtLdifAPI,
-    generate_ldif_models,
-    process_ldif_file,
-    validate_ldif_quality,
 )
 from flext_dbt_ldif.typings import FlextDbtLdifTypes
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
@@ -40,11 +34,9 @@ __all__: list[str] = [
     "PROJECT_VERSION",
     "VERSION",
     "FlextDbtLdif",
-    "FlextDbtLdifAPI",
     "FlextDbtLdifClient",
     "FlextDbtLdifCore",
     "FlextDbtLdifError",
-    "FlextDbtLdifModelGenerator",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifService",
@@ -54,12 +46,8 @@ __all__: list[str] = [
     "FlextDbtLdifUtilities",
     "FlextDbtLdifVersion",
     "FlextLdif",
-    "FlextLdifDbtModel",
     "FlextResult",
     "__version__",
     "__version_info__",
-    "generate_ldif_models",
     "main",
-    "process_ldif_file",
-    "validate_ldif_quality",
 ]

@@ -68,56 +68,9 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
                 parsed.error or "Parsing failed",
             )
         entries_raw = parsed.value.get("entries", [])
-        entries: list[dict[str, t.GeneralValueType]] = (
-            entries_raw if isinstance(entries_raw, list) else []
-        )
+        entries_payload = entries_raw if isinstance(entries_raw, list) else []
+        entries = [entry for entry in entries_payload if isinstance(entry, dict)]
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
 
-FlextDbtLdifAPI = FlextDbtLdif
-
-
-def process_ldif_file(
-    ldif_file: Path | str,
-    project_dir: Path | str | None = None,
-    *,
-    generate_models: bool = True,
-    run_transformations: bool = False,
-) -> FlextResult[dict[str, t.GeneralValueType]]:
-    """Function wrapper for processing LDIF workflows."""
-    return FlextDbtLdif().process_ldif_file(
-        ldif_file,
-        project_dir=project_dir,
-        generate_models=generate_models,
-        run_transformations=run_transformations,
-    )
-
-
-def validate_ldif_quality(
-    ldif_file: Path | str,
-) -> FlextResult[dict[str, t.GeneralValueType]]:
-    """Function wrapper for data quality workflow."""
-    return FlextDbtLdif().validate_ldif_quality(ldif_file)
-
-
-def generate_ldif_models(
-    ldif_file: Path | str,
-    project_dir: Path | str | None = None,
-    *,
-    overwrite: bool = False,
-) -> FlextResult[dict[str, t.GeneralValueType]]:
-    """Function wrapper for model generation workflow."""
-    return FlextDbtLdif().generate_ldif_models(
-        ldif_file,
-        project_dir=project_dir,
-        overwrite=overwrite,
-    )
-
-
-__all__ = [
-    "FlextDbtLdif",
-    "FlextDbtLdifAPI",
-    "generate_ldif_models",
-    "process_ldif_file",
-    "validate_ldif_quality",
-]
+__all__ = ["FlextDbtLdif"]

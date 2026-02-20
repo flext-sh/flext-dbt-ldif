@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 from flext_core import FlextTypes as t, FlextResult
 
-from flext_dbt_ldif import FlextDbtLdifService, FlextLdifDbtModel
+from flext_dbt_ldif import FlextDbtLdifModels, FlextDbtLdifService
 
 
 @pytest.fixture
@@ -37,7 +37,9 @@ def test_run_complete_workflow_all(
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({"quality_score": 0.9}),
+        lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({
+            "quality_score": 0.9
+        }),
     )
     monkeypatch.setattr(
         svc.client,
@@ -46,8 +48,12 @@ def test_run_complete_workflow_all(
     )
 
     # Model generator behavior
-    staging_model: t.GeneralValueType = FlextLdifDbtModel("stg_persons", "d", [])
-    analytics_model: t.GeneralValueType = FlextLdifDbtModel("analytics_ldif_insights", "d", [])
+    staging_model: t.GeneralValueType = FlextDbtLdifModels("stg_persons", "d", [])
+    analytics_model: t.GeneralValueType = FlextDbtLdifModels(
+        "analytics_ldif_insights",
+        "d",
+        [],
+    )
 
     monkeypatch.setattr(
         svc.model_generator,
@@ -94,11 +100,13 @@ def test_run_data_quality_assessment(
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({"quality_score": 0.88}),
+        lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({
+            "quality_score": 0.88
+        }),
     )
 
     # analyze_ldif_schema + generate_staging_models paths
-    staging_model3: t.GeneralValueType = FlextLdifDbtModel("stg_persons", "d", [])
+    staging_model3: t.GeneralValueType = FlextDbtLdifModels("stg_persons", "d", [])
 
     monkeypatch.setattr(
         svc.model_generator,
@@ -122,7 +130,7 @@ def test_generate_model_documentation(
     svc: FlextDbtLdifService,
 ) -> None:
     """Test model documentation generation."""
-    staging_model4: t.GeneralValueType = FlextLdifDbtModel("stg_persons", "d", [])
+    staging_model4: t.GeneralValueType = FlextDbtLdifModels("stg_persons", "d", [])
 
     monkeypatch.setattr(
         svc.model_generator,

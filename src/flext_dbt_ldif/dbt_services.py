@@ -103,9 +103,8 @@ class FlextDbtLdifService:
         }
 
         entries_raw = parse_validation.value.get("entries", [])
-        entries: list[dict[str, t.GeneralValueType]] = (
-            entries_raw if isinstance(entries_raw, list) else []
-        )
+        entries_payload = entries_raw if isinstance(entries_raw, list) else []
+        entries = [entry for entry in entries_payload if isinstance(entry, dict)]
 
         if generate_models:
             model_result = self.generate_and_write_models(entries)

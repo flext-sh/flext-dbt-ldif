@@ -10,17 +10,13 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_core import FlextResult
-
-
-
+from flext_dbt_ldif import (
+    FlextDbtLdif,
     FlextDbtLdifClient,
     FlextDbtLdifService,
     FlextDbtLdifSettings,
     FlextLdif,
     __version__,
-    generate_ldif_models,
-    process_ldif_file,
-    validate_ldif_quality,
 )
 
 
@@ -31,10 +27,7 @@ def test_api_imports() -> None:
     _ = FlextDbtLdifClient(FlextDbtLdifSettings())
     _ = FlextDbtLdifService(FlextDbtLdifSettings())
 
-    # Test aliased functions
-    assert callable(generate_ldif_models)
-    assert callable(process_ldif_file)
-    assert callable(validate_ldif_quality)
+    assert callable(FlextDbtLdif)
 
     assert FlextResult is not None
     assert FlextLdif is not None

@@ -13,10 +13,8 @@ import pytest
 from flext_core import FlextTypes as t, FlextResult
 
 from flext_dbt_ldif import (
+    FlextDbtLdif,
     FlextDbtLdifService,
-    generate_ldif_models,
-    process_ldif_file,
-    validate_ldif_quality,
 )
 
 
@@ -40,7 +38,9 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch.setattr(
         service.client,
         "validate_ldif_data",
-        lambda _entries: FlextResult[dict[str, t.GeneralValueType]].ok({"quality_score": 0.91}),
+        lambda _entries: FlextResult[dict[str, t.GeneralValueType]].ok({
+            "quality_score": 0.91
+        }),
     )
 
     result = service.parse_and_validate_ldif(tmp_path / "x.ldif")
@@ -104,7 +104,8 @@ def test_monkeypatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
 
-    assert process_ldif_file(tmp_path / "f.ldif").is_success
+    api = FlextDbtLdif()
+    assert api.process_ldif_file(tmp_path / "f.ldif").is_success
 
     # Patch validation path to avoid real file read
     def _run_quality(
@@ -118,7 +119,7 @@ def test_monkeypatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
         "run_data_quality_assessment",
         _run_quality,
     )
-    assert validate_ldif_quality(tmp_path / "f.ldif").is_success
+    assert api.validate_ldif_quality(tmp_path / "f.ldif").is_success
 
     def _parse_val(
         _self: FlextDbtLdifService,
@@ -137,4 +138,4 @@ def test_monkeypatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)
     monkeypatch.setattr(FlextDbtLdifService, "generate_and_write_models", _gen_models)
 
-    assert generate_ldif_models(tmp_path / "f.ldif").is_success
+    assert api.generate_ldif_models(tmp_path / "f.ldif").is_success

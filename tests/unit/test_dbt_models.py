@@ -9,31 +9,27 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
-
-    FlextDbtLdifModelGenerator,
-    FlextDbtLdifSettings,
-    FlextLdifDbtModel,
-)
+from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService
+from flext_dbt_ldif.models import FlextDbtLdifModels
 
 
 def test_write_models_and_sql_generation(tmp_path: Path) -> None:
     """Test writing models and generating SQL."""
-    gen = FlextDbtLdifModelGenerator(FlextDbtLdifSettings(), project_dir=tmp_path)
+    gen = FlextDbtLdifUnifiedService(FlextDbtLdifSettings(), project_dir=tmp_path)
     # Create a simple staging model and analytics models
-    stg = FlextLdifDbtModel(
+    stg = FlextDbtLdifModels(
         name="stg_persons",
         description="staging",
         columns=[{"name": "dn"}, {"name": "object_class"}],
         materialization="view",
     )
-    an_insights = FlextLdifDbtModel(
+    an_insights = FlextDbtLdifModels(
         name="analytics_ldif_insights",
         description="insights",
         columns=[{"name": "analysis_date"}],
         materialization="table",
     )
-    an_hier = FlextLdifDbtModel(
+    an_hier = FlextDbtLdifModels(
         name="analytics_ldif_hierarchy",
         description="hier",
         columns=[{"name": "dn_path"}],
@@ -50,7 +46,7 @@ def test_write_models_and_sql_generation(tmp_path: Path) -> None:
 
 def test_generate_analytics_models() -> None:
     """Test generating analytics models."""
-    gen = FlextDbtLdifModelGenerator(FlextDbtLdifSettings())
+    gen = FlextDbtLdifUnifiedService(FlextDbtLdifSettings())
     res = gen.generate_analytics_models([])
     assert res.is_success
     models = res.value or []
