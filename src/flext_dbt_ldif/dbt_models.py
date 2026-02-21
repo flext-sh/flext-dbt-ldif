@@ -13,6 +13,9 @@ from .settings import FlextDbtLdifSettings
 class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
     """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
+    name: str = "ldif_generator"
+    project_dir: Path = Path.cwd()
+
     def __init__(
         self,
         name: str = "ldif_generator",
@@ -20,10 +23,8 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
         project_dir: Path | None = None,
     ) -> None:
         """Initialize service with project and settings context."""
-        super().__init__()
-        self.name = name
+        super().__init__(name=name, project_dir=project_dir or Path.cwd())
         self._settings = config or FlextDbtLdifSettings.get_global_instance()
-        self.project_dir = project_dir or Path.cwd()
 
     def execute(self) -> FlextResult[dict[str, t.JsonValue]]:
         """Execute service and return metadata payload."""
