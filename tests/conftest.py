@@ -30,14 +30,11 @@ def shared_ldap_container(
 
     Container auto-starts if not running and remains running after tests.
     """
-    result = docker_control.start_container("flext-openldap-test")
+    result = docker_control.start_existing_container("flext-openldap-test")
     if result.is_failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
 
     yield "flext-openldap-test"
-
-    # Keep container running after tests
-    docker_control.stop_container("flext-openldap-test", remove=False)
 
 
 # Import shared fixtures from docker directory
@@ -48,7 +45,7 @@ def shared_ldap_container(
 def set_test_environment() -> Generator[None]:
     """Set test environment variables."""
     os.environ["FLEXT_ENV"] = "test"
-    os.environ["FLEXT_LOG_LEVEL"] = "debug"
+    os.environ["FLEXT_LOG_LEVEL"] = "DEBUG"
     temp_dir = tempfile.mkdtemp(prefix="dbt_profiles_")
     os.environ["DBT_PROFILES_DIR"] = temp_dir
     os.environ["LDIF_TEST_MODE"] = "true"

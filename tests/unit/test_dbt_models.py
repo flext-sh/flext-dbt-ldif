@@ -15,7 +15,9 @@ from flext_dbt_ldif.models import FlextDbtLdifModels
 
 def test_write_models_and_sql_generation(tmp_path: Path) -> None:
     """Test writing models and generating SQL."""
-    gen = FlextDbtLdifUnifiedService(FlextDbtLdifSettings(), project_dir=tmp_path)
+    gen = FlextDbtLdifUnifiedService(
+        config=FlextDbtLdifSettings(), project_dir=tmp_path
+    )
     # Create a simple staging model and analytics models
     stg = FlextDbtLdifModels(
         name="stg_persons",
@@ -46,7 +48,7 @@ def test_write_models_and_sql_generation(tmp_path: Path) -> None:
 
 def test_generate_analytics_models() -> None:
     """Test generating analytics models."""
-    gen = FlextDbtLdifUnifiedService(FlextDbtLdifSettings())
+    gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
     res = gen.generate_analytics_models([])
     assert res.is_success
     models = res.value or []

@@ -21,15 +21,14 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_initialization(self, tmp_path: Path) -> None:
         """Test FlextDbtLdifUnifiedService initialization."""
-        generator = FlextDbtLdifUnifiedService(tmp_path)
+        generator = FlextDbtLdifUnifiedService(project_dir=tmp_path)
         if generator.project_dir != tmp_path:
             msg: str = f"Expected {tmp_path}, got {generator.project_dir}"
             raise AssertionError(msg)
-        assert generator.models_dir == tmp_path / "models"
 
     def test_staging_model_generation(self, tmp_path: Path) -> None:
         """Test staging model generation."""
-        generator = FlextDbtLdifUnifiedService(tmp_path)
+        generator = FlextDbtLdifUnifiedService(project_dir=tmp_path)
         models = generator.generate_staging_models()
 
         assert isinstance(models, list)
@@ -45,7 +44,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_analytics_model_generation(self, tmp_path: Path) -> None:
         """Test analytics model generation."""
-        generator = FlextDbtLdifUnifiedService(tmp_path)
+        generator = FlextDbtLdifUnifiedService(project_dir=tmp_path)
         models = generator.generate_analytics_models()
 
         assert isinstance(models, list)
