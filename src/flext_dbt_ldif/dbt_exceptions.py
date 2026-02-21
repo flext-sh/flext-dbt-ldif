@@ -34,7 +34,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         self,
         message: str,
         *,
-        error_code: ErrorCode = ErrorCode.DBT_LDIF_ERROR,
+        error_code: c.ErrorCode = c.ErrorCode.DBT_LDIF_ERROR,
         **context: object,
     ) -> None:
         """Initialize LDIF DBT error with error code and context.
