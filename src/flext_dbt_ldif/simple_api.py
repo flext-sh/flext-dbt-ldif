@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import FlextResult, FlextService, FlextTypes as t
+from flext_core import FlextResult, FlextService, t
 
 from .dbt_services import FlextDbtLdifService
 from .settings import FlextDbtLdifSettings

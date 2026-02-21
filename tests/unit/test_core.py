@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations
-from flext_core import FlextTypes as t
+from flext_dbt_ldif import t
 
 from pathlib import Path
 

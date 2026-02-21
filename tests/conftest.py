@@ -12,7 +12,7 @@ import tempfile
 from collections.abc import Generator
 
 import pytest
-from flext_core import FlextTypes as t
+from flext_dbt_ldif import t
 from flext_tests import FlextTestsDocker
 
 

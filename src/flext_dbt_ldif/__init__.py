@@ -25,7 +25,7 @@ from flext_dbt_ldif.settings import FlextDbtLdifSettings
 from flext_dbt_ldif.simple_api import (
     FlextDbtLdif,
 )
-from flext_dbt_ldif.typings import FlextDbtLdifTypes
+from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
 from flext_dbt_ldif.version import PROJECT_VERSION, VERSION, FlextDbtLdifVersion
 from flext_ldif import FlextLdif
@@ -50,4 +50,5 @@ __all__: list[str] = [
     "__version__",
     "__version_info__",
     "main",
+    "t",
 ]
