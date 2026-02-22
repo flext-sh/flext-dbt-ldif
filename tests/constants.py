@@ -15,8 +15,9 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_tests.constants import FlextTestsConstants
+
+from flext_dbt_ldif.constants import FlextDbtLdifConstants
 
 
 class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
