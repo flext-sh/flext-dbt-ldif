@@ -73,11 +73,11 @@ __all__: list[str] = [
     "e",
     "h",
     "m",
+    "main",
     "p",
     "r",
     "s",
     "t",
     "u",
     "x",
-    "main",
 ]
