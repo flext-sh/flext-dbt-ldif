@@ -9,9 +9,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_tests.models import FlextTestsModels
-
 from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_tests.models import FlextTestsModels
 
 
 class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):

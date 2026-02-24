@@ -5,12 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, t
+from pydantic import TypeAdapter, ValidationError
 
 from .dbt_client import FlextDbtLdifClient
 from .dbt_models import FlextDbtLdifUnifiedService
 from .settings import FlextDbtLdifSettings
 
 logger = FlextLogger(__name__)
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.GeneralValueType]])
 
 
 class FlextDbtLdifService:
@@ -103,8 +105,12 @@ class FlextDbtLdifService:
         }
 
         entries_raw = parse_validation.value.get("entries", [])
-        entries_payload = entries_raw if isinstance(entries_raw, list) else []
-        entries = [entry for entry in entries_payload if isinstance(entry, dict)]
+        try:
+            entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
+        except ValidationError:
+            return FlextResult[dict[str, t.GeneralValueType]].fail(
+                "Invalid parsed entries payload",
+            )
 
         if generate_models:
             model_result = self.generate_and_write_models(entries)

@@ -6,6 +6,8 @@ from typing import Protocol, runtime_checkable
 
 from flext_core import FlextResult, t
 
+type LdifPayload = t.Dict
+
 
 class FlextDbtLdifProtocols:
     """Namespace for DBT LDIF protocol contracts."""
@@ -20,14 +22,14 @@ class FlextDbtLdifProtocols:
             def run_dbt_models(
                 self,
                 models: list[str] | None = None,
-            ) -> FlextResult[dict[str, t.JsonValue]]:
+            ) -> FlextResult[LdifPayload]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
                 self,
                 models: list[str] | None = None,
-            ) -> FlextResult[dict[str, t.JsonValue]]:
+            ) -> FlextResult[LdifPayload]:
                 """Run DBT tests and return status payload."""
                 ...
 

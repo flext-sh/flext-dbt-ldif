@@ -5,9 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import FlextResult, FlextService, t
+from pydantic import TypeAdapter, ValidationError
 
 from .dbt_services import FlextDbtLdifService
 from .settings import FlextDbtLdifSettings
+
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.GeneralValueType]])
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
@@ -21,9 +24,14 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
 
     def execute(self) -> FlextResult[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
-        if isinstance(self._config, FlextDbtLdifSettings):
-            return FlextResult[FlextDbtLdifSettings].ok(self._config)
-        return FlextResult[FlextDbtLdifSettings].fail("Invalid DBT LDIF settings")
+        try:
+            return FlextResult[FlextDbtLdifSettings].ok(
+                FlextDbtLdifSettings.model_validate(self._config),
+            )
+        except ValidationError:
+            return FlextResult[FlextDbtLdifSettings].fail(
+                "Invalid DBT LDIF settings",
+            )
 
     @property
     def service(self) -> FlextDbtLdifService:
@@ -68,8 +76,12 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
                 parsed.error or "Parsing failed",
             )
         entries_raw = parsed.value.get("entries", [])
-        entries_payload = entries_raw if isinstance(entries_raw, list) else []
-        entries = [entry for entry in entries_payload if isinstance(entry, dict)]
+        try:
+            entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
+        except ValidationError:
+            return FlextResult[dict[str, t.GeneralValueType]].fail(
+                "Invalid parsed entries payload",
+            )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
 
