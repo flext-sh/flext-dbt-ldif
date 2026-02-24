@@ -7,9 +7,17 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_core import FlextResult
+from flext_core import (
+    FlextDecorators,
+    FlextExceptions,
+    FlextHandlers,
+    FlextMixins,
+    FlextResult,
+    FlextService,
+)
 from flext_dbt_ldif.__version__ import __version__, __version_info__
 from flext_dbt_ldif.cli import main
+from flext_dbt_ldif.constants import FlextDbtLdifConstants
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
@@ -30,6 +38,18 @@ from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
 from flext_dbt_ldif.version import PROJECT_VERSION, VERSION, FlextDbtLdifVersion
 from flext_ldif import FlextLdif
 
+# Standard aliases (11 total)
+c = FlextDbtLdifConstants
+d = FlextDecorators
+e = FlextExceptions
+h = FlextHandlers
+m = FlextDbtLdifModels
+p = FlextDbtLdifProtocols
+r = FlextResult
+s = FlextService
+u = FlextDbtLdifUtilities
+x = FlextMixins
+
 __all__: list[str] = [
     "PROJECT_VERSION",
     "VERSION",
@@ -46,9 +66,18 @@ __all__: list[str] = [
     "FlextDbtLdifUtilities",
     "FlextDbtLdifVersion",
     "FlextLdif",
-    "FlextResult",
     "__version__",
     "__version_info__",
-    "main",
+    "c",
+    "d",
+    "e",
+    "h",
+    "m",
+    "p",
+    "r",
+    "s",
     "t",
+    "u",
+    "x",
+    "main",
 ]
