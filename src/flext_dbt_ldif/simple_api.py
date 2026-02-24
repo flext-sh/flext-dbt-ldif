@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
 
 from flext_core import FlextResult, FlextService, t
@@ -45,7 +46,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
+    ) -> FlextResult[Mapping[str, t.GeneralValueType]]:
         """Execute end-to-end LDIF workflow."""
         _ = project_dir
         return self.service.run_complete_workflow(
@@ -57,7 +58,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
     def validate_ldif_quality(
         self,
         ldif_file: Path | str,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
+    ) -> FlextResult[Mapping[str, t.GeneralValueType]]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
 
@@ -67,19 +68,19 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
+    ) -> FlextResult[Mapping[str, t.GeneralValueType]]:
         """Generate DBT model metadata from LDIF input."""
         _ = project_dir
         parsed = self.service.parse_and_validate_ldif(ldif_file)
         if parsed.is_failure or parsed.value is None:
-            return FlextResult[dict[str, t.GeneralValueType]].fail(
+            return FlextResult[Mapping[str, t.GeneralValueType]].fail(
                 parsed.error or "Parsing failed",
             )
         entries_raw = parsed.value.get("entries", [])
         try:
             entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
         except ValidationError:
-            return FlextResult[dict[str, t.GeneralValueType]].fail(
+            return FlextResult[Mapping[str, t.GeneralValueType]].fail(
                 "Invalid parsed entries payload",
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextResult
@@ -17,7 +18,7 @@ class FlextDbtLdifCore:
             """Initialize model generator."""
             self.project_dir = project_dir or Path.cwd()
 
-        def generate_staging_models(self) -> list[dict[str, str]]:
+        def generate_staging_models(self) -> list[Mapping[str, str]]:
             """Generate default staging model metadata."""
             return [
                 {
@@ -26,7 +27,7 @@ class FlextDbtLdifCore:
                 },
             ]
 
-        def generate_analytics_models(self) -> list[dict[str, str]]:
+        def generate_analytics_models(self) -> list[Mapping[str, str]]:
             """Generate default analytics model metadata."""
             return [
                 {
@@ -40,10 +41,10 @@ class FlextDbtLdifCore:
 
         def analyze_entry_patterns(
             self,
-            entries: list[dict[str, str]],
-        ) -> FlextResult[dict[str, object]]:
+            entries: Sequence[Mapping[str, str]],
+        ) -> FlextResult[Mapping[str, object]]:
             """Analyze input entries and return summary payload."""
-            return FlextResult[dict[str, object]].ok(
+            return FlextResult[Mapping[str, object]].ok(
                 {
                     "total_entries": len(entries),
                     "unique_dns": len({entry.get("dn", "") for entry in entries}),

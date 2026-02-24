@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextResult, FlextService, t
@@ -10,7 +11,7 @@ from .models import FlextDbtLdifModels
 from .settings import FlextDbtLdifSettings
 
 
-class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
+class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
     """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
     name: str = "ldif_generator"
@@ -23,12 +24,13 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
         project_dir: Path | None = None,
     ) -> None:
         """Initialize service with project and settings context."""
-        super().__init__(name=name, project_dir=project_dir or Path.cwd())
+        resolved_project_dir = str(project_dir or Path.cwd())
+        super().__init__(name=name, project_dir=resolved_project_dir)
         self._settings = config or FlextDbtLdifSettings.get_global_instance()
 
-    def execute(self) -> FlextResult[dict[str, t.JsonValue]]:
+    def execute(self) -> FlextResult[Mapping[str, t.JsonValue]]:
         """Execute service and return metadata payload."""
-        return FlextResult[dict[str, t.JsonValue]].ok(
+        return FlextResult[Mapping[str, t.JsonValue]].ok(
             {
                 "name": self.name,
                 "project_dir": str(self.project_dir),
@@ -38,7 +40,7 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, t.JsonValue]]):
 
     def generate_staging_models(
         self,
-        entries: list[dict[str, t.JsonValue]],
+        entries: Sequence[Mapping[str, t.JsonValue]],
     ) -> FlextResult[list[FlextDbtLdifModels.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:
