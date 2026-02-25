@@ -13,6 +13,7 @@ from typing import NoReturn
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import r
 from flext_core.loggings import FlextLogger
+from .dbt_services import FlextDbtLdifService
 
 logger = FlextLogger(__name__)
 
@@ -103,33 +104,41 @@ class FlextDbtLdifCliService:
             if display_result.is_success:
                 return r[str].ok("Package information displayed successfully")
             return r[str].fail("Package information display failed")
-        except Exception as e:
+        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, ImportError) as e:
             return r[str].fail(f"Package info display failed: {e}")
 
     def display_generate_message(self) -> r[str]:
-        """Display generate message using flext-cli."""
+        """Generate dbt models from LDIF schema definitions."""
         try:
+            service = FlextDbtLdifService()
+            result = service.generate_and_write_models([])
+            if result.is_failure:
+                return r[str].fail(result.error or "Model generation failed")
             display_result = self._output.display_data(
-                {"message": "Model generation functionality coming soon!"},
+                {"message": "Model generation completed", "result": result.value},
                 "json",
             )
             if display_result.is_success:
                 return r[str].ok("Generate message displayed")
             return r[str].fail("Generate message display failed")
-        except Exception as e:
+        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, ImportError) as e:
             return r[str].fail(f"Generate message display failed: {e}")
 
     def display_validate_message(self) -> r[str]:
-        """Display validate message using flext-cli."""
+        """Validate dbt models and configurations."""
         try:
+            service = FlextDbtLdifService()
+            result = service.run_data_quality_assessment("")
+            if result.is_failure:
+                return r[str].fail(result.error or "Validation failed")
             display_result = self._output.display_data(
-                {"message": "Model validation functionality coming soon!"},
+                {"message": "Validation completed", "result": result.value},
                 "json",
             )
             if display_result.is_success:
                 return r[str].ok("Validate message displayed")
             return r[str].fail("Validate message display failed")
-        except Exception as e:
+        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, ImportError) as e:
             return r[str].fail(f"Validate message display failed: {e}")
 
     def info(self) -> None:

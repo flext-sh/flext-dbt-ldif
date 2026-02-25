@@ -30,16 +30,20 @@ class TestFlextDbtLdifCliService:
         assert result.is_success or result.is_failure
 
     def test_display_generate_message(self) -> None:
-        """Test display_generate_message returns result."""
+        """Test display_generate_message calls real model generation."""
         service = FlextDbtLdifCliService()
         result = service.display_generate_message()
+        # Should succeed or fail gracefully, not return 'coming soon'
         assert result.is_success or result.is_failure
+        assert "coming soon" not in str(result.value).lower()
 
     def test_display_validate_message(self) -> None:
-        """Test display_validate_message returns result."""
+        """Test display_validate_message calls real validation."""
         service = FlextDbtLdifCliService()
         result = service.display_validate_message()
+        # Should succeed or fail gracefully, not return 'coming soon'
         assert result.is_success or result.is_failure
+        assert "coming soon" not in str(result.value).lower()
 
     def test_info_method(self) -> None:
         """Test info() method delegates to command handler."""
