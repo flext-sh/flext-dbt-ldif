@@ -13,6 +13,7 @@ from typing import NoReturn
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import r
 from flext_core.loggings import FlextLogger
+
 from .dbt_services import FlextDbtLdifService
 
 logger = FlextLogger(__name__)
@@ -104,7 +105,15 @@ class FlextDbtLdifCliService:
             if display_result.is_success:
                 return r[str].ok("Package information displayed successfully")
             return r[str].fail("Package information display failed")
-        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, ImportError) as e:
+        except (
+            ValueError,
+            TypeError,
+            KeyError,
+            AttributeError,
+            OSError,
+            RuntimeError,
+            ImportError,
+        ) as e:
             return r[str].fail(f"Package info display failed: {e}")
 
     def display_generate_message(self) -> r[str]:
@@ -121,7 +130,15 @@ class FlextDbtLdifCliService:
             if display_result.is_success:
                 return r[str].ok("Generate message displayed")
             return r[str].fail("Generate message display failed")
-        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, ImportError) as e:
+        except (
+            ValueError,
+            TypeError,
+            KeyError,
+            AttributeError,
+            OSError,
+            RuntimeError,
+            ImportError,
+        ) as e:
             return r[str].fail(f"Generate message display failed: {e}")
 
     def display_validate_message(self) -> r[str]:
@@ -138,7 +155,15 @@ class FlextDbtLdifCliService:
             if display_result.is_success:
                 return r[str].ok("Validate message displayed")
             return r[str].fail("Validate message display failed")
-        except (ValueError, TypeError, KeyError, AttributeError, OSError, RuntimeError, ImportError) as e:
+        except (
+            ValueError,
+            TypeError,
+            KeyError,
+            AttributeError,
+            OSError,
+            RuntimeError,
+            ImportError,
+        ) as e:
             return r[str].fail(f"Validate message display failed: {e}")
 
     def info(self) -> None:
