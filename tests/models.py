@@ -27,7 +27,6 @@ class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
     """
 
 
-
 # Short aliases per FLEXT convention
 tm = TestsFlextDbtLdifModels
 m = TestsFlextDbtLdifModels

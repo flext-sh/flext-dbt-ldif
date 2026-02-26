@@ -23,7 +23,6 @@ class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
     """
 
 
-
 # Runtime aliases
 p = TestsFlextDbtLdifProtocols
 p = TestsFlextDbtLdifProtocols
