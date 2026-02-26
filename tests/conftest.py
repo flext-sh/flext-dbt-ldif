@@ -34,7 +34,7 @@ def shared_ldap_container(
     if result.is_failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
 
-    return "flext-openldap-test"
+    yield "flext-openldap-test"
 
 
 # Import shared fixtures from docker directory
