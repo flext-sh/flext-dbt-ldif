@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings, t
 
 
@@ -52,7 +53,7 @@ class TestFlextDbtLdifClient:
         assert result.is_success
         data = result.value or {}
         assert data["total_entries"] == 1
-        assert data["quality_score"] == 1.0
+        assert data["quality_score"] == pytest.approx(1.0)
         assert data["validation_status"] == "passed"
 
     def test_validate_ldif_data_empty(self) -> None:
