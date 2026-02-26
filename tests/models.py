@@ -26,11 +26,6 @@ class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
     - m.* (production models via alternative alias)
     """
 
-    class Tests:
-        """Project-specific test fixtures namespace."""
-
-        class DbtLdif:
-            """DBT LDIF-specific test fixtures."""
 
 
 # Short aliases per FLEXT convention

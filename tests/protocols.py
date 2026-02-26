@@ -22,14 +22,6 @@ class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
     - p.DbtLdif.* (from FlextDbtLdifProtocols)
     """
 
-    class Tests:
-        """Project-specific test protocols.
-
-        Extends FlextTestsProtocols.Tests with DbtLdif-specific protocols.
-        """
-
-        class DbtLdif:
-            """DbtLdif-specific test protocols."""
 
 
 # Runtime aliases
