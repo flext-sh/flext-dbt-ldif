@@ -5,10 +5,11 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Final
 
-from flext_core import FlextConstants
+from flext_ldif.constants import FlextLdifConstants
+from flext_meltano.constants import FlextMeltanoConstants
 
 
-class FlextDbtLdifConstants(FlextConstants):
+class FlextMeltanoDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     """Typed constants used by DBT LDIF modules."""
 
     DEFAULT_LDIF_ENCODING: Final[str] = "utf-8"
@@ -49,6 +50,6 @@ class FlextDbtLdifConstants(FlextConstants):
         TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
 
-c = FlextDbtLdifConstants
+c = FlextMeltanoDbtLdifConstants
 
-__all__ = ["FlextDbtLdifConstants", "c"]
+__all__ = ["FlextMeltanoDbtLdifConstants", "c"]
