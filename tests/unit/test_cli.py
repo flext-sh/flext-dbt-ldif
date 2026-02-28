@@ -10,7 +10,7 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
-from flext_dbt_ldif.cli import FlextDbtLdifCliService, main
+from flext_dbt_ldif.cli import FlextDbtLdifCliService
 
 
 class TestFlextDbtLdifCliService:
@@ -61,41 +61,46 @@ class TestFlextDbtLdifCliService:
 
 
 class TestMainEntryPoint:
-    """Test cases for module-level main() entry point."""
+    """Test cases for FlextDbtLdifCliService.main() entry point."""
 
     def test_main_no_args_exits_zero(self) -> None:
         """Test main exits 0 when no args provided."""
         with patch("sys.argv", ["flext-dbt-ldif"]):
+            service = FlextDbtLdifCliService()
             with pytest.raises(SystemExit) as exc_info:
-                main()
+                service.main()
             assert exc_info.value.code == 0
 
     def test_main_info_command(self) -> None:
         """Test main with info command."""
         with patch("sys.argv", ["flext-dbt-ldif", "info"]):
+            service = FlextDbtLdifCliService()
             with pytest.raises(SystemExit) as exc_info:
-                main()
+                service.main()
             assert exc_info.value.code == 0
 
     def test_main_generate_command(self) -> None:
         """Test main with generate command."""
         with patch("sys.argv", ["flext-dbt-ldif", "generate"]):
+            service = FlextDbtLdifCliService()
             with pytest.raises(SystemExit) as exc_info:
-                main()
+                service.main()
             assert exc_info.value.code == 0
 
     def test_main_validate_command(self) -> None:
         """Test main with validate command."""
         with patch("sys.argv", ["flext-dbt-ldif", "validate"]):
+            service = FlextDbtLdifCliService()
             with pytest.raises(SystemExit) as exc_info:
-                main()
+                service.main()
             assert exc_info.value.code == 0
 
     def test_main_unknown_command_exits_one(self) -> None:
         """Test main with unknown command exits 1."""
         with patch("sys.argv", ["flext-dbt-ldif", "unknown"]):
+            service = FlextDbtLdifCliService()
             with pytest.raises(SystemExit) as exc_info:
-                main()
+                service.main()
             assert exc_info.value.code == 1
 
     def test_main_keyboard_interrupt(self) -> None:
@@ -106,8 +111,9 @@ class TestMainEntryPoint:
                 "handle_info_command",
                 side_effect=KeyboardInterrupt(),
             ):
+                service = FlextDbtLdifCliService()
                 with pytest.raises(SystemExit) as exc_info:
-                    main()
+                    service.main()
                 assert exc_info.value.code == 1
 
     def test_main_runtime_error(self) -> None:
@@ -118,6 +124,7 @@ class TestMainEntryPoint:
                 "handle_info_command",
                 side_effect=RuntimeError("Test error"),
             ):
+                service = FlextDbtLdifCliService()
                 with pytest.raises(SystemExit) as exc_info:
-                    main()
+                    service.main()
                 assert exc_info.value.code == 1

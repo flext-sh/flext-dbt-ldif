@@ -183,12 +183,5 @@ class FlextDbtLdifCliService:
         self._MainEntry.run_main_cli(self)
 
 
-# Module-level entry point for backwards compatibility
-def main() -> NoReturn:
-    """Module-level main entry point - delegates to service."""
-    service = FlextDbtLdifCliService()
-    service.main()
-
-
 if __name__ == "__main__":
-    main()
+    FlextDbtLdifCliService().main()
