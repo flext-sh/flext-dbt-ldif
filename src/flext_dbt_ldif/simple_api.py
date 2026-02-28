@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from pathlib import Path
 
+from typing import override
+
 from flext_core import FlextResult, FlextService, t
 from pydantic import TypeAdapter, ValidationError
 
@@ -23,6 +25,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         self._config = config or FlextDbtLdifSettings.get_global_instance()
         self._service = FlextDbtLdifService(config=self._config)
 
+    @override
     def execute(self) -> FlextResult[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
         try:

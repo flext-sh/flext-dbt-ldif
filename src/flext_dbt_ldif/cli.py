@@ -174,7 +174,7 @@ class FlextDbtLdifCliService:
         """Generate dbt models from LDIF schema definitions."""
         self._CommandHandlers.handle_generate_command(self)
 
-    @override
+
     def validate(self) -> None:
         """Validate dbt models and configurations."""
         self._CommandHandlers.handle_validate_command(self)

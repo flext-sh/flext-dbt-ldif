@@ -5,7 +5,11 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
+from typing import override
+
 from flext_core import FlextResult, FlextService, t
+
+from . import c
 
 from .models import FlextDbtLdifModels
 from .settings import FlextDbtLdifSettings
@@ -24,10 +28,12 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
         project_dir: Path | None = None,
     ) -> None:
         """Initialize service with project and settings context."""
-        resolved_project_dir = str(project_dir or Path.cwd())
-        super().__init__(name=name, project_dir=resolved_project_dir)
+        super().__init__()
+        self.name = name
+        self.project_dir = Path(project_dir or Path.cwd())
         self._settings = config or FlextDbtLdifSettings.get_global_instance()
 
+    @override
     def execute(self) -> FlextResult[Mapping[str, t.JsonValue]]:
         """Execute service and return metadata payload."""
         return FlextResult[Mapping[str, t.JsonValue]].ok(

@@ -17,7 +17,7 @@ from flext_core import (
 )
 from flext_dbt_ldif.__version__ import __version__, __version_info__
 from flext_dbt_ldif.cli import main
-from flext_dbt_ldif.constants import FlextDbtLdifConstants
+from flext_dbt_ldif.constants import FlextMeltanoDbtLdifConstants as FlextDbtLdifConstants
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
