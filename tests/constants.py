@@ -79,7 +79,6 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
 
 # Short aliases per FLEXT convention
 c = TestsFlextDbtLdifConstants  # Primary test constants alias
-c = TestsFlextDbtLdifConstants  # Alternative alias for compatibility
 
 __all__ = [
     "TestsFlextDbtLdifConstants",
