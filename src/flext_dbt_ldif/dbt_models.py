@@ -4,13 +4,11 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-
 from typing import override
 
 from flext_core import FlextResult, FlextService, t
 
 from . import c
-
 from .models import FlextDbtLdifModels
 from .settings import FlextDbtLdifSettings
 

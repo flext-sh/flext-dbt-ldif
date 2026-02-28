@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from pathlib import Path
-
 from typing import override
 
 from flext_core import FlextResult, FlextService, t

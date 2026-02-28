@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import sys
-from typing import NoReturn, override
+from typing import NoReturn
 
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import FlextLogger, r
@@ -173,7 +173,6 @@ class FlextDbtLdifCliService:
     def generate(self) -> None:
         """Generate dbt models from LDIF schema definitions."""
         self._CommandHandlers.handle_generate_command(self)
-
 
     def validate(self) -> None:
         """Validate dbt models and configurations."""
