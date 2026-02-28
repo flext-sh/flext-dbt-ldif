@@ -6,9 +6,11 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextResult, t
+from flext_ldif import FlextLdifUtilities
+from flext_meltano import FlextMeltanoUtilities
 
 
-class FlextDbtLdifUtilities:
+class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
     """Collection of static helpers used by DBT LDIF services."""
 
     class DbtLdif:
@@ -43,4 +45,6 @@ class FlextDbtLdifUtilities:
             )
 
 
-__all__ = ["FlextDbtLdifUtilities"]
+u = FlextDbtLdifUtilities
+
+__all__ = ["FlextDbtLdifUtilities", "u"]
