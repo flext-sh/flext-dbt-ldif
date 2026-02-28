@@ -16,9 +16,9 @@ from flext_core import (
     FlextService,
 )
 from flext_dbt_ldif.__version__ import __version__, __version_info__
-from flext_dbt_ldif.cli import main
+from flext_dbt_ldif.cli import FlextDbtLdifCliService
 from flext_dbt_ldif.constants import (
-    FlextMeltanoDbtLdifConstants as FlextDbtLdifConstants,
+    FlextDbtLdifConstants as FlextDbtLdifConstants,
 )
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
@@ -74,7 +74,7 @@ __all__: list[str] = [
     "e",
     "h",
     "m",
-    "main",
+    "FlextDbtLdifCliService",
     "p",
     "r",
     "s",

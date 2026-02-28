@@ -9,7 +9,7 @@ from flext_ldif import FlextLdifConstants
 from flext_meltano import FlextMeltanoConstants
 
 
-class FlextMeltanoDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
+class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     """Typed constants used by DBT LDIF modules."""
 
     DEFAULT_LDIF_ENCODING: Final[str] = "utf-8"
@@ -95,6 +95,6 @@ class FlextMeltanoDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
         TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
 
-c = FlextMeltanoDbtLdifConstants
+c = FlextDbtLdifConstants
 
-__all__ = ["FlextMeltanoDbtLdifConstants", "c"]
+__all__ = ["FlextDbtLdifConstants", "c"]

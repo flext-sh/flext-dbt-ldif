@@ -8,7 +8,7 @@ from typing import override
 
 from flext_core import FlextResult, FlextService, t
 
-from . import c
+from .constants import FlextDbtLdifConstants as c
 from .models import FlextDbtLdifModels
 from .settings import FlextDbtLdifSettings
 
