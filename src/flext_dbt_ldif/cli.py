@@ -11,8 +11,7 @@ import sys
 from typing import NoReturn, override
 
 from flext_cli import FlextCliOutput, FlextCliSettings
-from flext_core import r
-from flext_core.loggings import FlextLogger
+from flext_core import FlextLogger, r
 
 from .dbt_services import FlextDbtLdifService
 
