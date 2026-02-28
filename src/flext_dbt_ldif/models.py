@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from flext_core import FlextModels, FlextResult, t
+from flext_ldif.models import FlextLdifModels
 from flext_meltano.models import FlextMeltanoModels
 from pydantic import Field
 
 
-class FlextDbtLdifModels(FlextMeltanoModels):
+class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtModel(FlextModels.ArbitraryTypesModel):

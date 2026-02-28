@@ -19,6 +19,51 @@ class FlextMeltanoDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     MIN_FILE_SIZE_KB: Final[int] = 1024
     MAX_FILE_SIZE_GB: Final[int] = 1024 * 1024 * 1024
 
+    # CLI command names
+    CLI_COMMAND_INFO: Final[str] = "info"
+    CLI_COMMAND_GENERATE: Final[str] = "generate"
+    CLI_COMMAND_VALIDATE: Final[str] = "validate"
+
+    # Package metadata
+    PACKAGE_NAME: Final[str] = "FLEXT dbt LDIF"
+    PACKAGE_DESCRIPTION: Final[str] = "Advanced LDAP Data Analytics and Transformations"
+
+    # Output format
+    DEFAULT_OUTPUT_FORMAT_CLI: Final[str] = "json"
+
+    # Model names
+    STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
+    STAGING_MODEL_DESCRIPTION: Final[str] = "Staging model for LDIF entries"
+    ANALYTICS_MODEL_NAME: Final[str] = "analytics_ldif_insights"
+    ANALYTICS_MODEL_DESCRIPTION: Final[str] = "Analytics model for LDIF insights"
+
+    # DBT model types
+    DBT_MODEL_TYPE_STAGING: Final[str] = "staging"
+    DBT_MODEL_TYPE_ANALYTICS: Final[str] = "analytics"
+
+    # DBT materializations
+    DBT_MATERIALIZATION_VIEW: Final[str] = "view"
+    DBT_MATERIALIZATION_TABLE: Final[str] = "table"
+
+    # LDIF source names
+    LDIF_SOURCE_NAME: Final[str] = "ldif_entries"
+    LDIF_RAW_SOURCE: Final[str] = "raw_ldif_entries"
+
+    # Sample LDIF DN
+    SAMPLE_LDIF_DN: Final[str] = "cn=sample,dc=example,dc=org"
+
+    # Quality metrics
+    DEFAULT_QUALITY_SCORE: Final[float] = 1.0
+    VALIDATION_STATUS_PASSED: Final[str] = "passed"
+    VALIDATION_STATUS_COMPLETED: Final[str] = "completed"
+    TRANSFORMATION_STATUS_SUCCESS: Final[str] = "success"
+    WORKFLOW_STATUS_COMPLETED: Final[str] = "completed"
+    WORKFLOW_STATUS_READY: Final[str] = "ready"
+
+    # Exit codes
+    EXIT_CODE_SUCCESS: Final[int] = 0
+    EXIT_CODE_FAILURE: Final[int] = 1
+
     class DbtLogLevels(StrEnum):
         """Allowed DBT log levels."""
 
