@@ -34,7 +34,7 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
             {
                 "name": self.name,
                 "project_dir": str(self.project_dir),
-                "status": "ready",
+                "status": c.WORKFLOW_STATUS_READY,
             },
         )
 
@@ -47,12 +47,12 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
             return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([])
 
         model = FlextDbtLdifModels.DbtModel(
-            name="stg_ldif_entries",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            materialization="view",
-            sql_content="select * from {{ source('ldif', 'raw_ldif_entries') }}",
-            description="Staging model for LDIF entries",
+            name=c.STAGING_MODEL_NAME,
+            dbt_model_type=c.DBT_MODEL_TYPE_STAGING,
+            ldif_source=c.LDIF_SOURCE_NAME,
+            materialization=c.DBT_MATERIALIZATION_VIEW,
+            sql_content=f"select * from {{{{ source('ldif', '{c.LDIF_RAW_SOURCE}') }}}}",
+            description=c.STAGING_MODEL_DESCRIPTION,
         )
         return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([model])
 
@@ -64,13 +64,13 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
         if not staging_models:
             return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([])
         analytics = FlextDbtLdifModels.DbtModel(
-            name="analytics_ldif_insights",
-            dbt_model_type="analytics",
-            ldif_source="ldif_entries",
-            materialization="table",
-            sql_content="select * from {{ ref('stg_ldif_entries') }}",
-            description="Analytics model for LDIF insights",
-            dependencies=["stg_ldif_entries"],
+            name=c.ANALYTICS_MODEL_NAME,
+            dbt_model_type=c.DBT_MODEL_TYPE_ANALYTICS,
+            ldif_source=c.LDIF_SOURCE_NAME,
+            materialization=c.DBT_MATERIALIZATION_TABLE,
+            sql_content=f"select * from {{{{ ref('{c.STAGING_MODEL_NAME}') }}}}",
+            description=c.ANALYTICS_MODEL_DESCRIPTION,
+            dependencies=[c.STAGING_MODEL_NAME],
         )
         return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([analytics])
 

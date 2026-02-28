@@ -6,6 +6,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextResult, t
+
+from .constants import c
 from flext_ldif import FlextLdifUtilities
 from flext_meltano import FlextMeltanoUtilities
 
@@ -28,7 +30,7 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                     f"LDIF file not found: {file_path}",
                 )
             return FlextResult[list[Mapping[str, t.JsonValue]]].ok(
-                [{"dn": "cn=sample,dc=example,dc=org", "file": str(file_path)}],
+                [{"dn": c.SAMPLE_LDIF_DN, "file": str(file_path)}],
             )
 
         @staticmethod

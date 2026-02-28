@@ -13,6 +13,7 @@ from typing import NoReturn, override
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import FlextLogger, r
 
+from .constants import c
 from .dbt_services import FlextDbtLdifService
 
 logger = FlextLogger(__name__)
@@ -59,30 +60,30 @@ class FlextDbtLdifCliService:
             try:
                 if len(sys.argv) > 1:
                     command = sys.argv[1]
-                    if command == "info":
+                    if command == c.CLI_COMMAND_INFO:
                         service_instance._CommandHandlers.handle_info_command(
                             service_instance,
                         )
-                    elif command == "generate":
+                    elif command == c.CLI_COMMAND_GENERATE:
                         service_instance._CommandHandlers.handle_generate_command(
                             service_instance,
                         )
-                    elif command == "validate":
+                    elif command == c.CLI_COMMAND_VALIDATE:
                         service_instance._CommandHandlers.handle_validate_command(
                             service_instance,
                         )
                     else:
                         logger.error("Unknown command: %s", command)
-                        sys.exit(1)
+                        sys.exit(c.EXIT_CODE_FAILURE)
 
-                sys.exit(0)
+                sys.exit(c.EXIT_CODE_SUCCESS)
 
             except KeyboardInterrupt:
                 logger.info("Interrupted by user")
-                sys.exit(1)
+                sys.exit(c.EXIT_CODE_FAILURE)
             except (OSError, RuntimeError, ValueError):
                 logger.exception("CLI error")
-                sys.exit(1)
+                sys.exit(c.EXIT_CODE_FAILURE)
 
     def display_info(self) -> r[str]:
         """Display package info using flext-cli."""
@@ -100,7 +101,7 @@ class FlextDbtLdifCliService:
 
         # Use flext-cli to format and display data
         try:
-            display_result = self._output.display_data(info_data, "json")
+            display_result = self._output.display_data(info_data, c.DEFAULT_OUTPUT_FORMAT_CLI)
             if display_result.is_success:
                 return r[str].ok("Package information displayed successfully")
             return r[str].fail("Package information display failed")

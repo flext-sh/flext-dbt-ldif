@@ -8,6 +8,7 @@ from pathlib import Path
 from flext_core import FlextLogger, FlextResult, t
 from pydantic import TypeAdapter, ValidationError
 
+from .constants import c
 from .dbt_client import FlextDbtLdifClient
 from .dbt_models import FlextDbtLdifUnifiedService
 from .settings import FlextDbtLdifSettings
@@ -132,7 +133,7 @@ class FlextDbtLdifService:
                 )
             workflow_result["transformations"] = transform.value
 
-        workflow_result["workflow_status"] = "completed"
+        workflow_result["workflow_status"] = c.WORKFLOW_STATUS_COMPLETED
         logger.info("Completed DBT LDIF workflow")
         return FlextResult[Mapping[str, t.GeneralValueType]].ok(workflow_result)
 

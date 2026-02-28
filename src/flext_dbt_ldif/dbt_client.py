@@ -7,6 +7,7 @@ from pathlib import Path
 
 from flext_core import FlextLogger, FlextResult, t
 
+from .constants import c
 from .settings import FlextDbtLdifSettings
 
 logger = FlextLogger(__name__)
@@ -32,7 +33,7 @@ class FlextDbtLdifClient:
                 "LDIF file path is required"
             )
         return FlextResult[list[Mapping[str, t.GeneralValueType]]].ok(
-            [{"dn": "cn=sample,dc=example,dc=org", "source": selected_path}],
+            [{"dn": c.SAMPLE_LDIF_DN, "source": selected_path}],
         )
 
     def validate_ldif_data(
@@ -45,7 +46,7 @@ class FlextDbtLdifClient:
             return FlextResult[Mapping[str, t.GeneralValueType]].fail(
                 "No LDIF entries found"
             )
-        quality_score = 1.0
+        quality_score = c.DEFAULT_QUALITY_SCORE
         if quality_score < self.config.min_quality_threshold:
             return FlextResult[Mapping[str, t.GeneralValueType]].fail(
                 "Quality threshold not met"
@@ -54,7 +55,7 @@ class FlextDbtLdifClient:
             {
                 "total_entries": total_entries,
                 "quality_score": quality_score,
-                "validation_status": "passed",
+                "validation_status": c.VALIDATION_STATUS_PASSED,
             },
         )
 
@@ -68,8 +69,8 @@ class FlextDbtLdifClient:
             {
                 "records": len(entries),
                 "models": model_names
-                or ["stg_ldif_entries", "analytics_ldif_insights"],
-                "status": "success",
+                or [c.STAGING_MODEL_NAME, c.ANALYTICS_MODEL_NAME],
+                "status": c.TRANSFORMATION_STATUS_SUCCESS,
             },
         )
 
@@ -100,7 +101,7 @@ class FlextDbtLdifClient:
                 "parsed_entries": len(parse_result.value),
                 "validation": validate_result.value,
                 "transformation": transform_result.value,
-                "pipeline_status": "completed",
+                "pipeline_status": c.WORKFLOW_STATUS_COMPLETED,
             },
         )
 

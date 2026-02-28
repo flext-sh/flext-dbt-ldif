@@ -6,6 +6,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextResult
+from flext_dbt_ldif.constants import c
 
 
 class FlextDbtLdifCore:
@@ -22,8 +23,8 @@ class FlextDbtLdifCore:
             """Generate default staging model metadata."""
             return [
                 {
-                    "name": "stg_ldif_entries",
-                    "description": "Staging model for LDIF entries",
+                    "name": c.STAGING_MODEL_NAME,
+                    "description": c.STAGING_MODEL_DESCRIPTION,
                 },
             ]
 
@@ -31,8 +32,8 @@ class FlextDbtLdifCore:
             """Generate default analytics model metadata."""
             return [
                 {
-                    "name": "analytics_ldif_insights",
-                    "description": "Analytics model for LDIF insights",
+                    "name": c.ANALYTICS_MODEL_NAME,
+                    "description": c.ANALYTICS_MODEL_DESCRIPTION,
                 },
             ]
 
