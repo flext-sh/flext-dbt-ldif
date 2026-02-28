@@ -50,6 +50,8 @@ class FlextMeltanoDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
         TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
 
+FlextDbtLdifConstants = FlextMeltanoDbtLdifConstants
+
 c = FlextMeltanoDbtLdifConstants
 
-__all__ = ["FlextMeltanoDbtLdifConstants", "c"]
+__all__ = ["FlextDbtLdifConstants", "FlextMeltanoDbtLdifConstants", "c"]
