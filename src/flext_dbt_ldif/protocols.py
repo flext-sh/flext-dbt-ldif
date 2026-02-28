@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from flext_core import FlextResult, t
-from flext_ldif.protocols import FlextLdifProtocols
-from flext_meltano.protocols import FlextMeltanoProtocols
+from flext_ldif import FlextLdifProtocols
+from flext_meltano import FlextMeltanoProtocols
 
 type LdifPayload = t.Dict
 

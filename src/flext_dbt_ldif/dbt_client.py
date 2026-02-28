@@ -68,8 +68,7 @@ class FlextDbtLdifClient:
         return FlextResult[Mapping[str, t.GeneralValueType]].ok(
             {
                 "records": len(entries),
-                "models": model_names
-                or [c.STAGING_MODEL_NAME, c.ANALYTICS_MODEL_NAME],
+                "models": model_names or [c.STAGING_MODEL_NAME, c.ANALYTICS_MODEL_NAME],
                 "status": c.TRANSFORMATION_STATUS_SUCCESS,
             },
         )

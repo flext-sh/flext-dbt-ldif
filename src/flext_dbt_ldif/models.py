@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from flext_core import FlextModels, FlextResult
-from flext_ldif.models import FlextLdifModels
-from flext_meltano.models import FlextMeltanoModels
+from flext_ldif import FlextLdifModels
+from flext_meltano import FlextMeltanoModels
 from pydantic import Field
 
 

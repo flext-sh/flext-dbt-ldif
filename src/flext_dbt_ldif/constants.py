@@ -5,8 +5,8 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Final
 
-from flext_ldif.constants import FlextLdifConstants
-from flext_meltano.constants import FlextMeltanoConstants
+from flext_ldif import FlextLdifConstants
+from flext_meltano import FlextMeltanoConstants
 
 
 class FlextMeltanoDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
