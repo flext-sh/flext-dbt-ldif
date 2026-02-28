@@ -6,10 +6,10 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextResult, t
-
-from .constants import c
 from flext_ldif import FlextLdifUtilities
 from flext_meltano import FlextMeltanoUtilities
+
+from .constants import c
 
 
 class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
