@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from flext_core import FlextModels, FlextResult, t
+from flext_core import FlextModels, FlextResult
 from flext_ldif.models import FlextLdifModels
 from flext_meltano.models import FlextMeltanoModels
 from pydantic import Field
@@ -20,7 +20,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
         materialization: str = "view"
         sql_content: str
         description: str = ""
-        columns: list[dict[str, t.GeneralValueType]] = Field(default_factory=list)
+        columns: list[dict[str, object]] = Field(default=[])
         dependencies: list[str] = Field(default_factory=list)
 
         def validate_business_rules(self) -> FlextResult[bool]:
