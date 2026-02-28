@@ -14,9 +14,7 @@ from typing import override
 
 from flext_core import FlextExceptions
 from flext_dbt_ldif.constants import c
-
-# Alias for backward compatibility - ErrorCode is now centralized in constants.py
-ErrorCode = c.ErrorCode
+from flext_dbt_ldif.typings import t
 
 
 class FlextDbtLdifError(FlextExceptions.BaseError):
@@ -35,7 +33,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         message: str,
         *,
         error_code: c.ErrorCode = c.ErrorCode.DBT_LDIF_ERROR,
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> None:
         """Initialize LDIF DBT error with error code and context.
 
@@ -57,7 +55,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     def validation_error(
         cls,
         message: str = "LDIF data validation failed",
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create validation error."""
         return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)
@@ -66,7 +64,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     def configuration_error(
         cls,
         message: str = "LDIF DBT configuration is invalid or missing",
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create configuration error."""
         return cls(message, error_code=cls.ErrorCode.CONFIGURATION_ERROR, **context)
@@ -75,7 +73,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     def connection_error(
         cls,
         message: str = "LDIF DBT database connection failed",
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create connection error."""
         return cls(message, error_code=cls.ErrorCode.CONNECTION_ERROR, **context)
@@ -84,7 +82,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     def processing_error(
         cls,
         message: str = "LDIF processing operations failed",
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create processing error."""
         return cls(message, error_code=cls.ErrorCode.PROCESSING_ERROR, **context)
@@ -93,7 +91,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     def authentication_error(
         cls,
         message: str = "LDIF DBT authentication failed",
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create authentication error."""
         return cls(message, error_code=cls.ErrorCode.AUTHENTICATION_ERROR, **context)
@@ -102,7 +100,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     def timeout_error(
         cls,
         message: str = "LDIF DBT operation timeout",
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create timeout error."""
         return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)
@@ -114,7 +112,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         *,
         line_number: int | None = None,
         entry_dn: str | None = None,
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create LDIF parsing error with parse context."""
         context["operation"] = "ldif_parsing"
@@ -131,7 +129,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         *,
         model_name: str | None = None,
         model_type: str | None = None,
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create LDIF DBT model error with dbt context."""
         context["operation"] = "dbt_model_processing"
@@ -148,7 +146,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         *,
         transformation_type: str | None = None,
         model_name: str | None = None,
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create LDIF DBT transformation error with transformation context."""
         context["operation"] = "ldif_transformation"
@@ -165,7 +163,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         *,
         test_name: str | None = None,
         model_name: str | None = None,
-        **context: object,
+        **context: t.GeneralValueType,
     ) -> FlextDbtLdifError:
         """Create LDIF DBT test error with test validation context."""
         context["operation"] = "dbt_test_validation"
