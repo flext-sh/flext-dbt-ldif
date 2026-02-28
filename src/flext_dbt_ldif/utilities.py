@@ -40,7 +40,7 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
             """Validate basic LDIF structure and return quality metrics."""
             if not entries:
                 return FlextResult[Mapping[str, t.JsonValue]].fail(
-                    "No LDIF entries found"
+                    "No LDIF entries found",
                 )
             return FlextResult[Mapping[str, t.JsonValue]].ok(
                 {"is_valid": True, "total_entries": len(entries)},

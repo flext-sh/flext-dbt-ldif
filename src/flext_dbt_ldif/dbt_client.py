@@ -30,7 +30,7 @@ class FlextDbtLdifClient:
         )
         if not selected_path:
             return FlextResult[list[Mapping[str, t.GeneralValueType]]].fail(
-                "LDIF file path is required"
+                "LDIF file path is required",
             )
         return FlextResult[list[Mapping[str, t.GeneralValueType]]].ok(
             [{"dn": c.SAMPLE_LDIF_DN, "source": selected_path}],
@@ -44,12 +44,12 @@ class FlextDbtLdifClient:
         total_entries = len(entries)
         if total_entries == 0:
             return FlextResult[Mapping[str, t.GeneralValueType]].fail(
-                "No LDIF entries found"
+                "No LDIF entries found",
             )
         quality_score = c.DEFAULT_QUALITY_SCORE
         if quality_score < self.config.min_quality_threshold:
             return FlextResult[Mapping[str, t.GeneralValueType]].fail(
-                "Quality threshold not met"
+                "Quality threshold not met",
             )
         return FlextResult[Mapping[str, t.GeneralValueType]].ok(
             {
@@ -82,7 +82,7 @@ class FlextDbtLdifClient:
         parse_result = self.parse_ldif_file(file_path)
         if parse_result.is_failure or parse_result.value is None:
             return FlextResult[Mapping[str, t.GeneralValueType]].fail(
-                parse_result.error or "Parse failed"
+                parse_result.error or "Parse failed",
             )
         validate_result = self.validate_ldif_data(parse_result.value)
         if validate_result.is_failure or validate_result.value is None:

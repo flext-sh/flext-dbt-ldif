@@ -37,7 +37,7 @@ def test_parse_and_validate_ldif_ok(
         svc.client,
         "validate_ldif_data",
         lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({
-            "quality_score": 0.9
+            "quality_score": 0.9,
         }),
     )
 
@@ -58,7 +58,7 @@ def test_parse_and_validate_ldif_parse_fails(
         svc.client,
         "parse_ldif_file",
         lambda _fp: FlextResult[list[dict[str, t.GeneralValueType]]].fail(
-            "Parse error"
+            "Parse error",
         ),
     )
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
@@ -122,7 +122,7 @@ def test_run_complete_workflow_all(
         svc.client,
         "validate_ldif_data",
         lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({
-            "quality_score": 0.9
+            "quality_score": 0.9,
         }),
     )
     monkeypatch.setattr(
@@ -183,7 +183,7 @@ def test_run_data_quality_assessment(
         svc.client,
         "validate_ldif_data",
         lambda _e: FlextResult[dict[str, t.GeneralValueType]].ok({
-            "quality_score": 0.88
+            "quality_score": 0.88,
         }),
     )
 

@@ -41,7 +41,7 @@ def test_parse_and_validate_ldif_ok(
         service.client,
         "validate_ldif_data",
         lambda _entries: FlextResult[dict[str, t.GeneralValueType]].ok({
-            "quality_score": 0.91
+            "quality_score": 0.91,
         }),
     )
 

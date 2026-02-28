@@ -102,7 +102,8 @@ class FlextDbtLdifCliService:
         # Use flext-cli to format and display data
         try:
             display_result = self._output.display_data(
-                info_data, c.DEFAULT_OUTPUT_FORMAT_CLI
+                info_data,
+                c.DEFAULT_OUTPUT_FORMAT_CLI,
             )
             if display_result.is_success:
                 return r[str].ok("Package information displayed successfully")
