@@ -15,6 +15,8 @@ from flext_core import (
     FlextResult,
     FlextService,
 )
+from flext_ldif import FlextLdif
+
 from flext_dbt_ldif.__version__ import __version__, __version_info__
 from flext_dbt_ldif.cli import FlextDbtLdifCliService
 from flext_dbt_ldif.constants import (
@@ -38,7 +40,6 @@ from flext_dbt_ldif.simple_api import (
 from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
 from flext_dbt_ldif.version import PROJECT_VERSION, VERSION
-from flext_ldif import FlextLdif
 
 # Standard aliases (11 total)
 c = FlextDbtLdifConstants

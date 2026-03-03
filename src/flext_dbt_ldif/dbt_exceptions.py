@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import override
 
 from flext_core import FlextExceptions
+
 from flext_dbt_ldif.constants import c
 from flext_dbt_ldif.typings import t
 
