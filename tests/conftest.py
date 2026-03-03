@@ -74,7 +74,7 @@ def ensure_shared_docker_container(shared_ldap_container: object) -> None:
 
 # dbt LDIF configuration fixtures
 @pytest.fixture
-def dbt_ldif_profile() -> dict[str, t.GeneralValueType]:
+def dbt_ldif_profile() -> dict[str, t.ContainerValue]:
     """Dbt LDIF profile configuration for testing."""
     return {
         "config": {
@@ -105,7 +105,7 @@ def dbt_ldif_profile() -> dict[str, t.GeneralValueType]:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> dict[str, t.GeneralValueType]:
+def dbt_ldif_project_config() -> dict[str, t.ContainerValue]:
     """Dbt LDIF project configuration for testing."""
     return {
         "name": "flext_dbt_ldif_test",
@@ -141,7 +141,7 @@ def dbt_ldif_project_config() -> dict[str, t.GeneralValueType]:
 
 # LDIF source fixtures
 @pytest.fixture
-def ldif_source_config(shared_ldap_config: dict) -> dict[str, t.GeneralValueType]:
+def ldif_source_config(shared_ldap_config: dict) -> dict[str, t.ContainerValue]:
     """LDIF source configuration for testing using shared container."""
     _ = shared_ldap_config  # Acknowledge parameter usage
     return {
@@ -158,7 +158,7 @@ def ldif_source_config(shared_ldap_config: dict) -> dict[str, t.GeneralValueType
 
 
 @pytest.fixture
-def sample_ldif_entries() -> list[dict[str, t.GeneralValueType]]:
+def sample_ldif_entries() -> list[dict[str, t.ContainerValue]]:
     """Sample LDIF entries for testing using shared container domain."""
     return [
         {

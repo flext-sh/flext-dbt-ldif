@@ -32,16 +32,16 @@ def test_parse_and_validate_ldif_ok(
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF via service."""
-    entries: list[dict[str, t.GeneralValueType]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
     monkeypatch.setattr(
         service.client,
         "parse_ldif_file",
-        lambda _ldif_file: FlextResult[list[dict[str, t.GeneralValueType]]].ok(entries),
+        lambda _ldif_file: FlextResult[list[dict[str, t.ContainerValue]]].ok(entries),
     )
     monkeypatch.setattr(
         service.client,
         "validate_ldif_data",
-        lambda _entries: FlextResult[dict[str, t.GeneralValueType]].ok({
+        lambda _entries: FlextResult[dict[str, t.ContainerValue]].ok({
             "quality_score": 0.91,
         }),
     )
@@ -83,7 +83,7 @@ def test_generate_and_write_models_ok(
         lambda _m: FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model]),
     )
 
-    entries: list[dict[str, t.GeneralValueType]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
     result = service.generate_and_write_models(entries)
     assert result.is_success
     data = result.value or {}
@@ -103,8 +103,8 @@ def test_api_process_ldif_file(
         generate_models: bool = True,
         run_transformations: bool = False,
         model_names: list[str] | None = None,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"ok": True})
+    ) -> FlextResult[dict[str, t.ContainerValue]]:
+        return FlextResult[dict[str, t.ContainerValue]].ok({"ok": True})
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
 
@@ -122,8 +122,8 @@ def test_api_validate_ldif_quality(
     def _run_quality(
         _self: FlextDbtLdifService,
         _ldif_file: Path | str,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"ok": True})
+    ) -> FlextResult[dict[str, t.ContainerValue]]:
+        return FlextResult[dict[str, t.ContainerValue]].ok({"ok": True})
 
     monkeypatch.setattr(
         FlextDbtLdifService,
@@ -144,16 +144,16 @@ def test_api_generate_ldif_models(
     def _parse_val(
         _self: FlextDbtLdifService,
         _ldif_file: Path | str,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"entries": []})
+    ) -> FlextResult[dict[str, t.ContainerValue]]:
+        return FlextResult[dict[str, t.ContainerValue]].ok({"entries": []})
 
     def _gen_models(
         _self: FlextDbtLdifService,
-        _entries: list[dict[str, t.GeneralValueType]],
+        _entries: list[dict[str, t.ContainerValue]],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"total_models": 0})
+    ) -> FlextResult[dict[str, t.ContainerValue]]:
+        return FlextResult[dict[str, t.ContainerValue]].ok({"total_models": 0})
 
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)
     monkeypatch.setattr(FlextDbtLdifService, "generate_and_write_models", _gen_models)

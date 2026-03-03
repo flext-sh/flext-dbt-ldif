@@ -8,7 +8,7 @@ from flext_core import FlextResult, t
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import FlextMeltanoProtocols
 
-type LdifPayload = t.Dict
+type LdifPayload = m.Dict
 
 
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
