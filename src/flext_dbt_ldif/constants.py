@@ -8,6 +8,8 @@ from typing import Final
 from flext_ldif import FlextLdifConstants
 from flext_meltano import FlextMeltanoConstants
 
+from flext_dbt_ldif.__version__ import __version__
+
 PROJECT_VERSION: Final[str] = __version__
 VERSION: Final[str] = __version__
 
