@@ -14,7 +14,7 @@ from .dbt_models import FlextDbtLdifUnifiedService
 from .settings import FlextDbtLdifSettings
 
 logger = FlextLogger(__name__)
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[t.ConfigurationMapping])
 
 
 class FlextDbtLdifService:

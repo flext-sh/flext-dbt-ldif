@@ -32,12 +32,12 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[list[dict[str, t.ContainerValue]]].ok(entries),
+        lambda _fp: FlextResult[list[t.ConfigurationMapping]].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[dict[str, t.ContainerValue]].ok({
+        lambda _e: FlextResult[t.ConfigurationMapping].ok({
             "quality_score": 0.9,
         }),
     )
@@ -58,7 +58,7 @@ def test_parse_and_validate_ldif_parse_fails(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[list[dict[str, t.ContainerValue]]].fail(
+        lambda _fp: FlextResult[list[t.ConfigurationMapping]].fail(
             "Parse error",
         ),
     )
@@ -117,19 +117,19 @@ def test_run_complete_workflow_all(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[list[dict[str, t.ContainerValue]]].ok(entries),
+        lambda _fp: FlextResult[list[t.ConfigurationMapping]].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[dict[str, t.ContainerValue]].ok({
+        lambda _e: FlextResult[t.ConfigurationMapping].ok({
             "quality_score": 0.9,
         }),
     )
     monkeypatch.setattr(
         svc.client,
         "transform_with_dbt",
-        lambda _e, _m: FlextResult[dict[str, t.ContainerValue]].ok({"ran": True}),
+        lambda _e, _m: FlextResult[t.ConfigurationMapping].ok({"ran": True}),
     )
 
     staging_model = FlextDbtLdifModels.DbtModel(
@@ -178,12 +178,12 @@ def test_run_data_quality_assessment(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[list[dict[str, t.ContainerValue]]].ok(entries),
+        lambda _fp: FlextResult[list[t.ConfigurationMapping]].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[dict[str, t.ContainerValue]].ok({
+        lambda _e: FlextResult[t.ConfigurationMapping].ok({
             "quality_score": 0.88,
         }),
     )

@@ -12,7 +12,7 @@ from pydantic import TypeAdapter, ValidationError
 from .dbt_services import FlextDbtLdifService
 from .settings import FlextDbtLdifSettings
 
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[t.ConfigurationMapping])
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):

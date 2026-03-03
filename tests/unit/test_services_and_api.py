@@ -36,12 +36,12 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch.setattr(
         service.client,
         "parse_ldif_file",
-        lambda _ldif_file: FlextResult[list[dict[str, t.ContainerValue]]].ok(entries),
+        lambda _ldif_file: FlextResult[list[t.ConfigurationMapping]].ok(entries),
     )
     monkeypatch.setattr(
         service.client,
         "validate_ldif_data",
-        lambda _entries: FlextResult[dict[str, t.ContainerValue]].ok({
+        lambda _entries: FlextResult[t.ConfigurationMapping].ok({
             "quality_score": 0.91,
         }),
     )
@@ -104,7 +104,7 @@ def test_api_process_ldif_file(
         run_transformations: bool = False,
         model_names: list[str] | None = None,
     ) -> FlextResult[dict[str, t.ContainerValue]]:
-        return FlextResult[dict[str, t.ContainerValue]].ok({"ok": True})
+        return FlextResult[t.ConfigurationMapping].ok({"ok": True})
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
 
@@ -123,7 +123,7 @@ def test_api_validate_ldif_quality(
         _self: FlextDbtLdifService,
         _ldif_file: Path | str,
     ) -> FlextResult[dict[str, t.ContainerValue]]:
-        return FlextResult[dict[str, t.ContainerValue]].ok({"ok": True})
+        return FlextResult[t.ConfigurationMapping].ok({"ok": True})
 
     monkeypatch.setattr(
         FlextDbtLdifService,
@@ -145,7 +145,7 @@ def test_api_generate_ldif_models(
         _self: FlextDbtLdifService,
         _ldif_file: Path | str,
     ) -> FlextResult[dict[str, t.ContainerValue]]:
-        return FlextResult[dict[str, t.ContainerValue]].ok({"entries": []})
+        return FlextResult[t.ConfigurationMapping].ok({"entries": []})
 
     def _gen_models(
         _self: FlextDbtLdifService,
@@ -153,7 +153,7 @@ def test_api_generate_ldif_models(
         *,
         overwrite: bool = False,
     ) -> FlextResult[dict[str, t.ContainerValue]]:
-        return FlextResult[dict[str, t.ContainerValue]].ok({"total_models": 0})
+        return FlextResult[t.ConfigurationMapping].ok({"total_models": 0})
 
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)
     monkeypatch.setattr(FlextDbtLdifService, "generate_and_write_models", _gen_models)
