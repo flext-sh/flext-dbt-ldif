@@ -11,6 +11,7 @@ from pydantic_settings import SettingsConfigDict
 from .constants import c
 
 
+@FlextSettings.auto_register("dbt_ldif")
 class FlextDbtLdifSettings(FlextSettings):
     """Runtime settings model for LDIF to DBT workflow."""
 
