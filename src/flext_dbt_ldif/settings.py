@@ -31,6 +31,11 @@ class FlextDbtLdifSettings(FlextSettings):
     dbt_log_level: str = c.DbtLogLevels.INFO.value
     min_quality_threshold: float = Field(default=0.8, ge=0.0, le=1.0)
 
+    @property
+    def dbt_project_path(self) -> Path:
+        """Resolved project path helper."""
+        return Path(self.dbt_project_dir)
+
     def get_schema_for_entry_type(self, entry_type: str) -> str:
         """Get deterministic schema name for LDIF entry type."""
         return f"stg_{entry_type}"
@@ -42,11 +47,6 @@ class FlextDbtLdifSettings(FlextSettings):
         if not (0.0 <= self.min_quality_threshold <= 1.0):
             return FlextResult[bool].fail("min_quality_threshold must be in [0, 1]")
         return FlextResult[bool].ok(value=True)
-
-    @property
-    def dbt_project_path(self) -> Path:
-        """Resolved project path helper."""
-        return Path(self.dbt_project_dir)
 
 
 __all__ = ["FlextDbtLdifSettings"]

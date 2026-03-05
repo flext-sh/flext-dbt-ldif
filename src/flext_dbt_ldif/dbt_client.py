@@ -36,43 +36,6 @@ class FlextDbtLdifClient:
             [{"dn": c.SAMPLE_LDIF_DN, "source": selected_path}],
         )
 
-    def validate_ldif_data(
-        self,
-        entries: Sequence[Mapping[str, t.ContainerValue]],
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
-        """Validate parsed LDIF payload and compute quality score."""
-        total_entries = len(entries)
-        if total_entries == 0:
-            return FlextResult[t.ConfigurationMapping].fail(
-                "No LDIF entries found",
-            )
-        quality_score = c.DEFAULT_QUALITY_SCORE
-        if quality_score < self.config.min_quality_threshold:
-            return FlextResult[t.ConfigurationMapping].fail(
-                "Quality threshold not met",
-            )
-        return FlextResult[t.ConfigurationMapping].ok(
-            {
-                "total_entries": total_entries,
-                "quality_score": quality_score,
-                "validation_status": c.VALIDATION_STATUS_PASSED,
-            },
-        )
-
-    def transform_with_dbt(
-        self,
-        entries: Sequence[Mapping[str, t.ContainerValue]],
-        model_names: list[str] | None = None,
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
-        """Return synthetic DBT transformation metadata."""
-        return FlextResult[t.ConfigurationMapping].ok(
-            {
-                "records": len(entries),
-                "models": model_names or [c.STAGING_MODEL_NAME, c.ANALYTICS_MODEL_NAME],
-                "status": c.TRANSFORMATION_STATUS_SUCCESS,
-            },
-        )
-
     def run_full_pipeline(
         self,
         file_path: Path | str | None = None,
@@ -101,6 +64,43 @@ class FlextDbtLdifClient:
                 "validation": validate_result.value,
                 "transformation": transform_result.value,
                 "pipeline_status": c.WORKFLOW_STATUS_COMPLETED,
+            },
+        )
+
+    def transform_with_dbt(
+        self,
+        entries: Sequence[Mapping[str, t.ContainerValue]],
+        model_names: list[str] | None = None,
+    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+        """Return synthetic DBT transformation metadata."""
+        return FlextResult[t.ConfigurationMapping].ok(
+            {
+                "records": len(entries),
+                "models": model_names or [c.STAGING_MODEL_NAME, c.ANALYTICS_MODEL_NAME],
+                "status": c.TRANSFORMATION_STATUS_SUCCESS,
+            },
+        )
+
+    def validate_ldif_data(
+        self,
+        entries: Sequence[Mapping[str, t.ContainerValue]],
+    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+        """Validate parsed LDIF payload and compute quality score."""
+        total_entries = len(entries)
+        if total_entries == 0:
+            return FlextResult[t.ConfigurationMapping].fail(
+                "No LDIF entries found",
+            )
+        quality_score = c.DEFAULT_QUALITY_SCORE
+        if quality_score < self.config.min_quality_threshold:
+            return FlextResult[t.ConfigurationMapping].fail(
+                "Quality threshold not met",
+            )
+        return FlextResult[t.ConfigurationMapping].ok(
+            {
+                "total_entries": total_entries,
+                "quality_score": quality_score,
+                "validation_status": c.VALIDATION_STATUS_PASSED,
             },
         )
 

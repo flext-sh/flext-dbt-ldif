@@ -24,6 +24,11 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         self._config = config or FlextDbtLdifSettings.get_global_instance()
         self._service = FlextDbtLdifService(config=self._config)
 
+    @property
+    def service(self) -> FlextDbtLdifService:
+        """Return bound workflow service."""
+        return self._service
+
     @override
     def execute(self) -> FlextResult[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
@@ -35,34 +40,6 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             return FlextResult[FlextDbtLdifSettings].fail(
                 "Invalid DBT LDIF settings",
             )
-
-    @property
-    def service(self) -> FlextDbtLdifService:
-        """Return bound workflow service."""
-        return self._service
-
-    def process_ldif_file(
-        self,
-        ldif_file: Path | str,
-        project_dir: Path | str | None = None,
-        *,
-        generate_models: bool = True,
-        run_transformations: bool = False,
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
-        """Execute end-to-end LDIF workflow."""
-        _ = project_dir
-        return self.service.run_complete_workflow(
-            ldif_file=ldif_file,
-            generate_models=generate_models,
-            run_transformations=run_transformations,
-        )
-
-    def validate_ldif_quality(
-        self,
-        ldif_file: Path | str,
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
-        """Run quality-focused workflow."""
-        return self.service.run_data_quality_assessment(ldif_file)
 
     def generate_ldif_models(
         self,
@@ -86,6 +63,29 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
                 "Invalid parsed entries payload",
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
+
+    def process_ldif_file(
+        self,
+        ldif_file: Path | str,
+        project_dir: Path | str | None = None,
+        *,
+        generate_models: bool = True,
+        run_transformations: bool = False,
+    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+        """Execute end-to-end LDIF workflow."""
+        _ = project_dir
+        return self.service.run_complete_workflow(
+            ldif_file=ldif_file,
+            generate_models=generate_models,
+            run_transformations=run_transformations,
+        )
+
+    def validate_ldif_quality(
+        self,
+        ldif_file: Path | str,
+    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+        """Run quality-focused workflow."""
+        return self.service.run_data_quality_assessment(ldif_file)
 
 
 __all__ = ["FlextDbtLdif"]

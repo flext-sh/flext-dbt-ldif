@@ -31,18 +31,18 @@ class FlextDbtLdifCliService:
         """Nested helper class for command handling operations."""
 
         @staticmethod
-        def handle_info_command(service_instance: FlextDbtLdifCliService) -> None:
-            """Handle info command execution."""
-            result = service_instance.display_info()
-            if result.is_failure:
-                logger.error(f"Info command failed: {result.error}")
-
-        @staticmethod
         def handle_generate_command(service_instance: FlextDbtLdifCliService) -> None:
             """Handle generate command execution."""
             result: r[str] = service_instance.display_generate_message()
             if result.is_failure:
                 logger.error(f"Generate command failed: {result.error}")
+
+        @staticmethod
+        def handle_info_command(service_instance: FlextDbtLdifCliService) -> None:
+            """Handle info command execution."""
+            result = service_instance.display_info()
+            if result.is_failure:
+                logger.error(f"Info command failed: {result.error}")
 
         @staticmethod
         def handle_validate_command(service_instance: FlextDbtLdifCliService) -> None:
@@ -85,6 +85,31 @@ class FlextDbtLdifCliService:
                 logger.exception("CLI error")
                 sys.exit(c.EXIT_CODE_FAILURE)
 
+    def display_generate_message(self) -> r[str]:
+        """Generate dbt models from LDIF schema definitions."""
+        try:
+            service = FlextDbtLdifService()
+            result = service.generate_and_write_models([])
+            if result.is_failure:
+                return r[str].fail(result.error or "Model generation failed")
+            display_result = self._output.display_data(
+                {"message": "Model generation completed", "result": result.value},
+                "json",
+            )
+            if display_result.is_success:
+                return r[str].ok("Generate message displayed")
+            return r[str].fail("Generate message display failed")
+        except (
+            ValueError,
+            TypeError,
+            KeyError,
+            AttributeError,
+            OSError,
+            RuntimeError,
+            ImportError,
+        ) as e:
+            return r[str].fail(f"Generate message display failed: {e}")
+
     def display_info(self) -> r[str]:
         """Display package info using flext-cli."""
         info_data = {
@@ -119,31 +144,6 @@ class FlextDbtLdifCliService:
         ) as e:
             return r[str].fail(f"Package info display failed: {e}")
 
-    def display_generate_message(self) -> r[str]:
-        """Generate dbt models from LDIF schema definitions."""
-        try:
-            service = FlextDbtLdifService()
-            result = service.generate_and_write_models([])
-            if result.is_failure:
-                return r[str].fail(result.error or "Model generation failed")
-            display_result = self._output.display_data(
-                {"message": "Model generation completed", "result": result.value},
-                "json",
-            )
-            if display_result.is_success:
-                return r[str].ok("Generate message displayed")
-            return r[str].fail("Generate message display failed")
-        except (
-            ValueError,
-            TypeError,
-            KeyError,
-            AttributeError,
-            OSError,
-            RuntimeError,
-            ImportError,
-        ) as e:
-            return r[str].fail(f"Generate message display failed: {e}")
-
     def display_validate_message(self) -> r[str]:
         """Validate dbt models and configurations."""
         try:
@@ -169,21 +169,21 @@ class FlextDbtLdifCliService:
         ) as e:
             return r[str].fail(f"Validate message display failed: {e}")
 
-    def info(self) -> None:
-        """Show package information."""
-        self._CommandHandlers.handle_info_command(self)
-
     def generate(self) -> None:
         """Generate dbt models from LDIF schema definitions."""
         self._CommandHandlers.handle_generate_command(self)
 
-    def validate(self) -> None:
-        """Validate dbt models and configurations."""
-        self._CommandHandlers.handle_validate_command(self)
+    def info(self) -> None:
+        """Show package information."""
+        self._CommandHandlers.handle_info_command(self)
 
     def main(self) -> NoReturn:
         """Main CLI entry point for flext-dbt-ldif."""
         self._MainEntry.run_main_cli(self)
+
+    def validate(self) -> None:
+        """Validate dbt models and configurations."""
+        self._CommandHandlers.handle_validate_command(self)
 
 
 if __name__ == "__main__":

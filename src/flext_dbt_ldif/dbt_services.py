@@ -34,29 +34,6 @@ class FlextDbtLdifService:
             project_dir=self.project_dir,
         )
 
-    def parse_and_validate_ldif(
-        self,
-        ldif_file: Path | str,
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
-        """Parse and validate LDIF file in one operation."""
-        parse_result = self.client.parse_ldif_file(ldif_file)
-        if parse_result.is_failure or parse_result.value is None:
-            return FlextResult[t.ConfigurationMapping].fail(
-                parse_result.error or "Parse failed",
-            )
-        validation = self.client.validate_ldif_data(parse_result.value)
-        if validation.is_failure or validation.value is None:
-            return FlextResult[t.ConfigurationMapping].fail(
-                validation.error or "Validation failed",
-            )
-        return FlextResult[t.ConfigurationMapping].ok(
-            {
-                "entries": parse_result.value,
-                "entry_count": len(parse_result.value),
-                "validation_metrics": validation.value,
-            },
-        )
-
     def generate_and_write_models(
         self,
         entries: Sequence[Mapping[str, t.ContainerValue]],
@@ -83,6 +60,29 @@ class FlextDbtLdifService:
             {
                 "models_generated": len(all_models),
                 "model_names": [model.name for model in all_models],
+            },
+        )
+
+    def parse_and_validate_ldif(
+        self,
+        ldif_file: Path | str,
+    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+        """Parse and validate LDIF file in one operation."""
+        parse_result = self.client.parse_ldif_file(ldif_file)
+        if parse_result.is_failure or parse_result.value is None:
+            return FlextResult[t.ConfigurationMapping].fail(
+                parse_result.error or "Parse failed",
+            )
+        validation = self.client.validate_ldif_data(parse_result.value)
+        if validation.is_failure or validation.value is None:
+            return FlextResult[t.ConfigurationMapping].fail(
+                validation.error or "Validation failed",
+            )
+        return FlextResult[t.ConfigurationMapping].ok(
+            {
+                "entries": parse_result.value,
+                "entry_count": len(parse_result.value),
+                "validation_metrics": validation.value,
             },
         )
 

@@ -42,24 +42,6 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
             },
         )
 
-    def generate_staging_models(
-        self,
-        entries: Sequence[Mapping[str, t.JsonValue]],
-    ) -> FlextResult[list[FlextDbtLdifModels.DbtModel]]:
-        """Generate simple staging models for provided LDIF entries."""
-        if not entries:
-            return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([])
-
-        model = FlextDbtLdifModels.DbtModel(
-            name=c.STAGING_MODEL_NAME,
-            dbt_model_type=c.DBT_MODEL_TYPE_STAGING,
-            ldif_source=c.LDIF_SOURCE_NAME,
-            materialization=c.DBT_MATERIALIZATION_VIEW,
-            sql_content=f"select * from {{{{ source('ldif', '{c.LDIF_RAW_SOURCE}') }}}}",
-            description=c.STAGING_MODEL_DESCRIPTION,
-        )
-        return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([model])
-
     def generate_analytics_models(
         self,
         staging_models: list[FlextDbtLdifModels.DbtModel],
@@ -77,6 +59,24 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
             dependencies=[c.STAGING_MODEL_NAME],
         )
         return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([analytics])
+
+    def generate_staging_models(
+        self,
+        entries: Sequence[Mapping[str, t.JsonValue]],
+    ) -> FlextResult[list[FlextDbtLdifModels.DbtModel]]:
+        """Generate simple staging models for provided LDIF entries."""
+        if not entries:
+            return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([])
+
+        model = FlextDbtLdifModels.DbtModel(
+            name=c.STAGING_MODEL_NAME,
+            dbt_model_type=c.DBT_MODEL_TYPE_STAGING,
+            ldif_source=c.LDIF_SOURCE_NAME,
+            materialization=c.DBT_MATERIALIZATION_VIEW,
+            sql_content=f"select * from {{{{ source('ldif', '{c.LDIF_RAW_SOURCE}') }}}}",
+            description=c.STAGING_MODEL_DESCRIPTION,
+        )
+        return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([model])
 
 
 __all__ = ["FlextDbtLdifUnifiedService"]

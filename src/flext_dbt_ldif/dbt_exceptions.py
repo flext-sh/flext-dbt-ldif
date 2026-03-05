@@ -51,15 +51,14 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         super().__init__(message)
         self.error_code = error_code
 
-    # Factory methods for common error scenarios
     @classmethod
-    def validation_error(
+    def authentication_error(
         cls,
-        message: str = "LDIF data validation failed",
+        message: str = "LDIF DBT authentication failed",
         **context: t.ContainerValue,
     ) -> FlextDbtLdifError:
-        """Create validation error."""
-        return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)
+        """Create authentication error."""
+        return cls(message, error_code=cls.ErrorCode.AUTHENTICATION_ERROR, **context)
 
     @classmethod
     def configuration_error(
@@ -80,31 +79,21 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         return cls(message, error_code=cls.ErrorCode.CONNECTION_ERROR, **context)
 
     @classmethod
-    def processing_error(
+    def model_error(
         cls,
-        message: str = "LDIF processing operations failed",
+        message: str = "LDIF DBT model error",
+        *,
+        model_name: str | None = None,
+        model_type: str | None = None,
         **context: t.ContainerValue,
     ) -> FlextDbtLdifError:
-        """Create processing error."""
-        return cls(message, error_code=cls.ErrorCode.PROCESSING_ERROR, **context)
-
-    @classmethod
-    def authentication_error(
-        cls,
-        message: str = "LDIF DBT authentication failed",
-        **context: t.ContainerValue,
-    ) -> FlextDbtLdifError:
-        """Create authentication error."""
-        return cls(message, error_code=cls.ErrorCode.AUTHENTICATION_ERROR, **context)
-
-    @classmethod
-    def timeout_error(
-        cls,
-        message: str = "LDIF DBT operation timeout",
-        **context: t.ContainerValue,
-    ) -> FlextDbtLdifError:
-        """Create timeout error."""
-        return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)
+        """Create LDIF DBT model error with dbt context."""
+        context["operation"] = "dbt_model_processing"
+        if model_name is not None:
+            context["model_name"] = model_name
+        if model_type is not None:
+            context["model_type"] = model_type
+        return cls(message, error_code=cls.ErrorCode.MODEL_ERROR, **context)
 
     @classmethod
     def parse_error(
@@ -124,38 +113,13 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         return cls(message, error_code=cls.ErrorCode.PARSE_ERROR, **context)
 
     @classmethod
-    def model_error(
+    def processing_error(
         cls,
-        message: str = "LDIF DBT model error",
-        *,
-        model_name: str | None = None,
-        model_type: str | None = None,
+        message: str = "LDIF processing operations failed",
         **context: t.ContainerValue,
     ) -> FlextDbtLdifError:
-        """Create LDIF DBT model error with dbt context."""
-        context["operation"] = "dbt_model_processing"
-        if model_name is not None:
-            context["model_name"] = model_name
-        if model_type is not None:
-            context["model_type"] = model_type
-        return cls(message, error_code=cls.ErrorCode.MODEL_ERROR, **context)
-
-    @classmethod
-    def transformation_error(
-        cls,
-        message: str = "LDIF DBT transformation failed",
-        *,
-        transformation_type: str | None = None,
-        model_name: str | None = None,
-        **context: t.ContainerValue,
-    ) -> FlextDbtLdifError:
-        """Create LDIF DBT transformation error with transformation context."""
-        context["operation"] = "ldif_transformation"
-        if transformation_type is not None:
-            context["transformation_type"] = transformation_type
-        if model_name is not None:
-            context["model_name"] = model_name
-        return cls(message, error_code=cls.ErrorCode.TRANSFORMATION_ERROR, **context)
+        """Create processing error."""
+        return cls(message, error_code=cls.ErrorCode.PROCESSING_ERROR, **context)
 
     @classmethod
     def test_error(
@@ -174,9 +138,41 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
             context["model_name"] = model_name
         return cls(message, error_code=cls.ErrorCode.TEST_ERROR, **context)
 
-    def is_validation_error(self) -> bool:
-        """Check if this is a validation error."""
-        return self.error_code == self.ErrorCode.VALIDATION_ERROR
+    @classmethod
+    def timeout_error(
+        cls,
+        message: str = "LDIF DBT operation timeout",
+        **context: t.ContainerValue,
+    ) -> FlextDbtLdifError:
+        """Create timeout error."""
+        return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)
+
+    @classmethod
+    def transformation_error(
+        cls,
+        message: str = "LDIF DBT transformation failed",
+        *,
+        transformation_type: str | None = None,
+        model_name: str | None = None,
+        **context: t.ContainerValue,
+    ) -> FlextDbtLdifError:
+        """Create LDIF DBT transformation error with transformation context."""
+        context["operation"] = "ldif_transformation"
+        if transformation_type is not None:
+            context["transformation_type"] = transformation_type
+        if model_name is not None:
+            context["model_name"] = model_name
+        return cls(message, error_code=cls.ErrorCode.TRANSFORMATION_ERROR, **context)
+
+    # Factory methods for common error scenarios
+    @classmethod
+    def validation_error(
+        cls,
+        message: str = "LDIF data validation failed",
+        **context: t.ContainerValue,
+    ) -> FlextDbtLdifError:
+        """Create validation error."""
+        return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)
 
     def is_configuration_error(self) -> bool:
         """Check if this is a configuration error."""
@@ -190,6 +186,10 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
             self.ErrorCode.MODEL_ERROR,
             self.ErrorCode.TRANSFORMATION_ERROR,
         }
+
+    def is_validation_error(self) -> bool:
+        """Check if this is a validation error."""
+        return self.error_code == self.ErrorCode.VALIDATION_ERROR
 
 
 __all__: list[str] = [
