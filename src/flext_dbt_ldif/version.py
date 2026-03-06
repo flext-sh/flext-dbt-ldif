@@ -9,12 +9,12 @@ from __future__ import annotations
 
 from importlib.metadata import metadata
 
-from flext_dbt_ldif.constants import PROJECT_VERSION, VERSION
+from flext_dbt_ldif.constants import c
 
 _metadata = metadata("flext-dbt-ldif")
 __version__ = _metadata["Version"]
 __version_info__ = tuple(
-    int(part) if part.isdigit() else part for part in __version__.split(".")
+    (int(part) if part.isdigit() else part for part in __version__.split("."))
 )
 __title__ = _metadata["Name"]
 __description__ = _metadata.get("Summary", "")
@@ -23,8 +23,6 @@ __author_email__ = _metadata.get("Author-Email", "")
 __license__ = _metadata.get("License", "")
 __url__ = _metadata.get("Home-Page", "")
 __all__ = [
-    "PROJECT_VERSION",
-    "VERSION",
     "__author__",
     "__author_email__",
     "__description__",

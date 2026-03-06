@@ -10,9 +10,6 @@ from flext_meltano import FlextMeltanoConstants
 
 from flext_dbt_ldif.__version__ import __version__
 
-PROJECT_VERSION: Final[str] = __version__
-VERSION: Final[str] = __version__
-
 
 class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     """Typed constants used by DBT LDIF modules."""
@@ -78,6 +75,8 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
         MODEL_ERROR = "DBT_LDIF_MODEL_ERROR"
         TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
         TEST_ERROR = "DBT_LDIF_TEST_ERROR"
+    PROJECT_VERSION: Final[str] = __version__
+    VERSION: Final[str] = __version__
 
 
 c = FlextDbtLdifConstants

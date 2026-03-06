@@ -39,7 +39,7 @@ from flext_dbt_ldif.simple_api import (
 )
 from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
-from flext_dbt_ldif.version import PROJECT_VERSION, VERSION
+
 
 # Standard aliases (11 total)
 c = FlextDbtLdifConstants
@@ -54,8 +54,6 @@ u = FlextDbtLdifUtilities
 x = FlextMixins
 
 __all__: list[str] = [
-    "PROJECT_VERSION",
-    "VERSION",
     "FlextDbtLdif",
     "FlextDbtLdifCliService",
     "FlextDbtLdifClient",
