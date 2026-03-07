@@ -16,19 +16,16 @@ class FlextDbtLdifSettings(FlextSettings):
     """Runtime settings model for LDIF to DBT workflow."""
 
     model_config = SettingsConfigDict(
-        env_prefix="FLEXT_DBT_LDIF_",
-        case_sensitive=False,
-        extra="ignore",
+        env_prefix="FLEXT_DBT_LDIF_", case_sensitive=False, extra="ignore"
     )
-
     ldif_file_path: str = ""
-    ldif_encoding: str = c.DEFAULT_LDIF_ENCODING
-    ldif_max_file_size: int = c.MAX_FILE_SIZE_GB
+    ldif_encoding: str = c.DbtLdif.DEFAULT_LDIF_ENCODING
+    ldif_max_file_size: int = c.DbtLdif.MAX_FILE_SIZE_GB
     dbt_project_dir: str = "."
-    dbt_profiles_dir: str = c.DEFAULT_DBT_PROFILES_DIR
-    dbt_target: str = c.DEFAULT_DBT_TARGET
+    dbt_profiles_dir: str = c.DbtLdif.DEFAULT_DBT_PROFILES_DIR
+    dbt_target: str = c.DbtLdif.DEFAULT_DBT_TARGET
     dbt_threads: int = 4
-    dbt_log_level: str = c.DbtLogLevels.INFO.value
+    dbt_log_level: str = c.DbtLdif.DbtLogLevels.INFO.value
     min_quality_threshold: float = Field(default=0.8, ge=0.0, le=1.0)
 
     @property
@@ -44,7 +41,7 @@ class FlextDbtLdifSettings(FlextSettings):
         """Validate basic runtime invariants."""
         if self.dbt_threads <= 0:
             return FlextResult[bool].fail("dbt_threads must be positive")
-        if not (0.0 <= self.min_quality_threshold <= 1.0):
+        if not 0.0 <= self.min_quality_threshold <= 1.0:
             return FlextResult[bool].fail("min_quality_threshold must be in [0, 1]")
         return FlextResult[bool].ok(value=True)
 

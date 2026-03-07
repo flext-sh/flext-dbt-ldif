@@ -24,34 +24,31 @@ class FlextDbtLdifCore:
             """Generate default analytics model metadata."""
             return [
                 {
-                    "name": c.ANALYTICS_MODEL_NAME,
-                    "description": c.ANALYTICS_MODEL_DESCRIPTION,
-                },
+                    "name": c.DbtLdif.ANALYTICS_MODEL_NAME,
+                    "description": c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION,
+                }
             ]
 
         def generate_staging_models(self) -> list[Mapping[str, str]]:
             """Generate default staging model metadata."""
             return [
                 {
-                    "name": c.STAGING_MODEL_NAME,
-                    "description": c.STAGING_MODEL_DESCRIPTION,
-                },
+                    "name": c.DbtLdif.STAGING_MODEL_NAME,
+                    "description": c.DbtLdif.STAGING_MODEL_DESCRIPTION,
+                }
             ]
 
     class Analytics:
         """Compute basic analysis metrics for LDIF-like payloads."""
 
         def analyze_entry_patterns(
-            self,
-            entries: Sequence[Mapping[str, str]],
+            self, entries: Sequence[Mapping[str, str]]
         ) -> FlextResult[Mapping[str, object]]:
             """Analyze input entries and return summary payload."""
-            return FlextResult[Mapping[str, object]].ok(
-                {
-                    "total_entries": len(entries),
-                    "unique_dns": len({entry.get("dn", "") for entry in entries}),
-                },
-            )
+            return FlextResult[Mapping[str, object]].ok({
+                "total_entries": len(entries),
+                "unique_dns": len({entry.get("dn", "") for entry in entries}),
+            })
 
 
 __all__ = ["FlextDbtLdifCore"]

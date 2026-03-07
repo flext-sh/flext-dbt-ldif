@@ -21,8 +21,7 @@ class FlextDbtLdifClient:
         self.config = config or FlextDbtLdifSettings.get_global_instance()
 
     def parse_ldif_file(
-        self,
-        file_path: Path | str | None = None,
+        self, file_path: Path | str | None = None
     ) -> FlextResult[list[Mapping[str, t.ContainerValue]]]:
         """Return minimal parsed LDIF entries payload."""
         selected_path = (
@@ -30,42 +29,38 @@ class FlextDbtLdifClient:
         )
         if not selected_path:
             return FlextResult[list[t.ConfigurationMapping]].fail(
-                "LDIF file path is required",
+                "LDIF file path is required"
             )
-        return FlextResult[list[t.ConfigurationMapping]].ok(
-            [{"dn": c.SAMPLE_LDIF_DN, "source": selected_path}],
-        )
+        return FlextResult[list[t.ConfigurationMapping]].ok([
+            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
+        ])
 
     def run_full_pipeline(
-        self,
-        file_path: Path | str | None = None,
-        model_names: list[str] | None = None,
+        self, file_path: Path | str | None = None, model_names: list[str] | None = None
     ) -> FlextResult[Mapping[str, t.ContainerValue]]:
         """Run parse, validate, and transform pipeline."""
         parse_result = self.parse_ldif_file(file_path)
         if parse_result.is_failure or parse_result.value is None:
             return FlextResult[t.ConfigurationMapping].fail(
-                parse_result.error or "Parse failed",
+                parse_result.error or "Parse failed"
             )
         validate_result = self.validate_ldif_data(parse_result.value)
         if validate_result.is_failure or validate_result.value is None:
             return FlextResult[t.ConfigurationMapping].fail(
-                validate_result.error or "Validation failed",
+                validate_result.error or "Validation failed"
             )
         transform_result = self.transform_with_dbt(parse_result.value, model_names)
         if transform_result.is_failure or transform_result.value is None:
             return FlextResult[t.ConfigurationMapping].fail(
-                transform_result.error or "Transform failed",
+                transform_result.error or "Transform failed"
             )
         logger.info("Completed LDIF to DBT pipeline")
-        return FlextResult[t.ConfigurationMapping].ok(
-            {
-                "parsed_entries": len(parse_result.value),
-                "validation": validate_result.value,
-                "transformation": transform_result.value,
-                "pipeline_status": c.WORKFLOW_STATUS_COMPLETED,
-            },
-        )
+        return FlextResult[t.ConfigurationMapping].ok({
+            "parsed_entries": len(parse_result.value),
+            "validation": validate_result.value,
+            "transformation": transform_result.value,
+            "pipeline_status": c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
+        })
 
     def transform_with_dbt(
         self,
@@ -73,36 +68,28 @@ class FlextDbtLdifClient:
         model_names: list[str] | None = None,
     ) -> FlextResult[Mapping[str, t.ContainerValue]]:
         """Return synthetic DBT transformation metadata."""
-        return FlextResult[t.ConfigurationMapping].ok(
-            {
-                "records": len(entries),
-                "models": model_names or [c.STAGING_MODEL_NAME, c.ANALYTICS_MODEL_NAME],
-                "status": c.TRANSFORMATION_STATUS_SUCCESS,
-            },
-        )
+        return FlextResult[t.ConfigurationMapping].ok({
+            "records": len(entries),
+            "models": model_names
+            or [c.DbtLdif.STAGING_MODEL_NAME, c.DbtLdif.ANALYTICS_MODEL_NAME],
+            "status": c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
+        })
 
     def validate_ldif_data(
-        self,
-        entries: Sequence[Mapping[str, t.ContainerValue]],
+        self, entries: Sequence[Mapping[str, t.ContainerValue]]
     ) -> FlextResult[Mapping[str, t.ContainerValue]]:
         """Validate parsed LDIF payload and compute quality score."""
         total_entries = len(entries)
         if total_entries == 0:
-            return FlextResult[t.ConfigurationMapping].fail(
-                "No LDIF entries found",
-            )
-        quality_score = c.DEFAULT_QUALITY_SCORE
+            return FlextResult[t.ConfigurationMapping].fail("No LDIF entries found")
+        quality_score = c.DbtLdif.DEFAULT_QUALITY_SCORE
         if quality_score < self.config.min_quality_threshold:
-            return FlextResult[t.ConfigurationMapping].fail(
-                "Quality threshold not met",
-            )
-        return FlextResult[t.ConfigurationMapping].ok(
-            {
-                "total_entries": total_entries,
-                "quality_score": quality_score,
-                "validation_status": c.VALIDATION_STATUS_PASSED,
-            },
-        )
+            return FlextResult[t.ConfigurationMapping].fail("Quality threshold not met")
+        return FlextResult[t.ConfigurationMapping].ok({
+            "total_entries": total_entries,
+            "quality_score": quality_score,
+            "validation_status": c.DbtLdif.VALIDATION_STATUS_PASSED,
+        })
 
 
 __all__ = ["FlextDbtLdifClient"]

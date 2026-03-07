@@ -20,18 +20,17 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
 
         @staticmethod
         def parse_ldif_file(
-            file_path: Path,
-            encoding: str = "utf-8",
+            file_path: Path, encoding: str = "utf-8"
         ) -> FlextResult[list[Mapping[str, t.JsonValue]]]:
             """Parse LDIF file path into a lightweight row payload."""
             _ = encoding
             if not file_path.exists():
                 return FlextResult[list[Mapping[str, t.JsonValue]]].fail(
-                    f"LDIF file not found: {file_path}",
+                    f"LDIF file not found: {file_path}"
                 )
-            return FlextResult[list[Mapping[str, t.JsonValue]]].ok(
-                [{"dn": c.SAMPLE_LDIF_DN, "file": str(file_path)}],
-            )
+            return FlextResult[list[Mapping[str, t.JsonValue]]].ok([
+                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "file": str(file_path)}
+            ])
 
         @staticmethod
         def validate_ldif_structure(
@@ -40,13 +39,13 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
             """Validate basic LDIF structure and return quality metrics."""
             if not entries:
                 return FlextResult[Mapping[str, t.JsonValue]].fail(
-                    "No LDIF entries found",
+                    "No LDIF entries found"
                 )
-            return FlextResult[Mapping[str, t.JsonValue]].ok(
-                {"is_valid": True, "total_entries": len(entries)},
-            )
+            return FlextResult[Mapping[str, t.JsonValue]].ok({
+                "is_valid": True,
+                "total_entries": len(entries),
+            })
 
 
 u = FlextDbtLdifUtilities
-
 __all__ = ["FlextDbtLdifUtilities", "u"]

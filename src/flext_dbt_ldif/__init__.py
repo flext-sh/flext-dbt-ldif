@@ -40,7 +40,6 @@ from flext_dbt_ldif.simple_api import (
 from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
 
-
 # Standard aliases (11 total)
 c = FlextDbtLdifConstants
 d = FlextDecorators

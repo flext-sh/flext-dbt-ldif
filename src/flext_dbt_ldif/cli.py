@@ -60,30 +60,28 @@ class FlextDbtLdifCliService:
             try:
                 if len(sys.argv) > 1:
                     command = sys.argv[1]
-                    if command == c.CLI_COMMAND_INFO:
+                    if command == c.DbtLdif.CLI_COMMAND_INFO:
                         service_instance._CommandHandlers.handle_info_command(
-                            service_instance,
+                            service_instance
                         )
-                    elif command == c.CLI_COMMAND_GENERATE:
+                    elif command == c.DbtLdif.CLI_COMMAND_GENERATE:
                         service_instance._CommandHandlers.handle_generate_command(
-                            service_instance,
+                            service_instance
                         )
-                    elif command == c.CLI_COMMAND_VALIDATE:
+                    elif command == c.DbtLdif.CLI_COMMAND_VALIDATE:
                         service_instance._CommandHandlers.handle_validate_command(
-                            service_instance,
+                            service_instance
                         )
                     else:
                         logger.error("Unknown command: %s", command)
-                        sys.exit(c.EXIT_CODE_FAILURE)
-
-                sys.exit(c.EXIT_CODE_SUCCESS)
-
+                        sys.exit(c.DbtLdif.EXIT_CODE_FAILURE)
+                sys.exit(c.DbtLdif.EXIT_CODE_SUCCESS)
             except KeyboardInterrupt:
                 logger.info("Interrupted by user")
-                sys.exit(c.EXIT_CODE_FAILURE)
+                sys.exit(c.DbtLdif.EXIT_CODE_FAILURE)
             except (OSError, RuntimeError, ValueError):
                 logger.exception("CLI error")
-                sys.exit(c.EXIT_CODE_FAILURE)
+                sys.exit(c.DbtLdif.EXIT_CODE_FAILURE)
 
     def display_generate_message(self) -> r[str]:
         """Generate dbt models from LDIF schema definitions."""
@@ -123,12 +121,9 @@ class FlextDbtLdifCliService:
                 "PostgreSQL optimized transformations",
             ],
         }
-
-        # Use flext-cli to format and display data
         try:
             display_result = self._output.display_data(
-                info_data,
-                c.DEFAULT_OUTPUT_FORMAT_CLI,
+                info_data, c.DbtLdif.DEFAULT_OUTPUT_FORMAT_CLI
             )
             if display_result.is_success:
                 return r[str].ok("Package information displayed successfully")
@@ -152,8 +147,7 @@ class FlextDbtLdifCliService:
             if result.is_failure:
                 return r[str].fail(result.error or "Validation failed")
             display_result = self._output.display_data(
-                {"message": "Validation completed", "result": result.value},
-                "json",
+                {"message": "Validation completed", "result": result.value}, "json"
             )
             if display_result.is_success:
                 return r[str].ok("Validate message displayed")

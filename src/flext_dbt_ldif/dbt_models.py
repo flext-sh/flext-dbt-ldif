@@ -34,47 +34,42 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
     @override
     def execute(self) -> FlextResult[Mapping[str, t.JsonValue]]:
         """Execute service and return metadata payload."""
-        return FlextResult[Mapping[str, t.JsonValue]].ok(
-            {
-                "name": self.name,
-                "project_dir": str(self.project_dir),
-                "status": c.WORKFLOW_STATUS_READY,
-            },
-        )
+        return FlextResult[Mapping[str, t.JsonValue]].ok({
+            "name": self.name,
+            "project_dir": str(self.project_dir),
+            "status": c.DbtLdif.WORKFLOW_STATUS_READY,
+        })
 
     def generate_analytics_models(
-        self,
-        staging_models: list[FlextDbtLdifModels.DbtModel],
+        self, staging_models: list[FlextDbtLdifModels.DbtModel]
     ) -> FlextResult[list[FlextDbtLdifModels.DbtModel]]:
         """Generate one analytics model derived from staging set."""
         if not staging_models:
             return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([])
         analytics = FlextDbtLdifModels.DbtModel(
-            name=c.ANALYTICS_MODEL_NAME,
-            dbt_model_type=c.DBT_MODEL_TYPE_ANALYTICS,
-            ldif_source=c.LDIF_SOURCE_NAME,
-            materialization=c.DBT_MATERIALIZATION_TABLE,
-            sql_content=f"select * from {{{{ ref('{c.STAGING_MODEL_NAME}') }}}}",
-            description=c.ANALYTICS_MODEL_DESCRIPTION,
-            dependencies=[c.STAGING_MODEL_NAME],
+            name=c.DbtLdif.ANALYTICS_MODEL_NAME,
+            dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_ANALYTICS,
+            ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
+            materialization=c.DbtLdif.DBT_MATERIALIZATION_TABLE,
+            sql_content=f"select * from {{{{ ref('{c.DbtLdif.STAGING_MODEL_NAME}') }}}}",
+            description=c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION,
+            dependencies=[c.DbtLdif.STAGING_MODEL_NAME],
         )
         return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([analytics])
 
     def generate_staging_models(
-        self,
-        entries: Sequence[Mapping[str, t.JsonValue]],
+        self, entries: Sequence[Mapping[str, t.JsonValue]]
     ) -> FlextResult[list[FlextDbtLdifModels.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:
             return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([])
-
         model = FlextDbtLdifModels.DbtModel(
-            name=c.STAGING_MODEL_NAME,
-            dbt_model_type=c.DBT_MODEL_TYPE_STAGING,
-            ldif_source=c.LDIF_SOURCE_NAME,
-            materialization=c.DBT_MATERIALIZATION_VIEW,
-            sql_content=f"select * from {{{{ source('ldif', '{c.LDIF_RAW_SOURCE}') }}}}",
-            description=c.STAGING_MODEL_DESCRIPTION,
+            name=c.DbtLdif.STAGING_MODEL_NAME,
+            dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
+            ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
+            materialization=c.DbtLdif.DBT_MATERIALIZATION_VIEW,
+            sql_content=f"select * from {{{{ source('ldif', '{c.DbtLdif.LDIF_RAW_SOURCE}') }}}}",
+            description=c.DbtLdif.STAGING_MODEL_DESCRIPTION,
         )
         return FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([model])
 
