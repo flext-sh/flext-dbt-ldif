@@ -78,10 +78,5 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
         TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
 
 
-# Short aliases per FLEXT convention
-c = TestsFlextDbtLdifConstants  # Primary test constants alias
-
-__all__ = [
-    "TestsFlextDbtLdifConstants",
-    "c",
-]
+c = TestsFlextDbtLdifConstants
+__all__ = ["TestsFlextDbtLdifConstants", "c"]

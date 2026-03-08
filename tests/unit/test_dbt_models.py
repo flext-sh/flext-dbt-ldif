@@ -19,8 +19,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_initialization(self, tmp_path: Path) -> None:
         """Test service initialization with project dir."""
         gen = FlextDbtLdifUnifiedService(
-            config=FlextDbtLdifSettings(),
-            project_dir=tmp_path,
+            config=FlextDbtLdifSettings(), project_dir=tmp_path
         )
         assert gen.project_dir == tmp_path
         assert gen.name == "ldif_generator"

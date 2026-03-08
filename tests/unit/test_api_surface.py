@@ -22,13 +22,10 @@ from flext_dbt_ldif import (
 
 
 def test_api_imports() -> None:
-    """Test API imports."""  # Test version import
+    """Test API imports."""
     assert isinstance(__version__, str)
-    # Instantiate light-touch objects to bump coverage
     _ = FlextDbtLdifClient(FlextDbtLdifSettings())
     _ = FlextDbtLdifService(FlextDbtLdifSettings())
-
     assert callable(FlextDbtLdif)
-
     assert FlextResult is not None
     assert FlextLdif is not None

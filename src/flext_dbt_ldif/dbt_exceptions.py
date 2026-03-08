@@ -25,7 +25,6 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     through error codes instead of multiple exception classes.
     """
 
-    # Class-level reference to ErrorCode for internal usage
     ErrorCode = c.ErrorCode
 
     @override
@@ -44,10 +43,8 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         **context: Additional context information
 
         """
-        # Add error code to context
         context["error_code"] = error_code.value
         context["operation"] = context.get("operation", "ldif_dbt_operation")
-
         super().__init__(message)
         self.error_code = error_code
 
@@ -140,9 +137,7 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
 
     @classmethod
     def timeout_error(
-        cls,
-        message: str = "LDIF DBT operation timeout",
-        **context: t.ContainerValue,
+        cls, message: str = "LDIF DBT operation timeout", **context: t.ContainerValue
     ) -> FlextDbtLdifError:
         """Create timeout error."""
         return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)
@@ -164,12 +159,9 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
             context["model_name"] = model_name
         return cls(message, error_code=cls.ErrorCode.TRANSFORMATION_ERROR, **context)
 
-    # Factory methods for common error scenarios
     @classmethod
     def validation_error(
-        cls,
-        message: str = "LDIF data validation failed",
-        **context: t.ContainerValue,
+        cls, message: str = "LDIF data validation failed", **context: t.ContainerValue
     ) -> FlextDbtLdifError:
         """Create validation error."""
         return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)
@@ -192,6 +184,4 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
         return self.error_code == self.ErrorCode.VALIDATION_ERROR
 
 
-__all__: list[str] = [
-    "FlextDbtLdifError",
-]
+__all__: list[str] = ["FlextDbtLdifError"]

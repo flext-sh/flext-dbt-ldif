@@ -48,7 +48,7 @@ class TestFlextDbtLdifClient:
         """Test validating LDIF data with entries."""
         client = FlextDbtLdifClient()
         entries: list[dict[str, t.ContainerValue]] = [
-            {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"},
+            {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"}
         ]
         result = client.validate_ldif_data(entries)
         assert result.is_success
@@ -67,7 +67,7 @@ class TestFlextDbtLdifClient:
         """Test transforming with DBT returns metadata."""
         client = FlextDbtLdifClient()
         entries: list[dict[str, t.ContainerValue]] = [
-            {"dn": "cn=test,dc=example,dc=org"},
+            {"dn": "cn=test,dc=example,dc=org"}
         ]
         result = client.transform_with_dbt(entries, ["m1", "m2"])
         assert result.is_success

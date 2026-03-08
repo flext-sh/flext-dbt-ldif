@@ -19,28 +19,19 @@ from flext_ldif import FlextLdif
 
 from flext_dbt_ldif.__version__ import __version__, __version_info__
 from flext_dbt_ldif.cli import FlextDbtLdifCliService
-from flext_dbt_ldif.constants import (
-    FlextDbtLdifConstants as FlextDbtLdifConstants,
-)
+from flext_dbt_ldif.constants import FlextDbtLdifConstants as FlextDbtLdifConstants
 from flext_dbt_ldif.core import FlextDbtLdifCore
 from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
 from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
-from flext_dbt_ldif.dbt_models import (
-    FlextDbtLdifUnifiedService,
-)
+from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
 from flext_dbt_ldif.dbt_services import FlextDbtLdifService
-from flext_dbt_ldif.models import (
-    FlextDbtLdifModels,
-)
+from flext_dbt_ldif.models import FlextDbtLdifModels
 from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
 from flext_dbt_ldif.settings import FlextDbtLdifSettings
-from flext_dbt_ldif.simple_api import (
-    FlextDbtLdif,
-)
+from flext_dbt_ldif.simple_api import FlextDbtLdif
 from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
 from flext_dbt_ldif.utilities import FlextDbtLdifUtilities
 
-# Standard aliases (11 total)
 c = FlextDbtLdifConstants
 d = FlextDecorators
 e = FlextExceptions
@@ -51,7 +42,6 @@ r = FlextResult
 s = FlextService
 u = FlextDbtLdifUtilities
 x = FlextMixins
-
 __all__: list[str] = [
     "FlextDbtLdif",
     "FlextDbtLdifCliService",

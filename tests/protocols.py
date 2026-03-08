@@ -24,8 +24,6 @@ class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
     """
 
 
-# Runtime aliases
 p = TestsFlextDbtLdifProtocols
 p = TestsFlextDbtLdifProtocols
-
 __all__ = ["TestsFlextDbtLdifProtocols", "p"]

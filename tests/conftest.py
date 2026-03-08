@@ -24,9 +24,7 @@ def docker_control() -> FlextTestsDocker:
 
 
 @pytest.fixture(scope="session")
-def shared_ldap_container(
-    docker_control: FlextTestsDocker,
-) -> Generator[str]:
+def shared_ldap_container(docker_control: FlextTestsDocker) -> Generator[str]:
     """Start and maintain flext-openldap-test container.
 
     Container auto-starts if not running and remains running after tests.
@@ -34,14 +32,9 @@ def shared_ldap_container(
     result = docker_control.start_existing_container("flext-openldap-test")
     if result.is_failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
-
     return "flext-openldap-test"
 
 
-# Import shared fixtures from docker directory
-
-
-# Test environment setup
 @pytest.fixture(autouse=True)
 def set_test_environment() -> Generator[None]:
     """Set test environment variables."""
@@ -51,14 +44,12 @@ def set_test_environment() -> Generator[None]:
     os.environ["DBT_PROFILES_DIR"] = temp_dir
     os.environ["LDIF_TEST_MODE"] = "true"
     yield
-    # Cleanup
     os.environ.pop("FLEXT_ENV", None)
     os.environ.pop("FLEXT_LOG_LEVEL", None)
     os.environ.pop("DBT_PROFILES_DIR", None)
     os.environ.pop("LDIF_TEST_MODE", None)
 
 
-# Shared LDAP container fixture
 @pytest.fixture(scope="session", autouse=True)
 def ensure_shared_docker_container(shared_ldap_container: object) -> None:
     """Ensure shared Docker container is started for the test session.
@@ -66,13 +57,9 @@ def ensure_shared_docker_container(shared_ldap_container: object) -> None:
     This fixture automatically starts the shared LDAP container if not running,
     and ensures it's available for all tests in the session.
     """
-    # Suppress unused parameter warning - fixture is used for side effects
     _ = shared_ldap_container
-    # The shared_ldap_container fixture will be invoked automatically
-    # and will start/stop the container for the entire test session
 
 
-# dbt LDIF configuration fixtures
 @pytest.fixture
 def dbt_ldif_profile() -> dict[str, t.ContainerValue]:
     """Dbt LDIF profile configuration for testing."""
@@ -86,8 +73,7 @@ def dbt_ldif_profile() -> dict[str, t.ContainerValue]:
         "test": {
             "outputs": {
                 "default": {
-                    "type": "postgres",  # Using postgres as target for
-                    # transformed LDIF data
+                    "type": "postgres",
                     "host": "localhost",
                     "port": 5432,
                     "database": "ldif_warehouse",
@@ -97,7 +83,7 @@ def dbt_ldif_profile() -> dict[str, t.ContainerValue]:
                     "threads": 4,
                     "keepalives_idle": 0,
                     "search_path": "ldif_transformed",
-                },
+                }
             },
             "target": "default",
         },
@@ -126,30 +112,29 @@ def dbt_ldif_project_config() -> dict[str, t.ContainerValue]:
             "materialized": "table",
             "ldif": {
                 "enable_ldif_functions": True,
-                "ldap_server": "localhost:3390",  # Use shared container port
-                "base_dn": "dc=flext,dc=local",  # Use shared container domain
+                "ldap_server": "localhost:3390",
+                "base_dn": "dc=flext,dc=local",
             },
         },
         "vars": {
-            "ldif_base_dn": "dc=flext,dc=local",  # Use shared container domain
-            "ldif_users_ou": "ou=people",  # Use shared container OU structure
-            "ldif_groups_ou": "ou=groups",  # Use shared container OU structure
+            "ldif_base_dn": "dc=flext,dc=local",
+            "ldif_users_ou": "ou=people",
+            "ldif_groups_ou": "ou=groups",
             "enable_ldif_validation": True,
         },
     }
 
 
-# LDIF source fixtures
 @pytest.fixture
 def ldif_source_config(shared_ldap_config: dict) -> dict[str, t.ContainerValue]:
     """LDIF source configuration for testing using shared container."""
-    _ = shared_ldap_config  # Acknowledge parameter usage
+    _ = shared_ldap_config
     return {
         "server": "localhost",
-        "port": 3390,  # Use shared container port
-        "base_dn": "dc=flext,dc=local",  # Use shared container domain
-        "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=flext,dc=local",  # Use shared container REDACTED_LDAP_BIND_PASSWORD DN
-        "bind_password": "REDACTED_LDAP_BIND_PASSWORD123",  # Use shared container password
+        "port": 3390,
+        "base_dn": "dc=flext,dc=local",
+        "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=flext,dc=local",
+        "bind_password": "REDACTED_LDAP_BIND_PASSWORD123",
         "use_ssl": False,
         "use_tls": False,
         "timeout": 30,
@@ -206,7 +191,6 @@ def sample_ldif_entries() -> list[dict[str, t.ContainerValue]]:
     ]
 
 
-# Pytest markers for test categorization
 def pytest_configure(config: pytest.Config) -> None:
     """Configure pytest markers."""
     config.addinivalue_line("markers", "unit: Unit tests")

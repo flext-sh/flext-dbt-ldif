@@ -17,20 +17,14 @@ if TYPE_CHECKING:
         TestsFlextDbtLdifConstants,
         TestsFlextDbtLdifConstants as c,
     )
-
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestsFlextDbtLdifConstants": ("tests.constants", "TestsFlextDbtLdifConstants"),
     "c": ("tests.constants", "TestsFlextDbtLdifConstants"),
 }
-
-__all__ = [
-    "TestsFlextDbtLdifConstants",
-    "c",
-]
+__all__ = ["TestsFlextDbtLdifConstants", "c"]
 
 
-def __getattr__(name: str) -> Any:  # noqa: ANN401
+def __getattr__(name: str) -> Any:
     """Lazy-load module attributes on first access (PEP 562)."""
     return lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
 

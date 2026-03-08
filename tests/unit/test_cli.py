@@ -33,7 +33,6 @@ class TestFlextDbtLdifCliService:
         """Test display_generate_message calls real model generation."""
         service = FlextDbtLdifCliService()
         result = service.display_generate_message()
-        # Should succeed or fail gracefully, not return 'coming soon'
         assert result.is_success or result.is_failure
         assert "coming soon" not in str(result.value).lower()
 
@@ -41,7 +40,6 @@ class TestFlextDbtLdifCliService:
         """Test display_validate_message calls real validation."""
         service = FlextDbtLdifCliService()
         result = service.display_validate_message()
-        # Should succeed or fail gracefully, not return 'coming soon'
         assert result.is_success or result.is_failure
         assert "coming soon" not in str(result.value).lower()
 

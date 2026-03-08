@@ -34,12 +34,10 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         """Return current settings payload for service contracts."""
         try:
             return FlextResult[FlextDbtLdifSettings].ok(
-                FlextDbtLdifSettings.model_validate(self._config),
+                FlextDbtLdifSettings.model_validate(self._config)
             )
         except ValidationError:
-            return FlextResult[FlextDbtLdifSettings].fail(
-                "Invalid DBT LDIF settings",
-            )
+            return FlextResult[FlextDbtLdifSettings].fail("Invalid DBT LDIF settings")
 
     def generate_ldif_models(
         self,
@@ -53,14 +51,14 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         parsed = self.service.parse_and_validate_ldif(ldif_file)
         if parsed.is_failure or parsed.value is None:
             return FlextResult[t.ConfigurationMapping].fail(
-                parsed.error or "Parsing failed",
+                parsed.error or "Parsing failed"
             )
         entries_raw = parsed.value.get("entries", [])
         try:
             entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
         except ValidationError:
             return FlextResult[t.ConfigurationMapping].fail(
-                "Invalid parsed entries payload",
+                "Invalid parsed entries payload"
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
@@ -81,8 +79,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         )
 
     def validate_ldif_quality(
-        self,
-        ldif_file: Path | str,
+        self, ldif_file: Path | str
     ) -> FlextResult[Mapping[str, t.ContainerValue]]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)

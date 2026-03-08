@@ -22,20 +22,17 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
             """Protocol for DBT model execution and testing."""
 
             def run_dbt_models(
-                self,
-                models: list[str] | None = None,
+                self, models: list[str] | None = None
             ) -> FlextResult[LdifPayload]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
-                self,
-                models: list[str] | None = None,
+                self, models: list[str] | None = None
             ) -> FlextResult[LdifPayload]:
                 """Run DBT tests and return status payload."""
                 ...
 
 
 p = FlextDbtLdifProtocols
-
 __all__ = ["FlextDbtLdifProtocols", "p"]

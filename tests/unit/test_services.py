@@ -23,9 +23,7 @@ def svc(tmp_path: Path) -> FlextDbtLdifService:
 
 
 def test_parse_and_validate_ldif_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test parsing and validating LDIF succeeds."""
     entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
@@ -37,11 +35,8 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[t.ConfigurationMapping].ok({
-            "quality_score": 0.9,
-        }),
+        lambda _e: FlextResult[t.ConfigurationMapping].ok({"quality_score": 0.9}),
     )
-
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_success
     data = result.value or {}
@@ -50,25 +45,20 @@ def test_parse_and_validate_ldif_ok(
 
 
 def test_parse_and_validate_ldif_parse_fails(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test parse failure propagates."""
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: FlextResult[list[t.ConfigurationMapping]].fail(
-            "Parse error",
-        ),
+        lambda _fp: FlextResult[list[t.ConfigurationMapping]].fail("Parse error"),
     )
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_failure
 
 
 def test_generate_and_write_models_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
+    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService
 ) -> None:
     """Test model generation succeeds."""
     staging_model = FlextDbtLdifModels.DbtModel(
@@ -83,7 +73,6 @@ def test_generate_and_write_models_ok(
         ldif_source="ldif_entries",
         sql_content="select * from stg",
     )
-
     gen = svc.model_generator
     object.__setattr__(
         gen,
@@ -95,7 +84,6 @@ def test_generate_and_write_models_ok(
         "generate_analytics_models",
         lambda _m: FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model]),
     )
-
     entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
     result = svc.generate_and_write_models(entries)
     assert result.is_success
@@ -108,9 +96,7 @@ def test_generate_and_write_models_ok(
 
 
 def test_run_complete_workflow_all(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test complete workflow with all stages."""
     entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
@@ -122,16 +108,13 @@ def test_run_complete_workflow_all(
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[t.ConfigurationMapping].ok({
-            "quality_score": 0.9,
-        }),
+        lambda _e: FlextResult[t.ConfigurationMapping].ok({"quality_score": 0.9}),
     )
     monkeypatch.setattr(
         svc.client,
         "transform_with_dbt",
         lambda _e, _m: FlextResult[t.ConfigurationMapping].ok({"ran": True}),
     )
-
     staging_model = FlextDbtLdifModels.DbtModel(
         name="stg_ldif_entries",
         dbt_model_type="staging",
@@ -144,7 +127,6 @@ def test_run_complete_workflow_all(
         ldif_source="ldif_entries",
         sql_content="select * from stg",
     )
-
     gen = svc.model_generator
     object.__setattr__(
         gen,
@@ -156,7 +138,6 @@ def test_run_complete_workflow_all(
         "generate_analytics_models",
         lambda _m: FlextResult[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model]),
     )
-
     result = svc.run_complete_workflow(
         tmp_path / "f.ldif",
         generate_models=True,
@@ -169,9 +150,7 @@ def test_run_complete_workflow_all(
 
 
 def test_run_data_quality_assessment(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test data quality assessment delegates to parse_and_validate."""
     entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
@@ -183,11 +162,8 @@ def test_run_data_quality_assessment(
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: FlextResult[t.ConfigurationMapping].ok({
-            "quality_score": 0.88,
-        }),
+        lambda _e: FlextResult[t.ConfigurationMapping].ok({"quality_score": 0.88}),
     )
-
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
     assert result.is_success
     data = result.value or {}
