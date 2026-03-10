@@ -2,4 +2,4 @@
 
 from __future__ import annotations
 
-__all__ = ["FlextDbtLdifSettings"]
+__all__ = ["FlextDbtLdifSettings"]  # noqa: F822
