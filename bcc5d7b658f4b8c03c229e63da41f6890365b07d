@@ -1,0 +1,29 @@
+src/flext_dbt_ldif/dbt_client.py
+  e93a413913b0ebf6 21-22
+src/flext_dbt_ldif/simple_api.py
+  e93a413913b0ebf6 24-25
+src/flext_dbt_ldif/dbt_models.py
+  e93a413913b0ebf6 32-33
+src/flext_dbt_ldif/dbt_services.py
+  e93a413913b0ebf6 29-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "bcc5d7b658f4b8c03c229e63da41f6890365b07d",
+  "prompts": {
+    "e93a413913b0ebf6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_326980a86ffekYMW057MlAO3fe",
+        "model": "anthropic/claude-haiku-4-5"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 12,
+      "total_deletions": 4,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    }
+  }
+}
