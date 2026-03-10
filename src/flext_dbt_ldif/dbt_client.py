@@ -18,7 +18,9 @@ class FlextDbtLdifClient:
 
     def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
         """Initialize client with explicit or global settings."""
-        self.config = config or FlextDbtLdifSettings.get_global()
+        self.config = (
+            config if config is not None else FlextDbtLdifSettings.get_global()
+        )
 
     def parse_ldif_file(
         self, file_path: Path | str | None = None

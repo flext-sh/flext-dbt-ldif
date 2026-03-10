@@ -26,7 +26,9 @@ class FlextDbtLdifService:
         project_dir: Path | None = None,
     ) -> None:
         """Initialize service dependencies."""
-        self.config = config or FlextDbtLdifSettings.get_global()
+        self.config = (
+            config if config is not None else FlextDbtLdifSettings.get_global()
+        )
         self.project_dir = project_dir or Path(str(self.config.ldif_file_path or "."))
         self.client = FlextDbtLdifClient(self.config)
         self.model_generator = FlextDbtLdifUnifiedService(
