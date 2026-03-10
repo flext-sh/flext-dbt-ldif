@@ -25,7 +25,7 @@ class FlextDbtLdifCliService:
     def __init__(self) -> None:
         """Initialize CLI service with flext-cli patterns."""
         self._output = FlextCliOutput()
-        self._config = FlextCliSettings.get_global_instance()
+        self._config = FlextCliSettings.get_global()
 
     class _CommandHandlers:
         """Nested helper class for command handling operations."""

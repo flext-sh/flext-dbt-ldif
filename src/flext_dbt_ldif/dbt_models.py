@@ -29,7 +29,7 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
         super().__init__()
         self.name = name
         self.project_dir = Path(project_dir or Path.cwd())
-        self._settings = config or FlextDbtLdifSettings.get_global_instance()
+        self._settings = config or FlextDbtLdifSettings.get_global()
 
     @override
     def execute(self) -> FlextResult[Mapping[str, t.JsonValue]]:
