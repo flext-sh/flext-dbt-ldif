@@ -49,7 +49,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         """Generate DBT model metadata from LDIF input."""
         _ = project_dir
         parsed = self.service.parse_and_validate_ldif(ldif_file)
-        if parsed.is_failure or parsed.value is None:
+        if parsed.is_failure:
             return FlextResult[t.ConfigurationMapping].fail(
                 parsed.error or "Parsing failed"
             )

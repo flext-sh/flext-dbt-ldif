@@ -94,7 +94,7 @@ class FlextDbtLdifCliService:
                 {"message": "Model generation completed", "result": result.value},
                 "json",
             )
-            if display_result.is_success:
+            if display_result is not None and display_result.is_success:
                 return r[str].ok("Generate message displayed")
             return r[str].fail("Generate message display failed")
         except (
@@ -125,7 +125,7 @@ class FlextDbtLdifCliService:
             display_result = self._output.display_data(
                 info_data, c.DbtLdif.DEFAULT_OUTPUT_FORMAT_CLI
             )
-            if display_result.is_success:
+            if display_result is not None and display_result.is_success:
                 return r[str].ok("Package information displayed successfully")
             return r[str].fail("Package information display failed")
         except (
@@ -149,7 +149,7 @@ class FlextDbtLdifCliService:
             display_result = self._output.display_data(
                 {"message": "Validation completed", "result": result.value}, "json"
             )
-            if display_result.is_success:
+            if display_result is not None and display_result.is_success:
                 return r[str].ok("Validate message displayed")
             return r[str].fail("Validate message display failed")
         except (

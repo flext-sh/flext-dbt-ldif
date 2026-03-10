@@ -40,17 +40,17 @@ class FlextDbtLdifClient:
     ) -> FlextResult[Mapping[str, t.ContainerValue]]:
         """Run parse, validate, and transform pipeline."""
         parse_result = self.parse_ldif_file(file_path)
-        if parse_result.is_failure or parse_result.value is None:
+        if parse_result.is_failure:
             return FlextResult[t.ConfigurationMapping].fail(
                 parse_result.error or "Parse failed"
             )
         validate_result = self.validate_ldif_data(parse_result.value)
-        if validate_result.is_failure or validate_result.value is None:
+        if validate_result.is_failure:
             return FlextResult[t.ConfigurationMapping].fail(
                 validate_result.error or "Validation failed"
             )
         transform_result = self.transform_with_dbt(parse_result.value, model_names)
-        if transform_result.is_failure or transform_result.value is None:
+        if transform_result.is_failure:
             return FlextResult[t.ConfigurationMapping].fail(
                 transform_result.error or "Transform failed"
             )

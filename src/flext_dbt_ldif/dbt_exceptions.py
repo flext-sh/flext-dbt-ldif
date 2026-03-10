@@ -25,14 +25,14 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
     through error codes instead of multiple exception classes.
     """
 
-    ErrorCode = c.ErrorCode
+    ErrorCode = c.DbtLdif.ErrorCode
 
     @override
     def __init__(
         self,
         message: str,
         *,
-        error_code: c.ErrorCode = c.ErrorCode.DBT_LDIF_ERROR,
+        error_code: c.DbtLdif.ErrorCode = c.DbtLdif.ErrorCode.DBT_LDIF_ERROR,
         **context: t.ContainerValue,
     ) -> None:
         """Initialize LDIF DBT error with error code and context.
