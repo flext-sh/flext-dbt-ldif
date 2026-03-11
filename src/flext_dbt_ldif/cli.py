@@ -90,13 +90,11 @@ class FlextDbtLdifCliService:
             result = service.generate_and_write_models([])
             if result.is_failure:
                 return r[str].fail(result.error or "Model generation failed")
-            display_result = self._output.display_data(
+            self._output.display_data(
                 {"message": "Model generation completed", "result": result.value},
                 "json",
             )
-            if display_result is not None and display_result.is_success:
-                return r[str].ok("Generate message displayed")
-            return r[str].fail("Generate message display failed")
+            return r[str].ok("Generate message displayed")
         except (
             ValueError,
             TypeError,
@@ -122,12 +120,8 @@ class FlextDbtLdifCliService:
             ],
         }
         try:
-            display_result = self._output.display_data(
-                info_data, c.DbtLdif.DEFAULT_OUTPUT_FORMAT_CLI
-            )
-            if display_result is not None and display_result.is_success:
-                return r[str].ok("Package information displayed successfully")
-            return r[str].fail("Package information display failed")
+            self._output.display_data(info_data, c.DbtLdif.DEFAULT_OUTPUT_FORMAT_CLI)
+            return r[str].ok("Package information displayed successfully")
         except (
             ValueError,
             TypeError,
@@ -146,12 +140,10 @@ class FlextDbtLdifCliService:
             result = service.run_data_quality_assessment("")
             if result.is_failure:
                 return r[str].fail(result.error or "Validation failed")
-            display_result = self._output.display_data(
+            self._output.display_data(
                 {"message": "Validation completed", "result": result.value}, "json"
             )
-            if display_result is not None and display_result.is_success:
-                return r[str].ok("Validate message displayed")
-            return r[str].fail("Validate message display failed")
+            return r[str].ok("Validate message displayed")
         except (
             ValueError,
             TypeError,
