@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import r
 
 from flext_dbt_ldif.constants import c
 
@@ -43,9 +43,9 @@ class FlextDbtLdifCore:
 
         def analyze_entry_patterns(
             self, entries: Sequence[Mapping[str, str]]
-        ) -> FlextResult[Mapping[str, object]]:
+        ) -> r[Mapping[str, object]]:
             """Analyze input entries and return summary payload."""
-            return FlextResult[Mapping[str, object]].ok({
+            return r[Mapping[str, object]].ok({
                 "total_entries": len(entries),
                 "unique_dns": len({entry.get("dn", "") for entry in entries}),
             })

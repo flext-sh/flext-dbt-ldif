@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextResult, t
+from flext_core import FlextLogger, r, t
 from pydantic import TypeAdapter, ValidationError
 
 from .constants import c
@@ -40,7 +40,7 @@ class FlextDbtLdifService:
         entries: Sequence[Mapping[str, t.ContainerValue]],
         *,
         overwrite: bool = False,
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, t.ContainerValue]]:
         """Generate staging and analytics models for entries."""
         _ = overwrite
         staging_payload: list[dict[str, t.JsonValue]] = [
@@ -48,35 +48,33 @@ class FlextDbtLdifService:
         ]
         staging = self.model_generator.generate_staging_models(staging_payload)
         if staging.is_failure:
-            return FlextResult[t.ConfigurationMapping].fail(
+            return r[t.ConfigurationMapping].fail(
                 staging.error or "Staging model generation failed"
             )
         analytics = self.model_generator.generate_analytics_models(staging.value)
         if analytics.is_failure:
-            return FlextResult[t.ConfigurationMapping].fail(
+            return r[t.ConfigurationMapping].fail(
                 analytics.error or "Analytics model generation failed"
             )
         all_models = [*staging.value, *analytics.value]
-        return FlextResult[t.ConfigurationMapping].ok({
+        return r[t.ConfigurationMapping].ok({
             "models_generated": len(all_models),
             "model_names": [model.name for model in all_models],
         })
 
     def parse_and_validate_ldif(
         self, ldif_file: Path | str
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, t.ContainerValue]]:
         """Parse and validate LDIF file in one operation."""
         parse_result = self.client.parse_ldif_file(ldif_file)
         if parse_result.is_failure:
-            return FlextResult[t.ConfigurationMapping].fail(
-                parse_result.error or "Parse failed"
-            )
+            return r[t.ConfigurationMapping].fail(parse_result.error or "Parse failed")
         validation = self.client.validate_ldif_data(parse_result.value)
         if validation.is_failure:
-            return FlextResult[t.ConfigurationMapping].fail(
+            return r[t.ConfigurationMapping].fail(
                 validation.error or "Validation failed"
             )
-        return FlextResult[t.ConfigurationMapping].ok({
+        return r[t.ConfigurationMapping].ok({
             "entries": parse_result.value,
             "entry_count": len(parse_result.value),
             "validation_metrics": validation.value,
@@ -89,11 +87,11 @@ class FlextDbtLdifService:
         generate_models: bool = True,
         run_transformations: bool = True,
         model_names: list[str] | None = None,
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, t.ContainerValue]]:
         """Execute complete LDIF to DBT workflow."""
         parse_validation = self.parse_and_validate_ldif(ldif_file)
         if parse_validation.is_failure:
-            return FlextResult[t.ConfigurationMapping].fail(
+            return r[t.ConfigurationMapping].fail(
                 parse_validation.error or "Parse/validate workflow failed"
             )
         workflow_result: dict[str, t.ContainerValue] = {
@@ -104,13 +102,11 @@ class FlextDbtLdifService:
         try:
             entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
         except ValidationError:
-            return FlextResult[t.ConfigurationMapping].fail(
-                "Invalid parsed entries payload"
-            )
+            return r[t.ConfigurationMapping].fail("Invalid parsed entries payload")
         if generate_models:
             model_result = self.generate_and_write_models(entries)
             if model_result.is_failure:
-                return FlextResult[t.ConfigurationMapping].fail(
+                return r[t.ConfigurationMapping].fail(
                     model_result.error or "Model generation workflow failed"
                 )
             workflow_result["model_generation"] = model_result.value
@@ -120,17 +116,17 @@ class FlextDbtLdifService:
             ]
             transform = self.client.transform_with_dbt(transform_payload, model_names)
             if transform.is_failure:
-                return FlextResult[t.ConfigurationMapping].fail(
+                return r[t.ConfigurationMapping].fail(
                     transform.error or "Transformation workflow failed"
                 )
             workflow_result["transformations"] = transform.value
         workflow_result["workflow_status"] = c.DbtLdif.WORKFLOW_STATUS_COMPLETED
         logger.info("Completed DBT LDIF workflow")
-        return FlextResult[t.ConfigurationMapping].ok(workflow_result)
+        return r[t.ConfigurationMapping].ok(workflow_result)
 
     def run_data_quality_assessment(
         self, ldif_file: Path | str
-    ) -> FlextResult[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, t.ContainerValue]]:
         """Run quality assessment focused workflow."""
         return self.parse_and_validate_ldif(ldif_file)
 

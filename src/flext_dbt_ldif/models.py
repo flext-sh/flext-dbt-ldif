@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from flext_core import FlextModels, FlextResult
+from flext_core import FlextModels, r
 from flext_ldif import FlextLdifModels
 from flext_meltano import FlextMeltanoModels
 from pydantic import Field
@@ -23,15 +23,15 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
         columns: list[dict[str, object]] = Field(default=[])
         dependencies: list[str] = Field(default_factory=list)
 
-        def validate_business_rules(self) -> FlextResult[bool]:
+        def validate_business_rules(self) -> r[bool]:
             """Validate minimal model constraints."""
             if not self.name.strip():
-                return FlextResult[bool].fail("Model name cannot be empty")
+                return r[bool].fail("Model name cannot be empty")
             if not self.ldif_source.strip():
-                return FlextResult[bool].fail("LDIF source cannot be empty")
+                return r[bool].fail("LDIF source cannot be empty")
             if not self.sql_content.strip():
-                return FlextResult[bool].fail("SQL content cannot be empty")
-            return FlextResult[bool].ok(value=True)
+                return r[bool].fail("SQL content cannot be empty")
+            return r[bool].ok(value=True)
 
 
 m = FlextDbtLdifModels
