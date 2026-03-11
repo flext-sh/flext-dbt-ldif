@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextResult, FlextService, t
+from flext_core import FlextResult, FlextService, t, u
 from pydantic import TypeAdapter, ValidationError
 
 from .dbt_services import FlextDbtLdifService
@@ -34,12 +34,10 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
     @override
     def execute(self) -> FlextResult[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
-        try:
-            return FlextResult[FlextDbtLdifSettings].ok(
-                FlextDbtLdifSettings.model_validate(self._config)
-            )
-        except ValidationError:
-            return FlextResult[FlextDbtLdifSettings].fail("Invalid DBT LDIF settings")
+        return u.try_(
+            lambda: FlextDbtLdifSettings.model_validate(self._config),
+            catch=ValidationError,
+        ).map_error(lambda _: "Invalid DBT LDIF settings")
 
     def generate_ldif_models(
         self,
