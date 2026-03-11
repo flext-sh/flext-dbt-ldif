@@ -8,7 +8,6 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import sys
-from typing import NoReturn
 
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import FlextLogger, r
@@ -55,7 +54,7 @@ class FlextDbtLdifCliService:
         """Nested helper class for main entry point operations."""
 
         @staticmethod
-        def run_main_cli(service_instance: FlextDbtLdifCliService) -> NoReturn:
+        def run_main_cli(service_instance: FlextDbtLdifCliService) -> int:
             """Execute main CLI entry point logic."""
             try:
                 if len(sys.argv) > 1:
@@ -74,14 +73,14 @@ class FlextDbtLdifCliService:
                         )
                     else:
                         logger.error("Unknown command: %s", command)
-                        sys.exit(c.DbtLdif.EXIT_CODE_FAILURE)
-                sys.exit(c.DbtLdif.EXIT_CODE_SUCCESS)
+                        return c.DbtLdif.EXIT_CODE_FAILURE
+                return c.DbtLdif.EXIT_CODE_SUCCESS
             except KeyboardInterrupt:
                 logger.info("Interrupted by user")
-                sys.exit(c.DbtLdif.EXIT_CODE_FAILURE)
+                return c.DbtLdif.EXIT_CODE_FAILURE
             except (OSError, RuntimeError, ValueError):
                 logger.exception("CLI error")
-                sys.exit(c.DbtLdif.EXIT_CODE_FAILURE)
+                return c.DbtLdif.EXIT_CODE_FAILURE
 
     def display_generate_message(self) -> r[str]:
         """Generate dbt models from LDIF schema definitions."""
@@ -163,9 +162,9 @@ class FlextDbtLdifCliService:
         """Show package information."""
         self._CommandHandlers.handle_info_command(self)
 
-    def main(self) -> NoReturn:
+    def main(self) -> int:
         """Main CLI entry point for flext-dbt-ldif."""
-        self._MainEntry.run_main_cli(self)
+        return self._MainEntry.run_main_cli(self)
 
     def validate(self) -> None:
         """Validate dbt models and configurations."""
@@ -173,4 +172,4 @@ class FlextDbtLdifCliService:
 
 
 if __name__ == "__main__":
-    FlextDbtLdifCliService().main()
+    sys.exit(FlextDbtLdifCliService().main())
