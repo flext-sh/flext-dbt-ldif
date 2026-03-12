@@ -13,7 +13,7 @@ from .models import FlextDbtLdifModels
 from .settings import FlextDbtLdifSettings
 
 
-class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
+class FlextDbtLdifUnifiedService(FlextService[Mapping[str, object
     """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
     name: str = "ldif_generator"
@@ -34,9 +34,9 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
         )
 
     @override
-    def execute(self) -> r[Mapping[str, t.JsonValue]]:
+    def execute(self) -> r[Mapping[str, object
         """Execute service and return metadata payload."""
-        return r[Mapping[str, t.JsonValue]].ok({
+        return r[Mapping[str, object({
             "name": self.name,
             "project_dir": str(self.project_dir),
             "status": c.DbtLdif.WORKFLOW_STATUS_READY,
@@ -60,7 +60,7 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.JsonValue]]):
         return r[list[FlextDbtLdifModels.DbtModel]].ok([analytics])
 
     def generate_staging_models(
-        self, entries: Sequence[Mapping[str, t.JsonValue]]
+        self, entries: Sequence[Mapping[str, object
     ) -> r[list[FlextDbtLdifModels.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:

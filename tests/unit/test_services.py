@@ -30,12 +30,12 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: r[list[t.ConfigurationMapping]].ok(entries),
+        lambda _fp: r[list[object]].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: r[t.ConfigurationMapping].ok({"quality_score": 0.9}),
+        lambda _e: r[object].ok({"quality_score": 0.9}),
     )
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_success
@@ -51,7 +51,7 @@ def test_parse_and_validate_ldif_parse_fails(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: r[list[t.ConfigurationMapping]].fail("Parse error"),
+        lambda _fp: r[list[object]].fail("Parse error"),
     )
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_failure
@@ -103,17 +103,17 @@ def test_run_complete_workflow_all(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: r[list[t.ConfigurationMapping]].ok(entries),
+        lambda _fp: r[list[object]].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: r[t.ConfigurationMapping].ok({"quality_score": 0.9}),
+        lambda _e: r[object].ok({"quality_score": 0.9}),
     )
     monkeypatch.setattr(
         svc.client,
         "transform_with_dbt",
-        lambda _e, _m: r[t.ConfigurationMapping].ok({"ran": True}),
+        lambda _e, _m: r[object].ok({"ran": True}),
     )
     staging_model = FlextDbtLdifModels.DbtModel(
         name="stg_ldif_entries",
@@ -157,12 +157,12 @@ def test_run_data_quality_assessment(
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
-        lambda _fp: r[list[t.ConfigurationMapping]].ok(entries),
+        lambda _fp: r[list[object]].ok(entries),
     )
     monkeypatch.setattr(
         svc.client,
         "validate_ldif_data",
-        lambda _e: r[t.ConfigurationMapping].ok({"quality_score": 0.88}),
+        lambda _e: r[object].ok({"quality_score": 0.88}),
     )
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
     assert result.is_success

@@ -12,7 +12,7 @@ from pydantic import TypeAdapter, ValidationError
 from .dbt_services import FlextDbtLdifService
 from .settings import FlextDbtLdifSettings
 
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[t.ConfigurationMapping])
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[object])
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
@@ -50,12 +50,12 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         _ = project_dir
         parsed = self.service.parse_and_validate_ldif(ldif_file)
         if parsed.is_failure:
-            return r[t.ConfigurationMapping].fail(parsed.error or "Parsing failed")
+            return r[object].fail(parsed.error or "Parsing failed")
         entries_raw = parsed.value.get("entries", [])
         try:
             entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
         except ValidationError:
-            return r[t.ConfigurationMapping].fail("Invalid parsed entries payload")
+            return r[object].fail("Invalid parsed entries payload")
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
     def process_ldif_file(
