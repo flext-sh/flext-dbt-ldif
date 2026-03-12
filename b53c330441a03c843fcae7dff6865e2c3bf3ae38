@@ -1,0 +1,23 @@
+src/flext_dbt_ldif/dbt_exceptions.py
+  51368697b710d463 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "b53c330441a03c843fcae7dff6865e2c3bf3ae38",
+  "prompts": {
+    "51368697b710d463": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_31d7190e7ffetM1zOoM53ubbeq",
+        "model": "anthropic/claude-haiku-4-5"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
