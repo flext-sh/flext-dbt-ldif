@@ -26,7 +26,7 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch: pytest.MonkeyPatch, service: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test parsing and validating LDIF via service."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
     monkeypatch.setattr(
         service.client,
         "parse_ldif_file",
@@ -71,7 +71,7 @@ def test_generate_and_write_models_ok(
         "generate_analytics_models",
         lambda _m: r[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model]),
     )
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
     result = service.generate_and_write_models(entries)
     assert result.is_success
     data = result.value or {}
@@ -88,7 +88,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
         generate_models: bool = True,
         run_transformations: bool = False,
         model_names: list[str] | None = None,
-    ) -> r[dict[str, t.ContainerValue]]:
+    ) -> r[dict[str, object]]:
         return r[t.ConfigurationMapping].ok({"ok": True})
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
@@ -104,7 +104,7 @@ def test_api_validate_ldif_quality(
 
     def _run_quality(
         _self: FlextDbtLdifService, _ldif_file: Path | str
-    ) -> r[dict[str, t.ContainerValue]]:
+    ) -> r[dict[str, object]]:
         return r[t.ConfigurationMapping].ok({"ok": True})
 
     monkeypatch.setattr(
@@ -121,15 +121,15 @@ def test_api_generate_ldif_models(
 
     def _parse_val(
         _self: FlextDbtLdifService, _ldif_file: Path | str
-    ) -> r[dict[str, t.ContainerValue]]:
+    ) -> r[dict[str, object]]:
         return r[t.ConfigurationMapping].ok({"entries": []})
 
     def _gen_models(
         _self: FlextDbtLdifService,
-        _entries: list[dict[str, t.ContainerValue]],
+        _entries: list[dict[str, object]],
         *,
         overwrite: bool = False,
-    ) -> r[dict[str, t.ContainerValue]]:
+    ) -> r[dict[str, object]]:
         return r[t.ConfigurationMapping].ok({"total_models": 0})
 
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)

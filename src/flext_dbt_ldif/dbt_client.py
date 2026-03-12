@@ -24,7 +24,7 @@ class FlextDbtLdifClient:
 
     def parse_ldif_file(
         self, file_path: Path | str | None = None
-    ) -> r[list[Mapping[str, t.ContainerValue]]]:
+    ) -> r[list[Mapping[str, object]]]:
         """Return minimal parsed LDIF entries payload."""
         selected_path = (
             str(file_path) if file_path is not None else self.config.ldif_file_path
@@ -37,7 +37,7 @@ class FlextDbtLdifClient:
 
     def run_full_pipeline(
         self, file_path: Path | str | None = None, model_names: list[str] | None = None
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Run parse, validate, and transform pipeline."""
         parse_result = self.parse_ldif_file(file_path)
         if parse_result.is_failure:
@@ -62,9 +62,9 @@ class FlextDbtLdifClient:
 
     def transform_with_dbt(
         self,
-        entries: Sequence[Mapping[str, t.ContainerValue]],
+        entries: Sequence[Mapping[str, object]],
         model_names: list[str] | None = None,
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Return synthetic DBT transformation metadata."""
         return r[t.ConfigurationMapping].ok({
             "records": len(entries),
@@ -74,8 +74,8 @@ class FlextDbtLdifClient:
         })
 
     def validate_ldif_data(
-        self, entries: Sequence[Mapping[str, t.ContainerValue]]
-    ) -> r[Mapping[str, t.ContainerValue]]:
+        self, entries: Sequence[Mapping[str, object]]
+    ) -> r[Mapping[str, object]]:
         """Validate parsed LDIF payload and compute quality score."""
         total_entries = len(entries)
         if total_entries == 0:

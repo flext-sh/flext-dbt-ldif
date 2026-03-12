@@ -45,7 +45,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Generate DBT model metadata from LDIF input."""
         _ = project_dir
         parsed = self.service.parse_and_validate_ldif(ldif_file)
@@ -65,7 +65,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Execute end-to-end LDIF workflow."""
         _ = project_dir
         return self.service.run_complete_workflow(
@@ -74,9 +74,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             run_transformations=run_transformations,
         )
 
-    def validate_ldif_quality(
-        self, ldif_file: Path | str
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    def validate_ldif_quality(self, ldif_file: Path | str) -> r[Mapping[str, object]]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
 

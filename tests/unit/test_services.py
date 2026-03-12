@@ -26,7 +26,7 @@ def test_parse_and_validate_ldif_ok(
     monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test parsing and validating LDIF succeeds."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
@@ -84,7 +84,7 @@ def test_generate_and_write_models_ok(
         "generate_analytics_models",
         lambda _m: r[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model]),
     )
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
     result = svc.generate_and_write_models(entries)
     assert result.is_success
     data = result.value or {}
@@ -99,7 +99,7 @@ def test_run_complete_workflow_all(
     monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test complete workflow with all stages."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",
@@ -153,7 +153,7 @@ def test_run_data_quality_assessment(
     monkeypatch: pytest.MonkeyPatch, svc: FlextDbtLdifService, tmp_path: Path
 ) -> None:
     """Test data quality assessment delegates to parse_and_validate."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
     monkeypatch.setattr(
         svc.client,
         "parse_ldif_file",

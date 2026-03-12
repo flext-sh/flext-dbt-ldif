@@ -37,10 +37,10 @@ class FlextDbtLdifService:
 
     def generate_and_write_models(
         self,
-        entries: Sequence[Mapping[str, t.ContainerValue]],
+        entries: Sequence[Mapping[str, object]],
         *,
         overwrite: bool = False,
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Generate staging and analytics models for entries."""
         _ = overwrite
         staging_payload: list[dict[str, t.JsonValue]] = [
@@ -62,9 +62,7 @@ class FlextDbtLdifService:
             "model_names": [model.name for model in all_models],
         })
 
-    def parse_and_validate_ldif(
-        self, ldif_file: Path | str
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    def parse_and_validate_ldif(self, ldif_file: Path | str) -> r[Mapping[str, object]]:
         """Parse and validate LDIF file in one operation."""
         parse_result = self.client.parse_ldif_file(ldif_file)
         if parse_result.is_failure:
@@ -87,14 +85,14 @@ class FlextDbtLdifService:
         generate_models: bool = True,
         run_transformations: bool = True,
         model_names: list[str] | None = None,
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Execute complete LDIF to DBT workflow."""
         parse_validation = self.parse_and_validate_ldif(ldif_file)
         if parse_validation.is_failure:
             return r[t.ConfigurationMapping].fail(
                 parse_validation.error or "Parse/validate workflow failed"
             )
-        workflow_result: dict[str, t.ContainerValue] = {
+        workflow_result: dict[str, object] = {
             "ldif_file": str(ldif_file),
             "parse_validation": parse_validation.value,
         }
@@ -111,7 +109,7 @@ class FlextDbtLdifService:
                 )
             workflow_result["model_generation"] = model_result.value
         if run_transformations:
-            transform_payload: list[dict[str, t.ContainerValue]] = [
+            transform_payload: list[dict[str, object]] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             transform = self.client.transform_with_dbt(transform_payload, model_names)
@@ -126,7 +124,7 @@ class FlextDbtLdifService:
 
     def run_data_quality_assessment(
         self, ldif_file: Path | str
-    ) -> r[Mapping[str, t.ContainerValue]]:
+    ) -> r[Mapping[str, object]]:
         """Run quality assessment focused workflow."""
         return self.parse_and_validate_ldif(ldif_file)
 

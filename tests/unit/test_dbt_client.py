@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings, t
+from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
 
 
 class TestFlextDbtLdifClient:
@@ -47,7 +47,7 @@ class TestFlextDbtLdifClient:
     def test_validate_ldif_data_ok(self) -> None:
         """Test validating LDIF data with entries."""
         client = FlextDbtLdifClient()
-        entries: list[dict[str, t.ContainerValue]] = [
+        entries: list[dict[str, object]] = [
             {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"}
         ]
         result = client.validate_ldif_data(entries)
@@ -66,9 +66,7 @@ class TestFlextDbtLdifClient:
     def test_transform_with_dbt_ok(self) -> None:
         """Test transforming with DBT returns metadata."""
         client = FlextDbtLdifClient()
-        entries: list[dict[str, t.ContainerValue]] = [
-            {"dn": "cn=test,dc=example,dc=org"}
-        ]
+        entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
         result = client.transform_with_dbt(entries, ["m1", "m2"])
         assert result.is_success
         data = result.value or {}
