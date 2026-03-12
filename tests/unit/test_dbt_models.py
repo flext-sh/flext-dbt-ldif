@@ -36,7 +36,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_staging_models_with_entries(self) -> None:
         """Test staging model generation with entries."""
         gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
-        entries: list[dict[str, object[{"dn": "cn=test,dc=example,dc=org"}]
+        entries: list[dict[str, t.Scalar]] = [{"dn": "cn=test,dc=example,dc=org"}]
         result = gen.generate_staging_models(entries)
         assert result.is_success
         models = result.value or []
