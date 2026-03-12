@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 from flext_core import r
 
-from flext_dbt_ldif import FlextDbtLdifService, t
+from flext_dbt_ldif import FlextDbtLdifService
 from flext_dbt_ldif.models import FlextDbtLdifModels
 
 

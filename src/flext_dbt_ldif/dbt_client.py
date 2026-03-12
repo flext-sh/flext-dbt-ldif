@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger, r, t
+from flext_core import FlextLogger, r
 
 from .constants import c
 from .settings import FlextDbtLdifSettings
@@ -44,14 +44,10 @@ class FlextDbtLdifClient:
             return r[object].fail(parse_result.error or "Parse failed")
         validate_result = self.validate_ldif_data(parse_result.value)
         if validate_result.is_failure:
-            return r[object].fail(
-                validate_result.error or "Validation failed"
-            )
+            return r[object].fail(validate_result.error or "Validation failed")
         transform_result = self.transform_with_dbt(parse_result.value, model_names)
         if transform_result.is_failure:
-            return r[object].fail(
-                transform_result.error or "Transform failed"
-            )
+            return r[object].fail(transform_result.error or "Transform failed")
         logger.info("Completed LDIF to DBT pipeline")
         return r[object].ok({
             "parsed_entries": len(parse_result.value),

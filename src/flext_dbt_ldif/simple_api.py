@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextService, r, t, u
+from flext_core import FlextService, r, u
 from pydantic import TypeAdapter, ValidationError
 
 from .dbt_services import FlextDbtLdifService

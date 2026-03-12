@@ -13,7 +13,7 @@ from flext_core import (
     FlextHandlers,
     FlextMixins,
     FlextService,
-    r,
+    r as result,
 )
 from flext_ldif import FlextLdif
 
@@ -38,7 +38,7 @@ e = FlextExceptions
 h = FlextHandlers
 m = FlextDbtLdifModels
 p = FlextDbtLdifProtocols
-r = r
+r = result
 s = FlextService
 u = FlextDbtLdifUtilities
 x = FlextMixins

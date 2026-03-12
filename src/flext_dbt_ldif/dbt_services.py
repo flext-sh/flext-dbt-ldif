@@ -43,14 +43,12 @@ class FlextDbtLdifService:
     ) -> r[Mapping[str, object]]:
         """Generate staging and analytics models for entries."""
         _ = overwrite
-        staging_payload: list[dict[str, object[
+        staging_payload: list[dict[str, t.Scalar]] = [
             {"dn": str(entry.get("dn", ""))} for entry in entries
         ]
         staging = self.model_generator.generate_staging_models(staging_payload)
         if staging.is_failure:
-            return r[object].fail(
-                staging.error or "Staging model generation failed"
-            )
+            return r[object].fail(staging.error or "Staging model generation failed")
         analytics = self.model_generator.generate_analytics_models(staging.value)
         if analytics.is_failure:
             return r[object].fail(
@@ -69,9 +67,7 @@ class FlextDbtLdifService:
             return r[object].fail(parse_result.error or "Parse failed")
         validation = self.client.validate_ldif_data(parse_result.value)
         if validation.is_failure:
-            return r[object].fail(
-                validation.error or "Validation failed"
-            )
+            return r[object].fail(validation.error or "Validation failed")
         return r[object].ok({
             "entries": parse_result.value,
             "entry_count": len(parse_result.value),
