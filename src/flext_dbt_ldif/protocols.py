@@ -18,7 +18,7 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
         """DBT LDIF protocol namespace."""
 
         @runtime_checkable
-        class DbtProtocol(Protocol):
+        class Dbt(Protocol):
             """Protocol for DBT model execution and testing."""
 
             def run_dbt_models(self, models: list[str] | None = None) -> r[LdifPayload]:
