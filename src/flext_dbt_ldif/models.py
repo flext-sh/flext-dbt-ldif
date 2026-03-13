@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Annotated
+
 from flext_core import FlextModels, r
 from flext_ldif import FlextLdifModels
 from flext_meltano import FlextMeltanoModels
@@ -20,8 +22,8 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
         materialization: str = "view"
         sql_content: str
         description: str = ""
-        columns: list[dict[str, object]] = Field(default=[])
-        dependencies: list[str] = Field(default_factory=list)
+        columns: Annotated[list[dict[str, object]], Field(default_factory=list)]
+        dependencies: Annotated[list[str], Field(default_factory=list)]
 
         def validate_business_rules(self) -> r[bool]:
             """Validate minimal model constraints."""
