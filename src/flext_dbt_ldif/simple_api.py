@@ -2,17 +2,16 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextService, r, u
+from flext_core import FlextService, r, t, u
 from pydantic import TypeAdapter, ValidationError
 
 from .dbt_services import FlextDbtLdifService
 from .settings import FlextDbtLdifSettings
 
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[object])
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.Scalar]])
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
@@ -20,7 +19,19 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
 
     def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
-        super().__init__()
+        super().__init__(
+            config_type=None,
+            config_overrides=None,
+            initial_context=None,
+            subproject=None,
+            services=None,
+            factories=None,
+            resources=None,
+            container_overrides=None,
+            wire_modules=None,
+            wire_packages=None,
+            wire_classes=None,
+        )
         self._config = (
             config if config is not None else FlextDbtLdifSettings.get_global()
         )
@@ -34,8 +45,13 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
     @override
     def execute(self) -> r[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
+        current_config = (
+            self._config
+            if self._config is not None
+            else FlextDbtLdifSettings.get_global()
+        )
         return u.try_(
-            lambda: FlextDbtLdifSettings(self._config),
+            lambda: FlextDbtLdifSettings.model_validate(current_config.model_dump()),
             catch=ValidationError,
         ).map_error(lambda _: "Invalid DBT LDIF settings")
 
@@ -45,17 +61,17 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
-    ) -> r[Mapping[str, object]]:
+    ) -> r[t.Dict]:
         """Generate DBT model metadata from LDIF input."""
         _ = project_dir
-        parsed = self.service.parse_and_validate_ldif(ldif_file)
+        parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.is_failure:
-            return r[object].fail(parsed.error or "Parsing failed")
-        entries_raw = parsed.value.get("entries", [])
+            return r[t.Dict].fail(parsed.error or "Parsing failed")
+        entries_raw = parsed.value
         try:
             entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
         except ValidationError:
-            return r[object].fail("Invalid parsed entries payload")
+            return r[t.Dict].fail("Invalid parsed entries payload")
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
     def process_ldif_file(
@@ -65,7 +81,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> r[Mapping[str, object]]:
+    ) -> r[t.Dict]:
         """Execute end-to-end LDIF workflow."""
         _ = project_dir
         return self.service.run_complete_workflow(
@@ -74,7 +90,7 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             run_transformations=run_transformations,
         )
 
-    def validate_ldif_quality(self, ldif_file: Path | str) -> r[Mapping[str, object]]:
+    def validate_ldif_quality(self, ldif_file: Path | str) -> r[t.Dict]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
 
