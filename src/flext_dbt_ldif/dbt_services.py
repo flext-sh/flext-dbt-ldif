@@ -14,7 +14,7 @@ from .dbt_models import FlextDbtLdifUnifiedService
 from .settings import FlextDbtLdifSettings
 
 logger = FlextLogger(__name__)
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.Scalar]])
+_ENTRY_CONTAINER_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
 
 
 class FlextDbtLdifService:
@@ -37,13 +37,13 @@ class FlextDbtLdifService:
 
     def generate_and_write_models(
         self,
-        entries: Sequence[dict[str, t.Scalar]],
+        entries: Sequence[dict[str, t.ContainerValue]],
         *,
         overwrite: bool = False,
     ) -> r[t.Dict]:
         """Generate staging and analytics models for entries."""
         _ = overwrite
-        staging_payload: list[Mapping[str, t.Scalar]] = [
+        staging_payload: list[Mapping[str, t.ContainerValue]] = [
             {"dn": str(entry.get("dn", ""))} for entry in entries
         ]
         staging = self.model_generator.generate_staging_models(staging_payload)
@@ -65,7 +65,8 @@ class FlextDbtLdifService:
         parse_result = self.client.parse_ldif_file(ldif_file)
         if parse_result.is_failure:
             return r[t.Dict].fail(parse_result.error or "Parse failed")
-        validation = self.client.validate_ldif_data(parse_result.value)
+        entries = _ENTRY_CONTAINER_LIST_ADAPTER.validate_python(parse_result.value)
+        validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[t.Dict].fail(validation.error or "Validation failed")
         quality_score_value = validation.value.get("quality_score", 0.0)
@@ -75,7 +76,7 @@ class FlextDbtLdifService:
             else 0.0
         )
         return r[t.Dict].ok({
-            "entry_count": len(parse_result.value),
+            "entry_count": len(entries),
             "quality_score": quality_score,
             "validation_status": str(validation.value.get("validation_status", "")),
         })
@@ -92,7 +93,7 @@ class FlextDbtLdifService:
         parse_result = self.client.parse_ldif_file(ldif_file)
         if parse_result.is_failure:
             return r[t.Dict].fail(parse_result.error or "Parse failed")
-        entries = _ENTRY_LIST_ADAPTER.validate_python(parse_result.value)
+        entries = _ENTRY_CONTAINER_LIST_ADAPTER.validate_python(parse_result.value)
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[t.Dict].fail(validation.error or "Validation failed")
@@ -115,7 +116,7 @@ class FlextDbtLdifService:
             )
             workflow_result["models_generated"] = int(models_generated)
         if run_transformations:
-            transform_payload: list[dict[str, t.Scalar]] = [
+            transform_payload: list[dict[str, t.ContainerValue]] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             transform = self.client.transform_with_dbt(transform_payload, model_names)

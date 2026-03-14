@@ -24,8 +24,8 @@ from flext_dbt_ldif import (
 def test_api_imports() -> None:
     """Test API imports."""
     assert isinstance(__version__, str)
-    _ = FlextDbtLdifClient(FlextDbtLdifSettings())
-    _ = FlextDbtLdifService(FlextDbtLdifSettings())
+    _ = FlextDbtLdifClient(FlextDbtLdifSettings.get_global())
+    _ = FlextDbtLdifService(FlextDbtLdifSettings.get_global())
     assert callable(FlextDbtLdif)
     assert r is not None
     assert FlextLdif is not None

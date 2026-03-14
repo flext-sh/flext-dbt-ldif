@@ -9,9 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
-from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
+from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings, t
 
 
 class TestFlextDbtLdifClient:
@@ -24,7 +22,7 @@ class TestFlextDbtLdifClient:
 
     def test_initialization_with_config(self) -> None:
         """Test client initialization with explicit config."""
-        config = FlextDbtLdifSettings()
+        config = FlextDbtLdifSettings.get_global()
         client = FlextDbtLdifClient(config)
         assert client.config is config
 
@@ -38,7 +36,7 @@ class TestFlextDbtLdifClient:
 
     def test_parse_ldif_file_no_path(self) -> None:
         """Test parsing without file path fails when config path is empty."""
-        config = FlextDbtLdifSettings()
+        config = FlextDbtLdifSettings.get_global()
         client = FlextDbtLdifClient(config)
         result = client.parse_ldif_file()
         assert result.is_failure
@@ -47,14 +45,16 @@ class TestFlextDbtLdifClient:
     def test_validate_ldif_data_ok(self) -> None:
         """Test validating LDIF data with entries."""
         client = FlextDbtLdifClient()
-        entries: list[dict[str, object]] = [
+        entries: list[dict[str, t.ContainerValue]] = [
             {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"}
         ]
         result = client.validate_ldif_data(entries)
         assert result.is_success
         data = result.value or {}
         assert data["total_entries"] == 1
-        assert data["quality_score"] == pytest.approx(1.0)
+        quality_score = data["quality_score"]
+        assert isinstance(quality_score, float)
+        assert 0.99 < quality_score < 1.01
         assert data["validation_status"] == "passed"
 
     def test_validate_ldif_data_empty(self) -> None:
@@ -66,12 +66,14 @@ class TestFlextDbtLdifClient:
     def test_transform_with_dbt_ok(self) -> None:
         """Test transforming with DBT returns metadata."""
         client = FlextDbtLdifClient()
-        entries: list[dict[str, object]] = [{"dn": "cn=test,dc=example,dc=org"}]
+        entries: list[dict[str, t.ContainerValue]] = [
+            {"dn": "cn=test,dc=example,dc=org"}
+        ]
         result = client.transform_with_dbt(entries, ["m1", "m2"])
         assert result.is_success
         data = result.value or {}
         assert data["records"] == 1
-        assert data["models"] == ["m1", "m2"]
+        assert data["models"] == "m1,m2"
         assert data["status"] == "success"
 
     def test_transform_with_dbt_default_models(self) -> None:
@@ -97,7 +99,7 @@ class TestFlextDbtLdifClient:
 
     def test_run_full_pipeline_no_path(self) -> None:
         """Test pipeline fails when no file path and config path is empty."""
-        config = FlextDbtLdifSettings()
+        config = FlextDbtLdifSettings.get_global()
         client = FlextDbtLdifClient(config)
         result = client.run_full_pipeline()
         assert result.is_failure

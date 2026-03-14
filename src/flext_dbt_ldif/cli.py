@@ -89,9 +89,8 @@ class FlextDbtLdifCliService:
             result = service.generate_and_write_models([])
             if result.is_failure:
                 return r[str].fail(result.error or "Model generation failed")
-            self._output.display_data(
-                {"message": "Model generation completed", "result": result.value},
-                "json",
+            self._output.display_text(
+                f"Model generation completed: {result.value}",
             )
             return r[str].ok("Generate message displayed")
         except (
@@ -111,15 +110,10 @@ class FlextDbtLdifCliService:
             "name": "FLEXT dbt LDIF",
             "version": "__version__",
             "description": "Advanced LDAP Data Analytics and Transformations",
-            "features": [
-                "Programmatic dbt model generation",
-                "LDIF data processing and analytics",
-                "Advanced SQL pattern generation",
-                "PostgreSQL optimized transformations",
-            ],
+            "features": "Programmatic dbt model generation, LDIF data processing and analytics, Advanced SQL pattern generation, PostgreSQL optimized transformations",
         }
         try:
-            self._output.display_data(info_data, c.DbtLdif.DEFAULT_OUTPUT_FORMAT_CLI)
+            self._output.display_text(str(info_data))
             return r[str].ok("Package information displayed successfully")
         except (
             ValueError,
@@ -139,8 +133,8 @@ class FlextDbtLdifCliService:
             result = service.run_data_quality_assessment("")
             if result.is_failure:
                 return r[str].fail(result.error or "Validation failed")
-            self._output.display_data(
-                {"message": "Validation completed", "result": result.value}, "json"
+            self._output.display_text(
+                f"Validation completed: {result.value}",
             )
             return r[str].ok("Validate message displayed")
         except (

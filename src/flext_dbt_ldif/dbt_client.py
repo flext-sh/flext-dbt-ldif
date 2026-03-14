@@ -24,14 +24,16 @@ class FlextDbtLdifClient:
 
     def parse_ldif_file(
         self, file_path: Path | str | None = None
-    ) -> r[list[dict[str, t.Scalar]]]:
+    ) -> r[list[dict[str, t.ContainerValue]]]:
         """Return minimal parsed LDIF entries payload."""
         selected_path = (
             str(file_path) if file_path is not None else self.config.ldif_file_path
         )
         if not selected_path:
-            return r[list[dict[str, t.Scalar]]].fail("LDIF file path is required")
-        return r[list[dict[str, t.Scalar]]].ok([
+            return r[list[dict[str, t.ContainerValue]]].fail(
+                "LDIF file path is required"
+            )
+        return r[list[dict[str, t.ContainerValue]]].ok([
             {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
         ])
 
@@ -60,7 +62,7 @@ class FlextDbtLdifClient:
 
     def transform_with_dbt(
         self,
-        entries: Sequence[dict[str, t.Scalar]],
+        entries: Sequence[dict[str, t.ContainerValue]],
         model_names: list[str] | None = None,
     ) -> r[t.Dict]:
         """Return synthetic DBT transformation metadata."""
@@ -68,14 +70,17 @@ class FlextDbtLdifClient:
             c.DbtLdif.STAGING_MODEL_NAME,
             c.DbtLdif.ANALYTICS_MODEL_NAME,
         ]
-        transform_payload: dict[str, t.Scalar] = {
+        transform_payload: t.Dict = {
             "records": len(entries),
             "models": ",".join(selected_models),
             "status": c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
         }
         return r[t.Dict].ok(transform_payload)
 
-    def validate_ldif_data(self, entries: Sequence[dict[str, t.Scalar]]) -> r[t.Dict]:
+    def validate_ldif_data(
+        self,
+        entries: Sequence[dict[str, t.ContainerValue]],
+    ) -> r[t.Dict]:
         """Validate parsed LDIF payload and compute quality score."""
         total_entries = len(entries)
         if total_entries == 0:
@@ -83,7 +88,7 @@ class FlextDbtLdifClient:
         quality_score = c.DbtLdif.DEFAULT_QUALITY_SCORE
         if quality_score < self.config.min_quality_threshold:
             return r[t.Dict].fail("Quality threshold not met")
-        validation_payload: dict[str, t.Scalar] = {
+        validation_payload: t.Dict = {
             "total_entries": total_entries,
             "quality_score": quality_score,
             "validation_status": c.DbtLdif.VALIDATION_STATUS_PASSED,

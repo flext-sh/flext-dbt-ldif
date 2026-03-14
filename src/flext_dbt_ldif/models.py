@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import FlextModels, r
+from flext_core import FlextModels, r, t
 from flext_ldif import FlextLdifModels
 from flext_meltano import FlextMeltanoModels
 from pydantic import Field
@@ -22,7 +22,10 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
         materialization: str = "view"
         sql_content: str
         description: str = ""
-        columns: Annotated[list[dict[str, object]], Field(default_factory=list)]
+        columns: Annotated[
+            list[dict[str, t.ContainerValue]],
+            Field(default_factory=list),
+        ]
         dependencies: Annotated[list[str], Field(default_factory=list)]
 
         def validate_business_rules(self) -> r[bool]:

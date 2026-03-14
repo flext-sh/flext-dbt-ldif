@@ -11,7 +11,7 @@ from pydantic import TypeAdapter, ValidationError
 from .dbt_services import FlextDbtLdifService
 from .settings import FlextDbtLdifSettings
 
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.Scalar]])
+_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
 
 
 class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
@@ -23,14 +23,6 @@ class FlextDbtLdif(FlextService[FlextDbtLdifSettings]):
             config_type=None,
             config_overrides=None,
             initial_context=None,
-            subproject=None,
-            services=None,
-            factories=None,
-            resources=None,
-            container_overrides=None,
-            wire_modules=None,
-            wire_packages=None,
-            wire_classes=None,
         )
         self._config = (
             config if config is not None else FlextDbtLdifSettings.get_global()

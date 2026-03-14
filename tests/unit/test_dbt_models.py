@@ -19,14 +19,14 @@ class TestFlextDbtLdifUnifiedService:
     def test_initialization(self, tmp_path: Path) -> None:
         """Test service initialization with project dir."""
         gen = FlextDbtLdifUnifiedService(
-            config=FlextDbtLdifSettings(), project_dir=tmp_path
+            config=FlextDbtLdifSettings.get_global(), project_dir=tmp_path
         )
         assert gen.project_dir == tmp_path
         assert gen.name == "ldif_generator"
 
     def test_execute(self) -> None:
         """Test execute returns metadata payload."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
+        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
         result = gen.execute()
         assert result.is_success
         data = result.value or {}
@@ -35,7 +35,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_staging_models_with_entries(self) -> None:
         """Test staging model generation with entries."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
+        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
         entries: list[dict[str, t.Scalar]] = [{"dn": "cn=test,dc=example,dc=org"}]
         result = gen.generate_staging_models(entries)
         assert result.is_success
@@ -47,7 +47,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_staging_models_empty(self) -> None:
         """Test staging model generation with empty entries."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
+        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
         result = gen.generate_staging_models([])
         assert result.is_success
         models = result.value or []
@@ -55,12 +55,14 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_analytics_models_with_staging(self) -> None:
         """Test analytics model generation from staging models."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
+        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
         staging_model = FlextDbtLdifModels.DbtModel(
             name="stg_ldif_entries",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
             sql_content="select * from raw",
+            columns=[],
+            dependencies=[],
         )
         result = gen.generate_analytics_models([staging_model])
         assert result.is_success
@@ -72,7 +74,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_analytics_models_empty(self) -> None:
         """Test analytics model generation with empty staging."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings())
+        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
         result = gen.generate_analytics_models([])
         assert result.is_success
         models = result.value or []
@@ -89,6 +91,8 @@ class TestDbtModel:
             dbt_model_type="staging",
             ldif_source="ldif_entries",
             sql_content="select 1",
+            columns=[],
+            dependencies=[],
         )
         assert model.name == "test_model"
         assert model.materialization == "view"
@@ -103,6 +107,8 @@ class TestDbtModel:
             dbt_model_type="staging",
             ldif_source="ldif_entries",
             sql_content="select 1",
+            columns=[],
+            dependencies=[],
         )
         result = model.validate_business_rules()
         assert result.is_success
@@ -115,6 +121,8 @@ class TestDbtModel:
             dbt_model_type="staging",
             ldif_source="ldif_entries",
             sql_content="select 1",
+            columns=[],
+            dependencies=[],
         )
         result = model.validate_business_rules()
         assert result.is_failure
@@ -126,6 +134,8 @@ class TestDbtModel:
             dbt_model_type="staging",
             ldif_source="  ",
             sql_content="select 1",
+            columns=[],
+            dependencies=[],
         )
         result = model.validate_business_rules()
         assert result.is_failure
@@ -137,6 +147,8 @@ class TestDbtModel:
             dbt_model_type="staging",
             ldif_source="ldif_entries",
             sql_content="  ",
+            columns=[],
+            dependencies=[],
         )
         result = model.validate_business_rules()
         assert result.is_failure

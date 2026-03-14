@@ -26,7 +26,11 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
         project_dir: Path | None = None,
     ) -> None:
         """Initialize service with project and settings context."""
-        super().__init__()
+        super().__init__(
+            config_type=FlextDbtLdifSettings,
+            config_overrides=None,
+            initial_context=None,
+        )
         self.name = name
         self.project_dir = Path(project_dir or Path.cwd())
         self._settings = (
@@ -53,14 +57,15 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
             dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_ANALYTICS,
             ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
             materialization=c.DbtLdif.DBT_MATERIALIZATION_TABLE,
-            sql_content=f"select * from {{{{ ref('{c.DbtLdif.STAGING_MODEL_NAME}') }}}}",
+            sql_content="select * from {{ ref('stg_ldif_entries') }}",
             description=c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION,
+            columns=[],
             dependencies=[c.DbtLdif.STAGING_MODEL_NAME],
         )
         return r[list[FlextDbtLdifModels.DbtModel]].ok([analytics])
 
     def generate_staging_models(
-        self, entries: Sequence[Mapping[str, t.Scalar]]
+        self, entries: Sequence[Mapping[str, t.ContainerValue]]
     ) -> r[list[FlextDbtLdifModels.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:
@@ -70,8 +75,10 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
             dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
             ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
             materialization=c.DbtLdif.DBT_MATERIALIZATION_VIEW,
-            sql_content=f"select * from {{{{ source('ldif', '{c.DbtLdif.LDIF_RAW_SOURCE}') }}}}",
+            sql_content="select * from {{ source('ldif', 'raw_ldif_entries') }}",
             description=c.DbtLdif.STAGING_MODEL_DESCRIPTION,
+            columns=[],
+            dependencies=[],
         )
         return r[list[FlextDbtLdifModels.DbtModel]].ok([model])
 

@@ -25,5 +25,4 @@ class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
 
 
 p = TestsFlextDbtLdifProtocols
-p = TestsFlextDbtLdifProtocols
 __all__ = ["TestsFlextDbtLdifProtocols", "p"]
