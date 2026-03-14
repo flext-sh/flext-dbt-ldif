@@ -6,128 +6,80 @@ SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations
-from flext_core import FlextTypes as t
 
 from pathlib import Path
 
-from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
-
-# Constants
-EXPECTED_BULK_SIZE = 2
+from flext_dbt_ldif.core import FlextDbtLdifCore
 
 
-class TestFlextDbtLdifUnifiedService:
-    """Test cases for FlextDbtLdifUnifiedService class."""
+class TestModelGenerator:
+    """Test cases for FlextDbtLdifCore.ModelGenerator."""
 
-    def test_initialization(self, tmp_path: Path) -> None:
-        """Test FlextDbtLdifUnifiedService initialization."""
-        generator = FlextDbtLdifUnifiedService(tmp_path)
-        if generator.project_dir != tmp_path:
-            msg: str = f"Expected {tmp_path}, got {generator.project_dir}"
-            raise AssertionError(msg)
-        assert generator.models_dir == tmp_path / "models"
+    def test_initialization_default(self) -> None:
+        """Test ModelGenerator default initialization."""
+        gen = FlextDbtLdifCore.ModelGenerator()
+        assert gen.project_dir == Path.cwd()
 
-    def test_staging_model_generation(self, tmp_path: Path) -> None:
-        """Test staging model generation."""
-        generator = FlextDbtLdifUnifiedService(tmp_path)
-        models = generator.generate_staging_models()
+    def test_initialization_custom_dir(self, tmp_path: Path) -> None:
+        """Test ModelGenerator with custom project_dir."""
+        gen = FlextDbtLdifCore.ModelGenerator(project_dir=tmp_path)
+        assert gen.project_dir == tmp_path
 
+    def test_generate_staging_models(self) -> None:
+        """Test staging model generation returns expected structure."""
+        gen = FlextDbtLdifCore.ModelGenerator()
+        models = gen.generate_staging_models()
         assert isinstance(models, list)
         assert len(models) > 0
+        stg = models[0]
+        assert stg["name"] == "stg_ldif_entries"
+        assert "description" in stg
 
-        # Check the stg_ldif_entries model
-        stg_model = next((m for m in models if m["name"] == "stg_ldif_entries"), None)
-        assert stg_model is not None
-        if stg_model["materialization"] != "view":
-            raise AssertionError(f"Expected view, got {stg_model['materialization']}")
-        if "columns" not in stg_model:
-            raise AssertionError(f"Expected columns in {stg_model}")
-
-    def test_analytics_model_generation(self, tmp_path: Path) -> None:
-        """Test analytics model generation."""
-        generator = FlextDbtLdifUnifiedService(tmp_path)
-        models = generator.generate_analytics_models()
-
+    def test_generate_analytics_models(self) -> None:
+        """Test analytics model generation returns expected structure."""
+        gen = FlextDbtLdifCore.ModelGenerator()
+        models = gen.generate_analytics_models()
         assert isinstance(models, list)
         assert len(models) > 0
+        analytics = models[0]
+        assert analytics["name"] == "analytics_ldif_insights"
+        assert "description" in analytics
 
-        # Check the analytics model
-        analytics_model = next(
-            (m for m in models if m["name"] == "analytics_ldif_insights"),
-            None,
-        )
-        assert analytics_model is not None
-        if analytics_model["materialization"] != "table":
-            raise AssertionError(
-                f"Expected table, got {analytics_model['materialization']}",
-            )
-        if "features" not in analytics_model:
-            raise AssertionError(f"Expected features in {analytics_model}")
+
+class TestAnalytics:
+    """Test cases for FlextDbtLdifCore.Analytics."""
 
     def test_analyze_entry_patterns_empty(self) -> None:
         """Test pattern analysis with empty data."""
-        analytics = FlextDbtLdifUnifiedService()
+        analytics = FlextDbtLdifCore.Analytics()
         result = analytics.analyze_entry_patterns([])
         assert result.is_success
         data = result.value or {}
-        if data.get("total_entries") != 0:
-            raise AssertionError(f"Expected 0, got {data.get('total_entries')}")
+        assert data["total_entries"] == 0
+        assert data["unique_dns"] == 0
 
     def test_analyze_entry_patterns_with_data(self) -> None:
         """Test pattern analysis with sample data."""
-        sample_data: list[dict[str, t.GeneralValueType]] = [
-            {
-                "dn": "cn=user1,ou=users,dc=example,dc=com",
-                "objectClass": ["inetOrgPerson"],
-            },
-            {
-                "dn": "cn=user2,ou=users,dc=example,dc=com",
-                "objectClass": ["inetOrgPerson"],
-            },
+        sample_data = [
+            {"dn": "cn=user1,ou=users,dc=example,dc=com"},
+            {"dn": "cn=user2,ou=users,dc=example,dc=com"},
         ]
-
-        analytics = FlextDbtLdifUnifiedService()
+        analytics = FlextDbtLdifCore.Analytics()
         result = analytics.analyze_entry_patterns(sample_data)
         assert result.is_success
         data = result.value or {}
-        if data.get("total_entries") != EXPECTED_BULK_SIZE:
-            raise AssertionError(
-                f"Expected {EXPECTED_BULK_SIZE}, got {data.get('total_entries')}",
-            )
-        if "unique_object_classes" not in data:
-            msg: str = "Expected unique_object_classes in result"
-            raise AssertionError(msg)
-        assert "dn_depth_distribution" in data
-        if "risk_assessment" not in data:
-            msg: str = "Expected risk_assessment in result"
-            raise AssertionError(msg)
+        assert data["total_entries"] == 2
+        assert data["unique_dns"] == 2
 
-    def test_generate_quality_metrics_empty(self) -> None:
-        """Test quality metrics with empty data."""
-        analytics = FlextDbtLdifUnifiedService()
-        result = analytics.generate_quality_metrics([])
-        assert result.is_success
-        data = result.value or {}
-        if data.get("completeness") != 0.0:
-            raise AssertionError(f"Expected 0.0, got {data.get('completeness')}")
-        assert data.get("validity") == 0.0
-        if data.get("consistency") != 0.0:
-            raise AssertionError(f"Expected 0.0, got {data.get('consistency')}")
-
-    def test_generate_quality_metrics_with_data(self) -> None:
-        """Test quality metrics with sample data."""
-        sample_entries: list[dict[str, t.GeneralValueType]] = [
-            {"dn": "test", "objectClass": ["top"]},
+    def test_analyze_entry_patterns_duplicates(self) -> None:
+        """Test pattern analysis with duplicate DNs."""
+        sample_data = [
+            {"dn": "cn=user1,dc=example,dc=com"},
+            {"dn": "cn=user1,dc=example,dc=com"},
         ]
-        analytics = FlextDbtLdifUnifiedService()
-        result = analytics.generate_quality_metrics(sample_entries)
+        analytics = FlextDbtLdifCore.Analytics()
+        result = analytics.analyze_entry_patterns(sample_data)
         assert result.is_success
         data = result.value or {}
-        if "completeness" not in data:
-            msg: str = "Expected completeness in result"
-            raise AssertionError(msg)
-        assert "validity" in data
-        if "consistency" not in data:
-            msg: str = "Expected consistency in result"
-            raise AssertionError(msg)
-        assert all(isinstance(v, (int, float)) for v in data.values())
+        assert data["total_entries"] == 2
+        assert data["unique_dns"] == 1

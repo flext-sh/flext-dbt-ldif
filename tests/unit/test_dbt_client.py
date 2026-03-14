@@ -9,120 +9,97 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-from flext_core import FlextTypes as t, FlextResult
-
-from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
+from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings, t
 
 
-@pytest.fixture
-def client() -> FlextDbtLdifClient:
-    """Create a test client."""
-    return FlextDbtLdifClient(FlextDbtLdifSettings())
+class TestFlextDbtLdifClient:
+    """Test cases for FlextDbtLdifClient."""
 
+    def test_initialization_default(self) -> None:
+        """Test client initialization with default settings."""
+        client = FlextDbtLdifClient()
+        assert client.config is not None
 
-def test_parse_ldif_file_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-    client: FlextDbtLdifClient,
-) -> None:
-    """Test parsing LDIF file."""
+    def test_initialization_with_config(self) -> None:
+        """Test client initialization with explicit config."""
+        config = FlextDbtLdifSettings.get_global()
+        client = FlextDbtLdifClient(config)
+        assert client.config is config
 
-    def _parse_file(_self: object, __path: Path) -> FlextResult[list[t.GeneralValueType]]:
-        return FlextResult[list[t.GeneralValueType]].ok([])
+    def test_parse_ldif_file_ok(self, tmp_path: Path) -> None:
+        """Test parsing LDIF file returns success."""
+        client = FlextDbtLdifClient()
+        result = client.parse_ldif_file(tmp_path / "dummy.ldif")
+        assert result.is_success
+        assert isinstance(result.value, list)
+        assert len(result.value) > 0
 
-    monkeypatch.setattr(
-        client,
-        "_ldif_api",
-        type("X", (), {"parse_file": _parse_file})(),
-    )
-    result = client.parse_ldif_file(tmp_path / "dummy.ldif")
-    assert result.is_success
-    assert isinstance(result.value, list)
+    def test_parse_ldif_file_no_path(self) -> None:
+        """Test parsing without file path fails when config path is empty."""
+        config = FlextDbtLdifSettings.get_global()
+        client = FlextDbtLdifClient(config)
+        result = client.parse_ldif_file()
+        assert result.is_failure
+        assert "required" in (result.error or "").lower()
 
+    def test_validate_ldif_data_ok(self) -> None:
+        """Test validating LDIF data with entries."""
+        client = FlextDbtLdifClient()
+        entries: list[dict[str, t.ContainerValue]] = [
+            {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"}
+        ]
+        result = client.validate_ldif_data(entries)
+        assert result.is_success
+        data = result.value or {}
+        assert data["total_entries"] == 1
+        quality_score = data["quality_score"]
+        assert isinstance(quality_score, float)
+        assert 0.99 < quality_score < 1.01
+        assert data["validation_status"] == "passed"
 
-def test_validate_ldif_data_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    client: FlextDbtLdifClient,
-) -> None:
-    """Test validating LDIF data."""
+    def test_validate_ldif_data_empty(self) -> None:
+        """Test validating empty entries fails."""
+        client = FlextDbtLdifClient()
+        result = client.validate_ldif_data([])
+        assert result.is_failure
 
-    def _validate(
-        _self: object,
-        _entries: list[t.GeneralValueType],
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({})
+    def test_transform_with_dbt_ok(self) -> None:
+        """Test transforming with DBT returns metadata."""
+        client = FlextDbtLdifClient()
+        entries: list[dict[str, t.ContainerValue]] = [
+            {"dn": "cn=test,dc=example,dc=org"}
+        ]
+        result = client.transform_with_dbt(entries, ["m1", "m2"])
+        assert result.is_success
+        data = result.value or {}
+        assert data["records"] == 1
+        assert data["models"] == "m1,m2"
+        assert data["status"] == "success"
 
-    def _stats(
-        _self: object,
-        _entries: list[t.GeneralValueType],
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"quality_score": 0.95})
+    def test_transform_with_dbt_default_models(self) -> None:
+        """Test transform uses default models when none specified."""
+        client = FlextDbtLdifClient()
+        result = client.transform_with_dbt([], None)
+        assert result.is_success
+        data = result.value or {}
+        models = data["models"]
+        assert isinstance(models, list)
+        assert "stg_ldif_entries" in models
 
-    api = type("API", (), {"validate": _validate, "get_entry_statistics": _stats})()
-    monkeypatch.setattr(client, "_ldif_api", api)
+    def test_run_full_pipeline_ok(self, tmp_path: Path) -> None:
+        """Test running full pipeline with valid file."""
+        client = FlextDbtLdifClient()
+        result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
+        assert result.is_success
+        data = result.value or {}
+        assert data["pipeline_status"] == "completed"
+        assert "parsed_entries" in data
+        assert "validation" in data
+        assert "transformation" in data
 
-    empty_entries: list[t.GeneralValueType] = []
-    result = client.validate_ldif_data(empty_entries)
-    assert result.is_success
-    data = result.value or {}
-    assert data.get("quality_score") == 0.95
-    assert data.get("validation_status") == "passed"
-
-
-def test_transform_with_dbt_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    client: FlextDbtLdifClient,
-) -> None:
-    """Test transforming with DBT."""
-
-    def _prep(
-        _self: FlextDbtLdifClient,
-        _entries: list[t.GeneralValueType],
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"prepared": True})
-
-    monkeypatch.setattr(FlextDbtLdifClient, "_prepare_ldif_data_for_dbt", _prep)
-    # Preload hub to avoid real initialization
-    client._dbt_hub = object()  # type: ignore[assignment]
-
-    empty_entries: list[t.GeneralValueType] = []
-    result = client.transform_with_dbt(empty_entries, ["m1", "m2"])
-    assert result.is_success
-    assert isinstance(result.value, dict)
-
-
-def test_run_full_pipeline_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    client: FlextDbtLdifClient,
-    tmp_path: Path,
-) -> None:
-    """Test running full pipeline."""
-
-    def _parse(
-        _self: FlextDbtLdifClient,
-        _file: Path | str | None = None,
-    ) -> FlextResult[list[t.GeneralValueType]]:
-        return FlextResult[list[t.GeneralValueType]].ok([])
-
-    def _validate(
-        _self: FlextDbtLdifClient,
-        _entries: list[t.GeneralValueType],
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"quality_score": 0.9})
-
-    def _transform(
-        _self: FlextDbtLdifClient,
-        _entries: list[t.GeneralValueType],
-        _models: list[str] | None,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"ran": True})
-
-    monkeypatch.setattr(FlextDbtLdifClient, "parse_ldif_file", _parse)
-    monkeypatch.setattr(FlextDbtLdifClient, "validate_ldif_data", _validate)
-    monkeypatch.setattr(FlextDbtLdifClient, "transform_with_dbt", _transform)
-
-    result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
-    assert result.is_success
-    data = result.value or {}
-    assert data.get("pipeline_status") == "completed"
+    def test_run_full_pipeline_no_path(self) -> None:
+        """Test pipeline fails when no file path and config path is empty."""
+        config = FlextDbtLdifSettings.get_global()
+        client = FlextDbtLdifClient(config)
+        result = client.run_full_pipeline()
+        assert result.is_failure

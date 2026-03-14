@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import FlextResult
+from flext_core import r, t
+
+from flext_dbt_ldif.constants import c
 
 
 class FlextDbtLdifCore:
@@ -17,38 +20,35 @@ class FlextDbtLdifCore:
             """Initialize model generator."""
             self.project_dir = project_dir or Path.cwd()
 
-        def generate_staging_models(self) -> list[dict[str, str]]:
-            """Generate default staging model metadata."""
-            return [
-                {
-                    "name": "stg_ldif_entries",
-                    "description": "Staging model for LDIF entries",
-                },
-            ]
-
-        def generate_analytics_models(self) -> list[dict[str, str]]:
+        def generate_analytics_models(self) -> list[Mapping[str, str]]:
             """Generate default analytics model metadata."""
             return [
                 {
-                    "name": "analytics_ldif_insights",
-                    "description": "Analytics model for LDIF insights",
-                },
+                    "name": c.DbtLdif.ANALYTICS_MODEL_NAME,
+                    "description": c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION,
+                }
+            ]
+
+        def generate_staging_models(self) -> list[Mapping[str, str]]:
+            """Generate default staging model metadata."""
+            return [
+                {
+                    "name": c.DbtLdif.STAGING_MODEL_NAME,
+                    "description": c.DbtLdif.STAGING_MODEL_DESCRIPTION,
+                }
             ]
 
     class Analytics:
         """Compute basic analysis metrics for LDIF-like payloads."""
 
         def analyze_entry_patterns(
-            self,
-            entries: list[dict[str, str]],
-        ) -> FlextResult[dict[str, object]]:
+            self, entries: Sequence[Mapping[str, str]]
+        ) -> r[Mapping[str, t.ContainerValue]]:
             """Analyze input entries and return summary payload."""
-            return FlextResult[dict[str, object]].ok(
-                {
-                    "total_entries": len(entries),
-                    "unique_dns": len({entry.get("dn", "") for entry in entries}),
-                },
-            )
+            return r[Mapping[str, t.ContainerValue]].ok({
+                "total_entries": len(entries),
+                "unique_dns": len({entry.get("dn", "") for entry in entries}),
+            })
 
 
 __all__ = ["FlextDbtLdifCore"]

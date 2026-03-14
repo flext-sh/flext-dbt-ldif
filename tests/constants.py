@@ -15,8 +15,9 @@ from __future__ import annotations
 
 from typing import Final
 
+from flext_tests import FlextTestsConstants
+
 from flext_dbt_ldif.constants import FlextDbtLdifConstants
-from flext_tests.constants import FlextTestsConstants
 
 
 class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
@@ -27,11 +28,11 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
     2. FlextDbtLdifConstants - for domain constants (.DbtLdif.*)
 
     Access patterns:
-    - tc.Tests.Docker.* (container testing)
-    - tc.Tests.Matcher.* (assertion messages)
-    - tc.Tests.Factory.* (test data generation)
-    - tc.DbtLdif.* (domain constants from production)
-    - tc.TestDbt.* (project-specific test data)
+    - c.Tests.Docker.* (container testing)
+    - c.Tests.Matcher.* (assertion messages)
+    - c.Tests.Factory.* (test data generation)
+    - c.DbtLdif.* (domain constants from production)
+    - c.TestDbt.* (project-specific test data)
 
     Rules:
     - NEVER duplicate constants from FlextTestsConstants or FlextDbtLdifConstants
@@ -77,12 +78,5 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
         TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
 
 
-# Short aliases per FLEXT convention
-tc = TestsFlextDbtLdifConstants  # Primary test constants alias
-c = TestsFlextDbtLdifConstants  # Alternative alias for compatibility
-
-__all__ = [
-    "TestsFlextDbtLdifConstants",
-    "c",
-    "tc",
-]
+c = TestsFlextDbtLdifConstants
+__all__ = ["TestsFlextDbtLdifConstants", "c"]

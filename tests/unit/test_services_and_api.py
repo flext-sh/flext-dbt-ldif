@@ -10,14 +10,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_core import FlextTypes as t, FlextResult
+from flext_core import r
 
-from flext_dbt_ldif import (
-    FlextDbtLdifService,
-    generate_ldif_models,
-    process_ldif_file,
-    validate_ldif_quality,
-)
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifService, t
+from flext_dbt_ldif.models import FlextDbtLdifModels
 
 
 @pytest.fixture
@@ -27,114 +23,130 @@ def service(tmp_path: Path) -> FlextDbtLdifService:
 
 
 def test_parse_and_validate_ldif_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    service: FlextDbtLdifService,
-    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch, service: FlextDbtLdifService, tmp_path: Path
 ) -> None:
-    """Test parsing and validating LDIF."""
+    """Test parsing and validating LDIF via service."""
+    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+
+    def _parse_ldif_file(
+        _ldif_file: Path | str,
+    ) -> r[list[dict[str, t.ContainerValue]]]:
+        return r[list[dict[str, t.ContainerValue]]].ok(entries)
+
+    def _validate_ldif_data(
+        _entries: list[dict[str, t.ContainerValue]],
+    ) -> r[t.Dict]:
+        return r[t.Dict].ok({"quality_score": 0.91, "validation_status": "passed"})
+
     monkeypatch.setattr(
         service.client,
         "parse_ldif_file",
-        lambda _ldif_file: FlextResult[list[t.GeneralValueType]].ok([]),
+        _parse_ldif_file,
     )
     monkeypatch.setattr(
         service.client,
         "validate_ldif_data",
-        lambda _entries: FlextResult[dict[str, t.GeneralValueType]].ok({"quality_score": 0.91}),
+        _validate_ldif_data,
     )
-
     result = service.parse_and_validate_ldif(tmp_path / "x.ldif")
     assert result.is_success
     data = result.value or {}
-    assert data.get("status") == "validated"
+    assert data["entry_count"] == 1
 
 
 def test_generate_and_write_models_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    service: FlextDbtLdifService,
+    monkeypatch: pytest.MonkeyPatch, service: FlextDbtLdifService
 ) -> None:
-    """Test generating and writing models."""
+    """Test generating and writing models via service."""
+    staging_model = FlextDbtLdifModels.DbtModel(
+        name="stg_ldif_entries",
+        dbt_model_type="staging",
+        ldif_source="ldif_entries",
+        sql_content="select * from raw",
+        columns=[],
+        dependencies=[],
+    )
+    analytics_model = FlextDbtLdifModels.DbtModel(
+        name="analytics_ldif_insights",
+        dbt_model_type="analytics",
+        ldif_source="ldif_entries",
+        sql_content="select * from stg",
+        columns=[],
+        dependencies=["stg_ldif_entries"],
+    )
 
-    def _gen_stg(
-        _entries: list[t.GeneralValueType],
-    ) -> FlextResult[list[t.GeneralValueType]]:
-        model_obj: t.GeneralValueType = object()
-        return FlextResult[list[t.GeneralValueType]].ok([model_obj])
+    def _generate_staging_models(
+        _entries: list[dict[str, t.ContainerValue]],
+    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
+        return r[list[FlextDbtLdifModels.DbtModel]].ok([staging_model])
 
-    def _gen_an(
-        _models: list[t.GeneralValueType],
-    ) -> FlextResult[list[t.GeneralValueType]]:
-        model_obj: t.GeneralValueType = object()
-        return FlextResult[list[t.GeneralValueType]].ok([model_obj])
+    def _generate_analytics_models(
+        _models: list[FlextDbtLdifModels.DbtModel],
+    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
+        return r[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model])
 
-    def _write(
-        _models: list[t.GeneralValueType],
-        *,
-        _overwrite: bool = False,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok(
-            {
-                "written_files": ["f.sql", "f.yml"],
-                "output_dir": ".",
-            },
-        )
-
-    monkeypatch.setattr(service.model_generator, "generate_staging_models", _gen_stg)
-    monkeypatch.setattr(service.model_generator, "generate_analytics_models", _gen_an)
-    monkeypatch.setattr(service.model_generator, "write_models_to_disk", _write)
-
-    empty_entries: list[t.GeneralValueType] = []
-    result = service.generate_and_write_models(empty_entries)
+    gen = service.model_generator
+    object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
+    object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
+    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+    result = service.generate_and_write_models(entries)
     assert result.is_success
-    assert isinstance(result.value, dict)
+    data = result.value or {}
+    assert data["models_generated"] == 2
 
 
-def test_monkeypatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    """Test simple API helpers."""
+def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test FlextDbtLdif.process_ldif_file delegates correctly."""
 
     def _run(
         _self: FlextDbtLdifService,
-        _ldif_file: Path | str,
+        ldif_file: Path | str,
         *,
-        _generate_models: bool = True,
-        _run_transformations: bool = False,
-        _model_names: list[str] | None = None,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"ok": True})
+        generate_models: bool = True,
+        run_transformations: bool = False,
+        model_names: list[str] | None = None,
+    ) -> r[t.Dict]:
+        return r[t.Dict].ok({"ok": True})
 
     monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
+    api = FlextDbtLdif()
+    result = api.process_ldif_file(tmp_path / "f.ldif")
+    assert result.is_success
 
-    assert process_ldif_file(tmp_path / "f.ldif").is_success
 
-    # Patch validation path to avoid real file read
-    def _run_quality(
-        _self: FlextDbtLdifService,
-        _ldif_file: Path | str,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"ok": True})
+def test_api_validate_ldif_quality(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Test FlextDbtLdif.validate_ldif_quality delegates correctly."""
+
+    def _run_quality(_self: FlextDbtLdifService, _ldif_file: Path | str) -> r[t.Dict]:
+        return r[t.Dict].ok({"ok": True})
 
     monkeypatch.setattr(
-        FlextDbtLdifService,
-        "run_data_quality_assessment",
-        _run_quality,
+        FlextDbtLdifService, "run_data_quality_assessment", _run_quality
     )
-    assert validate_ldif_quality(tmp_path / "f.ldif").is_success
+    api = FlextDbtLdif()
+    assert api.validate_ldif_quality(tmp_path / "f.ldif").is_success
 
-    def _parse_val(
-        _self: FlextDbtLdifService,
-        _ldif_file: Path | str,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"entries": []})
+
+def test_api_generate_ldif_models(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Test FlextDbtLdif.generate_ldif_models delegates correctly."""
+
+    def _parse_val(_self: FlextDbtLdifService, _ldif_file: Path | str) -> r[t.Dict]:
+        return r[t.Dict].ok({"entry_count": 0})
 
     def _gen_models(
         _self: FlextDbtLdifService,
-        _entries: list[t.GeneralValueType],
+        _entries: list[dict[str, t.ContainerValue]],
         *,
-        _overwrite: bool = False,
-    ) -> FlextResult[dict[str, t.GeneralValueType]]:
-        return FlextResult[dict[str, t.GeneralValueType]].ok({"total_models": 0})
+        overwrite: bool = False,
+    ) -> r[t.Dict]:
+        _ = overwrite
+        return r[t.Dict].ok({"total_models": 0})
 
     monkeypatch.setattr(FlextDbtLdifService, "parse_and_validate_ldif", _parse_val)
     monkeypatch.setattr(FlextDbtLdifService, "generate_and_write_models", _gen_models)
-
-    assert generate_ldif_models(tmp_path / "f.ldif").is_success
+    api = FlextDbtLdif()
+    assert api.generate_ldif_models(tmp_path / "f.ldif").is_success

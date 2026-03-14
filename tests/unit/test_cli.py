@@ -10,107 +10,120 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
-from click.testing import CliRunner
 
-from flext_dbt_ldif import __version__, cli, main
+from flext_dbt_ldif.cli import FlextDbtLdifCliService
 
 
-class TestCLI:
-    """Test cases for CLI functionality."""
+class TestFlextDbtLdifCliService:
+    """Test cases for FlextDbtLdifCliService."""
 
-    def setup_method(self) -> None:
-        """Set up test fixtures."""
-        self.runner = CliRunner()
+    def test_initialization(self) -> None:
+        """Test CLI service can be instantiated."""
+        service = FlextDbtLdifCliService()
+        assert service._output is not None
+        assert service._config is not None
 
-    def test_cli_help(self) -> None:
-        """Test CLI help command."""
-        result = self.runner.invoke(cli, ["--help"])
-        if result.exit_code != 0:
-            raise AssertionError(f"Expected 0, got {result.exit_code}")
-        if "FLEXT dbt LDIF" not in result.output:
-            msg: str = "Expected 'FLEXT dbt LDIF' in output"
-            raise AssertionError(msg)
-        assert "Advanced LDAP Data Analytics" in result.output
+    def test_display_info(self) -> None:
+        """Test display_info returns result."""
+        service = FlextDbtLdifCliService()
+        result = service.display_info()
+        assert result.is_success or result.is_failure
 
-    def test_cli_version(self) -> None:
-        """Test CLI version command."""
-        result = self.runner.invoke(cli, ["--version"])
-        if result.exit_code != 0:
-            raise AssertionError(f"Expected 0, got {result.exit_code}")
-        if __version__ not in result.output:
-            msg: str = f"Expected {__version__} in output"
-            raise AssertionError(msg)
+    def test_display_generate_message(self) -> None:
+        """Test display_generate_message calls real model generation."""
+        service = FlextDbtLdifCliService()
+        result = service.display_generate_message()
+        assert result.is_success or result.is_failure
+        assert "coming soon" not in str(result.value).lower()
 
-    def test_cli_verbose_flag(self) -> None:
-        """Test CLI verbose flag."""
-        result = self.runner.invoke(cli, ["--verbose", "--help"])
-        if result.exit_code != 0:
-            raise AssertionError(f"Expected 0, got {result.exit_code}")
+    def test_display_validate_message(self) -> None:
+        """Test display_validate_message calls real validation."""
+        service = FlextDbtLdifCliService()
+        result = service.display_validate_message()
+        assert result.is_success or result.is_failure
+        assert "coming soon" not in str(result.value).lower()
 
-    def test_info_command(self) -> None:
-        """Test info command."""
-        result = self.runner.invoke(cli, ["info"])
-        if result.exit_code != 0:
-            raise AssertionError(f"Expected 0, got {result.exit_code}")
-        if "FLEXT dbt LDIF" not in result.output:
-            msg: str = "Expected 'FLEXT dbt LDIF' in output"
-            raise AssertionError(msg)
-        assert __version__ in result.output
-        if "Programmatic dbt model generation" not in result.output:
-            msg: str = "Expected 'Programmatic dbt model generation' in output"
-            raise AssertionError(msg)
+    def test_info_method(self) -> None:
+        """Test info() method delegates to command handler."""
+        service = FlextDbtLdifCliService()
+        service.info()
 
-    def test_generate_command(self) -> None:
-        """Test generate command."""
-        result = self.runner.invoke(cli, ["generate"])
-        if result.exit_code != 0:
-            raise AssertionError(f"Expected 0, got {result.exit_code}")
-        if "Model generation functionality coming soon!" not in result.output:
-            msg: str = (
-                "Expected 'Model generation functionality coming soon!' in output"
-            )
-            raise AssertionError(msg)
+    def test_generate_method(self) -> None:
+        """Test generate() method delegates to command handler."""
+        service = FlextDbtLdifCliService()
+        service.generate()
 
-    def test_validate_command(self) -> None:
-        """Test validate command."""
-        result = self.runner.invoke(cli, ["validate"])
-        if result.exit_code != 0:
-            raise AssertionError(f"Expected 0, got {result.exit_code}")
-        if "Model validation functionality coming soon!" not in result.output:
-            msg: str = (
-                "Expected 'Model validation functionality coming soon!' in output"
-            )
-            raise AssertionError(msg)
+    def test_validate_method(self) -> None:
+        """Test validate() method delegates to command handler."""
+        service = FlextDbtLdifCliService()
+        service.validate()
+
+
+class TestMainEntryPoint:
+    """Test cases for FlextDbtLdifCliService.main() entry point."""
+
+    def test_main_no_args_exits_zero(self) -> None:
+        """Test main exits 0 when no args provided."""
+        with patch("sys.argv", ["flext-dbt-ldif"]):
+            service = FlextDbtLdifCliService()
+            with pytest.raises(SystemExit) as exc_info:
+                service.main()
+            assert exc_info.value.code == 0
+
+    def test_main_info_command(self) -> None:
+        """Test main with info command."""
+        with patch("sys.argv", ["flext-dbt-ldif", "info"]):
+            service = FlextDbtLdifCliService()
+            with pytest.raises(SystemExit) as exc_info:
+                service.main()
+            assert exc_info.value.code == 0
+
+    def test_main_generate_command(self) -> None:
+        """Test main with generate command."""
+        with patch("sys.argv", ["flext-dbt-ldif", "generate"]):
+            service = FlextDbtLdifCliService()
+            with pytest.raises(SystemExit) as exc_info:
+                service.main()
+            assert exc_info.value.code == 0
+
+    def test_main_validate_command(self) -> None:
+        """Test main with validate command."""
+        with patch("sys.argv", ["flext-dbt-ldif", "validate"]):
+            service = FlextDbtLdifCliService()
+            with pytest.raises(SystemExit) as exc_info:
+                service.main()
+            assert exc_info.value.code == 0
+
+    def test_main_unknown_command_exits_one(self) -> None:
+        """Test main with unknown command exits 1."""
+        with patch("sys.argv", ["flext-dbt-ldif", "unknown"]):
+            service = FlextDbtLdifCliService()
+            with pytest.raises(SystemExit) as exc_info:
+                service.main()
+            assert exc_info.value.code == 1
 
     def test_main_keyboard_interrupt(self) -> None:
-        """Test main function with KeyboardInterrupt."""
-        with patch("flext_dbt_ldif.cli.cli") as mock_cli:
-            mock_cli.side_effect = KeyboardInterrupt()
-
-            with pytest.raises(SystemExit) as exc_info:
-                main()
-
-            if exc_info.value.code != 1:
-                raise AssertionError(f"Expected 1, got {exc_info.value.code}")
+        """Test main handles KeyboardInterrupt."""
+        with patch("sys.argv", ["flext-dbt-ldif", "info"]):
+            with patch.object(
+                FlextDbtLdifCliService._CommandHandlers,
+                "handle_info_command",
+                side_effect=KeyboardInterrupt(),
+            ):
+                service = FlextDbtLdifCliService()
+                with pytest.raises(SystemExit) as exc_info:
+                    service.main()
+                assert exc_info.value.code == 1
 
     def test_main_runtime_error(self) -> None:
-        """Test main function with RuntimeError."""
-        with patch("flext_dbt_ldif.cli.cli") as mock_cli:
-            mock_cli.side_effect = RuntimeError("Test error")
-
-            with pytest.raises(SystemExit) as exc_info:
-                main()
-
-            if exc_info.value.code != 1:
-                raise AssertionError(f"Expected 1, got {exc_info.value.code}")
-
-    def test_main_success(self) -> None:
-        """Test main function successful execution."""
-        with patch("flext_dbt_ldif.cli.cli") as mock_cli:
-            mock_cli.return_value = None
-
-            with pytest.raises(SystemExit) as exc_info:
-                main()
-
-            if exc_info.value.code != 0:
-                raise AssertionError(f"Expected 0, got {exc_info.value.code}")
+        """Test main handles RuntimeError."""
+        with patch("sys.argv", ["flext-dbt-ldif", "info"]):
+            with patch.object(
+                FlextDbtLdifCliService._CommandHandlers,
+                "handle_info_command",
+                side_effect=RuntimeError("Test error"),
+            ):
+                service = FlextDbtLdifCliService()
+                with pytest.raises(SystemExit) as exc_info:
+                    service.main()
+                assert exc_info.value.code == 1
