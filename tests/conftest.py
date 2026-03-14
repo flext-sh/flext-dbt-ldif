@@ -25,7 +25,7 @@ def docker_control() -> FlextTestsDocker:
 @pytest.fixture(scope="session")
 def shared_ldap_container(
     docker_control: FlextTestsDocker,
-) -> Generator[str]:
+) -> str:
     """Start and maintain flext-openldap-test container.
 
     Container auto-starts if not running and remains running after tests.
