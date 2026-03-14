@@ -61,7 +61,6 @@ if TYPE_CHECKING:
         TestsFlextDbtLdifUtilities as u,
     )
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestAnalytics": ("tests.unit.test_core", "TestAnalytics"),
     "TestDbtModel": ("tests.unit.test_dbt_models", "TestDbtModel"),

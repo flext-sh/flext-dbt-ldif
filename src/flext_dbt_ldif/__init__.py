@@ -49,7 +49,6 @@ if TYPE_CHECKING:
         FlextDbtLdifUtilities as u,
     )
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextDbtLdif": ("flext_dbt_ldif.simple_api", "FlextDbtLdif"),
     "FlextDbtLdifCliService": ("flext_dbt_ldif.cli", "FlextDbtLdifCliService"),

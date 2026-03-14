@@ -36,7 +36,6 @@ if TYPE_CHECKING:
     )
     from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 
-# Lazy import mapping: export_name -> (module_path, attr_name)
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestAnalytics": ("tests.unit.test_core", "TestAnalytics"),
     "TestDbtModel": ("tests.unit.test_dbt_models", "TestDbtModel"),
