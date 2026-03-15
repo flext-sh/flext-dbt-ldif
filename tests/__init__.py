@@ -1,13 +1,7 @@
 # AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
 # Regenerate with: make codegen
 #
-"""FLEXT DBT LDIF Tests - Test infrastructure and utilities.
-
-Provides TestsFlextDbtLdif classes extending FlextTests and FlextDbtLdif for comprehensive testing.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-"""
+"""Tests package."""
 
 from __future__ import annotations
 
@@ -17,6 +11,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
+    from tests import unit
     from tests.conftest import (
         dbt_ldif_profile,
         dbt_ldif_project_config,
@@ -133,6 +128,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "test_version_is_string": ("tests.unit.test_version", "test_version_is_string"),
     "tm": ("tests.models", "tm"),
     "u": ("tests.utilities", "TestsFlextDbtLdifUtilities"),
+    "unit": ("tests.unit", ""),
 }
 
 __all__ = [
@@ -177,6 +173,7 @@ __all__ = [
     "test_version_is_string",
     "tm",
     "u",
+    "unit",
 ]
 
 
