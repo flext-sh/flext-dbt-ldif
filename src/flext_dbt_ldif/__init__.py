@@ -61,10 +61,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextDbtLdifService": ("flext_dbt_ldif.dbt_services", "FlextDbtLdifService"),
     "FlextDbtLdifSettings": ("flext_dbt_ldif.settings", "FlextDbtLdifSettings"),
     "FlextDbtLdifTypes": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
-    "FlextDbtLdifUnifiedService": (
-        "flext_dbt_ldif.dbt_models",
-        "FlextDbtLdifUnifiedService",
-    ),
+    "FlextDbtLdifUnifiedService": ("flext_dbt_ldif.dbt_models", "FlextDbtLdifUnifiedService"),
     "FlextDbtLdifUtilities": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
     "__all__": ("flext_dbt_ldif.__version__", "__all__"),
     "__author__": ("flext_dbt_ldif.__version__", "__author__"),
