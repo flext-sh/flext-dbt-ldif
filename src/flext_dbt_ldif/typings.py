@@ -12,3 +12,5 @@ class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
 
 t = FlextDbtLdifTypes
 __all__ = ["FlextDbtLdifTypes", "t"]
+
+type LdifPayload = t.Dict

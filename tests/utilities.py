@@ -13,3 +13,5 @@ from flext_tests import FlextTestsUtilities
 
 class TestsFlextDbtLdifUtilities(FlextTestsUtilities):
     """Test utilities for flextdbtldif."""
+
+u = TestsFlextDbtLdifUtilities

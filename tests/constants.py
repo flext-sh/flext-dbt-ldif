@@ -78,5 +78,6 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
         TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
 
 
-c = TestsFlextDbtLdifConstants
 __all__ = ["TestsFlextDbtLdifConstants", "c"]
+
+c = TestsFlextDbtLdifConstants

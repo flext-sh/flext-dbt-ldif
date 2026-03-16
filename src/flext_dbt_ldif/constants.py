@@ -84,5 +84,6 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
         VERSION: Final[str] = __version__
 
 
-c = FlextDbtLdifConstants
 __all__ = ["FlextDbtLdifConstants", "c"]
+
+c = FlextDbtLdifConstants

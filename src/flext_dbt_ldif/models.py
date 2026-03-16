@@ -39,6 +39,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             return r[bool].ok(value=True)
 
 
-m = FlextDbtLdifModels
 
 __all__ = ["FlextDbtLdifModels", "m"]
+
+m = FlextDbtLdifModels

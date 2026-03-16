@@ -10,3 +10,5 @@ class FlextDbtLdifUtilities(FlextLdifUtilities):
 
 
 __all__ = ["FlextDbtLdifUtilities"]
+
+u = FlextDbtLdifUtilities
