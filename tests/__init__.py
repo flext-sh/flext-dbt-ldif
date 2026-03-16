@@ -51,10 +51,7 @@ if TYPE_CHECKING:
         test_parse_and_validate_ldif_ok,
     )
     from tests.unit.test_version import test_dunder_alignment, test_version_is_string
-    from tests.utilities import (
-        TestsFlextDbtLdifUtilities,
-        TestsFlextDbtLdifUtilities as u,
-    )
+    from tests.utilities import TestsFlextDbtLdifUtilities, u
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestAnalytics": ("tests.unit.test_core", "TestAnalytics"),
@@ -127,7 +124,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     ),
     "test_version_is_string": ("tests.unit.test_version", "test_version_is_string"),
     "tm": ("tests.models", "tm"),
-    "u": ("tests.utilities", "TestsFlextDbtLdifUtilities"),
+    "u": ("tests.utilities", "u"),
     "unit": ("tests.unit", ""),
 }
 

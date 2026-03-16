@@ -8,6 +8,7 @@ from flext_core import r
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import FlextMeltanoProtocols
 
+
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
     """Namespace for DBT LDIF protocol contracts."""
 
@@ -27,6 +28,7 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
             ) -> r[LdifPayload]:
                 """Run DBT tests and return status payload."""
                 ...
+
 
 __all__ = ["FlextDbtLdifProtocols", "p"]
 

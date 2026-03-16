@@ -12,8 +12,8 @@ import tempfile
 from collections.abc import Generator
 
 import pytest
-from tests import t
 from flext_tests import FlextTestsDocker
+from tests import t
 
 
 @pytest.fixture(scope="session")
