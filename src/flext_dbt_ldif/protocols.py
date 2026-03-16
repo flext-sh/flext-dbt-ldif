@@ -8,6 +8,8 @@ from flext_core import r
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import FlextMeltanoProtocols
 
+from flext_dbt_ldif.typings import LdifPayload
+
 
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
     """Namespace for DBT LDIF protocol contracts."""
