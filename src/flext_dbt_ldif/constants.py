@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from enum import StrEnum
+from enum import StrEnum, unique
 from typing import Final
 
 from flext_ldif import FlextLdifConstants
@@ -17,6 +17,7 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     class DbtLdif:
         """DBT LDIF domain constants namespace."""
 
+        @unique
         class DbtLogLevels(StrEnum):
             """Allowed DBT log levels."""
 
@@ -25,6 +26,7 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
             WARN = "warn"
             ERROR = "error"
 
+        @unique
         class DbtTargets(StrEnum):
             """Supported DBT targets."""
 
@@ -32,6 +34,7 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
             STAGING = "staging"
             PROD = "prod"
 
+        @unique
         class ErrorCode(StrEnum):
             """DBT LDIF error code identifiers."""
 
