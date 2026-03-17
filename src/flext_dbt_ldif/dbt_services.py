@@ -72,7 +72,7 @@ class FlextDbtLdifService:
         quality_score_value = validation.value.get("quality_score", 0.0)
         quality_score = (
             float(quality_score_value)
-            if isinstance(quality_score_value, str | int | float | bool)
+            if isinstance(quality_score_value, t.Primitives)
             else 0.0
         )
         return r[t.Dict].ok({
@@ -111,7 +111,7 @@ class FlextDbtLdifService:
             models_generated_value = model_result.value.get("models_generated", 0)
             models_generated = (
                 int(models_generated_value)
-                if isinstance(models_generated_value, str | int | float | bool)
+                if isinstance(models_generated_value, t.Primitives)
                 else 0
             )
             workflow_result["models_generated"] = int(models_generated)
