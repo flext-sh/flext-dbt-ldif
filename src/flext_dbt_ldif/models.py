@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import FlextModels, r, t
+from flext_core import FlextModels, r
 from flext_ldif import FlextLdifModels
 from flext_meltano import FlextMeltanoModels
 from pydantic import Field
+
+from flext_dbt_ldif import t
 
 
 class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
