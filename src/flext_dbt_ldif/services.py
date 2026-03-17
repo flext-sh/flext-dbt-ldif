@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger, r, t
+from flext_core import FlextLogger, r
 from pydantic import TypeAdapter
 
 from flext_dbt_ldif import (
@@ -14,6 +14,7 @@ from flext_dbt_ldif import (
     FlextDbtLdifUnifiedService,
     c,
     m,
+    t,
 )
 
 logger = FlextLogger(__name__)
@@ -145,4 +146,4 @@ class FlextDbtLdifService:
 
 s = FlextDbtLdifService
 
-__all__ = ["FlextDbtLdifService"]
+__all__ = ["FlextDbtLdifService", "s"]

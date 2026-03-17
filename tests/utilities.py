@@ -16,5 +16,13 @@ from flext_dbt_ldif import FlextDbtLdifUtilities
 class TestsFlextDbtLdifUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
     """Test utilities for flextdbtldif."""
 
+    class DbtLdif(FlextDbtLdifUtilities.DbtLdif):
+        """DbtLdif test utilities namespace."""
+
+        class Tests:
+            """Project-specific test utilities."""
+
 
 u = TestsFlextDbtLdifUtilities
+
+__all__ = ["TestsFlextDbtLdifUtilities", "u"]

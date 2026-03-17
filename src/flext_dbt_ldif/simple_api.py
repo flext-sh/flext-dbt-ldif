@@ -3,44 +3,33 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import override
 
-from flext_core import r, t, u
+from flext_core import r
 from pydantic import TypeAdapter, ValidationError
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, s
+from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, t, u
 
 _ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
 
 
-class FlextDbtLdif(s[FlextDbtLdifSettings]):
+class FlextDbtLdif:
     """Facade class that exposes primary DBT LDIF operations."""
 
     def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
-        super().__init__(
-            config_type=None,
-            config_overrides=None,
-            initial_context=None,
-        )
         self._config = (
             config if config is not None else FlextDbtLdifSettings.get_global()
         )
-        self._service = s(config=self._config)
+        self._service = FlextDbtLdifService(config=self._config)
 
     @property
-    def service(self) -> s:
+    def service(self) -> FlextDbtLdifService:
         """Return bound workflow service."""
         return self._service
 
-    @override
     def execute(self) -> r[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
-        current_config = (
-            self._config
-            if self._config is not None
-            else FlextDbtLdifSettings.get_global()
-        )
+        current_config = self._config
         return u.DbtLdif.try_(
             lambda: FlextDbtLdifSettings.model_validate(current_config.model_dump()),
             catch=ValidationError,

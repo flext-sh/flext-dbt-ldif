@@ -9,7 +9,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService, m, t
+from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService
+
+from ..models import m
+from ..typings import t
 
 
 class TestFlextDbtLdifUnifiedService:

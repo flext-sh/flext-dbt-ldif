@@ -13,7 +13,8 @@ from collections.abc import Generator
 
 import pytest
 from flext_tests import FlextTestsDocker
-from tests import t
+
+from .typings import t
 
 
 @pytest.fixture(scope="session")

@@ -41,41 +41,47 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
     - All production constants come from FlextDbtLdifConstants
     """
 
-    class Paths:
-        """Test path constants."""
+    class DbtLdif(FlextDbtLdifConstants.DbtLdif):
+        """DbtLdif test constants namespace."""
 
-        TEST_INPUT_DIR: Final[str] = "tests/fixtures/data/input"
-        TEST_OUTPUT_DIR: Final[str] = "tests/fixtures/data/output"
-        TEST_TEMP_PREFIX: Final[str] = "flext_dbt_ldif_test_"
-        TEST_PROFILES_DIR: Final[str] = "tests/fixtures/profiles"
-        TEST_LDIF_FILE: Final[str] = "tests/fixtures/data/sample.ldif"
+        class Tests:
+            """Project-specific test constants."""
 
-    class TestDbt:
-        """DBT test constants."""
+            class Paths:
+                """Test path constants."""
 
-        TEST_TARGET: Final[str] = "dev"
-        TEST_PROFILE: Final[str] = "test_profile"
-        TEST_PROJECT_DIR: Final[str] = "tests/fixtures/dbt_project"
-        TEST_MODEL_NAME: Final[str] = "test_model"
-        TEST_SCHEMA: Final[str] = "ldif_analytics"
+                TEST_INPUT_DIR: Final[str] = "tests/fixtures/data/input"
+                TEST_OUTPUT_DIR: Final[str] = "tests/fixtures/data/output"
+                TEST_TEMP_PREFIX: Final[str] = "flext_dbt_ldif_test_"
+                TEST_PROFILES_DIR: Final[str] = "tests/fixtures/profiles"
+                TEST_LDIF_FILE: Final[str] = "tests/fixtures/data/sample.ldif"
 
-    class TestLdif:
-        """LDIF test constants."""
+            class Dbt:
+                """DBT test constants."""
 
-        TEST_BASE_DN: Final[str] = "dc=test,dc=com"
-        TEST_ENTRY_DN: Final[str] = "cn=test,dc=test,dc=com"
-        TEST_ATTRIBUTE: Final[str] = "cn"
-        TEST_ATTRIBUTE_VALUE: Final[str] = "test_value"
+                TEST_TARGET: Final[str] = "dev"
+                TEST_PROFILE: Final[str] = "test_profile"
+                TEST_PROJECT_DIR: Final[str] = "tests/fixtures/dbt_project"
+                TEST_MODEL_NAME: Final[str] = "test_model"
+                TEST_SCHEMA: Final[str] = "ldif_analytics"
 
-    class TestTransformation:
-        """Transformation test constants."""
+            class Ldif:
+                """LDIF test constants."""
 
-        TEST_SCHEMA_MAPPING: Final[dict[str, str]] = {
-            "persons": "stg_persons",
-            "groups": "stg_groups",
-        }
-        TEST_BATCH_SIZE: Final[int] = 1000
-        TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
+                TEST_BASE_DN: Final[str] = "dc=test,dc=com"
+                TEST_ENTRY_DN: Final[str] = "cn=test,dc=test,dc=com"
+                TEST_ATTRIBUTE: Final[str] = "cn"
+                TEST_ATTRIBUTE_VALUE: Final[str] = "test_value"
+
+            class Transformation:
+                """Transformation test constants."""
+
+                TEST_SCHEMA_MAPPING: Final[dict[str, str]] = {
+                    "persons": "stg_persons",
+                    "groups": "stg_groups",
+                }
+                TEST_BATCH_SIZE: Final[int] = 1000
+                TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
 
 
 __all__ = ["TestsFlextDbtLdifConstants", "c"]

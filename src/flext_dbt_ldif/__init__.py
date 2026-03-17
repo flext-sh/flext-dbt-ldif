@@ -28,11 +28,7 @@ if TYPE_CHECKING:
         __version__,
         __version_info__,
     )
-    from flext_dbt_ldif.cli import (
-        FlextDbtLdifCliService,
-        FlextDbtLdifCliService as s,
-        logger,
-    )
+    from flext_dbt_ldif.cli import FlextDbtLdifCliService
     from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
     from flext_dbt_ldif.core import FlextDbtLdifCore
     from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
@@ -40,7 +36,7 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
     from flext_dbt_ldif.models import FlextDbtLdifModels, m
     from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
-    from flext_dbt_ldif.services import FlextDbtLdifService
+    from flext_dbt_ldif.services import FlextDbtLdifService, s
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.simple_api import FlextDbtLdif
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
@@ -76,10 +72,9 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "__version__": ("flext_dbt_ldif.__version__", "__version__"),
     "__version_info__": ("flext_dbt_ldif.__version__", "__version_info__"),
     "c": ("flext_dbt_ldif.constants", "c"),
-    "logger": ("flext_dbt_ldif.cli", "logger"),
     "m": ("flext_dbt_ldif.models", "m"),
     "p": ("flext_dbt_ldif.protocols", "p"),
-    "s": ("flext_dbt_ldif.cli", "FlextDbtLdifCliService"),
+    "s": ("flext_dbt_ldif.services", "s"),
     "t": ("flext_dbt_ldif.typings", "t"),
     "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
 }
@@ -108,7 +103,6 @@ __all__ = [
     "__version__",
     "__version_info__",
     "c",
-    "logger",
     "m",
     "p",
     "s",

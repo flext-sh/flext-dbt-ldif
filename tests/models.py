@@ -24,7 +24,14 @@ class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
     Access patterns:
     - m.Tests.* (generic test models from FlextTestsModels)
     - m.DbtLdif.* (DBT LDIF domain models)
+    - m.DbtLdif.Tests.* (project test-only models)
     """
+
+    class DbtLdif(FlextDbtLdifModels.DbtLdif):
+        """DbtLdif test models namespace."""
+
+        class Tests:
+            """Project-specific test models."""
 
 
 m = TestsFlextDbtLdifModels

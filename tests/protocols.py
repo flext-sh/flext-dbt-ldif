@@ -18,10 +18,16 @@ class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
     """Test protocols combining FlextTestsProtocols and FlextDbtLdifProtocols.
 
     Provides access to:
-    - p.Tests.Docker.* (from FlextTestsProtocols)
-    - p.Tests.Factory.* (from FlextTestsProtocols)
+    - p.Tests.* (from FlextTestsProtocols)
     - p.DbtLdif.* (from FlextDbtLdifProtocols)
+    - p.DbtLdif.Tests.* (project test protocols)
     """
+
+    class DbtLdif(FlextDbtLdifProtocols.DbtLdif):
+        """DbtLdif test protocols namespace."""
+
+        class Tests:
+            """Project-specific test protocols."""
 
 
 __all__ = ["TestsFlextDbtLdifProtocols", "p"]

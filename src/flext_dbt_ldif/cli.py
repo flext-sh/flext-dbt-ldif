@@ -12,7 +12,7 @@ import sys
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import FlextLogger, r
 
-from flext_dbt_ldif import c, s
+from flext_dbt_ldif import FlextDbtLdifService, c
 
 logger = FlextLogger(__name__)
 
@@ -57,7 +57,7 @@ class FlextDbtLdifCliService:
             """Execute main CLI entry point logic."""
             try:
                 if len(sys.argv) > 1:
-                    command = sys.argv[1]
+                    command: str = sys.argv[1]
                     if command == c.DbtLdif.CLI_COMMAND_INFO:
                         service_instance._CommandHandlers.handle_info_command(
                             service_instance
@@ -71,7 +71,7 @@ class FlextDbtLdifCliService:
                             service_instance
                         )
                     else:
-                        logger.error("Unknown command: %s", command)
+                        logger.error(f"Unknown command: {command}")
                         return c.DbtLdif.EXIT_CODE_FAILURE
                 return c.DbtLdif.EXIT_CODE_SUCCESS
             except KeyboardInterrupt:
@@ -84,7 +84,7 @@ class FlextDbtLdifCliService:
     def display_generate_message(self) -> r[str]:
         """Generate dbt models from LDIF schema definitions."""
         try:
-            service = s()
+            service = FlextDbtLdifService()
             result = service.generate_and_write_models([])
             if result.is_failure:
                 return r[str].fail(result.error or "Model generation failed")
@@ -128,7 +128,7 @@ class FlextDbtLdifCliService:
     def display_validate_message(self) -> r[str]:
         """Validate dbt models and configurations."""
         try:
-            service = s()
+            service = FlextDbtLdifService()
             result = service.run_data_quality_assessment("")
             if result.is_failure:
                 return r[str].fail(result.error or "Validation failed")
@@ -166,3 +166,6 @@ class FlextDbtLdifCliService:
 
 if __name__ == "__main__":
     sys.exit(FlextDbtLdifCliService().main())
+
+
+__all__ = ["FlextDbtLdifCliService"]

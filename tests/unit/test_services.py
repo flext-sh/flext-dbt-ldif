@@ -12,7 +12,10 @@ from pathlib import Path
 import pytest
 from flext_core import r
 
-from flext_dbt_ldif import FlextDbtLdifService, m, t
+from flext_dbt_ldif import FlextDbtLdifService
+
+from ..models import m
+from ..typings import t
 
 
 @pytest.fixture
@@ -34,9 +37,9 @@ def test_parse_and_validate_ldif_ok(
 
     def _validate_ldif_data(
         _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[m.LdifValidationResult]:
-        return r[m.LdifValidationResult].ok(
-            m.LdifValidationResult(
+    ) -> r[m.DbtLdif.LdifValidationResult]:
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
                 total_entries=1,
                 quality_score=0.9,
                 validation_status="passed",
@@ -77,7 +80,7 @@ def test_generate_and_write_models_ok(
     svc: FlextDbtLdifService,
 ) -> None:
     """Test model generation succeeds."""
-    staging_model = m.DbtModel(
+    staging_model = m.DbtLdif.DbtModel(
         name="stg_ldif_entries",
         dbt_model_type="staging",
         ldif_source="ldif_entries",
@@ -85,7 +88,7 @@ def test_generate_and_write_models_ok(
         columns=[],
         dependencies=[],
     )
-    analytics_model = m.DbtModel(
+    analytics_model = m.DbtLdif.DbtModel(
         name="analytics_ldif_insights",
         dbt_model_type="analytics",
         ldif_source="ldif_entries",
@@ -96,13 +99,13 @@ def test_generate_and_write_models_ok(
 
     def _generate_staging_models(
         _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[list[m.DbtModel]]:
-        return r[list[m.DbtModel]].ok([staging_model])
+    ) -> r[list[m.DbtLdif.DbtModel]]:
+        return r[list[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: list[m.DbtModel],
-    ) -> r[list[m.DbtModel]]:
-        return r[list[m.DbtModel]].ok([analytics_model])
+        _models: list[m.DbtLdif.DbtModel],
+    ) -> r[list[m.DbtLdif.DbtModel]]:
+        return r[list[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     monkeypatch.setattr(
         svc.model_generator, "generate_staging_models", _generate_staging_models
@@ -134,9 +137,9 @@ def test_run_complete_workflow_all(
 
     def _validate_ldif_data(
         _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[m.LdifValidationResult]:
-        return r[m.LdifValidationResult].ok(
-            m.LdifValidationResult(
+    ) -> r[m.DbtLdif.LdifValidationResult]:
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
                 total_entries=1,
                 quality_score=0.9,
                 validation_status="passed",
@@ -146,12 +149,16 @@ def test_run_complete_workflow_all(
     def _transform_with_dbt(
         _entries: list[dict[str, t.ContainerValue]],
         _model_names: list[str] | None,
-    ) -> r[m.DbtTransformationResult]:
-        return r[m.DbtTransformationResult].ok(
-            m.DbtTransformationResult(records=1, models=["m1"], status="success")
+    ) -> r[m.DbtLdif.DbtTransformationResult]:
+        return r[m.DbtLdif.DbtTransformationResult].ok(
+            m.DbtLdif.DbtTransformationResult(
+                records=1,
+                models=["m1"],
+                status="success",
+            )
         )
 
-    staging_model = m.DbtModel(
+    staging_model = m.DbtLdif.DbtModel(
         name="stg_ldif_entries",
         dbt_model_type="staging",
         ldif_source="ldif_entries",
@@ -159,7 +166,7 @@ def test_run_complete_workflow_all(
         columns=[],
         dependencies=[],
     )
-    analytics_model = m.DbtModel(
+    analytics_model = m.DbtLdif.DbtModel(
         name="analytics_ldif_insights",
         dbt_model_type="analytics",
         ldif_source="ldif_entries",
@@ -170,13 +177,13 @@ def test_run_complete_workflow_all(
 
     def _generate_staging_models(
         _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[list[m.DbtModel]]:
-        return r[list[m.DbtModel]].ok([staging_model])
+    ) -> r[list[m.DbtLdif.DbtModel]]:
+        return r[list[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: list[m.DbtModel],
-    ) -> r[list[m.DbtModel]]:
-        return r[list[m.DbtModel]].ok([analytics_model])
+        _models: list[m.DbtLdif.DbtModel],
+    ) -> r[list[m.DbtLdif.DbtModel]]:
+        return r[list[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
     monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
@@ -213,9 +220,9 @@ def test_run_data_quality_assessment(
 
     def _validate_ldif_data(
         _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[m.LdifValidationResult]:
-        return r[m.LdifValidationResult].ok(
-            m.LdifValidationResult(
+    ) -> r[m.DbtLdif.LdifValidationResult]:
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
                 total_entries=1,
                 quality_score=0.88,
                 validation_status="passed",
