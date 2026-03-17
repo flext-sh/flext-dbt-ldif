@@ -5,10 +5,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger, r, t
+from flext_core import FlextLogger, r
 
-from .constants import c
-from .settings import FlextDbtLdifSettings
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t
 
 logger = FlextLogger(__name__)
 
@@ -39,61 +38,69 @@ class FlextDbtLdifClient:
 
     def run_full_pipeline(
         self, file_path: Path | str | None = None, model_names: list[str] | None = None
-    ) -> r[t.Dict]:
+    ) -> r[m.DbtLdif.PipelineResult]:
         """Run parse, validate, and transform pipeline."""
         parse_result = self.parse_ldif_file(file_path)
         if parse_result.is_failure:
-            return r[t.Dict].fail(parse_result.error or "Parse failed")
+            return r[m.DbtLdif.PipelineResult].fail(
+                parse_result.error or "Parse failed"
+            )
         validate_result = self.validate_ldif_data(parse_result.value)
         if validate_result.is_failure:
-            return r[t.Dict].fail(validate_result.error or "Validation failed")
+            return r[m.DbtLdif.PipelineResult].fail(
+                validate_result.error or "Validation failed"
+            )
         transform_result = self.transform_with_dbt(parse_result.value, model_names)
         if transform_result.is_failure:
-            return r[t.Dict].fail(transform_result.error or "Transform failed")
+            return r[m.DbtLdif.PipelineResult].fail(
+                transform_result.error or "Transform failed"
+            )
         logger.info("Completed LDIF to DBT pipeline")
-        return r[t.Dict].ok({
-            "parsed_entries": len(parse_result.value),
-            "validation_status": str(
-                validate_result.value.get("validation_status", "")
-            ),
-            "transformation_status": str(transform_result.value.get("status", "")),
-            "pipeline_status": c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-        })
+        return r[m.DbtLdif.PipelineResult].ok(
+            m.DbtLdif.PipelineResult(
+                parsed_entries=len(parse_result.value),
+                validation_status=validate_result.value.validation_status,
+                transformation_status=transform_result.value.status,
+                pipeline_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
+            )
+        )
 
     def transform_with_dbt(
         self,
         entries: Sequence[dict[str, t.ContainerValue]],
         model_names: list[str] | None = None,
-    ) -> r[t.Dict]:
+    ) -> r[m.DbtLdif.DbtTransformationResult]:
         """Return synthetic DBT transformation metadata."""
         selected_models = model_names or [
             c.DbtLdif.STAGING_MODEL_NAME,
             c.DbtLdif.ANALYTICS_MODEL_NAME,
         ]
-        transform_payload: t.Dict = {
-            "records": len(entries),
-            "models": ",".join(selected_models),
-            "status": c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
-        }
-        return r[t.Dict].ok(transform_payload)
+        return r[m.DbtLdif.DbtTransformationResult].ok(
+            m.DbtLdif.DbtTransformationResult(
+                records=len(entries),
+                models=selected_models,
+                status=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
+            )
+        )
 
     def validate_ldif_data(
         self,
         entries: Sequence[dict[str, t.ContainerValue]],
-    ) -> r[t.Dict]:
+    ) -> r[m.DbtLdif.LdifValidationResult]:
         """Validate parsed LDIF payload and compute quality score."""
         total_entries = len(entries)
         if total_entries == 0:
-            return r[t.Dict].fail("No LDIF entries found")
+            return r[m.DbtLdif.LdifValidationResult].fail("No LDIF entries found")
         quality_score = c.DbtLdif.DEFAULT_QUALITY_SCORE
         if quality_score < self.config.min_quality_threshold:
-            return r[t.Dict].fail("Quality threshold not met")
-        validation_payload: t.Dict = {
-            "total_entries": total_entries,
-            "quality_score": quality_score,
-            "validation_status": c.DbtLdif.VALIDATION_STATUS_PASSED,
-        }
-        return r[t.Dict].ok(validation_payload)
+            return r[m.DbtLdif.LdifValidationResult].fail("Quality threshold not met")
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
+                total_entries=total_entries,
+                quality_score=quality_score,
+                validation_status=c.DbtLdif.VALIDATION_STATUS_PASSED,
+            )
+        )
 
 
 __all__ = ["FlextDbtLdifClient"]

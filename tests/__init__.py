@@ -24,9 +24,9 @@ if TYPE_CHECKING:
         shared_ldap_container,
     )
     from tests.constants import TestsFlextDbtLdifConstants, c
-    from tests.models import TestsFlextDbtLdifModels, m, tm
+    from tests.models import TestsFlextDbtLdifModels, m
     from tests.protocols import TestsFlextDbtLdifProtocols, p
-    from tests.typings import TestsFlextDbtLdifTypes, TestsFlextDbtLdifTypes as t
+    from tests.typings import TestsFlextDbtLdifTypes, t
     from tests.unit.test_api_surface import test_api_imports
     from tests.unit.test_cli import (
         TestFlextDbtLdifCliService,
@@ -87,7 +87,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "set_test_environment": ("tests.conftest", "set_test_environment"),
     "shared_ldap_container": ("tests.conftest", "shared_ldap_container"),
     "svc": ("tests.unit.test_services", "svc"),
-    "t": ("tests.typings", "TestsFlextDbtLdifTypes"),
+    "t": ("tests.typings", "t"),
     "test_api_generate_ldif_models": (
         "tests.unit.test_services_and_api",
         "test_api_generate_ldif_models",
@@ -123,7 +123,6 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
         "test_run_data_quality_assessment",
     ),
     "test_version_is_string": ("tests.unit.test_version", "test_version_is_string"),
-    "tm": ("tests.models", "tm"),
     "u": ("tests.utilities", "u"),
     "unit": ("tests.unit", ""),
 }
@@ -168,7 +167,6 @@ __all__ = [
     "test_run_complete_workflow_all",
     "test_run_data_quality_assessment",
     "test_version_is_string",
-    "tm",
     "u",
     "unit",
 ]

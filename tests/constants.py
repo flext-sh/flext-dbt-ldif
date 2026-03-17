@@ -17,7 +17,7 @@ from typing import Final
 
 from flext_tests import FlextTestsConstants
 
-from flext_dbt_ldif.constants import FlextDbtLdifConstants
+from flext_dbt_ldif import FlextDbtLdifConstants
 
 
 class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):

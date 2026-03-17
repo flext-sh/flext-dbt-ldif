@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import RootModel
+from pydantic import RootModel, TypeAdapter
 
 
 class FlextAutoConstants:
@@ -32,11 +32,11 @@ u = FlextAutoUtilities
 m = FlextAutoModels
 
 
-class _ENTRY_CONTAINER_LIST_ADAPTER(
+class _EntryContainerListAdapter(
     RootModel[TypeAdapter(list[dict[str, t.ContainerValue]])]
 ):
     pass
 
 
-class _ENTRY_LIST_ADAPTER(RootModel[TypeAdapter(list[dict[str, t.ContainerValue]])]):
+class _EntryListAdapter(RootModel[TypeAdapter(list[dict[str, t.ContainerValue]])]):
     pass

@@ -9,8 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService, t
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService, m, t
 
 
 class TestFlextDbtLdifUnifiedService:
@@ -36,7 +35,9 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_staging_models_with_entries(self) -> None:
         """Test staging model generation with entries."""
         gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
-        entries: list[dict[str, t.Scalar]] = [{"dn": "cn=test,dc=example,dc=org"}]
+        entries: list[dict[str, t.Scalar]] = [
+            {"dn": "cn=test,dc=example,dc=org"}
+        ]
         result = gen.generate_staging_models(entries)
         assert result.is_success
         models = result.value or []
@@ -56,7 +57,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_analytics_models_with_staging(self) -> None:
         """Test analytics model generation from staging models."""
         gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
-        staging_model = FlextDbtLdifModels.DbtModel(
+        staging_model = m.DbtLdif.DbtModel(
             name="stg_ldif_entries",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -82,11 +83,11 @@ class TestFlextDbtLdifUnifiedService:
 
 
 class TestDbtModel:
-    """Test cases for FlextDbtLdifModels.DbtModel."""
+    """Test cases for m.DbtLdif.DbtModel."""
 
     def test_create_model(self) -> None:
         """Test creating a DbtModel instance."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -102,7 +103,7 @@ class TestDbtModel:
 
     def test_validate_business_rules_ok(self) -> None:
         """Test business rules pass for valid model."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -116,7 +117,7 @@ class TestDbtModel:
 
     def test_validate_business_rules_empty_name(self) -> None:
         """Test business rules fail for empty name."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="  ",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -129,7 +130,7 @@ class TestDbtModel:
 
     def test_validate_business_rules_empty_source(self) -> None:
         """Test business rules fail for empty ldif_source."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="  ",
@@ -142,7 +143,7 @@ class TestDbtModel:
 
     def test_validate_business_rules_empty_sql(self) -> None:
         """Test business rules fail for empty sql_content."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="ldif_entries",

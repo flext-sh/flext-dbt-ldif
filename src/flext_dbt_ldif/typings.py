@@ -9,8 +9,15 @@ from flext_meltano import FlextMeltanoTypes
 class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
     """Type namespace for DBT LDIF domain."""
 
+    class DbtLdif:
+        """DBT LDIF type namespace."""
+
+        type ContainerValue = FlextLdifTypes.ContainerValue
+        type Scalar = FlextLdifTypes.Scalar
+        type Primitives = FlextLdifTypes.Primitives
+        type Dict = FlextLdifTypes.Dict
+
 
 t = FlextDbtLdifTypes
-__all__ = ["FlextDbtLdifTypes", "t"]
 
-type LdifPayload = t.Dict
+__all__ = ["FlextDbtLdifTypes", "t"]

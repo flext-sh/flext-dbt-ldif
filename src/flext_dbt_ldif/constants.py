@@ -8,7 +8,7 @@ from typing import Final
 from flext_ldif import FlextLdifConstants
 from flext_meltano import FlextMeltanoConstants
 
-from flext_dbt_ldif.__version__ import __version__
+from flext_dbt_ldif import __version__
 
 
 class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):

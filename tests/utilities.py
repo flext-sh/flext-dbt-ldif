@@ -10,8 +10,10 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsUtilities
 
+from flext_dbt_ldif import FlextDbtLdifUtilities
 
-class TestsFlextDbtLdifUtilities(FlextTestsUtilities):
+
+class TestsFlextDbtLdifUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
     """Test utilities for flextdbtldif."""
 
 

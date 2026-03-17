@@ -12,13 +12,12 @@ from __future__ import annotations
 
 from typing import override
 
-from flext_core import FlextExceptions
+from flext_core import e
 
-from flext_dbt_ldif.constants import c
-from flext_dbt_ldif.typings import t
+from flext_dbt_ldif import c, t
 
 
-class FlextDbtLdifError(FlextExceptions.BaseError):
+class FlextDbtLdifError(e.BaseError):
     """Unified exception for all LDIF DBT operations with error codes.
 
     Single responsibility class that handles all LDIF DBT error scenarios
@@ -161,7 +160,9 @@ class FlextDbtLdifError(FlextExceptions.BaseError):
 
     @classmethod
     def validation_error(
-        cls, message: str = "LDIF data validation failed", **context: t.Scalar
+        cls,
+        message: str = "LDIF data validation failed",
+        **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create validation error."""
         return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)

@@ -5,9 +5,9 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import r, t
+from flext_core import r
 
-from flext_dbt_ldif.constants import c
+from flext_dbt_ldif import c, t
 
 
 class FlextDbtLdifCore:

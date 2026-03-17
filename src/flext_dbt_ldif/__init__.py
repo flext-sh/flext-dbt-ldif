@@ -38,9 +38,9 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
     from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
     from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
-    from flext_dbt_ldif.dbt_services import FlextDbtLdifService
     from flext_dbt_ldif.models import FlextDbtLdifModels, m
     from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
+    from flext_dbt_ldif.services import FlextDbtLdifService
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.simple_api import FlextDbtLdif
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
@@ -58,7 +58,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextDbtLdifError": ("flext_dbt_ldif.dbt_exceptions", "FlextDbtLdifError"),
     "FlextDbtLdifModels": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
     "FlextDbtLdifProtocols": ("flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"),
-    "FlextDbtLdifService": ("flext_dbt_ldif.dbt_services", "FlextDbtLdifService"),
+    "FlextDbtLdifService": ("flext_dbt_ldif.services", "FlextDbtLdifService"),
     "FlextDbtLdifSettings": ("flext_dbt_ldif.settings", "FlextDbtLdifSettings"),
     "FlextDbtLdifTypes": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
     "FlextDbtLdifUnifiedService": (

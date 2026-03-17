@@ -12,8 +12,7 @@ import sys
 from flext_cli import FlextCliOutput, FlextCliSettings
 from flext_core import FlextLogger, r
 
-from .constants import c
-from .dbt_services import FlextDbtLdifService
+from flext_dbt_ldif import c, s
 
 logger = FlextLogger(__name__)
 
@@ -85,7 +84,7 @@ class FlextDbtLdifCliService:
     def display_generate_message(self) -> r[str]:
         """Generate dbt models from LDIF schema definitions."""
         try:
-            service = FlextDbtLdifService()
+            service = s()
             result = service.generate_and_write_models([])
             if result.is_failure:
                 return r[str].fail(result.error or "Model generation failed")
@@ -129,7 +128,7 @@ class FlextDbtLdifCliService:
     def display_validate_message(self) -> r[str]:
         """Validate dbt models and configurations."""
         try:
-            service = FlextDbtLdifService()
+            service = s()
             result = service.run_data_quality_assessment("")
             if result.is_failure:
                 return r[str].fail(result.error or "Validation failed")

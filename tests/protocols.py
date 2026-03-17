@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsProtocols
 
-from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
+from flext_dbt_ldif import FlextDbtLdifProtocols
 
 
 class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):

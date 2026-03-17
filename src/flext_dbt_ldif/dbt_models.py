@@ -8,9 +8,7 @@ from typing import override
 
 from flext_core import FlextService, r, t
 
-from .constants import FlextDbtLdifConstants as c
-from .models import FlextDbtLdifModels
-from .settings import FlextDbtLdifSettings
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m
 
 
 class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
@@ -47,12 +45,12 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
         })
 
     def generate_analytics_models(
-        self, staging_models: list[FlextDbtLdifModels.DbtModel]
-    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
+        self, staging_models: list[m.DbtLdif.DbtModel]
+    ) -> r[list[m.DbtLdif.DbtModel]]:
         """Generate one analytics model derived from staging set."""
         if not staging_models:
-            return r[list[FlextDbtLdifModels.DbtModel]].ok([])
-        analytics = FlextDbtLdifModels.DbtModel(
+            return r[list[m.DbtLdif.DbtModel]].ok([])
+        analytics = m.DbtLdif.DbtModel(
             name=c.DbtLdif.ANALYTICS_MODEL_NAME,
             dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_ANALYTICS,
             ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
@@ -62,15 +60,15 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
             columns=[],
             dependencies=[c.DbtLdif.STAGING_MODEL_NAME],
         )
-        return r[list[FlextDbtLdifModels.DbtModel]].ok([analytics])
+        return r[list[m.DbtLdif.DbtModel]].ok([analytics])
 
     def generate_staging_models(
         self, entries: Sequence[Mapping[str, t.ContainerValue]]
-    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
+    ) -> r[list[m.DbtLdif.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:
-            return r[list[FlextDbtLdifModels.DbtModel]].ok([])
-        model = FlextDbtLdifModels.DbtModel(
+            return r[list[m.DbtLdif.DbtModel]].ok([])
+        model = m.DbtLdif.DbtModel(
             name=c.DbtLdif.STAGING_MODEL_NAME,
             dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
             ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
@@ -80,7 +78,7 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
             columns=[],
             dependencies=[],
         )
-        return r[list[FlextDbtLdifModels.DbtModel]].ok([model])
+        return r[list[m.DbtLdif.DbtModel]].ok([model])
 
 
 __all__ = ["FlextDbtLdifUnifiedService"]

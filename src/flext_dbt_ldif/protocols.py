@@ -8,7 +8,7 @@ from flext_core import r
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import FlextMeltanoProtocols
 
-from flext_dbt_ldif.typings import LdifPayload
+from flext_dbt_ldif import m
 
 
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
@@ -21,13 +21,15 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
         class Dbt(Protocol):
             """Protocol for DBT model execution and testing."""
 
-            def run_dbt_models(self, models: list[str] | None = None) -> r[LdifPayload]:
+            def run_dbt_models(
+                self, models: list[str] | None = None
+            ) -> r[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
                 self, models: list[str] | None = None
-            ) -> r[LdifPayload]:
+            ) -> r[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT tests and return status payload."""
                 ...
 

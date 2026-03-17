@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsModels
 
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif import FlextDbtLdifModels
 
 
 class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
@@ -22,19 +22,14 @@ class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
     2. FlextDbtLdifModels - for domain models
 
     Access patterns:
-    - tm.Tests.* (generic test models from FlextTestsModels)
-    - tm.DbtLdif.* (DBT LDIF domain models)
-    - m.* (production models via alternative alias)
+    - m.Tests.* (generic test models from FlextTestsModels)
+    - m.DbtLdif.* (DBT LDIF domain models)
     """
 
 
-# Short aliases per FLEXT convention
-tm = TestsFlextDbtLdifModels
+m = TestsFlextDbtLdifModels
 
 __all__ = [
     "TestsFlextDbtLdifModels",
     "m",
-    "tm",
 ]
-
-m = TestsFlextDbtLdifModels

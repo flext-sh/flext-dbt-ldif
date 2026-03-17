@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from flext_dbt_ldif import __version__, __version_info__
-from flext_dbt_ldif.version import __version__ as version
+from flext_dbt_ldif.__version__ import __version__ as version
 
 
 def test_dunder_alignment() -> None:

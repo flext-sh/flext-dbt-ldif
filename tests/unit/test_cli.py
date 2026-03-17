@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-from flext_dbt_ldif.cli import FlextDbtLdifCliService
+from flext_dbt_ldif import FlextDbtLdifCliService
 
 
 class TestFlextDbtLdifCliService:
