@@ -12,19 +12,18 @@ import tempfile
 from collections.abc import Generator
 
 import pytest
-
-from .typings import t
+from flext_tests import td, tk
 
 
 @pytest.fixture(scope="session")
-def docker_control() -> FlextTestsDocker:
-    """Provide FlextTestsDocker instance for container management."""
-    return FlextTestsDocker()
+def docker_control() -> tk:
+    """Provide tk instance for container management."""
+    return tk()
 
 
 @pytest.fixture(scope="session")
 def shared_ldap_container(
-    docker_control: FlextTestsDocker,
+    docker_control: tk,
 ) -> str:
     """Start and maintain flext-openldap-test container.
 
@@ -53,7 +52,7 @@ def set_test_environment() -> Generator[None]:
 
 @pytest.fixture(scope="session", autouse=True)
 def ensure_shared_docker_container(
-    shared_ldap_container: t.ContainerValue,
+    shared_ldap_container: str,
 ) -> None:
     """Ensure shared Docker container is started for the test session.
 
@@ -64,7 +63,7 @@ def ensure_shared_docker_container(
 
 
 @pytest.fixture
-def dbt_ldif_profile() -> dict[str, t.ContainerValue]:
+def dbt_ldif_profile() -> dict[str, object]:
     """Dbt LDIF profile configuration for testing."""
     return {
         "config": {
@@ -94,24 +93,13 @@ def dbt_ldif_profile() -> dict[str, t.ContainerValue]:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> dict[str, t.ContainerValue]:
+def dbt_ldif_project_config() -> dict[str, object]:
     """Dbt LDIF project configuration for testing."""
-    return {
-        "name": "flext_dbt_ldif_test",
-        "version": "0.7.0",
-        "profile": "test",
-        "model-paths": ["models"],
-        "analysis-paths": ["analyses"],
-        "test-paths": ["tests"],
-        "seed-paths": ["seeds"],
-        "macro-paths": ["macros"],
-        "snapshot-paths": ["snapshots"],
-        "docs-paths": ["docs"],
-        "asset-paths": ["assets"],
-        "target-path": "target",
-        "clean-targets": ["target", "dbt_packages"],
-        "require-dbt-version": ">=1.8.0",
-        "model_config": {
+    project_config = td.build_dbt_project_config(
+        name="flext_dbt_ldif_test",
+        version="0.7.0",
+        profile="test",
+        model_config={
             "materialized": "table",
             "ldif": {
                 "enable_ldif_functions": True,
@@ -119,19 +107,20 @@ def dbt_ldif_project_config() -> dict[str, t.ContainerValue]:
                 "base_dn": "dc=flext,dc=local",
             },
         },
-        "vars": {
+        variables={
             "ldif_base_dn": "dc=flext,dc=local",
             "ldif_users_ou": "ou=people",
             "ldif_groups_ou": "ou=groups",
             "enable_ldif_validation": True,
         },
-    }
+    )
+    return dict(project_config.items())
 
 
 @pytest.fixture
 def ldif_source_config(
-    shared_ldap_config: dict[str, t.ContainerValue],
-) -> dict[str, t.ContainerValue]:
+    shared_ldap_config: dict[str, object],
+) -> dict[str, object]:
     """LDIF source configuration for testing using shared container."""
     _ = shared_ldap_config
     return {
@@ -154,7 +143,7 @@ def ldif_source_config(
 
 
 @pytest.fixture
-def sample_ldif_entries() -> list[dict[str, t.ContainerValue]]:
+def sample_ldif_entries() -> list[dict[str, object]]:
     """Sample LDIF entries for testing using shared container domain."""
     return [
         {

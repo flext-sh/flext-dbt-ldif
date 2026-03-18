@@ -13,7 +13,7 @@ from flext_tests import u
 from flext_dbt_ldif import FlextDbtLdifUtilities
 
 
-class TestsFlextDbtLdifUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
+class TestsFlextDbtLdifUtilities(u, FlextDbtLdifUtilities):
     """Test utilities for flextdbtldif."""
 
     class DbtLdif(FlextDbtLdifUtilities.DbtLdif):

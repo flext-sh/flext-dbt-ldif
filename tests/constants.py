@@ -1,10 +1,10 @@
 """Constants for flext-dbt-ldif tests.
 
-Provides TestsFlextDbtLdifConstants, extending FlextTestsConstants with flext-dbt-ldif-specific
+Provides TestsFlextDbtLdifConstants, extending c with flext-dbt-ldif-specific
 constants using COMPOSITION INHERITANCE.
 
 Inheritance hierarchy:
-- FlextTestsConstants (flext_tests) - Provides .Tests.* namespace
+- c (flext_tests) - Provides .Tests.* namespace
 - FlextDbtLdifConstants (production) - Provides .DbtLdif.* namespace
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -20,11 +20,11 @@ from flext_tests import c
 from flext_dbt_ldif import FlextDbtLdifConstants
 
 
-class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
+class TestsFlextDbtLdifConstants(c, FlextDbtLdifConstants):
     """Constants for flext-dbt-ldif tests using COMPOSITION INHERITANCE.
 
     MANDATORY: Inherits from BOTH:
-    1. FlextTestsConstants - for test infrastructure (.Tests.*)
+    1. c - for test infrastructure (.Tests.*)
     2. FlextDbtLdifConstants - for domain constants (.DbtLdif.*)
 
     Access patterns:
@@ -35,9 +35,9 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
     - c.TestDbt.* (project-specific test data)
 
     Rules:
-    - NEVER duplicate constants from FlextTestsConstants or FlextDbtLdifConstants
+    - NEVER duplicate constants from c or FlextDbtLdifConstants
     - Only flext-dbt-ldif-specific test constants allowed
-    - All generic constants come from FlextTestsConstants
+    - All generic constants come from c
     - All production constants come from FlextDbtLdifConstants
     """
 

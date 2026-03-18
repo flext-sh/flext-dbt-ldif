@@ -13,7 +13,7 @@ from flext_tests import t
 from flext_dbt_ldif import FlextDbtLdifTypes
 
 
-class TestsFlextDbtLdifTypes(FlextTestsTypes, FlextDbtLdifTypes):
+class TestsFlextDbtLdifTypes(t, FlextDbtLdifTypes):
     """Test type aliases for flextdbtldif."""
 
 

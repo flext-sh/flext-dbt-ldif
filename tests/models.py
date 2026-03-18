@@ -1,6 +1,6 @@
 """Test models for flext-dbt-ldif tests.
 
-Provides TestsFlextDbtLdifModels, extending FlextTestsModels with flext-dbt-ldif-specific
+Provides TestsFlextDbtLdifModels, extending m with flext-dbt-ldif-specific
 models using COMPOSITION INHERITANCE.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -14,15 +14,15 @@ from flext_tests import m
 from flext_dbt_ldif import FlextDbtLdifModels
 
 
-class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
+class TestsFlextDbtLdifModels(m, FlextDbtLdifModels):
     """Models for flext-dbt-ldif tests using COMPOSITION INHERITANCE.
 
     MANDATORY: Inherits from BOTH:
-    1. FlextTestsModels - for test infrastructure (.Tests.*)
+    1. m - for test infrastructure (.Tests.*)
     2. FlextDbtLdifModels - for domain models
 
     Access patterns:
-    - m.Tests.* (generic test models from FlextTestsModels)
+    - m.Tests.* (generic test models from m)
     - m.DbtLdif.* (DBT LDIF domain models)
     - m.DbtLdif.Tests.* (project test-only models)
     """
