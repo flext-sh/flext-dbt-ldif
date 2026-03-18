@@ -1,0 +1,23 @@
+src/flext_dbt_ldif/_models.py
+  94129b03712af7a6 5,35,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "3ac917c12dce0b0ba40e98919e7f4c483e3e1b47",
+  "prompts": {
+    "94129b03712af7a6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_2fe0a7de2ffeolmRBqYY1IOvu6",
+        "model": "anthropic/claude-haiku-4-5"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 5,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
