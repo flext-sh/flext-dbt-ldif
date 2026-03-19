@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from flext_core import t as core_t
 from pydantic import RootModel
 
 
@@ -32,9 +33,9 @@ u = FlextAutoUtilities
 m = FlextAutoModels
 
 
-class _EntryContainerListAdapter(RootModel[list[dict[str, object]]]):
+class _EntryContainerListAdapter(RootModel[list[dict[str, core_t.ContainerValue]]]):
     pass
 
 
-class _EntryListAdapter(RootModel[list[dict[str, object]]]):
+class _EntryListAdapter(RootModel[list[dict[str, core_t.ContainerValue]]]):
     pass
