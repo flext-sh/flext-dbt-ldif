@@ -13,11 +13,7 @@ if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
 
     from .test_api_surface import test_api_imports
-    from .test_cli import (
-        TestFlextDbtLdifCliService,
-        TestFlextDbtLdifCliService as s,
-        TestMainEntryPoint,
-    )
+    from .test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
     from .test_core import TestAnalytics, TestModelGenerator
     from .test_dbt_client import TestFlextDbtLdifClient
     from .test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
@@ -48,7 +44,6 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     ),
     "TestMainEntryPoint": ("tests.unit.test_cli", "TestMainEntryPoint"),
     "TestModelGenerator": ("tests.unit.test_core", "TestModelGenerator"),
-    "s": ("tests.unit.test_cli", "TestFlextDbtLdifCliService"),
     "service": ("tests.unit.test_services_and_api", "service"),
     "svc": ("tests.unit.test_services", "svc"),
     "test_api_generate_ldif_models": (
@@ -96,7 +91,6 @@ __all__ = [
     "TestFlextDbtLdifUnifiedService",
     "TestMainEntryPoint",
     "TestModelGenerator",
-    "s",
     "service",
     "svc",
     "test_api_generate_ldif_models",

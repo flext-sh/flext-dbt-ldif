@@ -12,6 +12,13 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
 
+    from flext_dbt_ldif.decorators import d
+    from flext_dbt_ldif.exceptions import e
+    from flext_dbt_ldif.handlers import h
+    from flext_dbt_ldif.mixins import x
+    from flext_dbt_ldif.result import r
+    from flext_dbt_ldif.service import s
+
     from . import unit as unit
     from .conftest import (
         dbt_ldif_profile,
@@ -29,11 +36,7 @@ if TYPE_CHECKING:
     from .protocols import TestsFlextDbtLdifProtocols, p
     from .typings import TestsFlextDbtLdifTypes, t
     from .unit.test_api_surface import test_api_imports
-    from .unit.test_cli import (
-        TestFlextDbtLdifCliService,
-        TestFlextDbtLdifCliService as s,
-        TestMainEntryPoint,
-    )
+    from .unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
     from .unit.test_core import TestAnalytics, TestModelGenerator
     from .unit.test_dbt_client import TestFlextDbtLdifClient
     from .unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
@@ -71,18 +74,22 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestsFlextDbtLdifTypes": ("tests.typings", "TestsFlextDbtLdifTypes"),
     "TestsFlextDbtLdifUtilities": ("tests.utilities", "TestsFlextDbtLdifUtilities"),
     "c": ("tests.constants", "c"),
+    "d": ("flext_dbt_ldif.decorators", "d"),
     "dbt_ldif_profile": ("tests.conftest", "dbt_ldif_profile"),
     "dbt_ldif_project_config": ("tests.conftest", "dbt_ldif_project_config"),
     "docker_control": ("tests.conftest", "docker_control"),
+    "e": ("flext_dbt_ldif.exceptions", "e"),
     "ensure_shared_docker_container": (
         "tests.conftest",
         "ensure_shared_docker_container",
     ),
+    "h": ("flext_dbt_ldif.handlers", "h"),
     "ldif_source_config": ("tests.conftest", "ldif_source_config"),
     "m": ("tests.models", "m"),
     "p": ("tests.protocols", "p"),
     "pytest_configure": ("tests.conftest", "pytest_configure"),
-    "s": ("tests.unit.test_cli", "TestFlextDbtLdifCliService"),
+    "r": ("flext_dbt_ldif.result", "r"),
+    "s": ("flext_dbt_ldif.service", "s"),
     "sample_ldif_entries": ("tests.conftest", "sample_ldif_entries"),
     "service": ("tests.unit.test_services_and_api", "service"),
     "set_test_environment": ("tests.conftest", "set_test_environment"),
@@ -126,6 +133,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "test_version_is_string": ("tests.unit.test_version", "test_version_is_string"),
     "u": ("tests.utilities", "u"),
     "unit": ("tests.unit", ""),
+    "x": ("flext_dbt_ldif.mixins", "x"),
 }
 
 __all__ = [
@@ -142,14 +150,18 @@ __all__ = [
     "TestsFlextDbtLdifTypes",
     "TestsFlextDbtLdifUtilities",
     "c",
+    "d",
     "dbt_ldif_profile",
     "dbt_ldif_project_config",
     "docker_control",
+    "e",
     "ensure_shared_docker_container",
+    "h",
     "ldif_source_config",
     "m",
     "p",
     "pytest_configure",
+    "r",
     "s",
     "sample_ldif_entries",
     "service",
@@ -170,6 +182,7 @@ __all__ = [
     "test_version_is_string",
     "u",
     "unit",
+    "x",
 ]
 
 

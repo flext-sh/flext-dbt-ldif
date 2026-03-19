@@ -16,6 +16,11 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
+    from flext_ldif.decorators import d
+    from flext_ldif.exceptions import e
+    from flext_ldif.handlers import h
+    from flext_ldif.mixins import x
+    from flext_ldif.result import r
 
     from flext_dbt_ldif.__version__ import (
         __all__,
@@ -72,11 +77,16 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "__version__": ("flext_dbt_ldif.__version__", "__version__"),
     "__version_info__": ("flext_dbt_ldif.__version__", "__version_info__"),
     "c": ("flext_dbt_ldif.constants", "c"),
+    "d": ("flext_ldif.decorators", "d"),
+    "e": ("flext_ldif.exceptions", "e"),
+    "h": ("flext_ldif.handlers", "h"),
     "m": ("flext_dbt_ldif.models", "m"),
     "p": ("flext_dbt_ldif.protocols", "p"),
+    "r": ("flext_ldif.result", "r"),
     "s": ("flext_dbt_ldif.services", "s"),
     "t": ("flext_dbt_ldif.typings", "t"),
     "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
+    "x": ("flext_ldif.mixins", "x"),
 }
 
 __all__ = [
@@ -103,11 +113,16 @@ __all__ = [
     "__version__",
     "__version_info__",
     "c",
+    "d",
+    "e",
+    "h",
     "m",
     "p",
+    "r",
     "s",
     "t",
     "u",
+    "x",
 ]
 
 
