@@ -12,7 +12,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
 
-    from flext_dbt_ldif import d, e, h, r, s, x
+    from flext_dbt_ldif import c, d, e, h, m, p, r, s, t, u, x
 
     from . import unit as unit
     from .conftest import (
@@ -26,10 +26,10 @@ if TYPE_CHECKING:
         set_test_environment,
         shared_ldap_container,
     )
-    from .constants import TestsFlextDbtLdifConstants, c
-    from .models import TestsFlextDbtLdifModels, m
-    from .protocols import TestsFlextDbtLdifProtocols, p
-    from .typings import TestsFlextDbtLdifTypes, t
+    from .constants import TestsFlextDbtLdifConstants
+    from .models import TestsFlextDbtLdifModels
+    from .protocols import TestsFlextDbtLdifProtocols
+    from .typings import TestsFlextDbtLdifTypes
     from .unit.test_api_surface import test_api_imports
     from .unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
     from .unit.test_core import TestAnalytics, TestModelGenerator
@@ -50,7 +50,7 @@ if TYPE_CHECKING:
         test_parse_and_validate_ldif_ok,
     )
     from .unit.test_version import test_dunder_alignment, test_version_is_string
-    from .utilities import TestsFlextDbtLdifUtilities, u
+    from .utilities import TestsFlextDbtLdifUtilities
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestAnalytics": ("tests.unit.test_core", "TestAnalytics"),
@@ -68,7 +68,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestsFlextDbtLdifProtocols": ("tests.protocols", "TestsFlextDbtLdifProtocols"),
     "TestsFlextDbtLdifTypes": ("tests.typings", "TestsFlextDbtLdifTypes"),
     "TestsFlextDbtLdifUtilities": ("tests.utilities", "TestsFlextDbtLdifUtilities"),
-    "c": ("tests.constants", "c"),
+    "c": ("flext_dbt_ldif", "c"),
     "d": ("flext_dbt_ldif", "d"),
     "dbt_ldif_profile": ("tests.conftest", "dbt_ldif_profile"),
     "dbt_ldif_project_config": ("tests.conftest", "dbt_ldif_project_config"),
@@ -80,8 +80,8 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     ),
     "h": ("flext_dbt_ldif", "h"),
     "ldif_source_config": ("tests.conftest", "ldif_source_config"),
-    "m": ("tests.models", "m"),
-    "p": ("tests.protocols", "p"),
+    "m": ("flext_dbt_ldif", "m"),
+    "p": ("flext_dbt_ldif", "p"),
     "pytest_configure": ("tests.conftest", "pytest_configure"),
     "r": ("flext_dbt_ldif", "r"),
     "s": ("flext_dbt_ldif", "s"),
@@ -90,7 +90,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "set_test_environment": ("tests.conftest", "set_test_environment"),
     "shared_ldap_container": ("tests.conftest", "shared_ldap_container"),
     "svc": ("tests.unit.test_services", "svc"),
-    "t": ("tests.typings", "t"),
+    "t": ("flext_dbt_ldif", "t"),
     "test_api_generate_ldif_models": (
         "tests.unit.test_services_and_api",
         "test_api_generate_ldif_models",
@@ -126,7 +126,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
         "test_run_data_quality_assessment",
     ),
     "test_version_is_string": ("tests.unit.test_version", "test_version_is_string"),
-    "u": ("tests.utilities", "u"),
+    "u": ("flext_dbt_ldif", "u"),
     "unit": ("tests.unit", ""),
     "x": ("flext_dbt_ldif", "x"),
 }

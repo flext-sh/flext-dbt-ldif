@@ -29,18 +29,24 @@ if TYPE_CHECKING:
         __version__,
         __version_info__,
     )
-    from flext_dbt_ldif.cli import FlextDbtLdifCliService
-    from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
+    from flext_dbt_ldif.cli import FlextDbtLdifCliService, FlextDbtLdifCliService as s
+    from flext_dbt_ldif.constants import (
+        FlextDbtLdifConstants,
+        FlextDbtLdifConstants as c,
+    )
     from flext_dbt_ldif.core import FlextDbtLdifCore
     from flext_dbt_ldif.dbt_client import FlextDbtLdifClient
     from flext_dbt_ldif.dbt_exceptions import FlextDbtLdifError
     from flext_dbt_ldif.dbt_models import FlextDbtLdifUnifiedService
-    from flext_dbt_ldif.models import FlextDbtLdifModels, m
-    from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
-    from flext_dbt_ldif.services import FlextDbtLdifService, s
+    from flext_dbt_ldif.models import FlextDbtLdifModels, FlextDbtLdifModels as m
+    from flext_dbt_ldif.protocols import (
+        FlextDbtLdifProtocols,
+        FlextDbtLdifProtocols as p,
+    )
+    from flext_dbt_ldif.services import FlextDbtLdifService
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.simple_api import FlextDbtLdif
-    from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
+    from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
     from flext_dbt_ldif.utilities import (
         FlextDbtLdifUtilities,
         FlextDbtLdifUtilities as u,
@@ -72,15 +78,15 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "__url__": ("flext_dbt_ldif.__version__", "__url__"),
     "__version__": ("flext_dbt_ldif.__version__", "__version__"),
     "__version_info__": ("flext_dbt_ldif.__version__", "__version_info__"),
-    "c": ("flext_dbt_ldif.constants", "c"),
+    "c": ("flext_dbt_ldif.constants", "FlextDbtLdifConstants"),
     "d": ("flext_ldif", "d"),
     "e": ("flext_ldif", "e"),
     "h": ("flext_ldif", "h"),
-    "m": ("flext_dbt_ldif.models", "m"),
-    "p": ("flext_dbt_ldif.protocols", "p"),
+    "m": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
+    "p": ("flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"),
     "r": ("flext_ldif", "r"),
-    "s": ("flext_dbt_ldif.services", "s"),
-    "t": ("flext_dbt_ldif.typings", "t"),
+    "s": ("flext_dbt_ldif.cli", "FlextDbtLdifCliService"),
+    "t": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
     "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
     "x": ("flext_ldif", "x"),
 }
