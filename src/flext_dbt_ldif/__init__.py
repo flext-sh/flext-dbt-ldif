@@ -16,7 +16,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core.typings import FlextTypes
-    from flext_ldif import d, e, h, r, x
+    from flext_ldif import d, e, h, r, s, x
 
     from flext_dbt_ldif.__version__ import (
         __all__,
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
         __version__,
         __version_info__,
     )
-    from flext_dbt_ldif.cli import FlextDbtLdifCliService, FlextDbtLdifCliService as s
+    from flext_dbt_ldif.cli import FlextDbtLdifCliService
     from flext_dbt_ldif.constants import (
         FlextDbtLdifConstants,
         FlextDbtLdifConstants as c,
@@ -85,7 +85,7 @@ _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "m": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
     "p": ("flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"),
     "r": ("flext_ldif", "r"),
-    "s": ("flext_dbt_ldif.cli", "FlextDbtLdifCliService"),
+    "s": ("flext_ldif", "s"),
     "t": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
     "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
     "x": ("flext_ldif", "x"),
