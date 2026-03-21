@@ -21,7 +21,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import ClassVar, override
+from typing import Annotated, ClassVar, override
 
 from flext_core import t
 from pydantic import BaseModel, Field
@@ -43,21 +43,21 @@ class AuditResult(BaseModel):
 
     project: str = Field(description="Project name")
     status: str = Field(description="Audit status: PASS, FAIL, WARNING, PENDING, SKIP")
-    critical: list[AuditViolation] = Field(
-        default_factory=list, description="Critical violations"
-    )
-    high: list[AuditViolation] = Field(
-        default_factory=list, description="High priority violations"
-    )
-    medium: list[AuditViolation] = Field(
-        default_factory=list, description="Medium priority violations"
-    )
-    recommendations: list[str] = Field(
-        default_factory=list, description="Audit recommendations"
-    )
-    stats: dict[str, t.Primitives] = Field(
-        default_factory=dict, description="Audit statistics"
-    )
+    critical: Annotated[
+        list[AuditViolation], Field(description="Critical violations")
+    ] = []
+    high: Annotated[
+        list[AuditViolation], Field(description="High priority violations")
+    ] = []
+    medium: Annotated[
+        list[AuditViolation], Field(description="Medium priority violations")
+    ] = []
+    recommendations: Annotated[
+        list[str], Field(description="Audit recommendations")
+    ] = []
+    stats: Annotated[
+        dict[str, t.Primitives], Field(description="Audit statistics")
+    ] = {}
 
     @property
     def total_violations(self) -> int:

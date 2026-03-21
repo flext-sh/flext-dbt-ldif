@@ -112,12 +112,9 @@ def test_generate_and_write_models_ok(
     ) -> r[list[FlextDbtLdifModels.DbtLdif.DbtModel]]:
         return r[list[FlextDbtLdifModels.DbtLdif.DbtModel]].ok([analytics_model])
 
-    monkeypatch.setattr(
-        svc.model_generator, "generate_staging_models", _generate_staging_models
-    )
-    monkeypatch.setattr(
-        svc.model_generator, "generate_analytics_models", _generate_analytics_models
-    )
+    gen = svc.model_generator
+    object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
+    object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
     entries: list[dict[str, FlextTypes.ContainerValue]] = [
         {"dn": "cn=test,dc=example,dc=org"}
@@ -199,12 +196,9 @@ def test_run_complete_workflow_all(
     monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
     monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
     monkeypatch.setattr(svc.client, "transform_with_dbt", _transform_with_dbt)
-    monkeypatch.setattr(
-        svc.model_generator, "generate_staging_models", _generate_staging_models
-    )
-    monkeypatch.setattr(
-        svc.model_generator, "generate_analytics_models", _generate_analytics_models
-    )
+    gen = svc.model_generator
+    object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
+    object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
     result = svc.run_complete_workflow(
         tmp_path / "f.ldif",

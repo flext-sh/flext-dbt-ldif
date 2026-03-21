@@ -12,7 +12,7 @@ from flext_core.typings import FlextTypes
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m
 
 
-class FlextDbtLdifUnifiedService(FlextService[dict[str, str]]):
+class FlextDbtLdifUnifiedService(FlextService[FlextTypes.ContainerMapping]):
     """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
     name: str = "ldif_generator"
@@ -37,9 +37,9 @@ class FlextDbtLdifUnifiedService(FlextService[dict[str, str]]):
         )
 
     @override
-    def execute(self) -> r[dict[str, str]]:
+    def execute(self) -> r[FlextTypes.ContainerMapping]:
         """Execute service and return metadata payload."""
-        return r[dict[str, str]].ok({
+        return r[FlextTypes.ContainerMapping].ok({
             "name": self.name,
             "project_dir": str(self.project_dir),
             "status": c.DbtLdif.WORKFLOW_STATUS_READY,

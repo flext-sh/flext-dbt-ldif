@@ -145,6 +145,9 @@ unannotated-return = true
 disable_error_code = [
   "prop-decorator",
 ]
+exclude = [
+  "^__init__\\.py$",
+]
 mypy_path = [
   "src",
 ]
