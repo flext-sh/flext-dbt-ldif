@@ -6,7 +6,6 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextLogger, r
-from pydantic import TypeAdapter
 
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
@@ -17,8 +16,9 @@ from flext_dbt_ldif import (
     t,
 )
 
+from ._models import _EntryContainerListAdapter
+
 logger = FlextLogger(__name__)
-_ENTRY_CONTAINER_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
 
 
 class FlextDbtLdifService:
@@ -77,7 +77,7 @@ class FlextDbtLdifService:
             return r[m.DbtLdif.ParseValidationResult].fail(
                 parse_result.error or "Parse failed"
             )
-        entries = _ENTRY_CONTAINER_LIST_ADAPTER.validate_python(parse_result.value)
+        entries = _EntryContainerListAdapter.model_validate(parse_result.value).root
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[m.DbtLdif.ParseValidationResult].fail(
@@ -105,7 +105,7 @@ class FlextDbtLdifService:
             return r[m.DbtLdif.WorkflowResult].fail(
                 parse_result.error or "Parse failed"
             )
-        entries = _ENTRY_CONTAINER_LIST_ADAPTER.validate_python(parse_result.value)
+        entries = _EntryContainerListAdapter.model_validate(parse_result.value).root
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[m.DbtLdif.WorkflowResult].fail(

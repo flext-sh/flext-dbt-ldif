@@ -5,11 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_core import r
-from pydantic import TypeAdapter, ValidationError
+from pydantic import ValidationError
 
-from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, t, u
+from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
 
-_ENTRY_LIST_ADAPTER = TypeAdapter(list[dict[str, t.ContainerValue]])
+from ._models import _EntryListAdapter
 
 
 class FlextDbtLdif:
@@ -51,7 +51,7 @@ class FlextDbtLdif:
             )
         entries_raw = parsed.value
         try:
-            entries = _ENTRY_LIST_ADAPTER.validate_python(entries_raw)
+            entries = _EntryListAdapter.model_validate(entries_raw).root
         except ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload"
