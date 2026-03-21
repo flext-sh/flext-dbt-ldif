@@ -28,9 +28,9 @@ u = FlextAutoUtilities
 m = FlextAutoModels
 
 
-class _EntryContainerListAdapter(RootModel[list[dict[str, t.ContainerValue]]]):
-    pass
+class EntryContainerListAdapter(RootModel[list[dict[str, t.ContainerValue]]]):
+    """Adapter for validating a list of LDIF entry containers."""
 
 
-class _EntryListAdapter(RootModel[list[dict[str, t.ContainerValue]]]):
-    pass
+class EntryListAdapter(RootModel[list[dict[str, t.ContainerValue]]]):
+    """Adapter for validating a list of LDIF entries."""

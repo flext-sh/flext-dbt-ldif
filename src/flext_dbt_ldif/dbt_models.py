@@ -7,11 +7,12 @@ from pathlib import Path
 from typing import override
 
 from flext_core import FlextService, r
+from flext_core.typings import FlextTypes
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m
 
 
-class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
+class FlextDbtLdifUnifiedService(FlextService[dict[str, str]]):
     """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
     name: str = "ldif_generator"
@@ -36,9 +37,9 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
         )
 
     @override
-    def execute(self) -> r[Mapping[str, t.Scalar]]:
+    def execute(self) -> r[dict[str, str]]:
         """Execute service and return metadata payload."""
-        return r[Mapping[str, t.Scalar]].ok({
+        return r[dict[str, str]].ok({
             "name": self.name,
             "project_dir": str(self.project_dir),
             "status": c.DbtLdif.WORKFLOW_STATUS_READY,
@@ -63,7 +64,7 @@ class FlextDbtLdifUnifiedService(FlextService[Mapping[str, t.Scalar]]):
         return r[list[m.DbtLdif.DbtModel]].ok([analytics])
 
     def generate_staging_models(
-        self, entries: Sequence[Mapping[str, t.ContainerValue]]
+        self, entries: Sequence[Mapping[str, FlextTypes.ContainerValue]]
     ) -> r[list[m.DbtLdif.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:

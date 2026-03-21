@@ -9,7 +9,7 @@ from pydantic import ValidationError
 
 from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
 
-from ._models import _EntryListAdapter
+from ._models import EntryListAdapter
 
 
 class FlextDbtLdif:
@@ -51,7 +51,7 @@ class FlextDbtLdif:
             )
         entries_raw = parsed.value
         try:
-            entries = _EntryListAdapter.model_validate(entries_raw).root
+            entries = EntryListAdapter.model_validate(entries_raw).root
         except ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload"

@@ -16,7 +16,7 @@ from flext_dbt_ldif import (
     t,
 )
 
-from ._models import _EntryContainerListAdapter
+from ._models import EntryContainerListAdapter
 
 logger = FlextLogger(__name__)
 
@@ -77,7 +77,7 @@ class FlextDbtLdifService:
             return r[m.DbtLdif.ParseValidationResult].fail(
                 parse_result.error or "Parse failed"
             )
-        entries = _EntryContainerListAdapter.model_validate(parse_result.value).root
+        entries = EntryContainerListAdapter.model_validate(parse_result.value).root
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[m.DbtLdif.ParseValidationResult].fail(
@@ -105,7 +105,7 @@ class FlextDbtLdifService:
             return r[m.DbtLdif.WorkflowResult].fail(
                 parse_result.error or "Parse failed"
             )
-        entries = _EntryContainerListAdapter.model_validate(parse_result.value).root
+        entries = EntryContainerListAdapter.model_validate(parse_result.value).root
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[m.DbtLdif.WorkflowResult].fail(

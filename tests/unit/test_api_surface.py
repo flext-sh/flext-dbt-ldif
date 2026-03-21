@@ -16,7 +16,6 @@ from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifService,
     FlextDbtLdifSettings,
-    FlextLdif,
     __version__,
 )
 
@@ -28,4 +27,3 @@ def test_api_imports() -> None:
     _ = FlextDbtLdifService(FlextDbtLdifSettings.get_global())
     assert callable(FlextDbtLdif)
     assert r is not None
-    assert FlextLdif is not None
