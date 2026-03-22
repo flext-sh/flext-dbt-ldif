@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core import r
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes, r
 from pydantic import RootModel, ValidationError
 
 from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
