@@ -1,11 +1,7 @@
-"""Constants for flext-dbt-ldif tests.
+"""Test constants for flext-dbt-ldif tests.
 
-Provides TestsFlextDbtLdifConstants, extending c with flext-dbt-ldif-specific
-constants using COMPOSITION INHERITANCE.
-
-Inheritance hierarchy:
-- c (flext_tests) - Provides .Tests.* namespace
-- FlextDbtLdifConstants (production) - Provides .DbtLdif.* namespace
+Provides FlextDbtLdifTestConstants, extending FlextTestsConstants with
+flext-dbt-ldif-specific constants.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -15,33 +11,17 @@ from __future__ import annotations
 
 from typing import Final
 
-from flext_tests import c
-
-from flext_dbt_ldif import FlextDbtLdifConstants
+from flext_tests import FlextTestsConstants
 
 
-class TestsFlextDbtLdifConstants(c, FlextDbtLdifConstants):
-    """Constants for flext-dbt-ldif tests using COMPOSITION INHERITANCE.
+class FlextDbtLdifTestConstants(FlextTestsConstants):
+    """Constants for flext-dbt-ldif tests.
 
-    MANDATORY: Inherits from BOTH:
-    1. c - for test infrastructure (.Tests.*)
-    2. FlextDbtLdifConstants - for domain constants (.DbtLdif.*)
-
-    Access patterns:
-    - c.Tests.Docker.* (container testing)
-    - c.Tests.Matcher.* (assertion messages)
-    - c.Tests.Factory.* (test data generation)
-    - c.DbtLdif.* (domain constants from production)
-    - c.TestDbt.* (project-specific test data)
-
-    Rules:
-    - NEVER duplicate constants from c or FlextDbtLdifConstants
-    - Only flext-dbt-ldif-specific test constants allowed
-    - All generic constants come from c
-    - All production constants come from FlextDbtLdifConstants
+    Only inherits from FlextTestsConstants - domain constants come from
+    FlextDbtLdifConstants via other inheritance paths.
     """
 
-    class DbtLdif(FlextDbtLdifConstants.DbtLdif):
+    class DbtLdif:
         """DbtLdif test constants namespace."""
 
         class Tests:
@@ -84,6 +64,5 @@ class TestsFlextDbtLdifConstants(c, FlextDbtLdifConstants):
                 TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
 
 
-__all__ = ["TestsFlextDbtLdifConstants", "c"]
-
-c = TestsFlextDbtLdifConstants
+c = FlextDbtLdifTestConstants
+__all__ = ["FlextDbtLdifTestConstants", "c"]

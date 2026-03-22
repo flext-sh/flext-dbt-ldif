@@ -1,6 +1,7 @@
-"""Module skeleton for TestsFlextDbtLdifTypes.
+"""Test type definitions for flext-dbt-ldif.
 
-Test type aliases for flextdbtldif.
+Provides FlextDbtLdifTestTypes, combining FlextTestsTypes with
+FlextDbtLdifTypes for test-specific type definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -8,18 +9,18 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_tests import t
+from flext_tests import FlextTestsTypes
 
 from flext_dbt_ldif import FlextDbtLdifTypes
 
 
-class TestsFlextDbtLdifTypes(t, FlextDbtLdifTypes):
-    """Test type aliases for flextdbtldif."""
+class FlextDbtLdifTestTypes(FlextTestsTypes, FlextDbtLdifTypes):
+    """Test types combining FlextTestsTypes with flext-dbt-ldif types."""
 
 
-t = TestsFlextDbtLdifTypes
+t = FlextDbtLdifTestTypes
 
 __all__ = [
-    "TestsFlextDbtLdifTypes",
+    "FlextDbtLdifTestTypes",
     "t",
 ]

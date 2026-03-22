@@ -1,6 +1,7 @@
-"""Module skeleton for TestsFlextDbtLdifUtilities.
+"""Test utilities for flext-dbt-ldif.
 
-Test utilities for flextdbtldif.
+Provides FlextDbtLdifTestUtilities, combining FlextTestsUtilities with
+FlextDbtLdifUtilities for test-specific utility definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -8,13 +9,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_tests import u
+from flext_tests import FlextTestsUtilities
 
 from flext_dbt_ldif import FlextDbtLdifUtilities
 
 
-class TestsFlextDbtLdifUtilities(u, FlextDbtLdifUtilities):
-    """Test utilities for flextdbtldif."""
+class FlextDbtLdifTestUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
+    """Test utilities combining FlextTestsUtilities with flext-dbt-ldif utilities."""
 
     class DbtLdif(FlextDbtLdifUtilities.DbtLdif):
         """DbtLdif test utilities namespace."""
@@ -23,6 +24,6 @@ class TestsFlextDbtLdifUtilities(u, FlextDbtLdifUtilities):
             """Project-specific test utilities."""
 
 
-u = TestsFlextDbtLdifUtilities
+u = FlextDbtLdifTestUtilities
 
-__all__ = ["TestsFlextDbtLdifUtilities", "u"]
+__all__ = ["FlextDbtLdifTestUtilities", "u"]

@@ -1,7 +1,7 @@
-"""Test models for flext-dbt-ldif tests.
+"""Test models for flext-dbt-ldif.
 
-Provides TestsFlextDbtLdifModels, extending m with flext-dbt-ldif-specific
-models using COMPOSITION INHERITANCE.
+Provides FlextDbtLdifTestModels, combining FlextTestsModels with
+FlextDbtLdifModels for test-specific model definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,23 +9,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_tests import m
+from flext_tests import FlextTestsModels
 
 from flext_dbt_ldif import FlextDbtLdifModels
 
 
-class TestsFlextDbtLdifModels(m, FlextDbtLdifModels):
-    """Models for flext-dbt-ldif tests using COMPOSITION INHERITANCE.
-
-    MANDATORY: Inherits from BOTH:
-    1. m - for test infrastructure (.Tests.*)
-    2. FlextDbtLdifModels - for domain models
-
-    Access patterns:
-    - m.Tests.* (generic test models from m)
-    - m.DbtLdif.* (DBT LDIF domain models)
-    - m.DbtLdif.Tests.* (project test-only models)
-    """
+class FlextDbtLdifTestModels(FlextTestsModels, FlextDbtLdifModels):
+    """Test models combining FlextTestsModels with flext-dbt-ldif models."""
 
     class DbtLdif(FlextDbtLdifModels.DbtLdif):
         """DbtLdif test models namespace."""
@@ -34,9 +24,9 @@ class TestsFlextDbtLdifModels(m, FlextDbtLdifModels):
             """Project-specific test models."""
 
 
-m = TestsFlextDbtLdifModels
+m = FlextDbtLdifTestModels
 
 __all__ = [
-    "TestsFlextDbtLdifModels",
+    "FlextDbtLdifTestModels",
     "m",
 ]
