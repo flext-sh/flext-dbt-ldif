@@ -6,6 +6,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextLogger, r
+from flext_core.typings import FlextTypes
+from pydantic import RootModel
 
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
@@ -16,7 +18,12 @@ from flext_dbt_ldif import (
     t,
 )
 
-from ._models import EntryContainerListAdapter
+
+class EntryContainerListAdapter(RootModel[list[dict[str, FlextTypes.ContainerValue]]]):
+    """Adapter for list of container entries."""
+
+    root: list[dict[str, FlextTypes.ContainerValue]]
+
 
 logger = FlextLogger(__name__)
 
