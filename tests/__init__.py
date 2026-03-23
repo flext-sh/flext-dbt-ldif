@@ -13,8 +13,8 @@ if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, r, s, x
 
-    from . import unit as unit
-    from .conftest import (
+    from tests import unit
+    from tests.conftest import (
         dbt_ldif_profile,
         dbt_ldif_project_config,
         docker_control,
@@ -25,22 +25,28 @@ if TYPE_CHECKING:
         set_test_environment,
         shared_ldap_container,
     )
-    from .constants import FlextDbtLdifTestConstants, FlextDbtLdifTestConstants as c
-    from .models import FlextDbtLdifTestModels, FlextDbtLdifTestModels as m
-    from .protocols import FlextDbtLdifTestProtocols, FlextDbtLdifTestProtocols as p
-    from .typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
-    from .unit.test_api_surface import test_api_imports
-    from .unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
-    from .unit.test_core import TestAnalytics, TestModelGenerator
-    from .unit.test_dbt_client import TestFlextDbtLdifClient
-    from .unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
-    from .unit.test_services import (
+    from tests.constants import (
+        FlextDbtLdifTestConstants,
+        FlextDbtLdifTestConstants as c,
+    )
+    from tests.models import FlextDbtLdifTestModels, FlextDbtLdifTestModels as m
+    from tests.protocols import (
+        FlextDbtLdifTestProtocols,
+        FlextDbtLdifTestProtocols as p,
+    )
+    from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
+    from tests.unit.test_api_surface import test_api_imports
+    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
+    from tests.unit.test_core import TestAnalytics, TestModelGenerator
+    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
+    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
+    from tests.unit.test_services import (
         svc,
         test_parse_and_validate_ldif_parse_fails,
         test_run_complete_workflow_all,
         test_run_data_quality_assessment,
     )
-    from .unit.test_services_and_api import (
+    from tests.unit.test_services_and_api import (
         service,
         test_api_generate_ldif_models,
         test_api_process_ldif_file,
@@ -48,8 +54,11 @@ if TYPE_CHECKING:
         test_generate_and_write_models_ok,
         test_parse_and_validate_ldif_ok,
     )
-    from .unit.test_version import test_dunder_alignment, test_version_is_string
-    from .utilities import FlextDbtLdifTestUtilities, FlextDbtLdifTestUtilities as u
+    from tests.unit.test_version import test_dunder_alignment, test_version_is_string
+    from tests.utilities import (
+        FlextDbtLdifTestUtilities,
+        FlextDbtLdifTestUtilities as u,
+    )
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "FlextDbtLdifTestConstants": ("tests.constants", "FlextDbtLdifTestConstants"),

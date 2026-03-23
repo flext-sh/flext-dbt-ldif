@@ -12,18 +12,18 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from .test_api_surface import test_api_imports
-    from .test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
-    from .test_core import TestAnalytics, TestModelGenerator
-    from .test_dbt_client import TestFlextDbtLdifClient
-    from .test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
-    from .test_services import (
+    from tests.unit.test_api_surface import test_api_imports
+    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
+    from tests.unit.test_core import TestAnalytics, TestModelGenerator
+    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
+    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
+    from tests.unit.test_services import (
         svc,
         test_parse_and_validate_ldif_parse_fails,
         test_run_complete_workflow_all,
         test_run_data_quality_assessment,
     )
-    from .test_services_and_api import (
+    from tests.unit.test_services_and_api import (
         service,
         test_api_generate_ldif_models,
         test_api_process_ldif_file,
@@ -31,7 +31,7 @@ if TYPE_CHECKING:
         test_generate_and_write_models_ok,
         test_parse_and_validate_ldif_ok,
     )
-    from .test_version import test_dunder_alignment, test_version_is_string
+    from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 
 _LAZY_IMPORTS: dict[str, tuple[str, str]] = {
     "TestAnalytics": ("tests.unit.test_core", "TestAnalytics"),
