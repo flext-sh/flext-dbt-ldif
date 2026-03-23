@@ -10,8 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_core import r
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes, r
 
 from flext_dbt_ldif import FlextDbtLdifService
 from flext_dbt_ldif.models import FlextDbtLdifModels

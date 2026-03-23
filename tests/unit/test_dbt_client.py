@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_core.typings import FlextTypes
+from flext_core import FlextTypes
 
 from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
 
