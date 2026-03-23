@@ -95,7 +95,7 @@ class TestMainEntryPoint:
     def test_main_keyboard_interrupt(self) -> None:
         """Test main handles KeyboardInterrupt and returns 1."""
         with patch("sys.argv", ["flext-dbt-ldif", "info"]):
-            with patch.t.NormalizedValue(
+            with patch.object(
                 FlextDbtLdifCliService._CommandHandlers,
                 "handle_info_command",
                 side_effect=KeyboardInterrupt(),
@@ -106,7 +106,7 @@ class TestMainEntryPoint:
     def test_main_runtime_error(self) -> None:
         """Test main handles RuntimeError and returns 1."""
         with patch("sys.argv", ["flext-dbt-ldif", "info"]):
-            with patch.t.NormalizedValue(
+            with patch.object(
                 FlextDbtLdifCliService._CommandHandlers,
                 "handle_info_command",
                 side_effect=RuntimeError("Test error"),
