@@ -20,7 +20,7 @@ class FlextDbtLdifCore:
             """Initialize model generator."""
             self.project_dir = project_dir or Path.cwd()
 
-        def generate_analytics_models(self) -> list[Mapping[str, str]]:
+        def generate_analytics_models(self) -> Sequence[Mapping[str, str]]:
             """Generate default analytics model metadata."""
             return [
                 {
@@ -29,7 +29,7 @@ class FlextDbtLdifCore:
                 }
             ]
 
-        def generate_staging_models(self) -> list[Mapping[str, str]]:
+        def generate_staging_models(self) -> Sequence[Mapping[str, str]]:
             """Generate default staging model metadata."""
             return [
                 {

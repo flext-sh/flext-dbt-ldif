@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
 from flext_core import r
@@ -22,13 +23,13 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
             """Protocol for DBT model execution and testing."""
 
             def run_dbt_models(
-                self, models: list[str] | None = None
+                self, models: Sequence[str] | None = None
             ) -> r[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
-                self, models: list[str] | None = None
+                self, models: Sequence[str] | None = None
             ) -> r[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT tests and return status payload."""
                 ...

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextLogger, r
@@ -23,21 +23,23 @@ class FlextDbtLdifClient:
 
     def parse_ldif_file(
         self, file_path: Path | str | None = None
-    ) -> r[list[dict[str, t.ContainerValue]]]:
+    ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
         """Return minimal parsed LDIF entries payload."""
         selected_path = (
             str(file_path) if file_path is not None else self.config.ldif_file_path
         )
         if not selected_path:
-            return r[list[dict[str, t.ContainerValue]]].fail(
+            return r[Sequence[Mapping[str, t.ContainerValue]]].fail(
                 "LDIF file path is required"
             )
-        return r[list[dict[str, t.ContainerValue]]].ok([
+        return r[Sequence[Mapping[str, t.ContainerValue]]].ok([
             {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
         ])
 
     def run_full_pipeline(
-        self, file_path: Path | str | None = None, model_names: list[str] | None = None
+        self,
+        file_path: Path | str | None = None,
+        model_names: Sequence[str] | None = None,
     ) -> r[m.DbtLdif.PipelineResult]:
         """Run parse, validate, and transform pipeline."""
         parse_result = self.parse_ldif_file(file_path)
@@ -67,8 +69,8 @@ class FlextDbtLdifClient:
 
     def transform_with_dbt(
         self,
-        entries: Sequence[dict[str, t.ContainerValue]],
-        model_names: list[str] | None = None,
+        entries: Sequence[Mapping[str, t.ContainerValue]],
+        model_names: Sequence[str] | None = None,
     ) -> r[m.DbtLdif.DbtTransformationResult]:
         """Return synthetic DBT transformation metadata."""
         selected_models = model_names or [
@@ -85,7 +87,7 @@ class FlextDbtLdifClient:
 
     def validate_ldif_data(
         self,
-        entries: Sequence[dict[str, t.ContainerValue]],
+        entries: Sequence[Mapping[str, t.ContainerValue]],
     ) -> r[m.DbtLdif.LdifValidationResult]:
         """Validate parsed LDIF payload and compute quality score."""
         total_entries = len(entries)

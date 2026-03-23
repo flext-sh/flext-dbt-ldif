@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextTypes, r
@@ -10,10 +11,10 @@ from pydantic import RootModel, ValidationError
 from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
 
 
-class EntryListAdapter(RootModel[list[dict[str, FlextTypes.ContainerValue]]]):
+class EntryListAdapter(RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]):
     """Adapter for list of entries."""
 
-    root: list[dict[str, FlextTypes.ContainerValue]]
+    root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
 
 
 class FlextDbtLdif:

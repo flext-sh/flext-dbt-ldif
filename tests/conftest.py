@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import os
 import tempfile
-from collections.abc import Generator
+from collections.abc import Generator, Mapping, Sequence
 
 import pytest
 from flext_tests import td, tk
@@ -65,7 +65,7 @@ def ensure_shared_docker_container(
 
 
 @pytest.fixture
-def dbt_ldif_profile() -> dict[str, t.NormalizedValue]:
+def dbt_ldif_profile() -> Mapping[str, t.NormalizedValue]:
     """Dbt LDIF profile configuration for testing."""
     return {
         "config": {
@@ -95,7 +95,7 @@ def dbt_ldif_profile() -> dict[str, t.NormalizedValue]:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> dict[str, t.NormalizedValue]:
+def dbt_ldif_project_config() -> Mapping[str, t.NormalizedValue]:
     """Dbt LDIF project configuration for testing."""
     project_config = td.build_dbt_project_config(
         name="flext_dbt_ldif_test",
@@ -121,8 +121,8 @@ def dbt_ldif_project_config() -> dict[str, t.NormalizedValue]:
 
 @pytest.fixture
 def ldif_source_config(
-    shared_ldap_config: dict[str, t.NormalizedValue],
-) -> dict[str, t.NormalizedValue]:
+    shared_ldap_config: Mapping[str, t.NormalizedValue],
+) -> Mapping[str, t.NormalizedValue]:
     """LDIF source configuration for testing using shared container."""
     _ = shared_ldap_config
     return {
@@ -145,7 +145,7 @@ def ldif_source_config(
 
 
 @pytest.fixture
-def sample_ldif_entries() -> list[dict[str, t.NormalizedValue]]:
+def sample_ldif_entries() -> Sequence[Mapping[str, t.NormalizedValue]]:
     """Sample LDIF entries for testing using shared container domain."""
     return [
         {

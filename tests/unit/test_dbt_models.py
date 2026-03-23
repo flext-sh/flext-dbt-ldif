@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextTypes
@@ -38,7 +39,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_staging_models_with_entries(self) -> None:
         """Test staging model generation with entries."""
         gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
-        entries: list[dict[str, FlextTypes.Scalar]] = [
+        entries: Sequence[Mapping[str, FlextTypes.Scalar]] = [
             {"dn": "cn=test,dc=example,dc=org"}
         ]
         result = gen.generate_staging_models(entries)

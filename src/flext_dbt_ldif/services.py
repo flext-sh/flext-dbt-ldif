@@ -18,10 +18,12 @@ from flext_dbt_ldif import (
 )
 
 
-class EntryContainerListAdapter(RootModel[list[dict[str, FlextTypes.ContainerValue]]]):
+class EntryContainerListAdapter(
+    RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]
+):
     """Adapter for list of container entries."""
 
-    root: list[dict[str, FlextTypes.ContainerValue]]
+    root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
 
 
 logger = FlextLogger(__name__)
@@ -47,13 +49,13 @@ class FlextDbtLdifService:
 
     def generate_and_write_models(
         self,
-        entries: Sequence[dict[str, t.ContainerValue]],
+        entries: Sequence[Mapping[str, t.ContainerValue]],
         *,
         overwrite: bool = False,
     ) -> r[m.DbtLdif.ModelGenerationResult]:
         """Generate staging and analytics models for entries."""
         _ = overwrite
-        staging_payload: list[Mapping[str, t.ContainerValue]] = [
+        staging_payload: Sequence[Mapping[str, t.ContainerValue]] = [
             {"dn": str(entry.get("dn", ""))} for entry in entries
         ]
         staging = self.model_generator.generate_staging_models(staging_payload)
@@ -103,7 +105,7 @@ class FlextDbtLdifService:
         *,
         generate_models: bool = True,
         run_transformations: bool = True,
-        model_names: list[str] | None = None,
+        model_names: Sequence[str] | None = None,
     ) -> r[m.DbtLdif.WorkflowResult]:
         """Execute complete LDIF to DBT workflow."""
         parse_result = self.client.parse_ldif_file(ldif_file)
@@ -131,7 +133,7 @@ class FlextDbtLdifService:
                 )
             workflow_result.models_generated = model_result.value.models_generated
         if run_transformations:
-            transform_payload: list[dict[str, t.ContainerValue]] = [
+            transform_payload: Sequence[Mapping[str, t.ContainerValue]] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             transform = self.client.transform_with_dbt(transform_payload, model_names)

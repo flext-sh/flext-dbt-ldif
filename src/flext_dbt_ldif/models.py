@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from typing import Annotated
 
 from flext_core import FlextModels, r
@@ -28,10 +29,10 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             sql_content: str
             description: str = ""
             columns: Annotated[
-                list[dict[str, t.ContainerValue]],
+                Sequence[Mapping[str, t.ContainerValue]],
                 Field(default_factory=list),
             ]
-            dependencies: Annotated[list[str], Field(default_factory=list)]
+            dependencies: Annotated[Sequence[str], Field(default_factory=list)]
 
             def validate_business_rules(self) -> r[bool]:
                 """Validate minimal model constraints."""
@@ -54,14 +55,14 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             """DBT transformation execution summary."""
 
             records: int
-            models: Annotated[list[str], Field(default_factory=list)]
+            models: Annotated[Sequence[str], Field(default_factory=list)]
             status: str
 
         class ModelGenerationResult(FlextModels.ArbitraryTypesModel):
             """Generated model metadata summary."""
 
             models_generated: int
-            model_names: Annotated[list[str], Field(default_factory=list)]
+            model_names: Annotated[Sequence[str], Field(default_factory=list)]
 
         class ParseValidationResult(FlextModels.ArbitraryTypesModel):
             """Combined parse and validation payload."""
