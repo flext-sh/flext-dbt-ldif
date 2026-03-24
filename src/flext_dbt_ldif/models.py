@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Annotated
 
-from flext_core import FlextModels, r
+from flext_core import r
 from flext_ldif import FlextLdifModels
 from flext_meltano import FlextMeltanoModels
 from pydantic import Field
@@ -19,7 +19,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
     class DbtLdif:
         """DBT LDIF model namespace."""
 
-        class DbtModel(FlextModels.ArbitraryTypesModel):
+        class DbtModel(FlextMeltanoModels.ArbitraryTypesModel):
             """Single DBT model definition payload."""
 
             name: str
@@ -44,34 +44,34 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
                     return r[bool].fail("SQL content cannot be empty")
                 return r[bool].ok(value=True)
 
-        class LdifValidationResult(FlextModels.ArbitraryTypesModel):
+        class LdifValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Validated LDIF quality metrics."""
 
             total_entries: int
             quality_score: float
             validation_status: str
 
-        class DbtTransformationResult(FlextModels.ArbitraryTypesModel):
+        class DbtTransformationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """DBT transformation execution summary."""
 
             records: int
             models: Annotated[t.StrSequence, Field(default_factory=list)]
             status: str
 
-        class ModelGenerationResult(FlextModels.ArbitraryTypesModel):
+        class ModelGenerationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Generated model metadata summary."""
 
             models_generated: int
             model_names: Annotated[t.StrSequence, Field(default_factory=list)]
 
-        class ParseValidationResult(FlextModels.ArbitraryTypesModel):
+        class ParseValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Combined parse and validation payload."""
 
             entry_count: int
             quality_score: float
             validation_status: str
 
-        class WorkflowResult(FlextModels.ArbitraryTypesModel):
+        class WorkflowResult(FlextMeltanoModels.ArbitraryTypesModel):
             """End-to-end service workflow result."""
 
             ldif_file: str
@@ -81,7 +81,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             transformation_status: str = ""
             workflow_status: str
 
-        class PipelineResult(FlextModels.ArbitraryTypesModel):
+        class PipelineResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Client pipeline status payload."""
 
             parsed_entries: int

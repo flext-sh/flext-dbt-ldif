@@ -17,20 +17,18 @@ from flext_dbt_ldif import (
     t,
 )
 
-
-class EntryContainerListAdapter(
-    RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]
-):
-    """Adapter for list of container entries."""
-
-    root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
-
-
 logger = FlextLogger(__name__)
 
 
 class FlextDbtLdifService:
     """Orchestrates parsing, validation, model generation, and transformations."""
+
+    class EntryContainerListAdapter(
+        RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]
+    ):
+        """Adapter for list of container entries."""
+
+        root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
 
     def __init__(
         self,
@@ -85,7 +83,9 @@ class FlextDbtLdifService:
             return r[m.DbtLdif.ParseValidationResult].fail(
                 parse_result.error or "Parse failed"
             )
-        entries = EntryContainerListAdapter.model_validate(parse_result.value).root
+        entries = FlextDbtLdifService.EntryContainerListAdapter.model_validate(
+            parse_result.value
+        ).root
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[m.DbtLdif.ParseValidationResult].fail(
@@ -113,7 +113,9 @@ class FlextDbtLdifService:
             return r[m.DbtLdif.WorkflowResult].fail(
                 parse_result.error or "Parse failed"
             )
-        entries = EntryContainerListAdapter.model_validate(parse_result.value).root
+        entries = FlextDbtLdifService.EntryContainerListAdapter.model_validate(
+            parse_result.value
+        ).root
         validation = self.client.validate_ldif_data(entries)
         if validation.is_failure:
             return r[m.DbtLdif.WorkflowResult].fail(
