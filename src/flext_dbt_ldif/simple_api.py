@@ -11,7 +11,9 @@ from pydantic import RootModel, ValidationError
 from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
 
 
-class FlextDbtLdifEntryListAdapter(RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]):
+class FlextDbtLdifEntryListAdapter(
+    RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]
+):
     """Adapter for list of entries."""
 
     root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
