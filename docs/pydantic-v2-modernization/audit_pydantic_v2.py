@@ -45,19 +45,24 @@ class AuditResult(BaseModel):
     project: str = Field(description="Project name")
     status: str = Field(description="Audit status: PASS, FAIL, WARNING, PENDING, SKIP")
     critical: Annotated[
-        Sequence[AuditViolation], Field(description="Critical violations")
+        Sequence[AuditViolation],
+        Field(description="Critical violations"),
     ] = []
     high: Annotated[
-        Sequence[AuditViolation], Field(description="High priority violations")
+        Sequence[AuditViolation],
+        Field(description="High priority violations"),
     ] = []
     medium: Annotated[
-        Sequence[AuditViolation], Field(description="Medium priority violations")
+        Sequence[AuditViolation],
+        Field(description="Medium priority violations"),
     ] = []
     recommendations: Annotated[
-        t.StrSequence, Field(description="Audit recommendations")
+        t.StrSequence,
+        Field(description="Audit recommendations"),
     ] = []
     stats: Annotated[
-        Mapping[str, t.Primitives], Field(description="Audit statistics")
+        Mapping[str, t.Primitives],
+        Field(description="Audit statistics"),
     ] = {}
 
     @property

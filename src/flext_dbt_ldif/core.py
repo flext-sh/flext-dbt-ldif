@@ -26,7 +26,7 @@ class FlextDbtLdifCore:
                 {
                     "name": c.DbtLdif.ANALYTICS_MODEL_NAME,
                     "description": c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION,
-                }
+                },
             ]
 
         def generate_staging_models(self) -> Sequence[t.StrMapping]:
@@ -35,14 +35,15 @@ class FlextDbtLdifCore:
                 {
                     "name": c.DbtLdif.STAGING_MODEL_NAME,
                     "description": c.DbtLdif.STAGING_MODEL_DESCRIPTION,
-                }
+                },
             ]
 
     class Analytics:
         """Compute basic analysis metrics for LDIF-like payloads."""
 
         def analyze_entry_patterns(
-            self, entries: Sequence[t.StrMapping]
+            self,
+            entries: Sequence[t.StrMapping],
         ) -> r[Mapping[str, t.ContainerValue]]:
             """Analyze input entries and return summary payload."""
             return r[t.ContainerValueMapping].ok({

@@ -136,7 +136,9 @@ class FlextDbtLdifError(e.BaseError):
 
     @classmethod
     def timeout_error(
-        cls, message: str = "LDIF DBT operation timeout", **context: t.Scalar
+        cls,
+        message: str = "LDIF DBT operation timeout",
+        **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create timeout error."""
         return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)

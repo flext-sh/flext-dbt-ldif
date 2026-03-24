@@ -14,7 +14,8 @@ class FlextDbtLdifSettings(FlextSettings):
     """Runtime settings for DBT LDIF transformations."""
 
     ldif_file_path: Annotated[
-        str, Field(default="", description="Path to LDIF file for processing")
+        str,
+        Field(default="", description="Path to LDIF file for processing"),
     ]
     min_quality_threshold: Annotated[
         float,

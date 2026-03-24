@@ -22,7 +22,8 @@ class FlextDbtLdifClient:
         )
 
     def parse_ldif_file(
-        self, file_path: Path | str | None = None
+        self,
+        file_path: Path | str | None = None,
     ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
         """Return minimal parsed LDIF entries payload."""
         selected_path = (
@@ -30,10 +31,10 @@ class FlextDbtLdifClient:
         )
         if not selected_path:
             return r[Sequence[t.ContainerValueMapping]].fail(
-                "LDIF file path is required"
+                "LDIF file path is required",
             )
         return r[Sequence[t.ContainerValueMapping]].ok([
-            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
+            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path},
         ])
 
     def run_full_pipeline(
@@ -45,17 +46,17 @@ class FlextDbtLdifClient:
         parse_result = self.parse_ldif_file(file_path)
         if parse_result.is_failure:
             return r[m.DbtLdif.PipelineResult].fail(
-                parse_result.error or "Parse failed"
+                parse_result.error or "Parse failed",
             )
         validate_result = self.validate_ldif_data(parse_result.value)
         if validate_result.is_failure:
             return r[m.DbtLdif.PipelineResult].fail(
-                validate_result.error or "Validation failed"
+                validate_result.error or "Validation failed",
             )
         transform_result = self.transform_with_dbt(parse_result.value, model_names)
         if transform_result.is_failure:
             return r[m.DbtLdif.PipelineResult].fail(
-                transform_result.error or "Transform failed"
+                transform_result.error or "Transform failed",
             )
         logger.info("Completed LDIF to DBT pipeline")
         return r[m.DbtLdif.PipelineResult].ok(
@@ -64,7 +65,7 @@ class FlextDbtLdifClient:
                 validation_status=validate_result.value.validation_status,
                 transformation_status=transform_result.value.status,
                 pipeline_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-            )
+            ),
         )
 
     def transform_with_dbt(
@@ -82,7 +83,7 @@ class FlextDbtLdifClient:
                 records=len(entries),
                 models=selected_models,
                 status=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
-            )
+            ),
         )
 
     def validate_ldif_data(
@@ -101,7 +102,7 @@ class FlextDbtLdifClient:
                 total_entries=total_entries,
                 quality_score=quality_score,
                 validation_status=c.DbtLdif.VALIDATION_STATUS_PASSED,
-            )
+            ),
         )
 
 

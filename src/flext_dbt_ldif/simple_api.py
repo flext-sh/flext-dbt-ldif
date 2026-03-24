@@ -12,7 +12,7 @@ from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
 
 
 class FlextDbtLdifEntryListAdapter(
-    RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]
+    RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]],
 ):
     """Adapter for list of entries."""
 
@@ -54,14 +54,14 @@ class FlextDbtLdif:
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.is_failure:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                parsed.error or "Parsing failed"
+                parsed.error or "Parsing failed",
             )
         entries_raw = parsed.value
         try:
             entries = FlextDbtLdifEntryListAdapter.model_validate(entries_raw).root
         except ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                "Invalid parsed entries payload"
+                "Invalid parsed entries payload",
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
@@ -82,7 +82,8 @@ class FlextDbtLdif:
         )
 
     def validate_ldif_quality(
-        self, ldif_file: Path | str
+        self,
+        ldif_file: Path | str,
     ) -> r[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)

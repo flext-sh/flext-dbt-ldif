@@ -30,7 +30,7 @@ def test_parse_and_validate_ldif_ok(
 ) -> None:
     """Test parsing and validating LDIF succeeds."""
     entries: Sequence[Mapping[str, FlextTypes.ContainerValue]] = [
-        {"dn": "cn=test,dc=example,dc=org"}
+        {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
@@ -46,7 +46,7 @@ def test_parse_and_validate_ldif_ok(
                 total_entries=1,
                 quality_score=0.9,
                 validation_status="passed",
-            )
+            ),
         )
 
     monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
@@ -117,7 +117,7 @@ def test_generate_and_write_models_ok(
     object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
     entries: Sequence[Mapping[str, FlextTypes.ContainerValue]] = [
-        {"dn": "cn=test,dc=example,dc=org"}
+        {"dn": "cn=test,dc=example,dc=org"},
     ]
     result = svc.generate_and_write_models(entries)
     assert result.is_success
@@ -135,7 +135,7 @@ def test_run_complete_workflow_all(
 ) -> None:
     """Test complete workflow with all stages."""
     entries: Sequence[Mapping[str, FlextTypes.ContainerValue]] = [
-        {"dn": "cn=test,dc=example,dc=org"}
+        {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
@@ -151,7 +151,7 @@ def test_run_complete_workflow_all(
                 total_entries=1,
                 quality_score=0.9,
                 validation_status="passed",
-            )
+            ),
         )
 
     def _transform_with_dbt(
@@ -163,7 +163,7 @@ def test_run_complete_workflow_all(
                 records=1,
                 models=["m1"],
                 status="success",
-            )
+            ),
         )
 
     staging_model = FlextDbtLdifModels.DbtLdif.DbtModel(
@@ -219,7 +219,7 @@ def test_run_data_quality_assessment(
 ) -> None:
     """Test data quality assessment delegates to parse_and_validate."""
     entries: Sequence[Mapping[str, FlextTypes.ContainerValue]] = [
-        {"dn": "cn=test,dc=example,dc=org"}
+        {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
@@ -235,7 +235,7 @@ def test_run_data_quality_assessment(
                 total_entries=1,
                 quality_score=0.88,
                 validation_status="passed",
-            )
+            ),
         )
 
     monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)

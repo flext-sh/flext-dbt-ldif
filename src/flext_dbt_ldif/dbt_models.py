@@ -45,7 +45,8 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.ContainerMapping]):
         })
 
     def generate_analytics_models(
-        self, staging_models: Sequence[m.DbtLdif.DbtModel]
+        self,
+        staging_models: Sequence[m.DbtLdif.DbtModel],
     ) -> r[Sequence[m.DbtLdif.DbtModel]]:
         """Generate one analytics model derived from staging set."""
         if not staging_models:
@@ -63,7 +64,8 @@ class FlextDbtLdifUnifiedService(FlextService[FlextTypes.ContainerMapping]):
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics])
 
     def generate_staging_models(
-        self, entries: Sequence[Mapping[str, FlextTypes.ContainerValue]]
+        self,
+        entries: Sequence[Mapping[str, FlextTypes.ContainerValue]],
     ) -> r[Sequence[m.DbtLdif.DbtModel]]:
         """Generate simple staging models for provided LDIF entries."""
         if not entries:

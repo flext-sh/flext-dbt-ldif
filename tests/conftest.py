@@ -87,7 +87,7 @@ def dbt_ldif_profile() -> t.ContainerMapping:
                     "threads": 4,
                     "keepalives_idle": 0,
                     "search_path": "ldif_transformed",
-                }
+                },
             },
             "target": "default",
         },

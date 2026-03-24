@@ -60,18 +60,18 @@ class FlextDbtLdifCliService:
                     command: str = sys.argv[1]
                     if command == c.DbtLdif.CLI_COMMAND_INFO:
                         service_instance._CommandHandlers.handle_info_command(
-                            service_instance
+                            service_instance,
                         )
                     elif command == c.DbtLdif.CLI_COMMAND_GENERATE:
                         service_instance._CommandHandlers.handle_generate_command(
-                            service_instance
+                            service_instance,
                         )
                     elif command == c.DbtLdif.CLI_COMMAND_VALIDATE:
                         service_instance._CommandHandlers.handle_validate_command(
-                            service_instance
+                            service_instance,
                         )
                     else:
-                        logger.error(f"Unknown command: {command}")
+                        logger.error("Unknown command: %s", command)
                         return c.DbtLdif.EXIT_CODE_FAILURE
                 return c.DbtLdif.EXIT_CODE_SUCCESS
             except KeyboardInterrupt:
