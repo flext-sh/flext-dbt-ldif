@@ -11,7 +11,7 @@ from pydantic import RootModel, ValidationError
 from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
 
 
-class EntryListAdapter(RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]):
+class FlextDbtLdifEntryListAdapter(RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]]):
     """Adapter for list of entries."""
 
     root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
@@ -56,7 +56,7 @@ class FlextDbtLdif:
             )
         entries_raw = parsed.value
         try:
-            entries = EntryListAdapter.model_validate(entries_raw).root
+            entries = FlextDbtLdifEntryListAdapter.model_validate(entries_raw).root
         except ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload"
