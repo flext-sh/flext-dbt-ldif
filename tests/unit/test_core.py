@@ -30,7 +30,7 @@ class TestModelGenerator:
         gen = FlextDbtLdifCore.ModelGenerator()
         models = gen.generate_staging_models()
         assert isinstance(models, list)
-        assert len(models) > 0
+        assert models
         stg = models[0]
         assert stg["name"] == "stg_ldif_entries"
         assert "description" in stg
@@ -40,7 +40,7 @@ class TestModelGenerator:
         gen = FlextDbtLdifCore.ModelGenerator()
         models = gen.generate_analytics_models()
         assert isinstance(models, list)
-        assert len(models) > 0
+        assert models
         analytics = models[0]
         assert analytics["name"] == "analytics_ldif_insights"
         assert "description" in analytics

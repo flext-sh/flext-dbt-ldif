@@ -56,7 +56,7 @@ class TestFlextDbtLdifUnifiedService:
         result = gen.generate_staging_models([])
         assert result.is_success
         models = result.value or []
-        assert len(models) == 0
+        assert not models
 
     def test_generate_analytics_models_with_staging(self) -> None:
         """Test analytics model generation from staging models."""
@@ -83,7 +83,7 @@ class TestFlextDbtLdifUnifiedService:
         result = gen.generate_analytics_models([])
         assert result.is_success
         models = result.value or []
-        assert len(models) == 0
+        assert not models
 
 
 class TestDbtModel:

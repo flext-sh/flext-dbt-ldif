@@ -35,7 +35,7 @@ class TestFlextDbtLdifClient:
         result = client.parse_ldif_file(tmp_path / "dummy.ldif")
         assert result.is_success
         assert isinstance(result.value, list)
-        assert len(result.value) > 0
+        assert result.value
 
     def test_parse_ldif_file_no_path(self) -> None:
         """Test parsing without file path fails when config path is empty."""
