@@ -26,9 +26,9 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "flext-core",
-  "flext-ldif",
-  "flext-meltano",
+  "flext-core @ file:../flext-core",
+  "flext-ldif @ file:../flext-ldif",
+  "flext-meltano @ file:../flext-meltano",
   "pydantic-core>=2.41.4",
   "pydantic>=2.12.3",
 ]
