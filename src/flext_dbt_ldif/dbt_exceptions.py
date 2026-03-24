@@ -10,7 +10,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 from typing import override
 
 from flext_core import e
@@ -186,4 +185,4 @@ class FlextDbtLdifError(e.BaseError):
         return self.error_code == self.ErrorCode.VALIDATION_ERROR
 
 
-__all__: Sequence[str] = ["FlextDbtLdifError"]
+__all__: t.StrSequence = ["FlextDbtLdifError"]

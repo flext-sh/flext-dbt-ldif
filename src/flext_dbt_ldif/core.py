@@ -20,7 +20,7 @@ class FlextDbtLdifCore:
             """Initialize model generator."""
             self.project_dir = project_dir or Path.cwd()
 
-        def generate_analytics_models(self) -> Sequence[Mapping[str, str]]:
+        def generate_analytics_models(self) -> Sequence[t.StrMapping]:
             """Generate default analytics model metadata."""
             return [
                 {
@@ -29,7 +29,7 @@ class FlextDbtLdifCore:
                 }
             ]
 
-        def generate_staging_models(self) -> Sequence[Mapping[str, str]]:
+        def generate_staging_models(self) -> Sequence[t.StrMapping]:
             """Generate default staging model metadata."""
             return [
                 {
@@ -42,7 +42,7 @@ class FlextDbtLdifCore:
         """Compute basic analysis metrics for LDIF-like payloads."""
 
         def analyze_entry_patterns(
-            self, entries: Sequence[Mapping[str, str]]
+            self, entries: Sequence[t.StrMapping]
         ) -> r[Mapping[str, t.ContainerValue]]:
             """Analyze input entries and return summary payload."""
             return r[t.ContainerValueMapping].ok({
