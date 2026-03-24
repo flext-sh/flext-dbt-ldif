@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import os
 import tempfile
-from collections.abc import Generator, Sequence
+from collections.abc import Generator, Mapping, Sequence
 
 import pytest
 from flext_tests import td, tk
@@ -95,7 +95,7 @@ def dbt_ldif_profile() -> t.ContainerMapping:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> t.ContainerMapping:
+def dbt_ldif_project_config() -> Mapping[str, t.Tests.Testobject]:
     """Dbt LDIF project configuration for testing."""
     project_config = td.build_dbt_project_config(
         name="flext_dbt_ldif_test",
