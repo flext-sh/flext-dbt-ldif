@@ -45,7 +45,7 @@ class FlextDbtLdifCore:
             self, entries: Sequence[Mapping[str, str]]
         ) -> r[Mapping[str, t.ContainerValue]]:
             """Analyze input entries and return summary payload."""
-            return r[Mapping[str, t.ContainerValue]].ok({
+            return r[t.ContainerValueMapping].ok({
                 "total_entries": len(entries),
                 "unique_dns": len({entry.get("dn", "") for entry in entries}),
             })

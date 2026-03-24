@@ -29,10 +29,10 @@ class FlextDbtLdifClient:
             str(file_path) if file_path is not None else self.config.ldif_file_path
         )
         if not selected_path:
-            return r[Sequence[Mapping[str, t.ContainerValue]]].fail(
+            return r[Sequence[t.ContainerValueMapping]].fail(
                 "LDIF file path is required"
             )
-        return r[Sequence[Mapping[str, t.ContainerValue]]].ok([
+        return r[Sequence[t.ContainerValueMapping]].ok([
             {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
         ])
 
