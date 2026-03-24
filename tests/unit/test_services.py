@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 from flext_core import FlextTypes, r
 
-from flext_dbt_ldif import FlextDbtLdifService
+from flext_dbt_ldif import FlextDbtLdifService, t
 from flext_dbt_ldif.models import FlextDbtLdifModels
 
 
@@ -156,7 +156,7 @@ def test_run_complete_workflow_all(
 
     def _transform_with_dbt(
         _entries: Sequence[Mapping[str, FlextTypes.ContainerValue]],
-        _model_names: Sequence[str] | None,
+        _model_names: t.StrSequence | None,
     ) -> r[FlextDbtLdifModels.DbtLdif.DbtTransformationResult]:
         return r[FlextDbtLdifModels.DbtLdif.DbtTransformationResult].ok(
             FlextDbtLdifModels.DbtLdif.DbtTransformationResult(

@@ -105,7 +105,7 @@ class FlextDbtLdifService:
         *,
         generate_models: bool = True,
         run_transformations: bool = True,
-        model_names: Sequence[str] | None = None,
+        model_names: t.StrSequence | None = None,
     ) -> r[m.DbtLdif.WorkflowResult]:
         """Execute complete LDIF to DBT workflow."""
         parse_result = self.client.parse_ldif_file(ldif_file)

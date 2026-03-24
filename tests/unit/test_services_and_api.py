@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 from flext_core import FlextTypes, r
 
-from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifService
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifService, t
 from flext_dbt_ldif.models import FlextDbtLdifModels
 
 
@@ -117,7 +117,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-        model_names: Sequence[str] | None = None,
+        model_names: t.StrSequence | None = None,
     ) -> r[FlextDbtLdifModels.DbtLdif.WorkflowResult]:
         return r[FlextDbtLdifModels.DbtLdif.WorkflowResult].ok(
             FlextDbtLdifModels.DbtLdif.WorkflowResult(

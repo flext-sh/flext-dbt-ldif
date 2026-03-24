@@ -39,7 +39,7 @@ class FlextDbtLdifClient:
     def run_full_pipeline(
         self,
         file_path: Path | str | None = None,
-        model_names: Sequence[str] | None = None,
+        model_names: t.StrSequence | None = None,
     ) -> r[m.DbtLdif.PipelineResult]:
         """Run parse, validate, and transform pipeline."""
         parse_result = self.parse_ldif_file(file_path)
@@ -70,7 +70,7 @@ class FlextDbtLdifClient:
     def transform_with_dbt(
         self,
         entries: Sequence[Mapping[str, t.ContainerValue]],
-        model_names: Sequence[str] | None = None,
+        model_names: t.StrSequence | None = None,
     ) -> r[m.DbtLdif.DbtTransformationResult]:
         """Return synthetic DBT transformation metadata."""
         selected_models = model_names or [
