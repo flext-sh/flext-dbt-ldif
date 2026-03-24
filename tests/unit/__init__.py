@@ -39,48 +39,21 @@ _LAZY_IMPORTS: Mapping[str, tuple[str, str]] = {
     "TestDbtModel": ("tests.unit.test_dbt_models", "TestDbtModel"),
     "TestFlextDbtLdifCliService": ("tests.unit.test_cli", "TestFlextDbtLdifCliService"),
     "TestFlextDbtLdifClient": ("tests.unit.test_dbt_client", "TestFlextDbtLdifClient"),
-    "TestFlextDbtLdifUnifiedService": (
-        "tests.unit.test_dbt_models",
-        "TestFlextDbtLdifUnifiedService",
-    ),
+    "TestFlextDbtLdifUnifiedService": ("tests.unit.test_dbt_models", "TestFlextDbtLdifUnifiedService"),
     "TestMainEntryPoint": ("tests.unit.test_cli", "TestMainEntryPoint"),
     "TestModelGenerator": ("tests.unit.test_core", "TestModelGenerator"),
     "service": ("tests.unit.test_services_and_api", "service"),
     "svc": ("tests.unit.test_services", "svc"),
-    "test_api_generate_ldif_models": (
-        "tests.unit.test_services_and_api",
-        "test_api_generate_ldif_models",
-    ),
+    "test_api_generate_ldif_models": ("tests.unit.test_services_and_api", "test_api_generate_ldif_models"),
     "test_api_imports": ("tests.unit.test_api_surface", "test_api_imports"),
-    "test_api_process_ldif_file": (
-        "tests.unit.test_services_and_api",
-        "test_api_process_ldif_file",
-    ),
-    "test_api_validate_ldif_quality": (
-        "tests.unit.test_services_and_api",
-        "test_api_validate_ldif_quality",
-    ),
+    "test_api_process_ldif_file": ("tests.unit.test_services_and_api", "test_api_process_ldif_file"),
+    "test_api_validate_ldif_quality": ("tests.unit.test_services_and_api", "test_api_validate_ldif_quality"),
     "test_dunder_alignment": ("tests.unit.test_version", "test_dunder_alignment"),
-    "test_generate_and_write_models_ok": (
-        "tests.unit.test_services_and_api",
-        "test_generate_and_write_models_ok",
-    ),
-    "test_parse_and_validate_ldif_ok": (
-        "tests.unit.test_services_and_api",
-        "test_parse_and_validate_ldif_ok",
-    ),
-    "test_parse_and_validate_ldif_parse_fails": (
-        "tests.unit.test_services",
-        "test_parse_and_validate_ldif_parse_fails",
-    ),
-    "test_run_complete_workflow_all": (
-        "tests.unit.test_services",
-        "test_run_complete_workflow_all",
-    ),
-    "test_run_data_quality_assessment": (
-        "tests.unit.test_services",
-        "test_run_data_quality_assessment",
-    ),
+    "test_generate_and_write_models_ok": ("tests.unit.test_services_and_api", "test_generate_and_write_models_ok"),
+    "test_parse_and_validate_ldif_ok": ("tests.unit.test_services_and_api", "test_parse_and_validate_ldif_ok"),
+    "test_parse_and_validate_ldif_parse_fails": ("tests.unit.test_services", "test_parse_and_validate_ldif_parse_fails"),
+    "test_run_complete_workflow_all": ("tests.unit.test_services", "test_run_complete_workflow_all"),
+    "test_run_data_quality_assessment": ("tests.unit.test_services", "test_run_data_quality_assessment"),
     "test_version_is_string": ("tests.unit.test_version", "test_version_is_string"),
 }
 
