@@ -156,7 +156,7 @@ def test_run_complete_workflow_all(
 
     def _transform_with_dbt(
         _entries: Sequence[Mapping[str, FlextTypes.ContainerValue]],
-        _model_names: t.StrSequence | None,
+        _model_names: Sequence[str] | None,
     ) -> r[FlextDbtLdifModels.DbtLdif.DbtTransformationResult]:
         return r[FlextDbtLdifModels.DbtLdif.DbtTransformationResult].ok(
             FlextDbtLdifModels.DbtLdif.DbtTransformationResult(

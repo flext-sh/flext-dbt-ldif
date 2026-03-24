@@ -32,7 +32,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
                 Sequence[Mapping[str, t.ContainerValue]],
                 Field(default_factory=list),
             ]
-            dependencies: Annotated[t.StrSequence, Field(default_factory=list)]
+            dependencies: Annotated[Sequence[str], Field(default_factory=list)]
 
             def validate_business_rules(self) -> r[bool]:
                 """Validate minimal model constraints."""
@@ -55,14 +55,14 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             """DBT transformation execution summary."""
 
             records: int
-            models: Annotated[t.StrSequence, Field(default_factory=list)]
+            models: Annotated[Sequence[str], Field(default_factory=list)]
             status: str
 
         class ModelGenerationResult(FlextModels.ArbitraryTypesModel):
             """Generated model metadata summary."""
 
             models_generated: int
-            model_names: Annotated[t.StrSequence, Field(default_factory=list)]
+            model_names: Annotated[Sequence[str], Field(default_factory=list)]
 
         class ParseValidationResult(FlextModels.ArbitraryTypesModel):
             """Combined parse and validation payload."""

@@ -117,7 +117,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-        model_names: t.StrSequence | None = None,
+        model_names: Sequence[str] | None = None,
     ) -> r[FlextDbtLdifModels.DbtLdif.WorkflowResult]:
         return r[FlextDbtLdifModels.DbtLdif.WorkflowResult].ok(
             FlextDbtLdifModels.DbtLdif.WorkflowResult(
