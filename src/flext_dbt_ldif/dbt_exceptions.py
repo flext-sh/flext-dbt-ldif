@@ -52,7 +52,9 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create authentication error."""
-        return cls(message, error_code=c.DbtLdif.ErrorCode.AUTHENTICATION_ERROR, **context)
+        return cls(
+            message, error_code=c.DbtLdif.ErrorCode.AUTHENTICATION_ERROR, **context
+        )
 
     @classmethod
     def configuration_error(
@@ -61,7 +63,9 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create configuration error."""
-        return cls(message, error_code=c.DbtLdif.ErrorCode.CONFIGURATION_ERROR, **context)
+        return cls(
+            message, error_code=c.DbtLdif.ErrorCode.CONFIGURATION_ERROR, **context
+        )
 
     @classmethod
     def connection_error(
@@ -156,7 +160,9 @@ class FlextDbtLdifError(e.BaseError):
             context["transformation_type"] = transformation_type
         if model_name is not None:
             context["model_name"] = model_name
-        return cls(message, error_code=c.DbtLdif.ErrorCode.TRANSFORMATION_ERROR, **context)
+        return cls(
+            message, error_code=c.DbtLdif.ErrorCode.TRANSFORMATION_ERROR, **context
+        )
 
     @classmethod
     def validation_error(
