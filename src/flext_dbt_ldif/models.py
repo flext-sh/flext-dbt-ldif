@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from typing import Annotated
 
 from flext_core import r
 from flext_ldif import FlextLdifModels
@@ -28,7 +27,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             materialization: str = "view"
             sql_content: str
             description: str = ""
-            columns: Annotated[Sequence[Mapping[str, t.ContainerValue]]] = Field(
+            columns: Sequence[Mapping[str, t.ContainerValue]] = Field(
                 default_factory=list
             )
             dependencies: t.StrSequence = Field(default_factory=list)
