@@ -14,15 +14,17 @@ from typing import Final
 
 from flext_tests import FlextTestsConstants
 
+from flext_dbt_ldif import FlextDbtLdifConstants
 
-class FlextDbtLdifTestConstants(FlextTestsConstants):
+
+class FlextDbtLdifTestConstants(FlextTestsConstants, FlextDbtLdifConstants):
     """Constants for flext-dbt-ldif tests.
 
-    Only inherits from FlextTestsConstants - domain constants come from
-    FlextDbtLdifConstants via other inheritance paths.
+    Inherits from FlextTestsConstants and FlextDbtLdifConstants for
+    full production constant access.
     """
 
-    class DbtLdif:
+    class DbtLdif(FlextDbtLdifConstants.DbtLdif):
         """DbtLdif test constants namespace."""
 
         class Tests:
