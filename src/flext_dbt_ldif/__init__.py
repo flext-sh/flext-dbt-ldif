@@ -17,7 +17,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core import FlextTypes
-    from flext_ldif import d, e, h, r, s, x
+    from flext_ldif import d, e, h, r, x
 
     from flext_dbt_ldif.__version__ import (
         __all__,
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
         FlextDbtLdifProtocols,
         FlextDbtLdifProtocols as p,
     )
-    from flext_dbt_ldif.services import FlextDbtLdifService
+    from flext_dbt_ldif.services import FlextDbtLdifService, s
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.simple_api import FlextDbtLdif
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
@@ -86,7 +86,7 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "m": ["flext_dbt_ldif.models", "FlextDbtLdifModels"],
     "p": ["flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"],
     "r": ["flext_ldif", "r"],
-    "s": ["flext_ldif", "s"],
+    "s": ["flext_dbt_ldif.services", "s"],
     "t": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
     "u": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
     "x": ["flext_ldif", "x"],
