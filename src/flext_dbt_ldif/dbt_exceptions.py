@@ -24,8 +24,6 @@ class FlextDbtLdifError(e.BaseError):
     through error codes instead of multiple exception classes.
     """
 
-    ErrorCode = c.DbtLdif.ErrorCode
-
     @override
     def __init__(
         self,
@@ -54,7 +52,7 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create authentication error."""
-        return cls(message, error_code=cls.ErrorCode.AUTHENTICATION_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.AUTHENTICATION_ERROR, **context)
 
     @classmethod
     def configuration_error(
@@ -63,7 +61,7 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create configuration error."""
-        return cls(message, error_code=cls.ErrorCode.CONFIGURATION_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.CONFIGURATION_ERROR, **context)
 
     @classmethod
     def connection_error(
@@ -72,7 +70,7 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create connection error."""
-        return cls(message, error_code=cls.ErrorCode.CONNECTION_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.CONNECTION_ERROR, **context)
 
     @classmethod
     def model_error(
@@ -89,7 +87,7 @@ class FlextDbtLdifError(e.BaseError):
             context["model_name"] = model_name
         if model_type is not None:
             context["model_type"] = model_type
-        return cls(message, error_code=cls.ErrorCode.MODEL_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.MODEL_ERROR, **context)
 
     @classmethod
     def parse_error(
@@ -106,7 +104,7 @@ class FlextDbtLdifError(e.BaseError):
             context["line_number"] = line_number
         if entry_dn is not None:
             context["entry_dn"] = entry_dn
-        return cls(message, error_code=cls.ErrorCode.PARSE_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.PARSE_ERROR, **context)
 
     @classmethod
     def processing_error(
@@ -115,7 +113,7 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create processing error."""
-        return cls(message, error_code=cls.ErrorCode.PROCESSING_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.PROCESSING_ERROR, **context)
 
     @classmethod
     def test_error(
@@ -132,7 +130,7 @@ class FlextDbtLdifError(e.BaseError):
             context["test_name"] = test_name
         if model_name is not None:
             context["model_name"] = model_name
-        return cls(message, error_code=cls.ErrorCode.TEST_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.TEST_ERROR, **context)
 
     @classmethod
     def timeout_error(
@@ -141,7 +139,7 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create timeout error."""
-        return cls(message, error_code=cls.ErrorCode.TIMEOUT_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.TIMEOUT_ERROR, **context)
 
     @classmethod
     def transformation_error(
@@ -158,7 +156,7 @@ class FlextDbtLdifError(e.BaseError):
             context["transformation_type"] = transformation_type
         if model_name is not None:
             context["model_name"] = model_name
-        return cls(message, error_code=cls.ErrorCode.TRANSFORMATION_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.TRANSFORMATION_ERROR, **context)
 
     @classmethod
     def validation_error(
@@ -167,24 +165,24 @@ class FlextDbtLdifError(e.BaseError):
         **context: t.Scalar,
     ) -> FlextDbtLdifError:
         """Create validation error."""
-        return cls(message, error_code=cls.ErrorCode.VALIDATION_ERROR, **context)
+        return cls(message, error_code=c.DbtLdif.ErrorCode.VALIDATION_ERROR, **context)
 
     def is_configuration_error(self) -> bool:
         """Check if this is a configuration error."""
-        return self.error_code == self.ErrorCode.CONFIGURATION_ERROR
+        return self.error_code == c.DbtLdif.ErrorCode.CONFIGURATION_ERROR
 
     def is_processing_error(self) -> bool:
         """Check if this is a processing error."""
         return self.error_code in {
-            self.ErrorCode.PROCESSING_ERROR,
-            self.ErrorCode.PARSE_ERROR,
-            self.ErrorCode.MODEL_ERROR,
-            self.ErrorCode.TRANSFORMATION_ERROR,
+            c.DbtLdif.ErrorCode.PROCESSING_ERROR,
+            c.DbtLdif.ErrorCode.PARSE_ERROR,
+            c.DbtLdif.ErrorCode.MODEL_ERROR,
+            c.DbtLdif.ErrorCode.TRANSFORMATION_ERROR,
         }
 
     def is_validation_error(self) -> bool:
         """Check if this is a validation error."""
-        return self.error_code == self.ErrorCode.VALIDATION_ERROR
+        return self.error_code == c.DbtLdif.ErrorCode.VALIDATION_ERROR
 
 
 __all__: t.StrSequence = ["FlextDbtLdifError"]
