@@ -28,7 +28,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             sql_content: str
             description: str = ""
             columns: Sequence[Mapping[str, t.ContainerValue]] = Field(
-                default_factory=list
+                default_factory=lambda: list[Mapping[str, t.ContainerValue]]()
             )
             dependencies: t.StrSequence = Field(default_factory=list)
 
