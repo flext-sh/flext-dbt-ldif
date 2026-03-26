@@ -20,10 +20,6 @@ logger = FlextLogger(__name__)
 class FlextDbtLdifCliService:
     """FLEXT dbt LDIF CLI service using flext-cli foundation exclusively."""
 
-    def __init__(self) -> None:
-        """Initialize CLI service with flext-cli patterns."""
-        self._cli = cli()
-
     class _CommandHandlers:
         """Nested helper class for command handling operations."""
 
@@ -87,7 +83,7 @@ class FlextDbtLdifCliService:
             result = service.generate_and_write_models([])
             if result.is_failure:
                 return r[str].fail(result.error or "Model generation failed")
-            self._cli.display_text(
+            cli.display_text(
                 f"Model generation completed: {result.value}",
             )
             return r[str].ok("Generate message displayed")
@@ -111,7 +107,7 @@ class FlextDbtLdifCliService:
             "features": "Programmatic dbt model generation, LDIF data processing and analytics, Advanced SQL pattern generation, PostgreSQL optimized transformations",
         }
         try:
-            self._cli.display_text(str(info_data))
+            cli.display_text(str(info_data))
             return r[str].ok("Package information displayed successfully")
         except (
             ValueError,
@@ -131,7 +127,7 @@ class FlextDbtLdifCliService:
             result = service.run_data_quality_assessment("")
             if result.is_failure:
                 return r[str].fail(result.error or "Validation failed")
-            self._cli.display_text(
+            cli.display_text(
                 f"Validation completed: {result.value}",
             )
             return r[str].ok("Validate message displayed")

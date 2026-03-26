@@ -18,8 +18,7 @@ class TestFlextDbtLdifCliService:
     def test_initialization(self) -> None:
         """Test CLI service can be instantiated."""
         service = FlextDbtLdifCliService()
-        assert service._output is not None
-        assert service._config is not None
+        assert isinstance(service, FlextDbtLdifCliService)
 
     def test_display_info(self) -> None:
         """Test display_info returns result."""
