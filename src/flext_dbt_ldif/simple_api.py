@@ -8,7 +8,7 @@ from pathlib import Path
 from flext_core import FlextTypes, r
 from pydantic import RootModel, ValidationError
 
-from flext_dbt_ldif import FlextDbtLdifService, FlextDbtLdifSettings, m, u
+from flext_dbt_ldif import FlextDbtLdifSettings, m, u
 
 
 class FlextDbtLdifEntryListAdapter(
@@ -27,10 +27,10 @@ class FlextDbtLdif:
         self._config = (
             config if config is not None else FlextDbtLdifSettings.get_global()
         )
-        self._service = FlextDbtLdifService(config=self._config)
+        self._service = u.DbtLdif.Service(config=self._config)
 
     @property
-    def service(self) -> FlextDbtLdifService:
+    def service(self) -> u.DbtLdif.Service:
         """Return bound workflow service."""
         return self._service
 
