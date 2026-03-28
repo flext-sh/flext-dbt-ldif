@@ -37,9 +37,13 @@ if TYPE_CHECKING:
     )
     from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
     from tests.unit.test_api_surface import test_api_imports
-    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
-    from tests.unit.test_core import TestAnalytics, TestModelGenerator
-    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
+    from tests.unit.test_cli import (
+        FlextDbtLdifCliService,
+        TestFlextDbtLdifCliService,
+        TestMainEntryPoint,
+    )
+    from tests.unit.test_core import FlextDbtLdifCore, TestAnalytics, TestModelGenerator
+    from tests.unit.test_dbt_client import FlextDbtLdifClient, TestFlextDbtLdifClient
     from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
     from tests.unit.test_services import (
         svc,
@@ -62,6 +66,9 @@ if TYPE_CHECKING:
     )
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
+    "FlextDbtLdifCliService": ["tests.unit.test_cli", "FlextDbtLdifCliService"],
+    "FlextDbtLdifClient": ["tests.unit.test_dbt_client", "FlextDbtLdifClient"],
+    "FlextDbtLdifCore": ["tests.unit.test_core", "FlextDbtLdifCore"],
     "FlextDbtLdifTestConstants": ["tests.constants", "FlextDbtLdifTestConstants"],
     "FlextDbtLdifTestModels": ["tests.models", "FlextDbtLdifTestModels"],
     "FlextDbtLdifTestProtocols": ["tests.protocols", "FlextDbtLdifTestProtocols"],
@@ -141,6 +148,9 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
 }
 
 __all__ = [
+    "FlextDbtLdifCliService",
+    "FlextDbtLdifClient",
+    "FlextDbtLdifCore",
     "FlextDbtLdifTestConstants",
     "FlextDbtLdifTestModels",
     "FlextDbtLdifTestProtocols",
