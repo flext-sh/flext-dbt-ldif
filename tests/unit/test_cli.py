@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from flext_dbt_ldif import FlextDbtLdifCliService
+from flext_dbt_ldif import u
+
+FlextDbtLdifCliService = u.DbtLdif.CliService
 
 
 class TestFlextDbtLdifCliService:

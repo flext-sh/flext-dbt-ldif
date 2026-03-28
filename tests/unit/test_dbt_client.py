@@ -10,8 +10,10 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
+from flext_dbt_ldif import FlextDbtLdifSettings, u
 from tests import t
+
+FlextDbtLdifClient = u.DbtLdif.Client
 
 
 class TestFlextDbtLdifClient:

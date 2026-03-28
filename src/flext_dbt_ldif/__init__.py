@@ -17,7 +17,7 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
 if TYPE_CHECKING:
     from flext_core import FlextTypes
-    from flext_ldif import d, e, h, r, x
+    from flext_ldif import d, e, h, r, s, x
 
     from flext_dbt_ldif.__version__ import (
         __all__,
@@ -43,33 +43,17 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.simple_api import FlextDbtLdif
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
     from flext_dbt_ldif.utilities import (
-        FlextDbtLdifClient,
-        FlextDbtLdifCliService,
-        FlextDbtLdifCore,
-        FlextDbtLdifError,
-        FlextDbtLdifService,
-        FlextDbtLdifUnifiedService,
         FlextDbtLdifUtilities,
         FlextDbtLdifUtilities as u,
-        s,
     )
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextDbtLdif": ["flext_dbt_ldif.simple_api", "FlextDbtLdif"],
-    "FlextDbtLdifCliService": ["flext_dbt_ldif.utilities", "FlextDbtLdifCliService"],
-    "FlextDbtLdifClient": ["flext_dbt_ldif.utilities", "FlextDbtLdifClient"],
     "FlextDbtLdifConstants": ["flext_dbt_ldif.constants", "FlextDbtLdifConstants"],
-    "FlextDbtLdifCore": ["flext_dbt_ldif.utilities", "FlextDbtLdifCore"],
-    "FlextDbtLdifError": ["flext_dbt_ldif.utilities", "FlextDbtLdifError"],
     "FlextDbtLdifModels": ["flext_dbt_ldif.models", "FlextDbtLdifModels"],
     "FlextDbtLdifProtocols": ["flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"],
-    "FlextDbtLdifService": ["flext_dbt_ldif.utilities", "FlextDbtLdifService"],
     "FlextDbtLdifSettings": ["flext_dbt_ldif.settings", "FlextDbtLdifSettings"],
     "FlextDbtLdifTypes": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
-    "FlextDbtLdifUnifiedService": [
-        "flext_dbt_ldif.utilities",
-        "FlextDbtLdifUnifiedService",
-    ],
     "FlextDbtLdifUtilities": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
     "__all__": ["flext_dbt_ldif.__version__", "__all__"],
     "__author__": ["flext_dbt_ldif.__version__", "__author__"],
@@ -87,7 +71,7 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "m": ["flext_dbt_ldif.models", "FlextDbtLdifModels"],
     "p": ["flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"],
     "r": ["flext_ldif", "r"],
-    "s": ["flext_dbt_ldif.utilities", "s"],
+    "s": ["flext_ldif", "s"],
     "t": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
     "u": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
     "x": ["flext_ldif", "x"],
@@ -95,17 +79,11 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
 
 __all__ = [
     "FlextDbtLdif",
-    "FlextDbtLdifCliService",
-    "FlextDbtLdifClient",
     "FlextDbtLdifConstants",
-    "FlextDbtLdifCore",
-    "FlextDbtLdifError",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
-    "FlextDbtLdifService",
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
-    "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
     "__all__",
     "__author__",

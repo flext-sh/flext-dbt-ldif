@@ -13,19 +13,19 @@ from pathlib import Path
 import pytest
 from flext_core import r
 
-from flext_dbt_ldif import FlextDbtLdifService, t
+from flext_dbt_ldif import t, u
 from flext_dbt_ldif.models import FlextDbtLdifModels
 
 
 @pytest.fixture
-def svc(tmp_path: Path) -> FlextDbtLdifService:
+def svc(tmp_path: Path) -> u.DbtLdif.Service:
     """Create a test service."""
-    return FlextDbtLdifService(project_dir=tmp_path)
+    return u.DbtLdif.Service(project_dir=tmp_path)
 
 
 def test_parse_and_validate_ldif_ok(
     monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
+    svc: u.DbtLdif.Service,
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF succeeds."""
@@ -65,7 +65,7 @@ def test_parse_and_validate_ldif_ok(
 
 def test_parse_and_validate_ldif_parse_fails(
     monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
+    svc: u.DbtLdif.Service,
     tmp_path: Path,
 ) -> None:
     """Test parse failure propagates."""
@@ -82,7 +82,7 @@ def test_parse_and_validate_ldif_parse_fails(
 
 def test_generate_and_write_models_ok(
     monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
+    svc: u.DbtLdif.Service,
 ) -> None:
     """Test model generation succeeds."""
     staging_model = FlextDbtLdifModels.DbtLdif.DbtModel(
@@ -130,7 +130,7 @@ def test_generate_and_write_models_ok(
 
 def test_run_complete_workflow_all(
     monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
+    svc: u.DbtLdif.Service,
     tmp_path: Path,
 ) -> None:
     """Test complete workflow with all stages."""
@@ -214,7 +214,7 @@ def test_run_complete_workflow_all(
 
 def test_run_data_quality_assessment(
     monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
+    svc: u.DbtLdif.Service,
     tmp_path: Path,
 ) -> None:
     """Test data quality assessment delegates to parse_and_validate."""

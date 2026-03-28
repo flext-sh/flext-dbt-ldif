@@ -707,24 +707,9 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                     logger.error(f"Validate command failed: {result.error}")
 
 
-# Backward-compatible aliases
-FlextDbtLdifUnifiedService = FlextDbtLdifUtilities.DbtLdif.UnifiedService
-FlextDbtLdifCore = FlextDbtLdifUtilities.DbtLdif.Core
-FlextDbtLdifClient = FlextDbtLdifUtilities.DbtLdif.Client
-FlextDbtLdifError = FlextDbtLdifUtilities.DbtLdif.Error
-FlextDbtLdifService = FlextDbtLdifUtilities.DbtLdif.Service
-FlextDbtLdifCliService = FlextDbtLdifUtilities.DbtLdif.CliService
-s = FlextDbtLdifService
+u = FlextDbtLdifUtilities
 
 __all__ = [
-    "FlextDbtLdifCliService",
-    "FlextDbtLdifClient",
-    "FlextDbtLdifCore",
-    "FlextDbtLdifError",
-    "FlextDbtLdifService",
-    "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
-    "s",
+    "u",
 ]
-
-u = FlextDbtLdifUtilities
