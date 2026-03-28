@@ -142,9 +142,7 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
             def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
                 """Initialize client with explicit or global settings."""
                 self.config = (
-                    config
-                    if config is not None
-                    else FlextDbtLdifSettings.get_global()
+                    config if config is not None else FlextDbtLdifSettings.get_global()
                 )
 
             def parse_ldif_file(
@@ -182,7 +180,8 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                         validate_result.error or "Validation failed",
                     )
                 transform_result = self.transform_with_dbt(
-                    parse_result.value, model_names,
+                    parse_result.value,
+                    model_names,
                 )
                 if transform_result.is_failure:
                     return r[m.DbtLdif.PipelineResult].fail(
@@ -463,19 +462,15 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
             ) -> None:
                 """Initialize service dependencies."""
                 self.config = (
-                    config
-                    if config is not None
-                    else FlextDbtLdifSettings.get_global()
+                    config if config is not None else FlextDbtLdifSettings.get_global()
                 )
                 self.project_dir = project_dir or Path(
                     str(self.config.ldif_file_path or "."),
                 )
                 self.client = FlextDbtLdifUtilities.DbtLdif.Client(self.config)
-                self.model_generator = (
-                    FlextDbtLdifUtilities.DbtLdif.UnifiedService(
-                        config=self.config,
-                        project_dir=self.project_dir,
-                    )
+                self.model_generator = FlextDbtLdifUtilities.DbtLdif.UnifiedService(
+                    config=self.config,
+                    project_dir=self.project_dir,
                 )
 
             def generate_and_write_models(
@@ -579,7 +574,8 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                         {"dn": str(entry.get("dn", ""))} for entry in entries
                     ]
                     transform = self.client.transform_with_dbt(
-                        transform_payload, model_names,
+                        transform_payload,
+                        model_names,
                     )
                     if transform.is_failure:
                         return r[m.DbtLdif.WorkflowResult].fail(
@@ -626,9 +622,7 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                 info_data = {
                     "name": "FLEXT dbt LDIF",
                     "version": "__version__",
-                    "description": (
-                        "Advanced LDAP Data Analytics and Transformations"
-                    ),
+                    "description": ("Advanced LDAP Data Analytics and Transformations"),
                     "features": (
                         "Programmatic dbt model generation, "
                         "LDIF data processing and analytics, "
