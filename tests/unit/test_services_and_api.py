@@ -13,14 +13,16 @@ from pathlib import Path
 import pytest
 from flext_core import r
 
-from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifService, t
+from flext_dbt_ldif import FlextDbtLdif, t, u
 from flext_dbt_ldif.models import FlextDbtLdifModels
+
+FlextDbtLdifService = u.DbtLdif.Service
 
 
 @pytest.fixture
-def service(tmp_path: Path) -> FlextDbtLdifService:
+def service(tmp_path: Path) -> u.DbtLdif.Service:
     """Create a test service."""
-    return FlextDbtLdifService(project_dir=tmp_path)
+    return u.DbtLdif.Service(project_dir=tmp_path)
 
 
 def test_parse_and_validate_ldif_ok(

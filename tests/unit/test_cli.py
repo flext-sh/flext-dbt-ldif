@@ -97,8 +97,8 @@ class TestMainEntryPoint:
         """Test main handles KeyboardInterrupt and returns 1."""
         with patch("sys.argv", ["flext-dbt-ldif", "info"]):
             with patch.object(
-                FlextDbtLdifCliService._CommandHandlers,
-                "handle_info_command",
+                FlextDbtLdifCliService,
+                "info",
                 side_effect=KeyboardInterrupt(),
             ):
                 service = FlextDbtLdifCliService()
@@ -108,8 +108,8 @@ class TestMainEntryPoint:
         """Test main handles RuntimeError and returns 1."""
         with patch("sys.argv", ["flext-dbt-ldif", "info"]):
             with patch.object(
-                FlextDbtLdifCliService._CommandHandlers,
-                "handle_info_command",
+                FlextDbtLdifCliService,
+                "info",
                 side_effect=RuntimeError("Test error"),
             ):
                 service = FlextDbtLdifCliService()

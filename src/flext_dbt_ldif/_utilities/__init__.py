@@ -13,10 +13,10 @@ from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 if TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from flext_dbt_ldif._utilities.simple_api import FlextDbtLdif
+    from flext_dbt_ldif.simple_api import FlextDbtLdif
 
 _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
-    "FlextDbtLdif": ["flext_dbt_ldif._utilities.simple_api", "FlextDbtLdif"],
+    "FlextDbtLdif": ["flext_dbt_ldif.simple_api", "FlextDbtLdif"],
 }
 
 __all__ = [

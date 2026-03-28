@@ -11,19 +11,13 @@ from __future__ import annotations
 
 from flext_core import r
 
-from flext_dbt_ldif import (
-    FlextDbtLdif,
-    FlextDbtLdifClient,
-    FlextDbtLdifService,
-    FlextDbtLdifSettings,
-    __version__,
-)
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__, u
 
 
 def test_api_imports() -> None:
     """Test API imports."""
     assert isinstance(__version__, str)
-    _ = FlextDbtLdifClient(FlextDbtLdifSettings.get_global())
-    _ = FlextDbtLdifService(FlextDbtLdifSettings.get_global())
+    _ = u.DbtLdif.Client(FlextDbtLdifSettings.get_global())
+    _ = u.DbtLdif.Service(FlextDbtLdifSettings.get_global())
     assert callable(FlextDbtLdif)
     assert r is not None

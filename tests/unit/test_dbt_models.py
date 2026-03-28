@@ -12,8 +12,10 @@ from pathlib import Path
 
 from flext_core import FlextTypes
 
-from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService
+from flext_dbt_ldif import FlextDbtLdifSettings, u
 from flext_dbt_ldif.models import FlextDbtLdifModels
+
+FlextDbtLdifUnifiedService = u.DbtLdif.UnifiedService
 
 
 class TestFlextDbtLdifUnifiedService:
@@ -80,7 +82,7 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_analytics_models_empty(self) -> None:
         """Test analytics model generation with empty staging."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
+        gen = u.DbtLdif.UnifiedService(config=FlextDbtLdifSettings.get_global())
         result = gen.generate_analytics_models([])
         assert result.is_success
         models = result.value or []
