@@ -44,7 +44,11 @@ if TYPE_CHECKING:
     )
     from tests.unit.test_core import FlextDbtLdifCore, TestAnalytics, TestModelGenerator
     from tests.unit.test_dbt_client import FlextDbtLdifClient, TestFlextDbtLdifClient
-    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
+    from tests.unit.test_dbt_models import (
+        FlextDbtLdifUnifiedService,
+        TestDbtModel,
+        TestFlextDbtLdifUnifiedService,
+    )
     from tests.unit.test_services import (
         svc,
         test_parse_and_validate_ldif_parse_fails,
@@ -52,6 +56,7 @@ if TYPE_CHECKING:
         test_run_data_quality_assessment,
     )
     from tests.unit.test_services_and_api import (
+        FlextDbtLdifService,
         service,
         test_api_generate_ldif_models,
         test_api_process_ldif_file,
@@ -69,11 +74,16 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextDbtLdifCliService": ["tests.unit.test_cli", "FlextDbtLdifCliService"],
     "FlextDbtLdifClient": ["tests.unit.test_dbt_client", "FlextDbtLdifClient"],
     "FlextDbtLdifCore": ["tests.unit.test_core", "FlextDbtLdifCore"],
+    "FlextDbtLdifService": ["tests.unit.test_services_and_api", "FlextDbtLdifService"],
     "FlextDbtLdifTestConstants": ["tests.constants", "FlextDbtLdifTestConstants"],
     "FlextDbtLdifTestModels": ["tests.models", "FlextDbtLdifTestModels"],
     "FlextDbtLdifTestProtocols": ["tests.protocols", "FlextDbtLdifTestProtocols"],
     "FlextDbtLdifTestTypes": ["tests.typings", "FlextDbtLdifTestTypes"],
     "FlextDbtLdifTestUtilities": ["tests.utilities", "FlextDbtLdifTestUtilities"],
+    "FlextDbtLdifUnifiedService": [
+        "tests.unit.test_dbt_models",
+        "FlextDbtLdifUnifiedService",
+    ],
     "TestAnalytics": ["tests.unit.test_core", "TestAnalytics"],
     "TestDbtModel": ["tests.unit.test_dbt_models", "TestDbtModel"],
     "TestFlextDbtLdifCliService": ["tests.unit.test_cli", "TestFlextDbtLdifCliService"],
@@ -151,11 +161,13 @@ __all__ = [
     "FlextDbtLdifCliService",
     "FlextDbtLdifClient",
     "FlextDbtLdifCore",
+    "FlextDbtLdifService",
     "FlextDbtLdifTestConstants",
     "FlextDbtLdifTestModels",
     "FlextDbtLdifTestProtocols",
     "FlextDbtLdifTestTypes",
     "FlextDbtLdifTestUtilities",
+    "FlextDbtLdifUnifiedService",
     "TestAnalytics",
     "TestDbtModel",
     "TestFlextDbtLdifCliService",
