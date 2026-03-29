@@ -7,7 +7,6 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Self, override
 
-from flext_cli import cli
 from flext_core import FlextLogger, FlextService, FlextTypes, e, r
 from flext_ldif import FlextLdifUtilities
 from flext_meltano import FlextMeltanoUtilities
@@ -602,19 +601,11 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                     result = service.generate_and_write_models([])
                     if result.is_failure:
                         return r[str].fail(result.error or "Model generation failed")
-                    cli.display_text(
+                    logger.info(
                         f"Model generation completed: {result.value}",
                     )
                     return r[str].ok("Generate message displayed")
-                except (
-                    ValueError,
-                    TypeError,
-                    KeyError,
-                    AttributeError,
-                    OSError,
-                    RuntimeError,
-                    ImportError,
-                ) as exc:
+                except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
                     return r[str].fail(f"Generate message display failed: {exc}")
 
             def display_info(self) -> r[str]:
@@ -631,17 +622,9 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                     ),
                 }
                 try:
-                    cli.display_text(str(info_data))
+                    logger.info(str(info_data))
                     return r[str].ok("Package information displayed successfully")
-                except (
-                    ValueError,
-                    TypeError,
-                    KeyError,
-                    AttributeError,
-                    OSError,
-                    RuntimeError,
-                    ImportError,
-                ) as exc:
+                except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
                     return r[str].fail(f"Package info display failed: {exc}")
 
             def display_validate_message(self) -> r[str]:
@@ -651,19 +634,11 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                     result = service.run_data_quality_assessment("")
                     if result.is_failure:
                         return r[str].fail(result.error or "Validation failed")
-                    cli.display_text(
+                    logger.info(
                         f"Validation completed: {result.value}",
                     )
                     return r[str].ok("Validate message displayed")
-                except (
-                    ValueError,
-                    TypeError,
-                    KeyError,
-                    AttributeError,
-                    OSError,
-                    RuntimeError,
-                    ImportError,
-                ) as exc:
+                except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
                     return r[str].fail(f"Validate message display failed: {exc}")
 
             def generate(self) -> None:
@@ -696,7 +671,7 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
                 except KeyboardInterrupt:
                     logger.info("Interrupted by user")
                     return c.DbtLdif.EXIT_CODE_FAILURE
-                except (OSError, RuntimeError, ValueError):
+                except c.Meltano.Singer.SAFE_EXCEPTIONS:
                     logger.exception("CLI error")
                     return c.DbtLdif.EXIT_CODE_FAILURE
 
