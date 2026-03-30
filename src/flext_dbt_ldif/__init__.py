@@ -15,29 +15,8 @@ from typing import TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
 
-from flext_dbt_ldif.__version__ import (
-    __author__,
-    __author_email__,
-    __description__,
-    __license__,
-    __title__,
-    __url__,
-    __version__,
-    __version_info__,
-)
-
 if TYPE_CHECKING:
-    from flext_ldif import *
-
-    from flext_dbt_ldif import (
-        constants,
-        models,
-        protocols,
-        settings,
-        simple_api,
-        typings,
-        utilities,
-    )
+    from flext_dbt_ldif.__version__ import *
     from flext_dbt_ldif.constants import *
     from flext_dbt_ldif.models import *
     from flext_dbt_ldif.protocols import *
@@ -45,6 +24,7 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.simple_api import *
     from flext_dbt_ldif.typings import *
     from flext_dbt_ldif.utilities import *
+
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlextDbtLdif": "flext_dbt_ldif.simple_api",
@@ -54,6 +34,14 @@ _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlextDbtLdifSettings": "flext_dbt_ldif.settings",
     "FlextDbtLdifTypes": "flext_dbt_ldif.typings",
     "FlextDbtLdifUtilities": "flext_dbt_ldif.utilities",
+    "__author__": "flext_dbt_ldif.__version__",
+    "__author_email__": "flext_dbt_ldif.__version__",
+    "__description__": "flext_dbt_ldif.__version__",
+    "__license__": "flext_dbt_ldif.__version__",
+    "__title__": "flext_dbt_ldif.__version__",
+    "__url__": "flext_dbt_ldif.__version__",
+    "__version__": "flext_dbt_ldif.__version__",
+    "__version_info__": "flext_dbt_ldif.__version__",
     "c": ["flext_dbt_ldif.constants", "FlextDbtLdifConstants"],
     "constants": "flext_dbt_ldif.constants",
     "d": "flext_ldif",
@@ -75,4 +63,4 @@ _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
 }
 
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, sorted(_LAZY_IMPORTS))
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
