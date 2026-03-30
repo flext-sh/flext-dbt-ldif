@@ -5,78 +5,99 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, MutableMapping, Sequence
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
+from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_core import FlextTypes
-    from flext_tests import d, e, h, r, s, x
-
-    from tests import conftest, constants, models, protocols, typings, unit, utilities
+    from tests import (
+        conftest as conftest,
+        constants as constants,
+        models as models,
+        protocols as protocols,
+        typings as typings,
+        unit as unit,
+        utilities as utilities,
+    )
     from tests.conftest import (
-        dbt_ldif_profile,
-        dbt_ldif_project_config,
-        docker_control,
-        ensure_shared_docker_container,
-        ldif_source_config,
-        pytest_configure,
-        sample_ldif_entries,
-        set_test_environment,
-        shared_ldap_container,
+        dbt_ldif_profile as dbt_ldif_profile,
+        dbt_ldif_project_config as dbt_ldif_project_config,
+        docker_control as docker_control,
+        ensure_shared_docker_container as ensure_shared_docker_container,
+        ldif_source_config as ldif_source_config,
+        pytest_configure as pytest_configure,
+        sample_ldif_entries as sample_ldif_entries,
+        set_test_environment as set_test_environment,
+        shared_ldap_container as shared_ldap_container,
     )
     from tests.constants import (
-        FlextDbtLdifTestConstants,
+        FlextDbtLdifTestConstants as FlextDbtLdifTestConstants,
         FlextDbtLdifTestConstants as c,
     )
-    from tests.models import FlextDbtLdifTestModels, FlextDbtLdifTestModels as m
+    from tests.models import (
+        FlextDbtLdifTestModels as FlextDbtLdifTestModels,
+        FlextDbtLdifTestModels as m,
+    )
     from tests.protocols import (
-        FlextDbtLdifTestProtocols,
+        FlextDbtLdifTestProtocols as FlextDbtLdifTestProtocols,
         FlextDbtLdifTestProtocols as p,
     )
-    from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
+    from tests.typings import (
+        FlextDbtLdifTestTypes as FlextDbtLdifTestTypes,
+        FlextDbtLdifTestTypes as t,
+    )
     from tests.unit import (
-        test_api_surface,
-        test_cli,
-        test_core,
-        test_dbt_client,
-        test_dbt_models,
-        test_services,
-        test_services_and_api,
-        test_version,
+        test_api_surface as test_api_surface,
+        test_cli as test_cli,
+        test_core as test_core,
+        test_dbt_client as test_dbt_client,
+        test_dbt_models as test_dbt_models,
+        test_services as test_services,
+        test_services_and_api as test_services_and_api,
+        test_version as test_version,
     )
-    from tests.unit.test_api_surface import test_api_imports
+    from tests.unit.test_api_surface import test_api_imports as test_api_imports
     from tests.unit.test_cli import (
-        FlextDbtLdifCliService,
-        TestFlextDbtLdifCliService,
-        TestMainEntryPoint,
+        FlextDbtLdifCliService as FlextDbtLdifCliService,
+        TestFlextDbtLdifCliService as TestFlextDbtLdifCliService,
+        TestMainEntryPoint as TestMainEntryPoint,
     )
-    from tests.unit.test_core import FlextDbtLdifCore, TestAnalytics, TestModelGenerator
-    from tests.unit.test_dbt_client import FlextDbtLdifClient, TestFlextDbtLdifClient
+    from tests.unit.test_core import (
+        FlextDbtLdifCore as FlextDbtLdifCore,
+        TestAnalytics as TestAnalytics,
+        TestModelGenerator as TestModelGenerator,
+    )
+    from tests.unit.test_dbt_client import (
+        FlextDbtLdifClient as FlextDbtLdifClient,
+        TestFlextDbtLdifClient as TestFlextDbtLdifClient,
+    )
     from tests.unit.test_dbt_models import (
-        FlextDbtLdifUnifiedService,
-        TestDbtModel,
-        TestFlextDbtLdifUnifiedService,
+        FlextDbtLdifUnifiedService as FlextDbtLdifUnifiedService,
+        TestDbtModel as TestDbtModel,
+        TestFlextDbtLdifUnifiedService as TestFlextDbtLdifUnifiedService,
     )
     from tests.unit.test_services import (
-        svc,
-        test_parse_and_validate_ldif_parse_fails,
-        test_run_complete_workflow_all,
-        test_run_data_quality_assessment,
+        svc as svc,
+        test_parse_and_validate_ldif_parse_fails as test_parse_and_validate_ldif_parse_fails,
+        test_run_complete_workflow_all as test_run_complete_workflow_all,
+        test_run_data_quality_assessment as test_run_data_quality_assessment,
     )
     from tests.unit.test_services_and_api import (
-        FlextDbtLdifService,
-        service,
-        test_api_generate_ldif_models,
-        test_api_process_ldif_file,
-        test_api_validate_ldif_quality,
-        test_generate_and_write_models_ok,
-        test_parse_and_validate_ldif_ok,
+        FlextDbtLdifService as FlextDbtLdifService,
+        service as service,
+        test_api_generate_ldif_models as test_api_generate_ldif_models,
+        test_api_process_ldif_file as test_api_process_ldif_file,
+        test_api_validate_ldif_quality as test_api_validate_ldif_quality,
+        test_generate_and_write_models_ok as test_generate_and_write_models_ok,
+        test_parse_and_validate_ldif_ok as test_parse_and_validate_ldif_ok,
     )
-    from tests.unit.test_version import test_dunder_alignment, test_version_is_string
+    from tests.unit.test_version import (
+        test_dunder_alignment as test_dunder_alignment,
+        test_version_is_string as test_version_is_string,
+    )
     from tests.utilities import (
-        FlextDbtLdifTestUtilities,
+        FlextDbtLdifTestUtilities as FlextDbtLdifTestUtilities,
         FlextDbtLdifTestUtilities as u,
     )
 
@@ -181,7 +202,7 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "x": ["flext_tests", "x"],
 }
 
-__all__ = [
+_EXPORTS: Sequence[str] = [
     "FlextDbtLdifCliService",
     "FlextDbtLdifClient",
     "FlextDbtLdifCore",
@@ -250,41 +271,4 @@ __all__ = [
 ]
 
 
-_LAZY_CACHE: MutableMapping[str, FlextTypes.ModuleExport] = {}
-
-
-def __getattr__(name: str) -> FlextTypes.ModuleExport:
-    """Lazy-load module attributes on first access (PEP 562).
-
-    A local cache ``_LAZY_CACHE`` persists resolved objects across repeated
-    accesses during process lifetime.
-
-    Args:
-        name: Attribute name requested by dir()/import.
-
-    Returns:
-        Lazy-loaded module export type.
-
-    Raises:
-        AttributeError: If attribute not registered.
-
-    """
-    if name in _LAZY_CACHE:
-        return _LAZY_CACHE[name]
-
-    value = lazy_getattr(name, _LAZY_IMPORTS, globals(), __name__)
-    _LAZY_CACHE[name] = value
-    return value
-
-
-def __dir__() -> Sequence[str]:
-    """Return list of available attributes for dir() and autocomplete.
-
-    Returns:
-        List of public names from module exports.
-
-    """
-    return sorted(__all__)
-
-
-cleanup_submodule_namespace(__name__, _LAZY_IMPORTS)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, _EXPORTS)
