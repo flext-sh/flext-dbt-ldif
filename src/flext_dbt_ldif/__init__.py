@@ -15,20 +15,21 @@ from typing import TYPE_CHECKING
 
 from flext_core.lazy import cleanup_submodule_namespace, lazy_getattr
 
+from flext_dbt_ldif.__version__ import (
+    __author__,
+    __author_email__,
+    __description__,
+    __license__,
+    __title__,
+    __url__,
+    __version__,
+    __version_info__,
+)
+
 if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_ldif import d, e, h, r, s, x
 
-    from flext_dbt_ldif.__version__ import (
-        __author__,
-        __author_email__,
-        __description__,
-        __license__,
-        __title__,
-        __url__,
-        __version__,
-        __version_info__,
-    )
     from flext_dbt_ldif.constants import (
         FlextDbtLdifConstants,
         FlextDbtLdifConstants as c,
@@ -54,14 +55,6 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextDbtLdifSettings": ["flext_dbt_ldif.settings", "FlextDbtLdifSettings"],
     "FlextDbtLdifTypes": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
     "FlextDbtLdifUtilities": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
-    "__author__": ["flext_dbt_ldif.__version__", "__author__"],
-    "__author_email__": ["flext_dbt_ldif.__version__", "__author_email__"],
-    "__description__": ["flext_dbt_ldif.__version__", "__description__"],
-    "__license__": ["flext_dbt_ldif.__version__", "__license__"],
-    "__title__": ["flext_dbt_ldif.__version__", "__title__"],
-    "__url__": ["flext_dbt_ldif.__version__", "__url__"],
-    "__version__": ["flext_dbt_ldif.__version__", "__version__"],
-    "__version_info__": ["flext_dbt_ldif.__version__", "__version_info__"],
     "c": ["flext_dbt_ldif.constants", "FlextDbtLdifConstants"],
     "d": ["flext_ldif", "d"],
     "e": ["flext_ldif", "e"],
