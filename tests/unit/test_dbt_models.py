@@ -12,8 +12,7 @@ from pathlib import Path
 
 from flext_core import FlextTypes
 
-from flext_dbt_ldif import FlextDbtLdifSettings, u
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif import FlextDbtLdifModels, FlextDbtLdifSettings, u
 
 FlextDbtLdifUnifiedService = u.DbtLdif.UnifiedService
 

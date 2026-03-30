@@ -13,8 +13,7 @@ from pathlib import Path
 import pytest
 from flext_core import r
 
-from flext_dbt_ldif import t, u
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif import FlextDbtLdifModels, t, u
 
 
 @pytest.fixture

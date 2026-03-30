@@ -20,7 +20,6 @@ if TYPE_CHECKING:
     from flext_ldif import d, e, h, r, s, x
 
     from flext_dbt_ldif.__version__ import (
-        __all__,
         __author__,
         __author_email__,
         __description__,
@@ -55,7 +54,6 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextDbtLdifSettings": ["flext_dbt_ldif.settings", "FlextDbtLdifSettings"],
     "FlextDbtLdifTypes": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
     "FlextDbtLdifUtilities": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
-    "__all__": ["flext_dbt_ldif.__version__", "__all__"],
     "__author__": ["flext_dbt_ldif.__version__", "__author__"],
     "__author_email__": ["flext_dbt_ldif.__version__", "__author_email__"],
     "__description__": ["flext_dbt_ldif.__version__", "__description__"],
@@ -85,7 +83,6 @@ __all__ = [
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
-    "__all__",
     "__author__",
     "__author_email__",
     "__description__",
