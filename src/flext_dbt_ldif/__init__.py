@@ -30,6 +30,15 @@ if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_ldif import d, e, h, r, s, x
 
+    from flext_dbt_ldif import (
+        constants,
+        models,
+        protocols,
+        settings,
+        simple_api,
+        typings,
+        utilities,
+    )
     from flext_dbt_ldif.constants import (
         FlextDbtLdifConstants,
         FlextDbtLdifConstants as c,
@@ -56,15 +65,22 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "FlextDbtLdifTypes": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
     "FlextDbtLdifUtilities": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
     "c": ["flext_dbt_ldif.constants", "FlextDbtLdifConstants"],
+    "constants": ["flext_dbt_ldif.constants", ""],
     "d": ["flext_ldif", "d"],
     "e": ["flext_ldif", "e"],
     "h": ["flext_ldif", "h"],
     "m": ["flext_dbt_ldif.models", "FlextDbtLdifModels"],
+    "models": ["flext_dbt_ldif.models", ""],
     "p": ["flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"],
+    "protocols": ["flext_dbt_ldif.protocols", ""],
     "r": ["flext_ldif", "r"],
     "s": ["flext_ldif", "s"],
+    "settings": ["flext_dbt_ldif.settings", ""],
+    "simple_api": ["flext_dbt_ldif.simple_api", ""],
     "t": ["flext_dbt_ldif.typings", "FlextDbtLdifTypes"],
+    "typings": ["flext_dbt_ldif.typings", ""],
     "u": ["flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"],
+    "utilities": ["flext_dbt_ldif.utilities", ""],
     "x": ["flext_ldif", "x"],
 }
 
@@ -85,15 +101,22 @@ __all__ = [
     "__version__",
     "__version_info__",
     "c",
+    "constants",
     "d",
     "e",
     "h",
     "m",
+    "models",
     "p",
+    "protocols",
     "r",
     "s",
+    "settings",
+    "simple_api",
     "t",
+    "typings",
     "u",
+    "utilities",
     "x",
 ]
 

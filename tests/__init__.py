@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from flext_core import FlextTypes
     from flext_tests import d, e, h, r, s, x
 
-    from tests import unit
+    from tests import conftest, constants, models, protocols, typings, unit, utilities
     from tests.conftest import (
         dbt_ldif_profile,
         dbt_ldif_project_config,
@@ -36,6 +36,16 @@ if TYPE_CHECKING:
         FlextDbtLdifTestProtocols as p,
     )
     from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
+    from tests.unit import (
+        test_api_surface,
+        test_cli,
+        test_core,
+        test_dbt_client,
+        test_dbt_models,
+        test_services,
+        test_services_and_api,
+        test_version,
+    )
     from tests.unit.test_api_surface import test_api_imports
     from tests.unit.test_cli import (
         FlextDbtLdifCliService,
@@ -95,6 +105,8 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "TestMainEntryPoint": ["tests.unit.test_cli", "TestMainEntryPoint"],
     "TestModelGenerator": ["tests.unit.test_core", "TestModelGenerator"],
     "c": ["tests.constants", "FlextDbtLdifTestConstants"],
+    "conftest": ["tests.conftest", ""],
+    "constants": ["tests.constants", ""],
     "d": ["flext_tests", "d"],
     "dbt_ldif_profile": ["tests.conftest", "dbt_ldif_profile"],
     "dbt_ldif_project_config": ["tests.conftest", "dbt_ldif_project_config"],
@@ -107,7 +119,9 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
     "h": ["flext_tests", "h"],
     "ldif_source_config": ["tests.conftest", "ldif_source_config"],
     "m": ["tests.models", "FlextDbtLdifTestModels"],
+    "models": ["tests.models", ""],
     "p": ["tests.protocols", "FlextDbtLdifTestProtocols"],
+    "protocols": ["tests.protocols", ""],
     "pytest_configure": ["tests.conftest", "pytest_configure"],
     "r": ["flext_tests", "r"],
     "s": ["flext_tests", "s"],
@@ -126,10 +140,15 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
         "tests.unit.test_services_and_api",
         "test_api_process_ldif_file",
     ],
+    "test_api_surface": ["tests.unit.test_api_surface", ""],
     "test_api_validate_ldif_quality": [
         "tests.unit.test_services_and_api",
         "test_api_validate_ldif_quality",
     ],
+    "test_cli": ["tests.unit.test_cli", ""],
+    "test_core": ["tests.unit.test_core", ""],
+    "test_dbt_client": ["tests.unit.test_dbt_client", ""],
+    "test_dbt_models": ["tests.unit.test_dbt_models", ""],
     "test_dunder_alignment": ["tests.unit.test_version", "test_dunder_alignment"],
     "test_generate_and_write_models_ok": [
         "tests.unit.test_services_and_api",
@@ -151,9 +170,14 @@ _LAZY_IMPORTS: Mapping[str, Sequence[str]] = {
         "tests.unit.test_services",
         "test_run_data_quality_assessment",
     ],
+    "test_services": ["tests.unit.test_services", ""],
+    "test_services_and_api": ["tests.unit.test_services_and_api", ""],
+    "test_version": ["tests.unit.test_version", ""],
     "test_version_is_string": ["tests.unit.test_version", "test_version_is_string"],
+    "typings": ["tests.typings", ""],
     "u": ["tests.utilities", "FlextDbtLdifTestUtilities"],
     "unit": ["tests.unit", ""],
+    "utilities": ["tests.utilities", ""],
     "x": ["flext_tests", "x"],
 }
 
@@ -176,6 +200,8 @@ __all__ = [
     "TestMainEntryPoint",
     "TestModelGenerator",
     "c",
+    "conftest",
+    "constants",
     "d",
     "dbt_ldif_profile",
     "dbt_ldif_project_config",
@@ -185,7 +211,9 @@ __all__ = [
     "h",
     "ldif_source_config",
     "m",
+    "models",
     "p",
+    "protocols",
     "pytest_configure",
     "r",
     "s",
@@ -198,16 +226,26 @@ __all__ = [
     "test_api_generate_ldif_models",
     "test_api_imports",
     "test_api_process_ldif_file",
+    "test_api_surface",
     "test_api_validate_ldif_quality",
+    "test_cli",
+    "test_core",
+    "test_dbt_client",
+    "test_dbt_models",
     "test_dunder_alignment",
     "test_generate_and_write_models_ok",
     "test_parse_and_validate_ldif_ok",
     "test_parse_and_validate_ldif_parse_fails",
     "test_run_complete_workflow_all",
     "test_run_data_quality_assessment",
+    "test_services",
+    "test_services_and_api",
+    "test_version",
     "test_version_is_string",
+    "typings",
     "u",
     "unit",
+    "utilities",
     "x",
 ]
 
