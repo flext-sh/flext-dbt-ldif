@@ -13,14 +13,35 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from tests.unit.test_api_surface import *
-    from tests.unit.test_cli import *
-    from tests.unit.test_core import *
-    from tests.unit.test_dbt_client import *
-    from tests.unit.test_dbt_models import *
-    from tests.unit.test_services import *
-    from tests.unit.test_services_and_api import *
-    from tests.unit.test_version import *
+    from tests.unit.test_api_surface import test_api_imports
+    from tests.unit.test_cli import (
+        FlextDbtLdifCliService,
+        TestFlextDbtLdifCliService,
+        TestMainEntryPoint,
+    )
+    from tests.unit.test_core import FlextDbtLdifCore, TestAnalytics, TestModelGenerator
+    from tests.unit.test_dbt_client import FlextDbtLdifClient, TestFlextDbtLdifClient
+    from tests.unit.test_dbt_models import (
+        FlextDbtLdifUnifiedService,
+        TestDbtModel,
+        TestFlextDbtLdifUnifiedService,
+    )
+    from tests.unit.test_services import (
+        svc,
+        test_parse_and_validate_ldif_parse_fails,
+        test_run_complete_workflow_all,
+        test_run_data_quality_assessment,
+    )
+    from tests.unit.test_services_and_api import (
+        FlextDbtLdifService,
+        service,
+        test_api_generate_ldif_models,
+        test_api_process_ldif_file,
+        test_api_validate_ldif_quality,
+        test_generate_and_write_models_ok,
+        test_parse_and_validate_ldif_ok,
+    )
+    from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlextDbtLdifCliService": "tests.unit.test_cli",

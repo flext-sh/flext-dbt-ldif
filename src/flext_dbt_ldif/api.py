@@ -1,14 +1,31 @@
-"""Public API facade for DBT LDIF workflows."""
+"""Public API facade for DBT LDIF workflows.
+
+MRO facade composing all service mixins per AGENTS.md §2.5.
+
+Copyright (c) 2025 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from pathlib import Path
+from typing import ClassVar, Self
 
 from flext_core import FlextTypes, r
 from pydantic import RootModel, ValidationError
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, u
+from flext_dbt_ldif import (
+    FlextDbtLdifClient,
+    FlextDbtLdifCliService,
+    FlextDbtLdifCore,
+    FlextDbtLdifError,
+    FlextDbtLdifServiceMixin,
+    FlextDbtLdifSettings,
+    FlextDbtLdifUnifiedService,
+    m,
+    u,
+)
 
 
 class FlextDbtLdifEntryListAdapter(
@@ -19,18 +36,37 @@ class FlextDbtLdifEntryListAdapter(
     root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
 
 
-class FlextDbtLdif:
-    """Facade class that exposes primary DBT LDIF operations."""
+class FlextDbtLdif(  # noqa: N818
+    FlextDbtLdifCliService,
+    FlextDbtLdifClient,
+    FlextDbtLdifCore,
+    FlextDbtLdifError,
+    FlextDbtLdifServiceMixin,
+    FlextDbtLdifUnifiedService,
+):
+    """MRO facade for all DBT LDIF operations.
+
+    All domain behavior comes from service mixins via MRO.
+    """
+
+    _instance: ClassVar[Self | None] = None
 
     def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
         self._config = (
             config if config is not None else FlextDbtLdifSettings.get_global()
         )
-        self._service = u.DbtLdif.Service(config=self._config)
+        self._service = self.Service(config=self._config)
+
+    @classmethod
+    def get_instance(cls) -> Self:
+        """Return the shared facade instance."""
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
     @property
-    def service(self) -> u.DbtLdif.Service:
+    def service(self) -> FlextDbtLdifServiceMixin.Service:
         """Return bound workflow service."""
         return self._service
 
@@ -45,12 +81,10 @@ class FlextDbtLdif:
     def generate_ldif_models(
         self,
         ldif_file: Path | str,
-        project_dir: Path | str | None = None,
         *,
         overwrite: bool = False,
     ) -> r[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input."""
-        _ = project_dir
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.is_failure:
             return r[m.DbtLdif.ModelGenerationResult].fail(
@@ -68,13 +102,11 @@ class FlextDbtLdif:
     def process_ldif_file(
         self,
         ldif_file: Path | str,
-        project_dir: Path | str | None = None,
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
     ) -> r[m.DbtLdif.WorkflowResult]:
         """Execute end-to-end LDIF workflow."""
-        _ = project_dir
         return self.service.run_complete_workflow(
             ldif_file=ldif_file,
             generate_models=generate_models,
@@ -89,4 +121,4 @@ class FlextDbtLdif:
         return self.service.run_data_quality_assessment(ldif_file)
 
 
-__all__ = ["FlextDbtLdif"]
+__all__ = ["FlextDbtLdif", "FlextDbtLdifEntryListAdapter"]
