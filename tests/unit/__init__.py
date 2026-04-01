@@ -13,6 +13,16 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
 
+    from tests.unit import (
+        test_api_surface,
+        test_cli,
+        test_core,
+        test_dbt_client,
+        test_dbt_models,
+        test_services,
+        test_services_and_api,
+        test_version,
+    )
     from tests.unit.test_api_surface import test_api_imports
     from tests.unit.test_cli import (
         FlextDbtLdifCliService,

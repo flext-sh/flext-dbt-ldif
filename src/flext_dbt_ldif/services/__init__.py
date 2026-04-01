@@ -13,12 +13,20 @@ from flext_core.lazy import install_lazy_exports
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
 
-    from flext_dbt_ldif.services.cli_service import *
-    from flext_dbt_ldif.services.client import *
-    from flext_dbt_ldif.services.core import *
-    from flext_dbt_ldif.services.error import *
-    from flext_dbt_ldif.services.service import *
-    from flext_dbt_ldif.services.unified_service import *
+    from flext_dbt_ldif.services import (
+        cli_service,
+        client,
+        core,
+        error,
+        service,
+        unified_service,
+    )
+    from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
+    from flext_dbt_ldif.services.client import FlextDbtLdifClient
+    from flext_dbt_ldif.services.core import FlextDbtLdifCore
+    from flext_dbt_ldif.services.error import FlextDbtLdifError
+    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin, logger
+    from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
     "FlextDbtLdifCliService": "flext_dbt_ldif.services.cli_service",
