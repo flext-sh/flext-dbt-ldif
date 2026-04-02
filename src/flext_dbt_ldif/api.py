@@ -36,7 +36,7 @@ class FlextDbtLdifEntryListAdapter(
     root: Sequence[FlextTypes.ContainerValueMapping]
 
 
-class FlextDbtLdif(  # noqa: N818
+class FlextDbtLdif(
     FlextDbtLdifCliService,
     FlextDbtLdifClient,
     FlextDbtLdifCore,
