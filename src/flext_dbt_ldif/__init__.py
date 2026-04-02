@@ -27,6 +27,12 @@ from flext_dbt_ldif.__version__ import (
 
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
+    from flext_core.decorators import FlextDecorators as d
+    from flext_core.exceptions import FlextExceptions as e
+    from flext_core.handlers import FlextHandlers as h
+    from flext_core.mixins import FlextMixins as x
+    from flext_core.result import FlextResult as r
+    from flext_core.service import FlextService as s
     from flext_dbt_ldif import (
         api,
         base,
@@ -70,7 +76,6 @@ if _TYPE_CHECKING:
         FlextDbtLdifUtilities,
         FlextDbtLdifUtilities as u,
     )
-    from flext_ldif import d, e, h, r, s, x
 
 _LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
     ("flext_dbt_ldif.services",),
@@ -88,22 +93,22 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
         "base": "flext_dbt_ldif.base",
         "c": ("flext_dbt_ldif.constants", "FlextDbtLdifConstants"),
         "constants": "flext_dbt_ldif.constants",
-        "d": "flext_ldif",
-        "e": "flext_ldif",
-        "h": "flext_ldif",
+        "d": ("flext_core.decorators", "FlextDecorators"),
+        "e": ("flext_core.exceptions", "FlextExceptions"),
+        "h": ("flext_core.handlers", "FlextHandlers"),
         "m": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
         "models": "flext_dbt_ldif.models",
         "p": ("flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"),
         "protocols": "flext_dbt_ldif.protocols",
-        "r": "flext_ldif",
-        "s": "flext_ldif",
+        "r": ("flext_core.result", "FlextResult"),
+        "s": ("flext_core.service", "FlextService"),
         "services": "flext_dbt_ldif.services",
         "settings": "flext_dbt_ldif.settings",
         "t": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
         "typings": "flext_dbt_ldif.typings",
         "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
         "utilities": "flext_dbt_ldif.utilities",
-        "x": "flext_ldif",
+        "x": ("flext_core.mixins", "FlextMixins"),
     },
 )
 
