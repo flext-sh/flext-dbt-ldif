@@ -25,7 +25,8 @@ class FlextDbtLdifCliService:
                 if result.is_failure:
                     return r[str].fail(result.error or "Model generation failed")
                 logger.info(
-                    f"Model generation completed: {result.value}",
+                    "Model generation completed: %s",
+                    result.value,
                 )
                 return r[str].ok("Generate message displayed")
             except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
@@ -58,7 +59,8 @@ class FlextDbtLdifCliService:
                 if result.is_failure:
                     return r[str].fail(result.error or "Validation failed")
                 logger.info(
-                    f"Validation completed: {result.value}",
+                    "Validation completed: %s",
+                    result.value,
                 )
                 return r[str].ok("Validate message displayed")
             except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
@@ -68,13 +70,13 @@ class FlextDbtLdifCliService:
             """Generate dbt models from LDIF schema definitions."""
             result: r[str] = self.display_generate_message()
             if result.is_failure:
-                logger.error(f"Generate command failed: {result.error}")
+                logger.error("Generate command failed: %s", result.error)
 
         def info(self) -> None:
             """Show package information."""
             result = self.display_info()
             if result.is_failure:
-                logger.error(f"Info command failed: {result.error}")
+                logger.error("Info command failed: %s", result.error)
 
         def main(self) -> int:
             """Main CLI entry point for flext-dbt-ldif."""
@@ -102,4 +104,4 @@ class FlextDbtLdifCliService:
             """Validate dbt models and configurations."""
             result: r[str] = self.display_validate_message()
             if result.is_failure:
-                logger.error(f"Validate command failed: {result.error}")
+                logger.error("Validate command failed: %s", result.error)

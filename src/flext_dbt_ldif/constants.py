@@ -8,31 +8,12 @@ from typing import Final
 from flext_ldif import FlextLdifConstants
 from flext_meltano import FlextMeltanoConstants
 
-from flext_dbt_ldif import __version__
-
 
 class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     """Typed constants used by DBT LDIF modules."""
 
     class DbtLdif:
         """DBT LDIF domain constants namespace."""
-
-        @unique
-        class DbtLogLevels(StrEnum):
-            """Allowed DBT log levels."""
-
-            DEBUG = "debug"
-            INFO = "info"
-            WARN = "warn"
-            ERROR = "error"
-
-        @unique
-        class DbtTargets(StrEnum):
-            """Supported DBT targets."""
-
-            DEV = "dev"
-            STAGING = "staging"
-            PROD = "prod"
 
         @unique
         class ErrorCode(StrEnum):
@@ -50,20 +31,9 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
             TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
             TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
-        DEFAULT_LDIF_ENCODING: Final[str] = "utf-8"
-        DEFAULT_DBT_PROFILES_DIR: Final[str] = "./profiles"
-        DEFAULT_DBT_TARGET: Final[str] = "dev"
-        DEFAULT_OUTPUT_FORMAT: Final[str] = "duckdb"
-        MIN_FILE_SIZE_KB: Final[int] = 1024
-        MAX_FILE_SIZE_GB: Final[int] = 1024 * 1024 * 1024
         CLI_COMMAND_INFO: Final[str] = "info"
         CLI_COMMAND_GENERATE: Final[str] = "generate"
         CLI_COMMAND_VALIDATE: Final[str] = "validate"
-        PACKAGE_NAME: Final[str] = "FLEXT dbt LDIF"
-        PACKAGE_DESCRIPTION: Final[str] = (
-            "Advanced LDAP Data Analytics and Transformations"
-        )
-        DEFAULT_OUTPUT_FORMAT_CLI: Final[str] = "json"
         STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
         STAGING_MODEL_DESCRIPTION: Final[str] = "Staging model for LDIF entries"
         ANALYTICS_MODEL_NAME: Final[str] = "analytics_ldif_insights"
@@ -73,18 +43,14 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
         DBT_MATERIALIZATION_VIEW: Final[str] = "view"
         DBT_MATERIALIZATION_TABLE: Final[str] = "table"
         LDIF_SOURCE_NAME: Final[str] = "ldif_entries"
-        LDIF_RAW_SOURCE: Final[str] = "raw_ldif_entries"
         SAMPLE_LDIF_DN: Final[str] = "cn=sample,dc=example,dc=org"
         DEFAULT_QUALITY_SCORE: Final[float] = 1.0
         VALIDATION_STATUS_PASSED: Final[str] = "passed"
-        VALIDATION_STATUS_COMPLETED: Final[str] = "completed"
         TRANSFORMATION_STATUS_SUCCESS: Final[str] = "success"
         WORKFLOW_STATUS_COMPLETED: Final[str] = "completed"
         WORKFLOW_STATUS_READY: Final[str] = "ready"
         EXIT_CODE_SUCCESS: Final[int] = 0
         EXIT_CODE_FAILURE: Final[int] = 1
-        PROJECT_VERSION: Final[str] = __version__
-        VERSION: Final[str] = __version__
 
 
 __all__ = ["FlextDbtLdifConstants", "c"]
