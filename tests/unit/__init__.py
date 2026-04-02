@@ -24,18 +24,10 @@ if _TYPE_CHECKING:
         test_version,
     )
     from tests.unit.test_api_surface import test_api_imports
-    from tests.unit.test_cli import (
-        FlextDbtLdifCliService,
-        TestFlextDbtLdifCliService,
-        TestMainEntryPoint,
-    )
-    from tests.unit.test_core import FlextDbtLdifCore, TestAnalytics, TestModelGenerator
-    from tests.unit.test_dbt_client import FlextDbtLdifClient, TestFlextDbtLdifClient
-    from tests.unit.test_dbt_models import (
-        FlextDbtLdifUnifiedService,
-        TestDbtModel,
-        TestFlextDbtLdifUnifiedService,
-    )
+    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
+    from tests.unit.test_core import TestAnalytics, TestModelGenerator
+    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
+    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
     from tests.unit.test_services import (
         svc,
         test_parse_and_validate_ldif_parse_fails,
@@ -54,11 +46,7 @@ if _TYPE_CHECKING:
     from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 
 _LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
-    "FlextDbtLdifCliService": "tests.unit.test_cli",
-    "FlextDbtLdifClient": "tests.unit.test_dbt_client",
-    "FlextDbtLdifCore": "tests.unit.test_core",
     "FlextDbtLdifService": "tests.unit.test_services_and_api",
-    "FlextDbtLdifUnifiedService": "tests.unit.test_dbt_models",
     "TestAnalytics": "tests.unit.test_core",
     "TestDbtModel": "tests.unit.test_dbt_models",
     "TestFlextDbtLdifCliService": "tests.unit.test_cli",

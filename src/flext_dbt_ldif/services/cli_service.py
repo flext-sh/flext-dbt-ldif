@@ -6,8 +6,7 @@ import sys
 
 from flext_core import FlextLogger, r
 
-from flext_dbt_ldif import c
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_dbt_ldif import FlextDbtLdifServiceMixin, c
 
 logger = FlextLogger(__name__)
 

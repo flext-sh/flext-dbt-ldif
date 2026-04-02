@@ -10,10 +10,8 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings, u
+from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
 from tests import t
-
-FlextDbtLdifClient = u.DbtLdif.Client
 
 
 class TestFlextDbtLdifClient:
@@ -21,18 +19,18 @@ class TestFlextDbtLdifClient:
 
     def test_initialization_default(self) -> None:
         """Test client initialization with default settings."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         assert client.config is not None
 
     def test_initialization_with_config(self) -> None:
         """Test client initialization with explicit config."""
         config = FlextDbtLdifSettings.get_global()
-        client = FlextDbtLdifClient(config)
+        client = FlextDbtLdifClient.Client(config)
         assert client.config is config
 
     def test_parse_ldif_file_ok(self, tmp_path: Path) -> None:
         """Test parsing LDIF file returns success."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         result = client.parse_ldif_file(tmp_path / "dummy.ldif")
         assert result.is_success
         assert isinstance(result.value, list)
@@ -41,14 +39,14 @@ class TestFlextDbtLdifClient:
     def test_parse_ldif_file_no_path(self) -> None:
         """Test parsing without file path fails when config path is empty."""
         config = FlextDbtLdifSettings.get_global()
-        client = FlextDbtLdifClient(config)
+        client = FlextDbtLdifClient.Client(config)
         result = client.parse_ldif_file()
         assert result.is_failure
         assert "required" in (result.error or "").lower()
 
     def test_validate_ldif_data_ok(self) -> None:
         """Test validating LDIF data with entries."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         entries: Sequence[Mapping[str, t.ContainerValue]] = [
             {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"},
         ]
@@ -64,13 +62,13 @@ class TestFlextDbtLdifClient:
 
     def test_validate_ldif_data_empty(self) -> None:
         """Test validating empty entries fails."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         result = client.validate_ldif_data([])
         assert result.is_failure
 
     def test_transform_with_dbt_ok(self) -> None:
         """Test transforming with DBT returns metadata."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         entries: Sequence[Mapping[str, t.ContainerValue]] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
@@ -84,7 +82,7 @@ class TestFlextDbtLdifClient:
 
     def test_transform_with_dbt_default_models(self) -> None:
         """Test transform uses default models when none specified."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         result = client.transform_with_dbt([], None)
         assert result.is_success
         data = result.value
@@ -93,7 +91,7 @@ class TestFlextDbtLdifClient:
 
     def test_run_full_pipeline_ok(self, tmp_path: Path) -> None:
         """Test running full pipeline with valid file."""
-        client = FlextDbtLdifClient()
+        client = FlextDbtLdifClient.Client()
         result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
         assert result.is_success
         data = result.value
@@ -106,6 +104,6 @@ class TestFlextDbtLdifClient:
     def test_run_full_pipeline_no_path(self) -> None:
         """Test pipeline fails when no file path and config path is empty."""
         config = FlextDbtLdifSettings.get_global()
-        client = FlextDbtLdifClient(config)
+        client = FlextDbtLdifClient.Client(config)
         result = client.run_full_pipeline()
         assert result.is_failure

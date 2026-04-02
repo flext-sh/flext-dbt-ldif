@@ -9,27 +9,25 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_dbt_ldif import u
-
-FlextDbtLdifCore = u.DbtLdif.Core
+from flext_dbt_ldif import FlextDbtLdifCore
 
 
 class TestModelGenerator:
-    """Test cases for FlextDbtLdifCore.ModelGenerator."""
+    """Test cases for FlextDbtLdifCore.Core.ModelGenerator."""
 
     def test_initialization_default(self) -> None:
         """Test ModelGenerator default initialization."""
-        gen = FlextDbtLdifCore.ModelGenerator()
+        gen = FlextDbtLdifCore.Core.ModelGenerator()
         assert gen.project_dir == Path.cwd()
 
     def test_initialization_custom_dir(self, tmp_path: Path) -> None:
         """Test ModelGenerator with custom project_dir."""
-        gen = FlextDbtLdifCore.ModelGenerator(project_dir=tmp_path)
+        gen = FlextDbtLdifCore.Core.ModelGenerator(project_dir=tmp_path)
         assert gen.project_dir == tmp_path
 
     def test_generate_staging_models(self) -> None:
         """Test staging model generation returns expected structure."""
-        gen = FlextDbtLdifCore.ModelGenerator()
+        gen = FlextDbtLdifCore.Core.ModelGenerator()
         models = gen.generate_staging_models()
         assert isinstance(models, list)
         assert models
@@ -39,7 +37,7 @@ class TestModelGenerator:
 
     def test_generate_analytics_models(self) -> None:
         """Test analytics model generation returns expected structure."""
-        gen = FlextDbtLdifCore.ModelGenerator()
+        gen = FlextDbtLdifCore.Core.ModelGenerator()
         models = gen.generate_analytics_models()
         assert isinstance(models, list)
         assert models
@@ -49,11 +47,11 @@ class TestModelGenerator:
 
 
 class TestAnalytics:
-    """Test cases for FlextDbtLdifCore.Analytics."""
+    """Test cases for FlextDbtLdifCore.Core.Analytics."""
 
     def test_analyze_entry_patterns_empty(self) -> None:
         """Test pattern analysis with empty data."""
-        analytics = FlextDbtLdifCore.Analytics()
+        analytics = FlextDbtLdifCore.Core.Analytics()
         result = analytics.analyze_entry_patterns([])
         assert result.is_success
         data = result.value or {}
@@ -66,7 +64,7 @@ class TestAnalytics:
             {"dn": "cn=user1,ou=users,dc=example,dc=com"},
             {"dn": "cn=user2,ou=users,dc=example,dc=com"},
         ]
-        analytics = FlextDbtLdifCore.Analytics()
+        analytics = FlextDbtLdifCore.Core.Analytics()
         result = analytics.analyze_entry_patterns(sample_data)
         assert result.is_success
         data = result.value or {}
@@ -79,7 +77,7 @@ class TestAnalytics:
             {"dn": "cn=user1,dc=example,dc=com"},
             {"dn": "cn=user1,dc=example,dc=com"},
         ]
-        analytics = FlextDbtLdifCore.Analytics()
+        analytics = FlextDbtLdifCore.Core.Analytics()
         result = analytics.analyze_entry_patterns(sample_data)
         assert result.is_success
         data = result.value or {}

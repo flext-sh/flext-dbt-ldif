@@ -13,18 +13,19 @@ from pathlib import Path
 import pytest
 from flext_core import r
 
-from flext_dbt_ldif import FlextDbtLdifModels, t, u
+from flext_dbt_ldif import FlextDbtLdifServiceMixin
+from tests import m, t
 
 
 @pytest.fixture
-def svc(tmp_path: Path) -> u.DbtLdif.Service:
+def svc(tmp_path: Path) -> FlextDbtLdifServiceMixin.Service:
     """Create a test service."""
-    return u.DbtLdif.Service(project_dir=tmp_path)
+    return FlextDbtLdifServiceMixin.Service(project_dir=tmp_path)
 
 
 def test_parse_and_validate_ldif_ok(
     monkeypatch: pytest.MonkeyPatch,
-    svc: u.DbtLdif.Service,
+    svc: FlextDbtLdifServiceMixin.Service,
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF succeeds."""
@@ -39,9 +40,9 @@ def test_parse_and_validate_ldif_ok(
 
     def _validate_ldif_data(
         _entries: Sequence[Mapping[str, t.ContainerValue]],
-    ) -> r[FlextDbtLdifModels.DbtLdif.LdifValidationResult]:
-        return r[FlextDbtLdifModels.DbtLdif.LdifValidationResult].ok(
-            FlextDbtLdifModels.DbtLdif.LdifValidationResult(
+    ) -> r[m.DbtLdif.LdifValidationResult]:
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
                 total_entries=1,
                 quality_score=0.9,
                 validation_status="passed",
@@ -64,7 +65,7 @@ def test_parse_and_validate_ldif_ok(
 
 def test_parse_and_validate_ldif_parse_fails(
     monkeypatch: pytest.MonkeyPatch,
-    svc: u.DbtLdif.Service,
+    svc: FlextDbtLdifServiceMixin.Service,
     tmp_path: Path,
 ) -> None:
     """Test parse failure propagates."""
@@ -81,10 +82,10 @@ def test_parse_and_validate_ldif_parse_fails(
 
 def test_generate_and_write_models_ok(
     monkeypatch: pytest.MonkeyPatch,
-    svc: u.DbtLdif.Service,
+    svc: FlextDbtLdifServiceMixin.Service,
 ) -> None:
     """Test model generation succeeds."""
-    staging_model = FlextDbtLdifModels.DbtLdif.DbtModel(
+    staging_model = m.DbtLdif.DbtModel(
         name="stg_ldif_entries",
         dbt_model_type="staging",
         ldif_source="ldif_entries",
@@ -92,7 +93,7 @@ def test_generate_and_write_models_ok(
         columns=[],
         dependencies=[],
     )
-    analytics_model = FlextDbtLdifModels.DbtLdif.DbtModel(
+    analytics_model = m.DbtLdif.DbtModel(
         name="analytics_ldif_insights",
         dbt_model_type="analytics",
         ldif_source="ldif_entries",
@@ -103,13 +104,13 @@ def test_generate_and_write_models_ok(
 
     def _generate_staging_models(
         _entries: Sequence[Mapping[str, t.ContainerValue]],
-    ) -> r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]]:
-        return r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]].ok([staging_model])
+    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+        return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: Sequence[FlextDbtLdifModels.DbtLdif.DbtModel],
-    ) -> r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]]:
-        return r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]].ok([analytics_model])
+        _models: Sequence[m.DbtLdif.DbtModel],
+    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+        return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     gen = svc.model_generator
     object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
@@ -129,7 +130,7 @@ def test_generate_and_write_models_ok(
 
 def test_run_complete_workflow_all(
     monkeypatch: pytest.MonkeyPatch,
-    svc: u.DbtLdif.Service,
+    svc: FlextDbtLdifServiceMixin.Service,
     tmp_path: Path,
 ) -> None:
     """Test complete workflow with all stages."""
@@ -144,9 +145,9 @@ def test_run_complete_workflow_all(
 
     def _validate_ldif_data(
         _entries: Sequence[Mapping[str, t.ContainerValue]],
-    ) -> r[FlextDbtLdifModels.DbtLdif.LdifValidationResult]:
-        return r[FlextDbtLdifModels.DbtLdif.LdifValidationResult].ok(
-            FlextDbtLdifModels.DbtLdif.LdifValidationResult(
+    ) -> r[m.DbtLdif.LdifValidationResult]:
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
                 total_entries=1,
                 quality_score=0.9,
                 validation_status="passed",
@@ -156,16 +157,16 @@ def test_run_complete_workflow_all(
     def _transform_with_dbt(
         _entries: Sequence[Mapping[str, t.ContainerValue]],
         _model_names: t.StrSequence | None,
-    ) -> r[FlextDbtLdifModels.DbtLdif.DbtTransformationResult]:
-        return r[FlextDbtLdifModels.DbtLdif.DbtTransformationResult].ok(
-            FlextDbtLdifModels.DbtLdif.DbtTransformationResult(
+    ) -> r[m.DbtLdif.DbtTransformationResult]:
+        return r[m.DbtLdif.DbtTransformationResult].ok(
+            m.DbtLdif.DbtTransformationResult(
                 records=1,
                 models=["m1"],
                 status="success",
             ),
         )
 
-    staging_model = FlextDbtLdifModels.DbtLdif.DbtModel(
+    staging_model = m.DbtLdif.DbtModel(
         name="stg_ldif_entries",
         dbt_model_type="staging",
         ldif_source="ldif_entries",
@@ -173,7 +174,7 @@ def test_run_complete_workflow_all(
         columns=[],
         dependencies=[],
     )
-    analytics_model = FlextDbtLdifModels.DbtLdif.DbtModel(
+    analytics_model = m.DbtLdif.DbtModel(
         name="analytics_ldif_insights",
         dbt_model_type="analytics",
         ldif_source="ldif_entries",
@@ -184,13 +185,13 @@ def test_run_complete_workflow_all(
 
     def _generate_staging_models(
         _entries: Sequence[Mapping[str, t.ContainerValue]],
-    ) -> r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]]:
-        return r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]].ok([staging_model])
+    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+        return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: Sequence[FlextDbtLdifModels.DbtLdif.DbtModel],
-    ) -> r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]]:
-        return r[Sequence[FlextDbtLdifModels.DbtLdif.DbtModel]].ok([analytics_model])
+        _models: Sequence[m.DbtLdif.DbtModel],
+    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+        return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
     monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
@@ -213,7 +214,7 @@ def test_run_complete_workflow_all(
 
 def test_run_data_quality_assessment(
     monkeypatch: pytest.MonkeyPatch,
-    svc: u.DbtLdif.Service,
+    svc: FlextDbtLdifServiceMixin.Service,
     tmp_path: Path,
 ) -> None:
     """Test data quality assessment delegates to parse_and_validate."""
@@ -228,9 +229,9 @@ def test_run_data_quality_assessment(
 
     def _validate_ldif_data(
         _entries: Sequence[Mapping[str, t.ContainerValue]],
-    ) -> r[FlextDbtLdifModels.DbtLdif.LdifValidationResult]:
-        return r[FlextDbtLdifModels.DbtLdif.LdifValidationResult].ok(
-            FlextDbtLdifModels.DbtLdif.LdifValidationResult(
+    ) -> r[m.DbtLdif.LdifValidationResult]:
+        return r[m.DbtLdif.LdifValidationResult].ok(
+            m.DbtLdif.LdifValidationResult(
                 total_entries=1,
                 quality_score=0.88,
                 validation_status="passed",

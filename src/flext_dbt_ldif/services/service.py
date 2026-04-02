@@ -8,9 +8,14 @@ from pathlib import Path
 from flext_core import FlextLogger, FlextTypes, r
 from pydantic import RootModel
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_dbt_ldif import (
+    FlextDbtLdifClient,
+    FlextDbtLdifSettings,
+    FlextDbtLdifUnifiedService,
+    c,
+    m,
+    t,
+)
 
 logger = FlextLogger(__name__)
 
