@@ -6,7 +6,6 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import r
-
 from flext_dbt_ldif import c, t
 
 

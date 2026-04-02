@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from flext_core import FlextLogger, FlextSettings
 from pydantic import Field
+
+from flext_core import FlextLogger, FlextSettings
 
 logger = FlextLogger(__name__)
 

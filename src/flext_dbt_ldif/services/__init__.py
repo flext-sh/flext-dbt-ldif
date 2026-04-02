@@ -12,7 +12,6 @@ from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
-
     from flext_dbt_ldif.services import (
         cli_service,
         client,
@@ -28,7 +27,7 @@ if _TYPE_CHECKING:
     from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin, logger
     from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
-_LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
+_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "FlextDbtLdifCliService": "flext_dbt_ldif.services.cli_service",
     "FlextDbtLdifClient": "flext_dbt_ldif.services.client",
     "FlextDbtLdifCore": "flext_dbt_ldif.services.core",

@@ -5,7 +5,6 @@ from __future__ import annotations
 import sys
 
 from flext_core import FlextLogger, r
-
 from flext_dbt_ldif import FlextDbtLdifServiceMixin, c
 
 logger = FlextLogger(__name__)

@@ -12,9 +12,9 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_core import FlextTypes, r
 from pydantic import RootModel, ValidationError
 
+from flext_core import FlextTypes, r
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifCliService,

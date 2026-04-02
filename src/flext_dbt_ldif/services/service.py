@@ -5,9 +5,9 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger, FlextTypes, r
 from pydantic import RootModel
 
+from flext_core import FlextLogger, FlextTypes, r
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifSettings,

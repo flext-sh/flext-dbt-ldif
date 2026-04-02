@@ -12,7 +12,6 @@ from flext_core.lazy import install_lazy_exports
 
 if _TYPE_CHECKING:
     from flext_core import FlextTypes
-
     from tests.unit import (
         test_api_surface,
         test_cli,
@@ -45,7 +44,7 @@ if _TYPE_CHECKING:
     )
     from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 
-_LAZY_IMPORTS: Mapping[str, str | Sequence[str]] = {
+_LAZY_IMPORTS: FlextTypes.LazyImportIndex = {
     "FlextDbtLdifService": "tests.unit.test_services_and_api",
     "TestAnalytics": "tests.unit.test_core",
     "TestDbtModel": "tests.unit.test_dbt_models",

@@ -11,8 +11,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import pytest
-from flext_core import r
 
+from flext_core import r
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifServiceMixin
 from tests import m, t
 

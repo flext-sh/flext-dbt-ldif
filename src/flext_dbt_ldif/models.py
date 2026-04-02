@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-from flext_core import r
-from flext_ldif import FlextLdifModels
-from flext_meltano import FlextMeltanoModels
 from pydantic import Field
 
+from flext_core import r
 from flext_dbt_ldif import t
+from flext_ldif import FlextLdifModels
+from flext_meltano import FlextMeltanoModels
 
 
 class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):

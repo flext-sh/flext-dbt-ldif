@@ -5,10 +5,9 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from flext_core import r
+from flext_dbt_ldif import m, t
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import FlextMeltanoProtocols
-
-from flext_dbt_ldif import m, t
 
 
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):

@@ -6,7 +6,6 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from flext_core import FlextLogger, r
-
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t
 
 logger = FlextLogger(__name__)

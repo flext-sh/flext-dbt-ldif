@@ -10,7 +10,6 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_core import r
-
 from flext_dbt_ldif import (
     FlextDbtLdif,
     FlextDbtLdifClient,

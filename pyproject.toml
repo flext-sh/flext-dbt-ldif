@@ -130,7 +130,10 @@ omit = [
 # [MANAGED] deptry
 [tool.deptry]
 known_first_party = [
+  "flext_core",
   "flext_dbt_ldif",
+  "flext_ldif",
+  "flext_meltano",
 ]
 pep621_dev_dependency_groups = [
   "dev",
@@ -543,7 +546,10 @@ select = [
 combine-as-imports = true
 force-single-line = false
 known-first-party = [
+  "flext_core",
   "flext_dbt_ldif",
+  "flext_ldif",
+  "flext_meltano",
 ]
 split-on-trailing-comma = true
 
