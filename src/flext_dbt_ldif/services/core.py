@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
 from flext_core import r
@@ -46,7 +46,7 @@ class FlextDbtLdifCore:
             def analyze_entry_patterns(
                 self,
                 entries: Sequence[t.StrMapping],
-            ) -> r[Mapping[str, t.ContainerValue]]:
+            ) -> r[t.ContainerValueMapping]:
                 """Analyze input entries and return summary payload."""
                 return r[t.ContainerValueMapping].ok({
                     "total_entries": len(entries),

@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
@@ -31,17 +31,17 @@ def test_parse_and_validate_ldif_ok(
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF via service."""
-    entries: Sequence[Mapping[str, t.ContainerValue]] = [
+    entries: Sequence[t.ContainerValueMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
         _ldif_file: Path | str,
-    ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
-        return r[Sequence[Mapping[str, t.ContainerValue]]].ok(entries)
+    ) -> r[Sequence[t.ContainerValueMapping]]:
+        return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -91,7 +91,7 @@ def test_generate_and_write_models_ok(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
@@ -103,7 +103,7 @@ def test_generate_and_write_models_ok(
     gen = service.model_generator
     object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
     object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
-    entries: Sequence[Mapping[str, t.ContainerValue]] = [
+    entries: Sequence[t.ContainerValueMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
     result = service.generate_and_write_models(entries)
@@ -174,7 +174,7 @@ def test_api_generate_ldif_models(
 
     def _gen_models(
         _self: FlextDbtLdifService,
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
         *,
         overwrite: bool = False,
     ) -> r[m.DbtLdif.ModelGenerationResult]:

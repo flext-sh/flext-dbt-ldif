@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
@@ -29,11 +29,11 @@ from flext_dbt_ldif import (
 
 
 class FlextDbtLdifEntryListAdapter(
-    RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]],
+    RootModel[Sequence[FlextTypes.ContainerValueMapping]],
 ):
     """Adapter for list of entries."""
 
-    root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
+    root: Sequence[FlextTypes.ContainerValueMapping]
 
 
 class FlextDbtLdif(  # noqa: N818

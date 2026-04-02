@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
@@ -67,7 +67,7 @@ class FlextDbtLdifUnifiedService:
 
         def generate_staging_models(
             self,
-            entries: Sequence[Mapping[str, FlextTypes.ContainerValue]],
+            entries: Sequence[FlextTypes.ContainerValueMapping],
         ) -> r[Sequence[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
 from pydantic import RootModel
@@ -27,11 +27,11 @@ class FlextDbtLdifServiceMixin:
         """Orchestrates parsing, validation, model generation, and transformations."""
 
         class EntryContainerListAdapter(
-            RootModel[Sequence[Mapping[str, FlextTypes.ContainerValue]]],
+            RootModel[Sequence[FlextTypes.ContainerValueMapping]],
         ):
             """Adapter for list of container entries."""
 
-            root: Sequence[Mapping[str, FlextTypes.ContainerValue]]
+            root: Sequence[FlextTypes.ContainerValueMapping]
 
         def __init__(
             self,
@@ -53,13 +53,13 @@ class FlextDbtLdifServiceMixin:
 
         def generate_and_write_models(
             self,
-            entries: Sequence[Mapping[str, t.ContainerValue]],
+            entries: Sequence[t.ContainerValueMapping],
             *,
             overwrite: bool = False,
         ) -> r[m.DbtLdif.ModelGenerationResult]:
             """Generate staging and analytics models for entries."""
             _ = overwrite
-            staging_payload: Sequence[Mapping[str, t.ContainerValue]] = [
+            staging_payload: Sequence[t.ContainerValueMapping] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
@@ -142,7 +142,7 @@ class FlextDbtLdifServiceMixin:
                     )
                 workflow_result.models_generated = model_result.value.models_generated
             if run_transformations:
-                transform_payload: Sequence[Mapping[str, t.ContainerValue]] = [
+                transform_payload: Sequence[t.ContainerValueMapping] = [
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(

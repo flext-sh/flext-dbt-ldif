@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 
 from pydantic import Field
 
@@ -27,8 +27,8 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             materialization: str = "view"
             sql_content: str
             description: str = ""
-            columns: Sequence[Mapping[str, t.ContainerValue]] = Field(
-                default_factory=lambda: list[Mapping[str, t.ContainerValue]]()
+            columns: Sequence[t.ContainerValueMapping] = Field(
+                default_factory=lambda: list[t.ContainerValueMapping]()
             )
             dependencies: t.StrSequence = Field(default_factory=list)
 

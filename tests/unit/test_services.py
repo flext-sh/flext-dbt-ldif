@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
@@ -29,17 +29,17 @@ def test_parse_and_validate_ldif_ok(
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF succeeds."""
-    entries: Sequence[Mapping[str, t.ContainerValue]] = [
+    entries: Sequence[t.ContainerValueMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
-        return r[Sequence[Mapping[str, t.ContainerValue]]].ok(entries)
+    ) -> r[Sequence[t.ContainerValueMapping]]:
+        return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -72,8 +72,8 @@ def test_parse_and_validate_ldif_parse_fails(
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
-        return r[Sequence[Mapping[str, t.ContainerValue]]].fail("Parse error")
+    ) -> r[Sequence[t.ContainerValueMapping]]:
+        return r[Sequence[t.ContainerValueMapping]].fail("Parse error")
 
     monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
@@ -103,7 +103,7 @@ def test_generate_and_write_models_ok(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
@@ -116,7 +116,7 @@ def test_generate_and_write_models_ok(
     object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
     object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
-    entries: Sequence[Mapping[str, t.ContainerValue]] = [
+    entries: Sequence[t.ContainerValueMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
     result = svc.generate_and_write_models(entries)
@@ -134,17 +134,17 @@ def test_run_complete_workflow_all(
     tmp_path: Path,
 ) -> None:
     """Test complete workflow with all stages."""
-    entries: Sequence[Mapping[str, t.ContainerValue]] = [
+    entries: Sequence[t.ContainerValueMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
-        return r[Sequence[Mapping[str, t.ContainerValue]]].ok(entries)
+    ) -> r[Sequence[t.ContainerValueMapping]]:
+        return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -155,7 +155,7 @@ def test_run_complete_workflow_all(
         )
 
     def _transform_with_dbt(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
         _model_names: t.StrSequence | None,
     ) -> r[m.DbtLdif.DbtTransformationResult]:
         return r[m.DbtLdif.DbtTransformationResult].ok(
@@ -184,7 +184,7 @@ def test_run_complete_workflow_all(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
@@ -218,17 +218,17 @@ def test_run_data_quality_assessment(
     tmp_path: Path,
 ) -> None:
     """Test data quality assessment delegates to parse_and_validate."""
-    entries: Sequence[Mapping[str, t.ContainerValue]] = [
+    entries: Sequence[t.ContainerValueMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
-        return r[Sequence[Mapping[str, t.ContainerValue]]].ok(entries)
+    ) -> r[Sequence[t.ContainerValueMapping]]:
+        return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[Mapping[str, t.ContainerValue]],
+        _entries: Sequence[t.ContainerValueMapping],
     ) -> r[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(

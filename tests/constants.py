@@ -9,12 +9,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import Final
 
 from flext_tests import FlextTestsConstants
 
 from flext_dbt_ldif import FlextDbtLdifConstants
+from tests import t
 
 
 class FlextDbtLdifTestConstants(FlextTestsConstants, FlextDbtLdifConstants):
@@ -59,7 +59,7 @@ class FlextDbtLdifTestConstants(FlextTestsConstants, FlextDbtLdifConstants):
             class Transformation:
                 """Transformation test constants."""
 
-                TEST_SCHEMA_MAPPING: Final[Mapping[str, str]] = {
+                TEST_SCHEMA_MAPPING: Final[t.StrMapping] = {
                     "persons": "stg_persons",
                     "groups": "stg_groups",
                 }

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
 from flext_core import FlextLogger, r
@@ -26,7 +26,7 @@ class FlextDbtLdifClient:
         def parse_ldif_file(
             self,
             file_path: Path | str | None = None,
-        ) -> r[Sequence[Mapping[str, t.ContainerValue]]]:
+        ) -> r[Sequence[t.ContainerValueMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
                 str(file_path) if file_path is not None else self.config.ldif_file_path
@@ -75,7 +75,7 @@ class FlextDbtLdifClient:
 
         def transform_with_dbt(
             self,
-            entries: Sequence[Mapping[str, t.ContainerValue]],
+            entries: Sequence[t.ContainerValueMapping],
             model_names: t.StrSequence | None = None,
         ) -> r[m.DbtLdif.DbtTransformationResult]:
             """Return synthetic DBT transformation metadata."""
@@ -93,7 +93,7 @@ class FlextDbtLdifClient:
 
         def validate_ldif_data(
             self,
-            entries: Sequence[Mapping[str, t.ContainerValue]],
+            entries: Sequence[t.ContainerValueMapping],
         ) -> r[m.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score."""
             total_entries = len(entries)
