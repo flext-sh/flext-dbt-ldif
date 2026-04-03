@@ -18,7 +18,7 @@ if _TYPE_CHECKING:
     from flext_core.mixins import FlextMixins as x
     from flext_core.result import FlextResult as r
     from flext_core.service import FlextService as s
-    from flext_dbt_ldif import (
+    from tests import (
         conftest,
         constants,
         models,
@@ -35,7 +35,7 @@ if _TYPE_CHECKING:
         unit,
         utilities,
     )
-    from flext_dbt_ldif.conftest import (
+    from tests.conftest import (
         dbt_ldif_profile,
         dbt_ldif_project_config,
         docker_control,
@@ -46,20 +46,20 @@ if _TYPE_CHECKING:
         set_test_environment,
         shared_ldap_container,
     )
-    from flext_dbt_ldif.constants import (
+    from tests.constants import (
         FlextDbtLdifTestConstants,
         FlextDbtLdifTestConstants as c,
     )
-    from flext_dbt_ldif.models import (
+    from tests.models import (
         FlextDbtLdifTestModels,
         FlextDbtLdifTestModels as m,
     )
-    from flext_dbt_ldif.protocols import (
+    from tests.protocols import (
         FlextDbtLdifTestProtocols,
         FlextDbtLdifTestProtocols as p,
     )
-    from flext_dbt_ldif.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
-    from flext_dbt_ldif.unit import (
+    from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
+    from tests.unit import (
         FlextDbtLdifService,
         TestFlextDbtLdifClient,
         TestFlextDbtLdifCliService,
@@ -79,53 +79,53 @@ if _TYPE_CHECKING:
         test_api_imports,
         test_dunder_alignment,
     )
-    from flext_dbt_ldif.utilities import (
+    from tests.utilities import (
         FlextDbtLdifTestUtilities,
         FlextDbtLdifTestUtilities as u,
     )
 
 _LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
-    ("flext_dbt_ldif.unit",),
+    ("tests.unit",),
     {
-        "FlextDbtLdifTestConstants": "flext_dbt_ldif.constants",
-        "FlextDbtLdifTestModels": "flext_dbt_ldif.models",
-        "FlextDbtLdifTestProtocols": "flext_dbt_ldif.protocols",
-        "FlextDbtLdifTestTypes": "flext_dbt_ldif.typings",
-        "FlextDbtLdifTestUtilities": "flext_dbt_ldif.utilities",
-        "c": ("flext_dbt_ldif.constants", "FlextDbtLdifTestConstants"),
-        "conftest": "flext_dbt_ldif.conftest",
-        "constants": "flext_dbt_ldif.constants",
+        "FlextDbtLdifTestConstants": "tests.constants",
+        "FlextDbtLdifTestModels": "tests.models",
+        "FlextDbtLdifTestProtocols": "tests.protocols",
+        "FlextDbtLdifTestTypes": "tests.typings",
+        "FlextDbtLdifTestUtilities": "tests.utilities",
+        "c": ("tests.constants", "FlextDbtLdifTestConstants"),
+        "conftest": "tests.conftest",
+        "constants": "tests.constants",
         "d": ("flext_core.decorators", "FlextDecorators"),
-        "dbt_ldif_profile": "flext_dbt_ldif.conftest",
-        "dbt_ldif_project_config": "flext_dbt_ldif.conftest",
-        "docker_control": "flext_dbt_ldif.conftest",
+        "dbt_ldif_profile": "tests.conftest",
+        "dbt_ldif_project_config": "tests.conftest",
+        "docker_control": "tests.conftest",
         "e": ("flext_core.exceptions", "FlextExceptions"),
-        "ensure_shared_docker_container": "flext_dbt_ldif.conftest",
+        "ensure_shared_docker_container": "tests.conftest",
         "h": ("flext_core.handlers", "FlextHandlers"),
-        "ldif_source_config": "flext_dbt_ldif.conftest",
-        "m": ("flext_dbt_ldif.models", "FlextDbtLdifTestModels"),
-        "models": "flext_dbt_ldif.models",
-        "p": ("flext_dbt_ldif.protocols", "FlextDbtLdifTestProtocols"),
-        "protocols": "flext_dbt_ldif.protocols",
+        "ldif_source_config": "tests.conftest",
+        "m": ("tests.models", "FlextDbtLdifTestModels"),
+        "models": "tests.models",
+        "p": ("tests.protocols", "FlextDbtLdifTestProtocols"),
+        "protocols": "tests.protocols",
         "r": ("flext_core.result", "FlextResult"),
-        "result": "flext_dbt_ldif.conftest",
+        "result": "tests.conftest",
         "s": ("flext_core.service", "FlextService"),
-        "sample_ldif_entries": "flext_dbt_ldif.conftest",
-        "set_test_environment": "flext_dbt_ldif.conftest",
-        "shared_ldap_container": "flext_dbt_ldif.conftest",
-        "t": ("flext_dbt_ldif.typings", "FlextDbtLdifTestTypes"),
-        "test_api_surface": "flext_dbt_ldif.test_api_surface",
-        "test_cli": "flext_dbt_ldif.test_cli",
-        "test_core": "flext_dbt_ldif.test_core",
-        "test_dbt_client": "flext_dbt_ldif.test_dbt_client",
-        "test_dbt_models": "flext_dbt_ldif.test_dbt_models",
-        "test_services": "flext_dbt_ldif.test_services",
-        "test_services_and_api": "flext_dbt_ldif.test_services_and_api",
-        "test_version": "flext_dbt_ldif.test_version",
-        "typings": "flext_dbt_ldif.typings",
-        "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifTestUtilities"),
-        "unit": "flext_dbt_ldif.unit",
-        "utilities": "flext_dbt_ldif.utilities",
+        "sample_ldif_entries": "tests.conftest",
+        "set_test_environment": "tests.conftest",
+        "shared_ldap_container": "tests.conftest",
+        "t": ("tests.typings", "FlextDbtLdifTestTypes"),
+        "test_api_surface": "tests.test_api_surface",
+        "test_cli": "tests.test_cli",
+        "test_core": "tests.test_core",
+        "test_dbt_client": "tests.test_dbt_client",
+        "test_dbt_models": "tests.test_dbt_models",
+        "test_services": "tests.test_services",
+        "test_services_and_api": "tests.test_services_and_api",
+        "test_version": "tests.test_version",
+        "typings": "tests.typings",
+        "u": ("tests.utilities", "FlextDbtLdifTestUtilities"),
+        "unit": "tests.unit",
+        "utilities": "tests.utilities",
         "x": ("flext_core.mixins", "FlextMixins"),
     },
 )
