@@ -1,12 +1,7 @@
 # AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
 # Regenerate with: make gen
 #
-"""LDIF Data Analytics and Transformations for DBT.
-
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
-"""
+"""Flext dbt ldif package."""
 
 from __future__ import annotations
 
@@ -15,6 +10,7 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports, merge_lazy_imports
 from flext_dbt_ldif.__version__ import (
+    __all__,
     __author__,
     __author_email__,
     __description__,
@@ -36,12 +32,18 @@ if _TYPE_CHECKING:
     from flext_dbt_ldif import (
         api,
         base,
+        cli_service,
+        client,
         constants,
+        core,
+        error,
         models,
         protocols,
+        service,
         services,
         settings,
         typings,
+        unified_service,
         utilities,
     )
     from flext_dbt_ldif.api import FlextDbtLdif, FlextDbtLdifEntryListAdapter
@@ -62,13 +64,7 @@ if _TYPE_CHECKING:
         FlextDbtLdifError,
         FlextDbtLdifServiceMixin,
         FlextDbtLdifUnifiedService,
-        cli_service,
-        client,
-        core,
-        error,
         logger,
-        service,
-        unified_service,
     )
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
@@ -92,9 +88,13 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
         "api": "flext_dbt_ldif.api",
         "base": "flext_dbt_ldif.base",
         "c": ("flext_dbt_ldif.constants", "FlextDbtLdifConstants"),
+        "cli_service": "flext_dbt_ldif.cli_service",
+        "client": "flext_dbt_ldif.client",
         "constants": "flext_dbt_ldif.constants",
+        "core": "flext_dbt_ldif.core",
         "d": ("flext_core.decorators", "FlextDecorators"),
         "e": ("flext_core.exceptions", "FlextExceptions"),
+        "error": "flext_dbt_ldif.error",
         "h": ("flext_core.handlers", "FlextHandlers"),
         "m": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
         "models": "flext_dbt_ldif.models",
@@ -102,11 +102,13 @@ _LAZY_IMPORTS: FlextTypes.LazyImportIndex = merge_lazy_imports(
         "protocols": "flext_dbt_ldif.protocols",
         "r": ("flext_core.result", "FlextResult"),
         "s": ("flext_core.service", "FlextService"),
+        "service": "flext_dbt_ldif.service",
         "services": "flext_dbt_ldif.services",
         "settings": "flext_dbt_ldif.settings",
         "t": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
         "typings": "flext_dbt_ldif.typings",
         "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
+        "unified_service": "flext_dbt_ldif.unified_service",
         "utilities": "flext_dbt_ldif.utilities",
         "x": ("flext_core.mixins", "FlextMixins"),
     },
@@ -118,6 +120,7 @@ install_lazy_exports(
     globals(),
     _LAZY_IMPORTS,
     [
+        "__all__",
         "__author__",
         "__author_email__",
         "__description__",
