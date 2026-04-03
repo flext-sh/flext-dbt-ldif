@@ -19,7 +19,7 @@ from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifCliService,
     FlextDbtLdifCore,
-    FlextDbtLdifError,
+    FlextDbtLdifError as FlextDbtLdifErrorMixin,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
     FlextDbtLdifUnifiedService,
@@ -40,7 +40,7 @@ class FlextDbtLdif(
     FlextDbtLdifCliService,
     FlextDbtLdifClient,
     FlextDbtLdifCore,
-    FlextDbtLdifError,
+    FlextDbtLdifErrorMixin,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifUnifiedService,
 ):
