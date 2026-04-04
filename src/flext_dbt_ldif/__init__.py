@@ -50,31 +50,22 @@ if _t.TYPE_CHECKING:
     )
 
     services = _flext_dbt_ldif_services
-    import flext_dbt_ldif.services.cli_service as _flext_dbt_ldif_services_cli_service
-
-    cli_service = _flext_dbt_ldif_services_cli_service
-    import flext_dbt_ldif.services.client as _flext_dbt_ldif_services_client
-    from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
-
-    client = _flext_dbt_ldif_services_client
-    import flext_dbt_ldif.services.core as _flext_dbt_ldif_services_core
-    from flext_dbt_ldif.services.client import FlextDbtLdifClient
-
-    core = _flext_dbt_ldif_services_core
-    import flext_dbt_ldif.services.error as _flext_dbt_ldif_services_error
-    from flext_dbt_ldif.services.core import FlextDbtLdifCore
-
-    error = _flext_dbt_ldif_services_error
-    import flext_dbt_ldif.services.service as _flext_dbt_ldif_services_service
-    from flext_dbt_ldif.services.error import FlextDbtLdifError
-
-    service = _flext_dbt_ldif_services_service
-    import flext_dbt_ldif.services.unified_service as _flext_dbt_ldif_services_unified_service
-    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin, logger
-
-    unified_service = _flext_dbt_ldif_services_unified_service
     import flext_dbt_ldif.settings as _flext_dbt_ldif_settings
-    from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+    from flext_dbt_ldif.services import (
+        FlextDbtLdifClient,
+        FlextDbtLdifCliService,
+        FlextDbtLdifCore,
+        FlextDbtLdifError,
+        FlextDbtLdifServiceMixin,
+        FlextDbtLdifUnifiedService,
+        cli_service,
+        client,
+        core,
+        error,
+        logger,
+        service,
+        unified_service,
+    )
 
     settings = _flext_dbt_ldif_settings
     import flext_dbt_ldif.typings as _flext_dbt_ldif_typings

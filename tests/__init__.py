@@ -49,52 +49,38 @@ if _t.TYPE_CHECKING:
     from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
 
     unit = _tests_unit
-    import tests.unit.test_api_surface as _tests_unit_test_api_surface
-
-    test_api_surface = _tests_unit_test_api_surface
-    import tests.unit.test_cli as _tests_unit_test_cli
-    from tests.unit.test_api_surface import test_api_imports
-
-    test_cli = _tests_unit_test_cli
-    import tests.unit.test_core as _tests_unit_test_core
-    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
-
-    test_core = _tests_unit_test_core
-    import tests.unit.test_dbt_client as _tests_unit_test_dbt_client
-    from tests.unit.test_core import TestAnalytics, TestModelGenerator
-
-    test_dbt_client = _tests_unit_test_dbt_client
-    import tests.unit.test_dbt_models as _tests_unit_test_dbt_models
-    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
-
-    test_dbt_models = _tests_unit_test_dbt_models
-    import tests.unit.test_services as _tests_unit_test_services
-    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
-
-    test_services = _tests_unit_test_services
-    import tests.unit.test_services_and_api as _tests_unit_test_services_and_api
-    from tests.unit.test_services import (
+    import tests.utilities as _tests_utilities
+    from tests.unit import (
+        FlextDbtLdifService,
+        TestAnalytics,
+        TestDbtModel,
+        TestFlextDbtLdifClient,
+        TestFlextDbtLdifCliService,
+        TestFlextDbtLdifUnifiedService,
+        TestMainEntryPoint,
+        TestModelGenerator,
+        service,
         svc,
+        test_api_generate_ldif_models,
+        test_api_imports,
+        test_api_process_ldif_file,
+        test_api_surface,
+        test_api_validate_ldif_quality,
+        test_cli,
+        test_core,
+        test_dbt_client,
+        test_dbt_models,
+        test_dunder_alignment,
+        test_generate_and_write_models_ok,
+        test_parse_and_validate_ldif_ok,
         test_parse_and_validate_ldif_parse_fails,
         test_run_complete_workflow_all,
         test_run_data_quality_assessment,
+        test_services,
+        test_services_and_api,
+        test_version,
+        test_version_is_string,
     )
-
-    test_services_and_api = _tests_unit_test_services_and_api
-    import tests.unit.test_version as _tests_unit_test_version
-    from tests.unit.test_services_and_api import (
-        FlextDbtLdifService,
-        service,
-        test_api_generate_ldif_models,
-        test_api_process_ldif_file,
-        test_api_validate_ldif_quality,
-        test_generate_and_write_models_ok,
-        test_parse_and_validate_ldif_ok,
-    )
-
-    test_version = _tests_unit_test_version
-    import tests.utilities as _tests_utilities
-    from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 
     utilities = _tests_utilities
     from flext_core.decorators import FlextDecorators as d
