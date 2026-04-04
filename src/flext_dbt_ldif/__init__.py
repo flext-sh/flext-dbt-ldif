@@ -12,16 +12,6 @@ from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
     import flext_dbt_ldif.api as _flext_dbt_ldif_api
-    from flext_dbt_ldif.__version__ import (
-        __author__,
-        __author_email__,
-        __description__,
-        __license__,
-        __title__,
-        __url__,
-        __version__,
-        __version_info__,
-    )
 
     api = _flext_dbt_ldif_api
     import flext_dbt_ldif.base as _flext_dbt_ldif_base
