@@ -28,7 +28,7 @@ class FlextDbtLdifCliService:
                     result.value,
                 )
                 return r[str].ok("Generate message displayed")
-            except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
+            except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
                 return r[str].fail(f"Generate message display failed: {exc}")
 
         def display_info(self) -> r[str]:
@@ -47,7 +47,7 @@ class FlextDbtLdifCliService:
             try:
                 logger.info(str(info_data))
                 return r[str].ok("Package information displayed successfully")
-            except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
+            except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
                 return r[str].fail(f"Package info display failed: {exc}")
 
         def display_validate_message(self) -> r[str]:
@@ -62,7 +62,7 @@ class FlextDbtLdifCliService:
                     result.value,
                 )
                 return r[str].ok("Validate message displayed")
-            except c.Meltano.Singer.SAFE_EXCEPTIONS as exc:
+            except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
                 return r[str].fail(f"Validate message display failed: {exc}")
 
         def generate(self) -> None:
@@ -95,7 +95,7 @@ class FlextDbtLdifCliService:
             except KeyboardInterrupt:
                 logger.info("Interrupted by user")
                 return c.DbtLdif.EXIT_CODE_FAILURE
-            except c.Meltano.Singer.SAFE_EXCEPTIONS:
+            except c.Meltano.SINGER_SAFE_EXCEPTIONS:
                 logger.exception("CLI error")
                 return c.DbtLdif.EXIT_CODE_FAILURE
 
