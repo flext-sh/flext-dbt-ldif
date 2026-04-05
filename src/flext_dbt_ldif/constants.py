@@ -15,6 +15,9 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
     class DbtLdif:
         """DBT LDIF domain constants namespace."""
 
+        DEFAULT_LDIF_FILE_PATH: Final[str] = ""
+        DEFAULT_QUALITY_THRESHOLD: Final[float] = 0.8
+
         @unique
         class ErrorCode(StrEnum):
             """DBT LDIF error code identifiers."""
