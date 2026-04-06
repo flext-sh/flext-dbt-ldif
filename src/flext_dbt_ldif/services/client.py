@@ -101,15 +101,15 @@ class FlextDbtLdifClient:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "No LDIF entries found",
                 )
-            # quality_score = c.DbtLdif.DEFAULT_QUALITY_SCORE
-            if quality_score < self.config.min_quality_threshold:
+            # c.DbtLdif.DEFAULT_QUALITY_SCORE = c.DbtLdif.DEFAULT_QUALITY_SCORE
+            if self.config.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met",
                 )
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
                     total_entries=total_entries,
-                    quality_score=quality_score,
+                    quality_score=c.DbtLdif.DEFAULT_QUALITY_SCORE,
                     validation_status=c.DbtLdif.VALIDATION_STATUS_PASSED,
                 ),
             )

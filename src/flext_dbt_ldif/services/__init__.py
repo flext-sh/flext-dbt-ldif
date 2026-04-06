@@ -46,12 +46,21 @@ if _t.TYPE_CHECKING:
     from flext_core.utilities import FlextUtilities as u
     from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 _LAZY_IMPORTS = {
-    "FlextDbtLdifCliService": "flext_dbt_ldif.services.cli_service",
-    "FlextDbtLdifClient": "flext_dbt_ldif.services.client",
-    "FlextDbtLdifCore": "flext_dbt_ldif.services.core",
-    "FlextDbtLdifError": "flext_dbt_ldif.services.error",
-    "FlextDbtLdifServiceMixin": "flext_dbt_ldif.services.service",
-    "FlextDbtLdifUnifiedService": "flext_dbt_ldif.services.unified_service",
+    "FlextDbtLdifCliService": (
+        "flext_dbt_ldif.services.cli_service",
+        "FlextDbtLdifCliService",
+    ),
+    "FlextDbtLdifClient": ("flext_dbt_ldif.services.client", "FlextDbtLdifClient"),
+    "FlextDbtLdifCore": ("flext_dbt_ldif.services.core", "FlextDbtLdifCore"),
+    "FlextDbtLdifError": ("flext_dbt_ldif.services.error", "FlextDbtLdifError"),
+    "FlextDbtLdifServiceMixin": (
+        "flext_dbt_ldif.services.service",
+        "FlextDbtLdifServiceMixin",
+    ),
+    "FlextDbtLdifUnifiedService": (
+        "flext_dbt_ldif.services.unified_service",
+        "FlextDbtLdifUnifiedService",
+    ),
     "c": ("flext_core.constants", "FlextConstants"),
     "cli_service": "flext_dbt_ldif.services.cli_service",
     "client": "flext_dbt_ldif.services.client",
@@ -60,7 +69,7 @@ _LAZY_IMPORTS = {
     "e": ("flext_core.exceptions", "FlextExceptions"),
     "error": "flext_dbt_ldif.services.error",
     "h": ("flext_core.handlers", "FlextHandlers"),
-    "logger": "flext_dbt_ldif.services.service",
+    "logger": ("flext_dbt_ldif.services.service", "logger"),
     "m": ("flext_core.models", "FlextModels"),
     "p": ("flext_core.protocols", "FlextProtocols"),
     "r": ("flext_core.result", "FlextResult"),
