@@ -97,7 +97,7 @@ def dbt_ldif_profile() -> t.ContainerMapping:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> Mapping[str, t.Tests.Testobject]:
+def dbt_ldif_project_config() -> Mapping[str, t.Tests.TestobjectSerializable]:
     """Dbt LDIF project configuration for testing."""
     project_config = td.build_dbt_project_config(
         name="flext_dbt_ldif_test",
