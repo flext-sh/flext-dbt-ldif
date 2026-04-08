@@ -6,14 +6,14 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextService, FlextTypes, r
+from flext_core import FlextTypes, r, s
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m
 
 
 class FlextDbtLdifUnifiedService:
     """Mixin providing UnifiedService for dbt-ldif utilities."""
 
-    class UnifiedService(FlextService[FlextTypes.ContainerMapping]):
+    class UnifiedService(s[FlextTypes.ContainerMapping]):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
         name: str = "ldif_generator"
