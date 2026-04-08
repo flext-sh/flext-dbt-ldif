@@ -43,44 +43,47 @@ if _t.TYPE_CHECKING:
         FlextDbtLdifUtilities as u,
     )
 _LAZY_IMPORTS = merge_lazy_imports(
-    ("flext_dbt_ldif.services",),
+    (".services",),
     {
-        "FlextDbtLdif": ("flext_dbt_ldif.api", "FlextDbtLdif"),
-        "FlextDbtLdifConstants": ("flext_dbt_ldif.constants", "FlextDbtLdifConstants"),
-        "FlextDbtLdifModels": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
-        "FlextDbtLdifProtocols": ("flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"),
-        "FlextDbtLdifServiceBase": ("flext_dbt_ldif.base", "FlextDbtLdifServiceBase"),
-        "FlextDbtLdifSettings": ("flext_dbt_ldif.settings", "FlextDbtLdifSettings"),
-        "FlextDbtLdifTypes": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
-        "FlextDbtLdifUtilities": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
-        "__author__": ("flext_dbt_ldif.__version__", "__author__"),
-        "__author_email__": ("flext_dbt_ldif.__version__", "__author_email__"),
-        "__description__": ("flext_dbt_ldif.__version__", "__description__"),
-        "__license__": ("flext_dbt_ldif.__version__", "__license__"),
-        "__title__": ("flext_dbt_ldif.__version__", "__title__"),
-        "__url__": ("flext_dbt_ldif.__version__", "__url__"),
-        "__version__": ("flext_dbt_ldif.__version__", "__version__"),
-        "__version_info__": ("flext_dbt_ldif.__version__", "__version_info__"),
-        "c": ("flext_dbt_ldif.constants", "FlextDbtLdifConstants"),
+        "FlextDbtLdif": ".api",
+        "FlextDbtLdifConstants": ".constants",
+        "FlextDbtLdifModels": ".models",
+        "FlextDbtLdifProtocols": ".protocols",
+        "FlextDbtLdifServiceBase": ".base",
+        "FlextDbtLdifSettings": ".settings",
+        "FlextDbtLdifTypes": ".typings",
+        "FlextDbtLdifUtilities": ".utilities",
+        "__author__": ".__version__",
+        "__author_email__": ".__version__",
+        "__description__": ".__version__",
+        "__license__": ".__version__",
+        "__title__": ".__version__",
+        "__url__": ".__version__",
+        "__version__": ".__version__",
+        "__version_info__": ".__version__",
+        "c": (".constants", "FlextDbtLdifConstants"),
         "d": ("flext_core.decorators", "FlextDecorators"),
         "e": ("flext_core.exceptions", "FlextExceptions"),
         "h": ("flext_core.handlers", "FlextHandlers"),
-        "m": ("flext_dbt_ldif.models", "FlextDbtLdifModels"),
-        "p": ("flext_dbt_ldif.protocols", "FlextDbtLdifProtocols"),
+        "m": (".models", "FlextDbtLdifModels"),
+        "p": (".protocols", "FlextDbtLdifProtocols"),
         "r": ("flext_core.result", "FlextResult"),
-        "s": ("flext_dbt_ldif.base", "FlextDbtLdifServiceBase"),
-        "t": ("flext_dbt_ldif.typings", "FlextDbtLdifTypes"),
-        "u": ("flext_dbt_ldif.utilities", "FlextDbtLdifUtilities"),
+        "s": (".base", "FlextDbtLdifServiceBase"),
+        "t": (".typings", "FlextDbtLdifTypes"),
+        "u": (".utilities", "FlextDbtLdifUtilities"),
         "x": ("flext_core.mixins", "FlextMixins"),
     },
+    exclude_names=(
+        "cleanup_submodule_namespace",
+        "install_lazy_exports",
+        "lazy_getattr",
+        "logger",
+        "merge_lazy_imports",
+        "output",
+        "output_reporting",
+    ),
+    module_name=__name__,
 )
-_ = _LAZY_IMPORTS.pop("cleanup_submodule_namespace", None)
-_ = _LAZY_IMPORTS.pop("install_lazy_exports", None)
-_ = _LAZY_IMPORTS.pop("lazy_getattr", None)
-_ = _LAZY_IMPORTS.pop("logger", None)
-_ = _LAZY_IMPORTS.pop("merge_lazy_imports", None)
-_ = _LAZY_IMPORTS.pop("output", None)
-_ = _LAZY_IMPORTS.pop("output_reporting", None)
 
 __all__ = [
     "FlextDbtLdif",
