@@ -11,62 +11,44 @@ from flext_core.lazy import install_lazy_exports, merge_lazy_imports
 from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
-    import flext_dbt_ldif.api as _flext_dbt_ldif_api
-
-    api = _flext_dbt_ldif_api
-    import flext_dbt_ldif.base as _flext_dbt_ldif_base
-    from flext_dbt_ldif.api import FlextDbtLdif
-
-    base = _flext_dbt_ldif_base
-    import flext_dbt_ldif.constants as _flext_dbt_ldif_constants
-    from flext_dbt_ldif.base import (
-        FlextDbtLdifServiceBase,
-        FlextDbtLdifServiceBase as s,
-    )
-
-    constants = _flext_dbt_ldif_constants
-    import flext_dbt_ldif.models as _flext_dbt_ldif_models
-    from flext_dbt_ldif.constants import (
-        FlextDbtLdifConstants,
-        FlextDbtLdifConstants as c,
-    )
-
-    models = _flext_dbt_ldif_models
-    import flext_dbt_ldif.protocols as _flext_dbt_ldif_protocols
-    from flext_dbt_ldif.models import FlextDbtLdifModels, FlextDbtLdifModels as m
-
-    protocols = _flext_dbt_ldif_protocols
-    import flext_dbt_ldif.services as _flext_dbt_ldif_services
-    from flext_dbt_ldif.protocols import (
-        FlextDbtLdifProtocols,
-        FlextDbtLdifProtocols as p,
-    )
-
-    services = _flext_dbt_ldif_services
-    import flext_dbt_ldif.settings as _flext_dbt_ldif_settings
-    from flext_dbt_ldif.services import (
-        FlextDbtLdifClient,
-        FlextDbtLdifCliService,
-        FlextDbtLdifCore,
-        FlextDbtLdifError,
-        FlextDbtLdifServiceMixin,
-        FlextDbtLdifUnifiedService,
-    )
-
-    settings = _flext_dbt_ldif_settings
-    import flext_dbt_ldif.typings as _flext_dbt_ldif_typings
-    from flext_dbt_ldif.settings import FlextDbtLdifSettings
-
-    typings = _flext_dbt_ldif_typings
-    import flext_dbt_ldif.utilities as _flext_dbt_ldif_utilities
-    from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
-
-    utilities = _flext_dbt_ldif_utilities
     from flext_core.decorators import FlextDecorators as d
     from flext_core.exceptions import FlextExceptions as e
     from flext_core.handlers import FlextHandlers as h
     from flext_core.mixins import FlextMixins as x
     from flext_core.result import FlextResult as r
+    from flext_dbt_ldif import (
+        api,
+        base,
+        constants,
+        models,
+        protocols,
+        services,
+        settings,
+        typings,
+        utilities,
+    )
+    from flext_dbt_ldif.api import FlextDbtLdif
+    from flext_dbt_ldif.base import (
+        FlextDbtLdifServiceBase,
+        FlextDbtLdifServiceBase as s,
+    )
+    from flext_dbt_ldif.constants import (
+        FlextDbtLdifConstants,
+        FlextDbtLdifConstants as c,
+    )
+    from flext_dbt_ldif.models import FlextDbtLdifModels, FlextDbtLdifModels as m
+    from flext_dbt_ldif.protocols import (
+        FlextDbtLdifProtocols,
+        FlextDbtLdifProtocols as p,
+    )
+    from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
+    from flext_dbt_ldif.services.client import FlextDbtLdifClient
+    from flext_dbt_ldif.services.core import FlextDbtLdifCore
+    from flext_dbt_ldif.services.error import FlextDbtLdifError
+    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+    from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+    from flext_dbt_ldif.settings import FlextDbtLdifSettings
+    from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
     from flext_dbt_ldif.utilities import (
         FlextDbtLdifUtilities,
         FlextDbtLdifUtilities as u,
