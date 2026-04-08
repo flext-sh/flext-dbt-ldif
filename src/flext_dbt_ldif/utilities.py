@@ -9,8 +9,8 @@ from flext_meltano import FlextMeltanoUtilities
 class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
     """Utilities for dbt-ldif operations inheriting LDIF processing capabilities."""
 
-    class DbtLdif(FlextLdifUtilities):
-        """DBT LDIF utilities namespace — inherits LDIF utility methods."""
+    class DbtLdif:
+        """DBT LDIF namespace over the canonical LDIF utility branch."""
 
 
 u = FlextDbtLdifUtilities

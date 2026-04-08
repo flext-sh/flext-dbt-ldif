@@ -9,6 +9,9 @@ from flext_meltano import FlextMeltanoTypes
 class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
     """Type namespace for DBT LDIF domain."""
 
+    class DbtLdif:
+        """DBT LDIF namespace."""
+
 
 t = FlextDbtLdifTypes
 

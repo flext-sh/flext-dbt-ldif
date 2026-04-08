@@ -73,7 +73,7 @@ class FlextDbtLdif(
     def execute(self) -> r[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
         current_config = self._config
-        return u.DbtLdif.try_(
+        return u.try_(
             lambda: FlextDbtLdifSettings.model_validate(current_config.model_dump()),
             catch=ValidationError,
         ).map_error(lambda _: "Invalid DBT LDIF settings")
