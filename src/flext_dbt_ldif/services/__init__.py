@@ -23,12 +23,6 @@ _LAZY_IMPORTS = {
         "flext_dbt_ldif.services.unified_service",
         "FlextDbtLdifUnifiedService",
     ),
-    "cli_service": "flext_dbt_ldif.services.cli_service",
-    "client": "flext_dbt_ldif.services.client",
-    "core": "flext_dbt_ldif.services.core",
-    "error": "flext_dbt_ldif.services.error",
-    "service": "flext_dbt_ldif.services.service",
-    "unified_service": "flext_dbt_ldif.services.unified_service",
 }
 
 
