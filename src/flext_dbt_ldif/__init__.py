@@ -5,7 +5,11 @@ from __future__ import annotations
 
 import typing as _t
 
-from flext_core.lazy import install_lazy_exports, merge_lazy_imports
+from flext_core.lazy import (
+    build_lazy_import_map,
+    install_lazy_exports,
+    merge_lazy_imports,
+)
 from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
@@ -42,35 +46,41 @@ if _t.TYPE_CHECKING:
     )
 _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
-    {
-        "FlextDbtLdif": ".api",
-        "FlextDbtLdifConstants": ".constants",
-        "FlextDbtLdifModels": ".models",
-        "FlextDbtLdifProtocols": ".protocols",
-        "FlextDbtLdifServiceBase": ".base",
-        "FlextDbtLdifSettings": ".settings",
-        "FlextDbtLdifTypes": ".typings",
-        "FlextDbtLdifUtilities": ".utilities",
-        "__author__": ".__version__",
-        "__author_email__": ".__version__",
-        "__description__": ".__version__",
-        "__license__": ".__version__",
-        "__title__": ".__version__",
-        "__url__": ".__version__",
-        "__version__": ".__version__",
-        "__version_info__": ".__version__",
-        "c": (".constants", "FlextDbtLdifConstants"),
-        "d": ("flext_core.decorators", "FlextDecorators"),
-        "e": ("flext_core.exceptions", "FlextExceptions"),
-        "h": ("flext_core.handlers", "FlextHandlers"),
-        "m": (".models", "FlextDbtLdifModels"),
-        "p": (".protocols", "FlextDbtLdifProtocols"),
-        "r": ("flext_core.result", "FlextResult"),
-        "s": (".base", "FlextDbtLdifServiceBase"),
-        "t": (".typings", "FlextDbtLdifTypes"),
-        "u": (".utilities", "FlextDbtLdifUtilities"),
-        "x": ("flext_core.mixins", "FlextMixins"),
-    },
+    build_lazy_import_map(
+        {
+            ".__version__": (
+                "__author__",
+                "__author_email__",
+                "__description__",
+                "__license__",
+                "__title__",
+                "__url__",
+                "__version__",
+                "__version_info__",
+            ),
+            ".api": ("FlextDbtLdif",),
+            ".base": ("FlextDbtLdifServiceBase",),
+            ".constants": ("FlextDbtLdifConstants",),
+            ".models": ("FlextDbtLdifModels",),
+            ".protocols": ("FlextDbtLdifProtocols",),
+            ".settings": ("FlextDbtLdifSettings",),
+            ".typings": ("FlextDbtLdifTypes",),
+            ".utilities": ("FlextDbtLdifUtilities",),
+        },
+        alias_groups={
+            ".base": (("s", "FlextDbtLdifServiceBase"),),
+            ".constants": (("c", "FlextDbtLdifConstants"),),
+            ".models": (("m", "FlextDbtLdifModels"),),
+            ".protocols": (("p", "FlextDbtLdifProtocols"),),
+            ".typings": (("t", "FlextDbtLdifTypes"),),
+            ".utilities": (("u", "FlextDbtLdifUtilities"),),
+            "flext_core.decorators": (("d", "FlextDecorators"),),
+            "flext_core.exceptions": (("e", "FlextExceptions"),),
+            "flext_core.handlers": (("h", "FlextHandlers"),),
+            "flext_core.mixins": (("x", "FlextMixins"),),
+            "flext_core.result": (("r", "FlextResult"),),
+        },
+    ),
     exclude_names=(
         "cleanup_submodule_namespace",
         "install_lazy_exports",

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import typing as _t
 
-from flext_core.lazy import install_lazy_exports
+from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if _t.TYPE_CHECKING:
     from flext_core.decorators import FlextDecorators as d
@@ -28,24 +28,28 @@ if _t.TYPE_CHECKING:
         TestsFlextDbtLdifUtilities,
         TestsFlextDbtLdifUtilities as u,
     )
-_LAZY_IMPORTS = {
-    "TestsFlextDbtLdifConstants": ".constants",
-    "TestsFlextDbtLdifModels": ".models",
-    "TestsFlextDbtLdifProtocols": ".protocols",
-    "TestsFlextDbtLdifTypes": ".typings",
-    "TestsFlextDbtLdifUtilities": ".utilities",
-    "c": (".constants", "TestsFlextDbtLdifConstants"),
-    "d": ("flext_core.decorators", "FlextDecorators"),
-    "e": ("flext_core.exceptions", "FlextExceptions"),
-    "h": ("flext_core.handlers", "FlextHandlers"),
-    "m": (".models", "TestsFlextDbtLdifModels"),
-    "p": (".protocols", "TestsFlextDbtLdifProtocols"),
-    "r": ("flext_core.result", "FlextResult"),
-    "s": ("flext_core.service", "FlextService"),
-    "t": (".typings", "TestsFlextDbtLdifTypes"),
-    "u": (".utilities", "TestsFlextDbtLdifUtilities"),
-    "x": ("flext_core.mixins", "FlextMixins"),
-}
+_LAZY_IMPORTS = build_lazy_import_map(
+    {
+        ".constants": ("TestsFlextDbtLdifConstants",),
+        ".models": ("TestsFlextDbtLdifModels",),
+        ".protocols": ("TestsFlextDbtLdifProtocols",),
+        ".typings": ("TestsFlextDbtLdifTypes",),
+        ".utilities": ("TestsFlextDbtLdifUtilities",),
+    },
+    alias_groups={
+        ".constants": (("c", "TestsFlextDbtLdifConstants"),),
+        ".models": (("m", "TestsFlextDbtLdifModels"),),
+        ".protocols": (("p", "TestsFlextDbtLdifProtocols"),),
+        ".typings": (("t", "TestsFlextDbtLdifTypes"),),
+        ".utilities": (("u", "TestsFlextDbtLdifUtilities"),),
+        "flext_core.decorators": (("d", "FlextDecorators"),),
+        "flext_core.exceptions": (("e", "FlextExceptions"),),
+        "flext_core.handlers": (("h", "FlextHandlers"),),
+        "flext_core.mixins": (("x", "FlextMixins"),),
+        "flext_core.result": (("r", "FlextResult"),),
+        "flext_core.service": (("s", "FlextService"),),
+    },
+)
 
 __all__ = [
     "TestsFlextDbtLdifConstants",

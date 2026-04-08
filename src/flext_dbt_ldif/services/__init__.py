@@ -3,16 +3,18 @@
 
 from __future__ import annotations
 
-from flext_core.lazy import install_lazy_exports
+from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
-_LAZY_IMPORTS = {
-    "FlextDbtLdifCliService": ".cli_service",
-    "FlextDbtLdifClient": ".client",
-    "FlextDbtLdifCore": ".core",
-    "FlextDbtLdifError": ".error",
-    "FlextDbtLdifServiceMixin": ".service",
-    "FlextDbtLdifUnifiedService": ".unified_service",
-}
+_LAZY_IMPORTS = build_lazy_import_map(
+    {
+        ".cli_service": ("FlextDbtLdifCliService",),
+        ".client": ("FlextDbtLdifClient",),
+        ".core": ("FlextDbtLdifCore",),
+        ".error": ("FlextDbtLdifError",),
+        ".service": ("FlextDbtLdifServiceMixin",),
+        ".unified_service": ("FlextDbtLdifUnifiedService",),
+    },
+)
 
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, publish_all=False)
