@@ -1,6 +1,6 @@
 """Test utilities for flext-dbt-ldif.
 
-Provides FlextDbtLdifTestUtilities, combining FlextTestsUtilities with
+Provides TestsFlextDbtLdifUtilities, combining TestsFlextUtilities with
 FlextDbtLdifUtilities for test-specific utility definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -14,8 +14,8 @@ from flext_tests import FlextTestsUtilities
 from flext_dbt_ldif import FlextDbtLdifUtilities
 
 
-class FlextDbtLdifTestUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
-    """Test utilities combining FlextTestsUtilities with flext-dbt-ldif utilities."""
+class TestsFlextDbtLdifUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
+    """Test utilities combining TestsFlextUtilities with flext-dbt-ldif utilities."""
 
     class DbtLdif(FlextDbtLdifUtilities.DbtLdif):
         """DbtLdif test utilities namespace."""
@@ -24,6 +24,6 @@ class FlextDbtLdifTestUtilities(FlextTestsUtilities, FlextDbtLdifUtilities):
             """Project-specific test utilities."""
 
 
-u = FlextDbtLdifTestUtilities
+u = TestsFlextDbtLdifUtilities
 
-__all__ = ["FlextDbtLdifTestUtilities", "u"]
+__all__ = ["TestsFlextDbtLdifUtilities", "u"]

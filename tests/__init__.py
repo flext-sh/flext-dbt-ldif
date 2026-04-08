@@ -7,36 +7,38 @@ from __future__ import annotations
 
 import typing as _t
 
-from flext_core.lazy import install_lazy_exports
+from flext_core.lazy import install_lazy_exports, merge_lazy_imports
 
 if _t.TYPE_CHECKING:
     import tests.conftest as _tests_conftest
 
     conftest = _tests_conftest
     import tests.constants as _tests_constants
-    from tests.conftest import pytest_configure, pytest_plugins
 
     constants = _tests_constants
     import tests.models as _tests_models
     from tests.constants import (
-        FlextDbtLdifTestConstants,
-        FlextDbtLdifTestConstants as c,
+        TestsFlextDbtLdifConstants,
+        TestsFlextDbtLdifConstants as c,
     )
 
     models = _tests_models
     import tests.protocols as _tests_protocols
-    from tests.models import FlextDbtLdifTestModels, FlextDbtLdifTestModels as m
+    from tests.models import TestsFlextDbtLdifModels, TestsFlextDbtLdifModels as m
 
     protocols = _tests_protocols
     import tests.typings as _tests_typings
     from tests.protocols import (
-        FlextDbtLdifTestProtocols,
-        FlextDbtLdifTestProtocols as p,
+        TestsFlextDbtLdifProtocols,
+        TestsFlextDbtLdifProtocols as p,
     )
 
     typings = _tests_typings
+    import tests.unit as _tests_unit
+    from tests.typings import TestsFlextDbtLdifTypes, TestsFlextDbtLdifTypes as t
+
+    unit = _tests_unit
     import tests.utilities as _tests_utilities
-    from tests.typings import FlextDbtLdifTestTypes, FlextDbtLdifTestTypes as t
 
     utilities = _tests_utilities
     from flext_core.decorators import FlextDecorators as d
@@ -46,42 +48,51 @@ if _t.TYPE_CHECKING:
     from flext_core.result import FlextResult as r
     from flext_core.service import FlextService as s
     from tests.utilities import (
-        FlextDbtLdifTestUtilities,
-        FlextDbtLdifTestUtilities as u,
+        TestsFlextDbtLdifUtilities,
+        TestsFlextDbtLdifUtilities as u,
     )
-_LAZY_IMPORTS = {
-    "FlextDbtLdifTestConstants": ("tests.constants", "FlextDbtLdifTestConstants"),
-    "FlextDbtLdifTestModels": ("tests.models", "FlextDbtLdifTestModels"),
-    "FlextDbtLdifTestProtocols": ("tests.protocols", "FlextDbtLdifTestProtocols"),
-    "FlextDbtLdifTestTypes": ("tests.typings", "FlextDbtLdifTestTypes"),
-    "FlextDbtLdifTestUtilities": ("tests.utilities", "FlextDbtLdifTestUtilities"),
-    "c": ("tests.constants", "FlextDbtLdifTestConstants"),
-    "conftest": "tests.conftest",
-    "constants": "tests.constants",
-    "d": ("flext_core.decorators", "FlextDecorators"),
-    "e": ("flext_core.exceptions", "FlextExceptions"),
-    "h": ("flext_core.handlers", "FlextHandlers"),
-    "m": ("tests.models", "FlextDbtLdifTestModels"),
-    "models": "tests.models",
-    "p": ("tests.protocols", "FlextDbtLdifTestProtocols"),
-    "protocols": "tests.protocols",
-    "pytest_configure": ("tests.conftest", "pytest_configure"),
-    "pytest_plugins": ("tests.conftest", "pytest_plugins"),
-    "r": ("flext_core.result", "FlextResult"),
-    "s": ("flext_core.service", "FlextService"),
-    "t": ("tests.typings", "FlextDbtLdifTestTypes"),
-    "typings": "tests.typings",
-    "u": ("tests.utilities", "FlextDbtLdifTestUtilities"),
-    "utilities": "tests.utilities",
-    "x": ("flext_core.mixins", "FlextMixins"),
-}
+_LAZY_IMPORTS = merge_lazy_imports(
+    ("tests.unit",),
+    {
+        "TestsFlextDbtLdifConstants": ("tests.constants", "TestsFlextDbtLdifConstants"),
+        "TestsFlextDbtLdifModels": ("tests.models", "TestsFlextDbtLdifModels"),
+        "TestsFlextDbtLdifProtocols": ("tests.protocols", "TestsFlextDbtLdifProtocols"),
+        "TestsFlextDbtLdifTypes": ("tests.typings", "TestsFlextDbtLdifTypes"),
+        "TestsFlextDbtLdifUtilities": ("tests.utilities", "TestsFlextDbtLdifUtilities"),
+        "c": ("tests.constants", "TestsFlextDbtLdifConstants"),
+        "conftest": "tests.conftest",
+        "constants": "tests.constants",
+        "d": ("flext_core.decorators", "FlextDecorators"),
+        "e": ("flext_core.exceptions", "FlextExceptions"),
+        "h": ("flext_core.handlers", "FlextHandlers"),
+        "m": ("tests.models", "TestsFlextDbtLdifModels"),
+        "models": "tests.models",
+        "p": ("tests.protocols", "TestsFlextDbtLdifProtocols"),
+        "protocols": "tests.protocols",
+        "r": ("flext_core.result", "FlextResult"),
+        "s": ("flext_core.service", "FlextService"),
+        "t": ("tests.typings", "TestsFlextDbtLdifTypes"),
+        "typings": "tests.typings",
+        "u": ("tests.utilities", "TestsFlextDbtLdifUtilities"),
+        "unit": "tests.unit",
+        "utilities": "tests.utilities",
+        "x": ("flext_core.mixins", "FlextMixins"),
+    },
+)
+_ = _LAZY_IMPORTS.pop("cleanup_submodule_namespace", None)
+_ = _LAZY_IMPORTS.pop("install_lazy_exports", None)
+_ = _LAZY_IMPORTS.pop("lazy_getattr", None)
+_ = _LAZY_IMPORTS.pop("logger", None)
+_ = _LAZY_IMPORTS.pop("merge_lazy_imports", None)
+_ = _LAZY_IMPORTS.pop("output", None)
+_ = _LAZY_IMPORTS.pop("output_reporting", None)
 
 __all__ = [
-    "FlextDbtLdifTestConstants",
-    "FlextDbtLdifTestModels",
-    "FlextDbtLdifTestProtocols",
-    "FlextDbtLdifTestTypes",
-    "FlextDbtLdifTestUtilities",
+    "TestsFlextDbtLdifConstants",
+    "TestsFlextDbtLdifModels",
+    "TestsFlextDbtLdifProtocols",
+    "TestsFlextDbtLdifTypes",
+    "TestsFlextDbtLdifUtilities",
     "c",
     "conftest",
     "constants",
@@ -92,13 +103,12 @@ __all__ = [
     "models",
     "p",
     "protocols",
-    "pytest_configure",
-    "pytest_plugins",
     "r",
     "s",
     "t",
     "typings",
     "u",
+    "unit",
     "utilities",
     "x",
 ]

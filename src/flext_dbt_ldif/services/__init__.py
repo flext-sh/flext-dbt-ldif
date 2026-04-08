@@ -30,7 +30,7 @@ if _t.TYPE_CHECKING:
 
     service = _flext_dbt_ldif_services_service
     import flext_dbt_ldif.services.unified_service as _flext_dbt_ldif_services_unified_service
-    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin, logger
+    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 
     unified_service = _flext_dbt_ldif_services_unified_service
     from flext_core.constants import FlextConstants as c
@@ -69,7 +69,6 @@ _LAZY_IMPORTS = {
     "e": ("flext_core.exceptions", "FlextExceptions"),
     "error": "flext_dbt_ldif.services.error",
     "h": ("flext_core.handlers", "FlextHandlers"),
-    "logger": ("flext_dbt_ldif.services.service", "logger"),
     "m": ("flext_core.models", "FlextModels"),
     "p": ("flext_core.protocols", "FlextProtocols"),
     "r": ("flext_core.result", "FlextResult"),
@@ -96,7 +95,6 @@ __all__ = [
     "e",
     "error",
     "h",
-    "logger",
     "m",
     "p",
     "r",

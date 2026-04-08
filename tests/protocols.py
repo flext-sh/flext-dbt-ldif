@@ -1,6 +1,6 @@
 """Test protocol definitions for flext-dbt-ldif.
 
-Provides FlextDbtLdifTestProtocols, combining FlextTestsProtocols with
+Provides TestsFlextDbtLdifProtocols, combining TestsFlextProtocols with
 FlextDbtLdifProtocols for test-specific protocol definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -14,8 +14,8 @@ from flext_tests import FlextTestsProtocols
 from flext_dbt_ldif import FlextDbtLdifProtocols
 
 
-class FlextDbtLdifTestProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
-    """Test protocols combining FlextTestsProtocols and FlextDbtLdifProtocols."""
+class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
+    """Test protocols combining TestsFlextProtocols and FlextDbtLdifProtocols."""
 
     class DbtLdif(FlextDbtLdifProtocols.DbtLdif):
         """DbtLdif test protocols namespace."""
@@ -24,5 +24,5 @@ class FlextDbtLdifTestProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
             """Project-specific test protocols."""
 
 
-p = FlextDbtLdifTestProtocols
-__all__ = ["FlextDbtLdifTestProtocols", "p"]
+p = TestsFlextDbtLdifProtocols
+__all__ = ["TestsFlextDbtLdifProtocols", "p"]

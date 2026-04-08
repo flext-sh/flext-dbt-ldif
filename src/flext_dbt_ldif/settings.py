@@ -7,10 +7,8 @@ from typing import Annotated, ClassVar
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
 
-from flext_core import FlextLogger, FlextSettings
+from flext_core import FlextSettings
 from flext_dbt_ldif import c
-
-logger = FlextLogger(__name__)
 
 
 @FlextSettings.auto_register("dbt-ldif")
@@ -38,6 +36,3 @@ class FlextDbtLdifSettings(FlextSettings):
             description="Minimum data quality score threshold",
         ),
     ]
-
-
-__all__ = ["FlextDbtLdifSettings"]

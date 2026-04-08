@@ -1,6 +1,6 @@
 """Test constants for flext-dbt-ldif tests.
 
-Provides FlextDbtLdifTestConstants, extending FlextTestsConstants with
+Provides TestsFlextDbtLdifConstants, extending FlextTestsConstants with
 flext-dbt-ldif-specific constants.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -17,7 +17,7 @@ from flext_dbt_ldif import FlextDbtLdifConstants
 from tests import t
 
 
-class FlextDbtLdifTestConstants(FlextTestsConstants, FlextDbtLdifConstants):
+class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
     """Constants for flext-dbt-ldif tests.
 
     Inherits from FlextTestsConstants and FlextDbtLdifConstants for
@@ -67,5 +67,5 @@ class FlextDbtLdifTestConstants(FlextTestsConstants, FlextDbtLdifConstants):
                 TEST_OUTPUT_FORMAT: Final[str] = "postgresql"
 
 
-c = FlextDbtLdifTestConstants
-__all__ = ["FlextDbtLdifTestConstants", "c"]
+c = TestsFlextDbtLdifConstants
+__all__ = ["TestsFlextDbtLdifConstants", "c"]

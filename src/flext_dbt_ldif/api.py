@@ -28,14 +28,6 @@ from flext_dbt_ldif import (
 )
 
 
-class FlextDbtLdifEntryListAdapter(
-    RootModel[Sequence[FlextTypes.ContainerValueMapping]],
-):
-    """Adapter for list of entries."""
-
-    root: Sequence[FlextTypes.ContainerValueMapping]
-
-
 class FlextDbtLdif(
     FlextDbtLdifCliService,
     FlextDbtLdifClient,
@@ -48,6 +40,13 @@ class FlextDbtLdif(
 
     All domain behavior comes from service mixins via MRO.
     """
+
+    class _EntryListAdapter(
+        RootModel[Sequence[FlextTypes.ContainerValueMapping]],
+    ):
+        """Adapter for parsed-entry lists."""
+
+        root: Sequence[FlextTypes.ContainerValueMapping]
 
     _instance: ClassVar[Self | None] = None
 
@@ -92,7 +91,7 @@ class FlextDbtLdif(
             )
         entries_raw = parsed.value
         try:
-            entries = FlextDbtLdifEntryListAdapter.model_validate(entries_raw).root
+            entries = self._EntryListAdapter.model_validate(entries_raw).root
         except ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload",
@@ -119,6 +118,3 @@ class FlextDbtLdif(
     ) -> r[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
-
-
-__all__ = ["FlextDbtLdif", "FlextDbtLdifEntryListAdapter"]
