@@ -44,7 +44,6 @@ if _t.TYPE_CHECKING:
     test_services_and_api = _tests_unit_test_services_and_api
     import tests.unit.test_version as _tests_unit_test_version
     from tests.unit.test_services_and_api import (
-        FlextDbtLdifService,
         service,
         test_api_generate_ldif_models,
         test_api_process_ldif_file,
@@ -67,7 +66,6 @@ if _t.TYPE_CHECKING:
     from flext_core.utilities import FlextUtilities as u
     from tests.unit.test_version import test_dunder_alignment, test_version_is_string
 _LAZY_IMPORTS = {
-    "FlextDbtLdifService": ("tests.unit.test_services_and_api", "FlextDbtLdifService"),
     "TestAnalytics": ("tests.unit.test_core", "TestAnalytics"),
     "TestDbtModel": ("tests.unit.test_dbt_models", "TestDbtModel"),
     "TestFlextDbtLdifCliService": ("tests.unit.test_cli", "TestFlextDbtLdifCliService"),
@@ -137,7 +135,6 @@ _LAZY_IMPORTS = {
 }
 
 __all__ = [
-    "FlextDbtLdifService",
     "TestAnalytics",
     "TestDbtModel",
     "TestFlextDbtLdifCliService",

@@ -52,7 +52,6 @@ if _t.TYPE_CHECKING:
     unit = _tests_unit
     import tests.utilities as _tests_utilities
     from tests.unit import (
-        FlextDbtLdifService,
         TestAnalytics,
         TestDbtModel,
         TestFlextDbtLdifClient,
@@ -143,7 +142,6 @@ _ = _LAZY_IMPORTS.pop("output", None)
 _ = _LAZY_IMPORTS.pop("output_reporting", None)
 
 __all__ = [
-    "FlextDbtLdifService",
     "FlextDbtLdifTestConstants",
     "FlextDbtLdifTestModels",
     "FlextDbtLdifTestProtocols",

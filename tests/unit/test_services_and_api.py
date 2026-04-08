@@ -16,8 +16,6 @@ from flext_core import r
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifServiceMixin
 from tests import m, t
 
-FlextDbtLdifService = FlextDbtLdifServiceMixin.Service
-
 
 @pytest.fixture
 def service(tmp_path: Path) -> FlextDbtLdifServiceMixin.Service:
@@ -27,7 +25,7 @@ def service(tmp_path: Path) -> FlextDbtLdifServiceMixin.Service:
 
 def test_parse_and_validate_ldif_ok(
     monkeypatch: pytest.MonkeyPatch,
-    service: FlextDbtLdifService,
+    service: FlextDbtLdifServiceMixin.Service,
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF via service."""
@@ -70,7 +68,7 @@ def test_parse_and_validate_ldif_ok(
 
 def test_generate_and_write_models_ok(
     monkeypatch: pytest.MonkeyPatch,
-    service: FlextDbtLdifService,
+    service: FlextDbtLdifServiceMixin.Service,
 ) -> None:
     """Test generating and writing models via service."""
     staging_model = m.DbtLdif.DbtModel(
@@ -117,7 +115,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
     """Test FlextDbtLdif.process_ldif_file delegates correctly."""
 
     def _run(
-        _self: FlextDbtLdifService,
+        _self: FlextDbtLdifServiceMixin.Service,
         ldif_file: Path | str,
         *,
         generate_models: bool = True,
@@ -133,7 +131,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
             ),
         )
 
-    monkeypatch.setattr(FlextDbtLdifService, "run_complete_workflow", _run)
+    monkeypatch.setattr(FlextDbtLdifServiceMixin.Service, "run_complete_workflow", _run)
     api = FlextDbtLdif()
     result = api.process_ldif_file(tmp_path / "f.ldif")
     assert result.is_success
@@ -146,7 +144,7 @@ def test_api_validate_ldif_quality(
     """Test FlextDbtLdif.validate_ldif_quality delegates correctly."""
 
     def _run_quality(
-        _self: FlextDbtLdifService,
+        _self: FlextDbtLdifServiceMixin.Service,
         _ldif_file: Path | str,
     ) -> r[m.DbtLdif.ParseValidationResult]:
         return r[m.DbtLdif.ParseValidationResult].ok(
@@ -158,7 +156,7 @@ def test_api_validate_ldif_quality(
         )
 
     monkeypatch.setattr(
-        FlextDbtLdifService,
+        FlextDbtLdifServiceMixin.Service,
         "run_data_quality_assessment",
         _run_quality,
     )
@@ -173,7 +171,7 @@ def test_api_generate_ldif_models(
     """Test FlextDbtLdif.generate_ldif_models delegates correctly."""
 
     def _gen_models(
-        _self: FlextDbtLdifService,
+        _self: FlextDbtLdifServiceMixin.Service,
         _entries: Sequence[t.ContainerValueMapping],
         *,
         overwrite: bool = False,
@@ -186,6 +184,10 @@ def test_api_generate_ldif_models(
             ),
         )
 
-    monkeypatch.setattr(FlextDbtLdifService, "generate_and_write_models", _gen_models)
+    monkeypatch.setattr(
+        FlextDbtLdifServiceMixin.Service,
+        "generate_and_write_models",
+        _gen_models,
+    )
     api = FlextDbtLdif()
     assert api.generate_ldif_models(tmp_path / "f.ldif").is_success
