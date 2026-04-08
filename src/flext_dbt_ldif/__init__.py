@@ -1,7 +1,5 @@
-# AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
-# Regenerate with: make gen
-#
-"""Flext dbt ldif package."""
+# AUTO-GENERATED FILE — Regenerate with: make gen
+"""Flext Dbt Ldif package."""
 
 from __future__ import annotations
 
