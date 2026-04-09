@@ -131,7 +131,6 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
             ),
         )
 
-    monkeypatch.setattr(FlextDbtLdifServiceMixin.Service, "run_complete_workflow", _run)
     api = FlextDbtLdif()
     result = api.process_ldif_file(tmp_path / "f.ldif")
     assert result.is_success

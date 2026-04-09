@@ -49,8 +49,6 @@ def test_parse_and_validate_ldif_ok(
             ),
         )
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
 
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_success
@@ -75,7 +73,6 @@ def test_parse_and_validate_ldif_parse_fails(
     ) -> r[Sequence[t.ContainerValueMapping]]:
         return r[Sequence[t.ContainerValueMapping]].fail("Parse error")
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_failure
 
@@ -193,9 +190,6 @@ def test_run_complete_workflow_all(
     ) -> r[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
-    monkeypatch.setattr(svc.client, "transform_with_dbt", _transform_with_dbt)
     gen = svc.model_generator
     object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
     object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
@@ -238,8 +232,6 @@ def test_run_data_quality_assessment(
             ),
         )
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
 
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
     assert result.is_success
