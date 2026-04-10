@@ -49,7 +49,6 @@ def test_parse_and_validate_ldif_ok(
             ),
         )
 
-
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
     assert result.is_success
     data = result.value
@@ -231,7 +230,6 @@ def test_run_data_quality_assessment(
                 validation_status="passed",
             ),
         )
-
 
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
     assert result.is_success
