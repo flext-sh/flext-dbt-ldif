@@ -17,11 +17,11 @@ from flext_dbt_ldif import (
     t,
 )
 
-logger = FlextLogger(__name__)
-
 
 class FlextDbtLdifServiceMixin:
     """Mixin providing Service for dbt-ldif utilities."""
+
+    _logger = FlextLogger(__name__)
 
     class Service:
         """Orchestrates parsing, validation, model generation, and transformations."""
@@ -154,7 +154,7 @@ class FlextDbtLdifServiceMixin:
                         transform.error or "Transformation workflow failed",
                     )
                 workflow_result.transformation_status = transform.value.status
-            logger.info("Completed DBT LDIF workflow")
+            FlextDbtLdifServiceMixin._logger.info("Completed DBT LDIF workflow")
             return r[m.DbtLdif.WorkflowResult].ok(workflow_result)
 
         def run_data_quality_assessment(

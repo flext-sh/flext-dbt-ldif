@@ -13,25 +13,18 @@ from flext_core.lazy import (
 from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
+    from flext_cli.base import s
+
     from flext_core.decorators import d
     from flext_core.exceptions import e
     from flext_core.handlers import h
     from flext_core.mixins import x
     from flext_core.result import r
     from flext_dbt_ldif.api import FlextDbtLdif
-    from flext_dbt_ldif.base import (
-        FlextDbtLdifServiceBase,
-        FlextDbtLdifServiceBase as s,
-    )
-    from flext_dbt_ldif.constants import (
-        FlextDbtLdifConstants,
-        FlextDbtLdifConstants as c,
-    )
-    from flext_dbt_ldif.models import FlextDbtLdifModels, FlextDbtLdifModels as m
-    from flext_dbt_ldif.protocols import (
-        FlextDbtLdifProtocols,
-        FlextDbtLdifProtocols as p,
-    )
+    from flext_dbt_ldif.base import FlextDbtLdifServiceBase
+    from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
+    from flext_dbt_ldif.models import FlextDbtLdifModels, m
+    from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
     from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
     from flext_dbt_ldif.services.client import FlextDbtLdifClient
     from flext_dbt_ldif.services.core import FlextDbtLdifCore
@@ -39,11 +32,8 @@ if _t.TYPE_CHECKING:
     from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
     from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
-    from flext_dbt_ldif.typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
-    from flext_dbt_ldif.utilities import (
-        FlextDbtLdifUtilities,
-        FlextDbtLdifUtilities as u,
-    )
+    from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
+    from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
     build_lazy_import_map(
@@ -60,25 +50,33 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ),
             ".api": ("FlextDbtLdif",),
             ".base": ("FlextDbtLdifServiceBase",),
-            ".constants": ("FlextDbtLdifConstants",),
-            ".models": ("FlextDbtLdifModels",),
-            ".protocols": ("FlextDbtLdifProtocols",),
+            ".constants": (
+                "FlextDbtLdifConstants",
+                "c",
+            ),
+            ".models": (
+                "FlextDbtLdifModels",
+                "m",
+            ),
+            ".protocols": (
+                "FlextDbtLdifProtocols",
+                "p",
+            ),
             ".settings": ("FlextDbtLdifSettings",),
-            ".typings": ("FlextDbtLdifTypes",),
-            ".utilities": ("FlextDbtLdifUtilities",),
+            ".typings": (
+                "FlextDbtLdifTypes",
+                "t",
+            ),
+            ".utilities": (
+                "FlextDbtLdifUtilities",
+                "u",
+            ),
+            "flext_cli.base": ("s",),
             "flext_core.decorators": ("d",),
             "flext_core.exceptions": ("e",),
             "flext_core.handlers": ("h",),
             "flext_core.mixins": ("x",),
             "flext_core.result": ("r",),
-        },
-        alias_groups={
-            ".base": (("s", "FlextDbtLdifServiceBase"),),
-            ".constants": (("c", "FlextDbtLdifConstants"),),
-            ".models": (("m", "FlextDbtLdifModels"),),
-            ".protocols": (("p", "FlextDbtLdifProtocols"),),
-            ".typings": (("t", "FlextDbtLdifTypes"),),
-            ".utilities": (("u", "FlextDbtLdifUtilities"),),
         },
     ),
     exclude_names=(
@@ -92,6 +90,9 @@ _LAZY_IMPORTS = merge_lazy_imports(
     ),
     module_name=__name__,
 )
+
+
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
 
 __all__ = [
     "FlextDbtLdif",
@@ -128,6 +129,3 @@ __all__ = [
     "u",
     "x",
 ]
-
-
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
