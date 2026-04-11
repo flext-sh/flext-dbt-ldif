@@ -22,17 +22,17 @@ if _t.TYPE_CHECKING:
     from flext_core.result import r
     from flext_dbt_ldif.api import FlextDbtLdif
     from flext_dbt_ldif.base import FlextDbtLdifServiceBase
+    from flext_dbt_ldif.cli_service import FlextDbtLdifCliService
+    from flext_dbt_ldif.client import FlextDbtLdifClient
     from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
+    from flext_dbt_ldif.core import FlextDbtLdifCore
+    from flext_dbt_ldif.error import FlextDbtLdifError
     from flext_dbt_ldif.models import FlextDbtLdifModels, m
     from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
-    from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
-    from flext_dbt_ldif.services.client import FlextDbtLdifClient
-    from flext_dbt_ldif.services.core import FlextDbtLdifCore
-    from flext_dbt_ldif.services.error import FlextDbtLdifError
-    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-    from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+    from flext_dbt_ldif.service import FlextDbtLdifServiceMixin
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
+    from flext_dbt_ldif.unified_service import FlextDbtLdifUnifiedService
     from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
@@ -50,10 +50,14 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ),
             ".api": ("FlextDbtLdif",),
             ".base": ("FlextDbtLdifServiceBase",),
+            ".cli_service": ("FlextDbtLdifCliService",),
+            ".client": ("FlextDbtLdifClient",),
             ".constants": (
                 "FlextDbtLdifConstants",
                 "c",
             ),
+            ".core": ("FlextDbtLdifCore",),
+            ".error": ("FlextDbtLdifError",),
             ".models": (
                 "FlextDbtLdifModels",
                 "m",
@@ -62,11 +66,13 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "FlextDbtLdifProtocols",
                 "p",
             ),
+            ".service": ("FlextDbtLdifServiceMixin",),
             ".settings": ("FlextDbtLdifSettings",),
             ".typings": (
                 "FlextDbtLdifTypes",
                 "t",
             ),
+            ".unified_service": ("FlextDbtLdifUnifiedService",),
             ".utilities": (
                 "FlextDbtLdifUtilities",
                 "u",
