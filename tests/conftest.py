@@ -70,7 +70,7 @@ def ensure_shared_docker_container(
 def dbt_ldif_profile() -> t.ContainerMapping:
     """Dbt LDIF profile configuration for testing."""
     return {
-        "config": {
+        "settings": {
             "partial_parse": True,
             "printer_width": 120,
             "send_anonymous_usage_stats": False,
@@ -97,13 +97,13 @@ def dbt_ldif_profile() -> t.ContainerMapping:
 
 
 @pytest.fixture
-def dbt_ldif_project_config() -> Mapping[str, t.Tests.TestobjectSerializable]:
+def dbt_ldif_project_settings() -> Mapping[str, t.Tests.TestobjectSerializable]:
     """Dbt LDIF project configuration for testing."""
-    project_config = td.build_dbt_project_config(
+    project_settings = td.build_dbt_project_settings(
         name="flext_dbt_ldif_test",
         version="0.7.0",
         profile="test",
-        model_config={
+        model_settings={
             "materialized": "table",
             "ldif": {
                 "enable_ldif_functions": True,
@@ -118,15 +118,15 @@ def dbt_ldif_project_config() -> Mapping[str, t.Tests.TestobjectSerializable]:
             "enable_ldif_validation": True,
         },
     )
-    return dict(project_config.items())
+    return dict(project_settings.items())
 
 
 @pytest.fixture
-def ldif_source_config(
-    shared_ldap_config: t.ContainerMapping,
+def ldif_source_settings(
+    shared_ldap_settings: t.ContainerMapping,
 ) -> t.ContainerMapping:
     """LDIF source configuration for testing using shared container."""
-    _ = shared_ldap_config
+    _ = shared_ldap_settings
     return {
         "server": "localhost",
         "port": 3390,
@@ -195,14 +195,14 @@ def sample_ldif_entries() -> Sequence[t.ContainerMapping]:
     ]
 
 
-def pytest_configure(config: pytest.Config) -> None:
+def pytest_settingsure(settings: pytest.Config) -> None:
     """Configure pytest markers."""
-    config.addinivalue_line("markers", "unit: Unit tests")
-    config.addinivalue_line("markers", "integration: Integration tests")
-    config.addinivalue_line("markers", "e2e: End-to-end tests")
-    config.addinivalue_line("markers", "dbt: dbt-specific tests")
-    config.addinivalue_line("markers", "ldif: LDIF integration tests")
-    config.addinivalue_line("markers", "transformation: Data transformation tests")
-    config.addinivalue_line("markers", "validation: Data validation tests")
-    config.addinivalue_line("markers", "performance: Performance tests")
-    config.addinivalue_line("markers", "slow: Slow tests")
+    settings.addinivalue_line("markers", "unit: Unit tests")
+    settings.addinivalue_line("markers", "integration: Integration tests")
+    settings.addinivalue_line("markers", "e2e: End-to-end tests")
+    settings.addinivalue_line("markers", "dbt: dbt-specific tests")
+    settings.addinivalue_line("markers", "ldif: LDIF integration tests")
+    settings.addinivalue_line("markers", "transformation: Data transformation tests")
+    settings.addinivalue_line("markers", "validation: Data validation tests")
+    settings.addinivalue_line("markers", "performance: Performance tests")
+    settings.addinivalue_line("markers", "slow: Slow tests")

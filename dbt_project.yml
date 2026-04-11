@@ -1,12 +1,12 @@
 name: "flext_dbt_ldif"
 version: "1.0.0"
-config-version: 2
+settings-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
 profile: "flext_ldif"
 
 # These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
+# The `model-paths` settings, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models"]
 analysis-paths: ["analyses"]

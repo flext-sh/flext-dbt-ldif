@@ -22,19 +22,21 @@ class FlextDbtLdifUnifiedService:
         def __init__(
             self,
             name: str = "ldif_generator",
-            config: FlextDbtLdifSettings | None = None,
+            settings: FlextDbtLdifSettings | None = None,
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service with project and settings context."""
             super().__init__(
-                config_type=FlextDbtLdifSettings,
-                config_overrides=None,
+                settings_type=FlextDbtLdifSettings,
+                settings_overrides=None,
                 initial_context=None,
             )
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
             self._settings = (
-                config if config is not None else FlextDbtLdifSettings.fetch_global()
+                settings
+                if settings is not None
+                else FlextDbtLdifSettings.fetch_global()
             )
 
         @override

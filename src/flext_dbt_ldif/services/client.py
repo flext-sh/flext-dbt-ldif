@@ -17,10 +17,12 @@ class FlextDbtLdifClient:
     class Client:
         """Client with typed parse, validate, and transform operations."""
 
-        def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
+        def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
             """Initialize client with explicit or global settings."""
-            self.config = (
-                config if config is not None else FlextDbtLdifSettings.fetch_global()
+            self.settings = (
+                settings
+                if settings is not None
+                else FlextDbtLdifSettings.fetch_global()
             )
 
         def parse_ldif_file(
@@ -29,7 +31,9 @@ class FlextDbtLdifClient:
         ) -> r[Sequence[t.ContainerValueMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
-                str(file_path) if file_path is not None else self.config.ldif_file_path
+                str(file_path)
+                if file_path is not None
+                else self.settings.ldif_file_path
             )
             if not selected_path:
                 return r[Sequence[t.ContainerValueMapping]].fail(
@@ -102,7 +106,7 @@ class FlextDbtLdifClient:
                     "No LDIF entries found",
                 )
             # c.DbtLdif.DEFAULT_QUALITY_SCORE = c.DbtLdif.DEFAULT_QUALITY_SCORE
-            if self.config.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
+            if self.settings.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met",
                 )

@@ -20,13 +20,13 @@ class TestFlextDbtLdifClient:
     def test_initialization_default(self) -> None:
         """Test client initialization with default settings."""
         client = FlextDbtLdifClient.Client()
-        assert client.config is not None
+        assert client.settings is not None
 
     def test_initialization_with_config(self) -> None:
-        """Test client initialization with explicit config."""
-        config = FlextDbtLdifSettings.fetch_global()
-        client = FlextDbtLdifClient.Client(config)
-        assert client.config is config
+        """Test client initialization with explicit settings."""
+        settings = FlextDbtLdifSettings.fetch_global()
+        client = FlextDbtLdifClient.Client(settings)
+        assert client.settings is settings
 
     def test_parse_ldif_file_ok(self, tmp_path: Path) -> None:
         """Test parsing LDIF file returns success."""
@@ -37,9 +37,9 @@ class TestFlextDbtLdifClient:
         assert result.value
 
     def test_parse_ldif_file_no_path(self) -> None:
-        """Test parsing without file path fails when config path is empty."""
-        config = FlextDbtLdifSettings.fetch_global()
-        client = FlextDbtLdifClient.Client(config)
+        """Test parsing without file path fails when settings path is empty."""
+        settings = FlextDbtLdifSettings.fetch_global()
+        client = FlextDbtLdifClient.Client(settings)
         result = client.parse_ldif_file()
         assert result.failure
         assert "required" in (result.error or "").lower()
@@ -102,8 +102,8 @@ class TestFlextDbtLdifClient:
         assert data.transformation_status == "success"
 
     def test_run_full_pipeline_no_path(self) -> None:
-        """Test pipeline fails when no file path and config path is empty."""
-        config = FlextDbtLdifSettings.fetch_global()
-        client = FlextDbtLdifClient.Client(config)
+        """Test pipeline fails when no file path and settings path is empty."""
+        settings = FlextDbtLdifSettings.fetch_global()
+        client = FlextDbtLdifClient.Client(settings)
         result = client.run_full_pipeline()
         assert result.failure

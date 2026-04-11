@@ -21,7 +21,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_initialization(self, tmp_path: Path) -> None:
         """Test service initialization with project dir."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            config=FlextDbtLdifSettings.fetch_global(),
+            settings=FlextDbtLdifSettings.fetch_global(),
             project_dir=tmp_path,
         )
         assert gen.project_dir == tmp_path
@@ -30,7 +30,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_execute(self) -> None:
         """Test execute returns metadata payload."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            config=FlextDbtLdifSettings.fetch_global()
+            settings=FlextDbtLdifSettings.fetch_global()
         )
         result = gen.execute()
         assert result.success
@@ -41,7 +41,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_staging_models_with_entries(self) -> None:
         """Test staging model generation with entries."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            config=FlextDbtLdifSettings.fetch_global()
+            settings=FlextDbtLdifSettings.fetch_global()
         )
         entries: Sequence[Mapping[str, FlextTypes.Scalar]] = [
             {"dn": "cn=test,dc=example,dc=org"},
@@ -57,7 +57,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_staging_models_empty(self) -> None:
         """Test staging model generation with empty entries."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            config=FlextDbtLdifSettings.fetch_global()
+            settings=FlextDbtLdifSettings.fetch_global()
         )
         result = gen.generate_staging_models([])
         assert result.success
@@ -67,7 +67,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_analytics_models_with_staging(self) -> None:
         """Test analytics model generation from staging models."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            config=FlextDbtLdifSettings.fetch_global()
+            settings=FlextDbtLdifSettings.fetch_global()
         )
         staging_model = m.DbtLdif.DbtModel(
             name="stg_ldif_entries",
@@ -88,7 +88,7 @@ class TestFlextDbtLdifUnifiedService:
     def test_generate_analytics_models_empty(self) -> None:
         """Test analytics model generation with empty staging."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            config=FlextDbtLdifSettings.fetch_global()
+            settings=FlextDbtLdifSettings.fetch_global()
         )
         result = gen.generate_analytics_models([])
         assert result.success

@@ -36,19 +36,21 @@ class FlextDbtLdifServiceMixin:
 
         def __init__(
             self,
-            config: FlextDbtLdifSettings | None = None,
+            settings: FlextDbtLdifSettings | None = None,
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service dependencies."""
-            self.config = (
-                config if config is not None else FlextDbtLdifSettings.fetch_global()
+            self.settings = (
+                settings
+                if settings is not None
+                else FlextDbtLdifSettings.fetch_global()
             )
             self.project_dir = project_dir or Path(
-                str(self.config.ldif_file_path or "."),
+                str(self.settings.ldif_file_path or "."),
             )
-            self.client = FlextDbtLdifClient.Client(self.config)
+            self.client = FlextDbtLdifClient.Client(self.settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                config=self.config,
+                settings=self.settings,
                 project_dir=self.project_dir,
             )
 

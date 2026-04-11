@@ -27,7 +27,7 @@ if _t.TYPE_CHECKING:
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
     from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
-    from flext_meltano import d, e, h, r, s, x
+    from flext_ldif import d, e, h, r, s, x
 _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
     build_lazy_import_map(
@@ -68,7 +68,7 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "FlextDbtLdifUtilities",
                 "u",
             ),
-            "flext_meltano": (
+            "flext_ldif": (
                 "d",
                 "e",
                 "h",
