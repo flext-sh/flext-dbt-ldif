@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from flext_core import r
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t, u
 
 logger = u.fetch_logger(__name__)
 

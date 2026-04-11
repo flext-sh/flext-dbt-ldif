@@ -118,3 +118,8 @@ class FlextDbtLdif(
     ) -> r[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
+
+
+dbt_ldif = FlextDbtLdif
+
+__all__ = ["FlextDbtLdif", "dbt_ldif"]
