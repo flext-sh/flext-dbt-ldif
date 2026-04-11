@@ -53,7 +53,7 @@ class TestAnalytics:
         """Test pattern analysis with empty data."""
         analytics = FlextDbtLdifCore.Core.Analytics()
         result = analytics.analyze_entry_patterns([])
-        assert result.is_success
+        assert result.success
         data = result.value or {}
         assert data["total_entries"] == 0
         assert data["unique_dns"] == 0
@@ -66,7 +66,7 @@ class TestAnalytics:
         ]
         analytics = FlextDbtLdifCore.Core.Analytics()
         result = analytics.analyze_entry_patterns(sample_data)
-        assert result.is_success
+        assert result.success
         data = result.value or {}
         assert data["total_entries"] == 2
         assert data["unique_dns"] == 2
@@ -79,7 +79,7 @@ class TestAnalytics:
         ]
         analytics = FlextDbtLdifCore.Core.Analytics()
         result = analytics.analyze_entry_patterns(sample_data)
-        assert result.is_success
+        assert result.success
         data = result.value or {}
         assert data["total_entries"] == 2
         assert data["unique_dns"] == 1

@@ -85,7 +85,7 @@ class FlextDbtLdif(
     ) -> r[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
-        if parsed.is_failure:
+        if parsed.failure:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 parsed.error or "Parsing failed",
             )

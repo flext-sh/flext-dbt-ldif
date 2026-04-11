@@ -33,7 +33,7 @@ class TestFlextDbtLdifUnifiedService:
             config=FlextDbtLdifSettings.get_global()
         )
         result = gen.execute()
-        assert result.is_success
+        assert result.success
         data = result.value or {}
         assert data["name"] == "ldif_generator"
         assert data["status"] == "ready"
@@ -47,7 +47,7 @@ class TestFlextDbtLdifUnifiedService:
             {"dn": "cn=test,dc=example,dc=org"},
         ]
         result = gen.generate_staging_models(entries)
-        assert result.is_success
+        assert result.success
         models = result.value or []
         assert len(models) == 1
         assert models[0].name == "stg_ldif_entries"
@@ -60,7 +60,7 @@ class TestFlextDbtLdifUnifiedService:
             config=FlextDbtLdifSettings.get_global()
         )
         result = gen.generate_staging_models([])
-        assert result.is_success
+        assert result.success
         models = result.value or []
         assert not models
 
@@ -78,7 +78,7 @@ class TestFlextDbtLdifUnifiedService:
             dependencies=[],
         )
         result = gen.generate_analytics_models([staging_model])
-        assert result.is_success
+        assert result.success
         models = result.value or []
         assert len(models) == 1
         assert models[0].name == "analytics_ldif_insights"
@@ -91,7 +91,7 @@ class TestFlextDbtLdifUnifiedService:
             config=FlextDbtLdifSettings.get_global()
         )
         result = gen.generate_analytics_models([])
-        assert result.is_success
+        assert result.success
         models = result.value or []
         assert not models
 
@@ -126,7 +126,7 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_success
+        assert result.success
         assert result.value is True
 
     def test_validate_business_rules_empty_name(self) -> None:
@@ -140,7 +140,7 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_failure
+        assert result.failure
 
     def test_validate_business_rules_empty_source(self) -> None:
         """Test business rules fail for empty ldif_source."""
@@ -153,7 +153,7 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_failure
+        assert result.failure
 
     def test_validate_business_rules_empty_sql(self) -> None:
         """Test business rules fail for empty sql_content."""
@@ -166,4 +166,4 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_failure
+        assert result.failure

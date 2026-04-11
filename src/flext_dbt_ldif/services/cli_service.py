@@ -21,7 +21,7 @@ class FlextDbtLdifCliService:
             try:
                 service = FlextDbtLdifServiceMixin.Service()
                 result = service.generate_and_write_models([])
-                if result.is_failure:
+                if result.failure:
                     return r[str].fail(result.error or "Model generation failed")
                 logger.info(
                     "Model generation completed: %s",
@@ -55,7 +55,7 @@ class FlextDbtLdifCliService:
             try:
                 service = FlextDbtLdifServiceMixin.Service()
                 result = service.run_data_quality_assessment("")
-                if result.is_failure:
+                if result.failure:
                     return r[str].fail(result.error or "Validation failed")
                 logger.info(
                     "Validation completed: %s",
@@ -68,13 +68,13 @@ class FlextDbtLdifCliService:
         def generate(self) -> None:
             """Generate dbt models from LDIF schema definitions."""
             result: r[str] = self.display_generate_message()
-            if result.is_failure:
+            if result.failure:
                 logger.error("Generate command failed: %s", result.error)
 
         def info(self) -> None:
             """Show package information."""
             result = self.display_info()
-            if result.is_failure:
+            if result.failure:
                 logger.error("Info command failed: %s", result.error)
 
         def main(self) -> int:
@@ -102,5 +102,5 @@ class FlextDbtLdifCliService:
         def validate(self) -> None:
             """Validate dbt models and configurations."""
             result: r[str] = self.display_validate_message()
-            if result.is_failure:
+            if result.failure:
                 logger.error("Validate command failed: %s", result.error)

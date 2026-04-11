@@ -34,7 +34,7 @@ def shared_ldap_container(
     Container auto-starts if not running and remains running after tests.
     """
     result = docker_control.start_existing_container("flext-openldap-test")
-    if result.is_failure:
+    if result.failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
     return "flext-openldap-test"
 

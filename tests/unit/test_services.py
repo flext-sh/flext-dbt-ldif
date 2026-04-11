@@ -50,7 +50,7 @@ def test_parse_and_validate_ldif_ok(
         )
 
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
-    assert result.is_success
+    assert result.success
     data = result.value
     assert data is not None
     assert data.entry_count == 1
@@ -73,7 +73,7 @@ def test_parse_and_validate_ldif_parse_fails(
         return r[Sequence[t.ContainerValueMapping]].fail("Parse error")
 
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
-    assert result.is_failure
+    assert result.failure
 
 
 def test_generate_and_write_models_ok(
@@ -116,7 +116,7 @@ def test_generate_and_write_models_ok(
         {"dn": "cn=test,dc=example,dc=org"},
     ]
     result = svc.generate_and_write_models(entries)
-    assert result.is_success
+    assert result.success
     data = result.value
     assert data is not None
     assert data.models_generated == 2
@@ -199,7 +199,7 @@ def test_run_complete_workflow_all(
         run_transformations=True,
         model_names=["m1"],
     )
-    assert result.is_success
+    assert result.success
     data = result.value
     assert data is not None
     assert data.workflow_status == "completed"
@@ -232,7 +232,7 @@ def test_run_data_quality_assessment(
         )
 
     result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
-    assert result.is_success
+    assert result.success
     data = result.value
     assert data is not None
     assert data.entry_count == 1

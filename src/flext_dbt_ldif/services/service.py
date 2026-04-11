@@ -63,14 +63,14 @@ class FlextDbtLdifServiceMixin:
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
-            if staging.is_failure:
+            if staging.failure:
                 return r[m.DbtLdif.ModelGenerationResult].fail(
                     staging.error or "Staging model generation failed",
                 )
             analytics = self.model_generator.generate_analytics_models(
                 staging.value,
             )
-            if analytics.is_failure:
+            if analytics.failure:
                 return r[m.DbtLdif.ModelGenerationResult].fail(
                     analytics.error or "Analytics model generation failed",
                 )
@@ -89,13 +89,13 @@ class FlextDbtLdifServiceMixin:
             """Parse and validate LDIF file in one operation."""
             adapter = FlextDbtLdifServiceMixin.Service.EntryContainerListAdapter
             parse_result = self.client.parse_ldif_file(ldif_file)
-            if parse_result.is_failure:
+            if parse_result.failure:
                 return r[m.DbtLdif.ParseValidationResult].fail(
                     parse_result.error or "Parse failed",
                 )
             entries = adapter.model_validate(parse_result.value).root
             validation = self.client.validate_ldif_data(entries)
-            if validation.is_failure:
+            if validation.failure:
                 return r[m.DbtLdif.ParseValidationResult].fail(
                     validation.error or "Validation failed",
                 )
@@ -118,13 +118,13 @@ class FlextDbtLdifServiceMixin:
             """Execute complete LDIF to DBT workflow."""
             adapter = FlextDbtLdifServiceMixin.Service.EntryContainerListAdapter
             parse_result = self.client.parse_ldif_file(ldif_file)
-            if parse_result.is_failure:
+            if parse_result.failure:
                 return r[m.DbtLdif.WorkflowResult].fail(
                     parse_result.error or "Parse failed",
                 )
             entries = adapter.model_validate(parse_result.value).root
             validation = self.client.validate_ldif_data(entries)
-            if validation.is_failure:
+            if validation.failure:
                 return r[m.DbtLdif.WorkflowResult].fail(
                     validation.error or "Validation failed",
                 )
@@ -136,7 +136,7 @@ class FlextDbtLdifServiceMixin:
             )
             if generate_models:
                 model_result = self.generate_and_write_models(entries)
-                if model_result.is_failure:
+                if model_result.failure:
                     return r[m.DbtLdif.WorkflowResult].fail(
                         model_result.error or "Model generation workflow failed",
                     )
@@ -149,7 +149,7 @@ class FlextDbtLdifServiceMixin:
                     transform_payload,
                     model_names,
                 )
-                if transform.is_failure:
+                if transform.failure:
                     return r[m.DbtLdif.WorkflowResult].fail(
                         transform.error or "Transformation workflow failed",
                     )

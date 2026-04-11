@@ -24,22 +24,22 @@ class TestFlextDbtLdifCliService:
         """Test display_info returns result."""
         service = FlextDbtLdifCliService.CliService()
         result = service.display_info()
-        assert result.is_success or result.is_failure
+        assert result.success or result.failure
 
     def test_display_generate_message(self) -> None:
         """Test display_generate_message calls real model generation."""
         service = FlextDbtLdifCliService.CliService()
         result = service.display_generate_message()
-        assert result.is_success or result.is_failure
-        if result.is_success:
+        assert result.success or result.failure
+        if result.success:
             assert "coming soon" not in str(result.value).lower()
 
     def test_display_validate_message(self) -> None:
         """Test display_validate_message calls real validation."""
         service = FlextDbtLdifCliService.CliService()
         result = service.display_validate_message()
-        assert result.is_success or result.is_failure
-        if result.is_success:
+        assert result.success or result.failure
+        if result.success:
             assert "coming soon" not in str(result.value).lower()
 
     def test_info_method(self) -> None:

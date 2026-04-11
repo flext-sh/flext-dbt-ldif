@@ -32,7 +32,7 @@ class TestFlextDbtLdifClient:
         """Test parsing LDIF file returns success."""
         client = FlextDbtLdifClient.Client()
         result = client.parse_ldif_file(tmp_path / "dummy.ldif")
-        assert result.is_success
+        assert result.success
         assert isinstance(result.value, list)
         assert result.value
 
@@ -41,7 +41,7 @@ class TestFlextDbtLdifClient:
         config = FlextDbtLdifSettings.get_global()
         client = FlextDbtLdifClient.Client(config)
         result = client.parse_ldif_file()
-        assert result.is_failure
+        assert result.failure
         assert "required" in (result.error or "").lower()
 
     def test_validate_ldif_data_ok(self) -> None:
@@ -51,7 +51,7 @@ class TestFlextDbtLdifClient:
             {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"},
         ]
         result = client.validate_ldif_data(entries)
-        assert result.is_success
+        assert result.success
         data = result.value
         assert data is not None
         assert data.total_entries == 1
@@ -64,7 +64,7 @@ class TestFlextDbtLdifClient:
         """Test validating empty entries fails."""
         client = FlextDbtLdifClient.Client()
         result = client.validate_ldif_data([])
-        assert result.is_failure
+        assert result.failure
 
     def test_transform_with_dbt_ok(self) -> None:
         """Test transforming with DBT returns metadata."""
@@ -73,7 +73,7 @@ class TestFlextDbtLdifClient:
             {"dn": "cn=test,dc=example,dc=org"},
         ]
         result = client.transform_with_dbt(entries, ["m1", "m2"])
-        assert result.is_success
+        assert result.success
         data = result.value
         assert data is not None
         assert data.records == 1
@@ -84,7 +84,7 @@ class TestFlextDbtLdifClient:
         """Test transform uses default models when none specified."""
         client = FlextDbtLdifClient.Client()
         result = client.transform_with_dbt([], None)
-        assert result.is_success
+        assert result.success
         data = result.value
         assert data is not None
         assert "stg_ldif_entries" in data.models
@@ -93,7 +93,7 @@ class TestFlextDbtLdifClient:
         """Test running full pipeline with valid file."""
         client = FlextDbtLdifClient.Client()
         result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
-        assert result.is_success
+        assert result.success
         data = result.value
         assert data is not None
         assert data.pipeline_status == "completed"
@@ -106,4 +106,4 @@ class TestFlextDbtLdifClient:
         config = FlextDbtLdifSettings.get_global()
         client = FlextDbtLdifClient.Client(config)
         result = client.run_full_pipeline()
-        assert result.is_failure
+        assert result.failure

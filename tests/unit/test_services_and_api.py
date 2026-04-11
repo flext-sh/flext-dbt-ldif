@@ -60,7 +60,7 @@ def test_parse_and_validate_ldif_ok(
         _validate_ldif_data,
     )
     result = service.parse_and_validate_ldif(tmp_path / "x.ldif")
-    assert result.is_success
+    assert result.success
     data = result.value
     assert data is not None
     assert data.entry_count == 1
@@ -105,7 +105,7 @@ def test_generate_and_write_models_ok(
         {"dn": "cn=test,dc=example,dc=org"},
     ]
     result = service.generate_and_write_models(entries)
-    assert result.is_success
+    assert result.success
     data = result.value
     assert data is not None
     assert data.models_generated == 2
@@ -133,7 +133,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
 
     api = FlextDbtLdif()
     result = api.process_ldif_file(tmp_path / "f.ldif")
-    assert result.is_success
+    assert result.success
 
 
 def test_api_validate_ldif_quality(
@@ -160,7 +160,7 @@ def test_api_validate_ldif_quality(
         _run_quality,
     )
     api = FlextDbtLdif()
-    assert api.validate_ldif_quality(tmp_path / "f.ldif").is_success
+    assert api.validate_ldif_quality(tmp_path / "f.ldif").success
 
 
 def test_api_generate_ldif_models(
@@ -189,4 +189,4 @@ def test_api_generate_ldif_models(
         _gen_models,
     )
     api = FlextDbtLdif()
-    assert api.generate_ldif_models(tmp_path / "f.ldif").is_success
+    assert api.generate_ldif_models(tmp_path / "f.ldif").success
