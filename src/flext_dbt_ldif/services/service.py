@@ -7,7 +7,7 @@ from pathlib import Path
 
 from pydantic import RootModel
 
-from flext_core import FlextLogger, FlextTypes, r
+from flext_core import FlextTypes, r
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifSettings,
@@ -21,7 +21,7 @@ from flext_dbt_ldif import (
 class FlextDbtLdifServiceMixin:
     """Mixin providing Service for dbt-ldif utilities."""
 
-    _logger = FlextLogger(__name__)
+    _logger = u.fetch_logger(__name__)
 
     class Service:
         """Orchestrates parsing, validation, model generation, and transformations."""
@@ -40,7 +40,7 @@ class FlextDbtLdifServiceMixin:
         ) -> None:
             """Initialize service dependencies."""
             self.config = (
-                config if config is not None else FlextDbtLdifSettings.get_global()
+                config if config is not None else FlextDbtLdifSettings.fetch_global()
             )
             self.project_dir = project_dir or Path(
                 str(self.config.ldif_file_path or "."),

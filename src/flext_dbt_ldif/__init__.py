@@ -13,7 +13,7 @@ from flext_core.lazy import (
 from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
-    from flext_dbt_ldif.api import FlextDbtLdif
+    from flext_dbt_ldif.api import FlextDbtLdif, dbt_ldif
     from flext_dbt_ldif.base import FlextDbtLdifServiceBase
     from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
     from flext_dbt_ldif.models import FlextDbtLdifModels, m
@@ -42,7 +42,10 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "__version__",
                 "__version_info__",
             ),
-            ".api": ("FlextDbtLdif",),
+            ".api": (
+                "FlextDbtLdif",
+                "dbt_ldif",
+            ),
             ".base": ("FlextDbtLdifServiceBase",),
             ".constants": (
                 "FlextDbtLdifConstants",
@@ -115,6 +118,7 @@ __all__ = [
     "__version_info__",
     "c",
     "d",
+    "dbt_ldif",
     "e",
     "h",
     "m",

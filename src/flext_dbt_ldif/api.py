@@ -53,7 +53,7 @@ class FlextDbtLdif(
     def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
         self._config = (
-            config if config is not None else FlextDbtLdifSettings.get_global()
+            config if config is not None else FlextDbtLdifSettings.fetch_global()
         )
         self._service = self.Service(config=self._config)
 

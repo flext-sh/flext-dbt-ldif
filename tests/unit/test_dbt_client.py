@@ -24,7 +24,7 @@ class TestFlextDbtLdifClient:
 
     def test_initialization_with_config(self) -> None:
         """Test client initialization with explicit config."""
-        config = FlextDbtLdifSettings.get_global()
+        config = FlextDbtLdifSettings.fetch_global()
         client = FlextDbtLdifClient.Client(config)
         assert client.config is config
 
@@ -38,7 +38,7 @@ class TestFlextDbtLdifClient:
 
     def test_parse_ldif_file_no_path(self) -> None:
         """Test parsing without file path fails when config path is empty."""
-        config = FlextDbtLdifSettings.get_global()
+        config = FlextDbtLdifSettings.fetch_global()
         client = FlextDbtLdifClient.Client(config)
         result = client.parse_ldif_file()
         assert result.failure
@@ -103,7 +103,7 @@ class TestFlextDbtLdifClient:
 
     def test_run_full_pipeline_no_path(self) -> None:
         """Test pipeline fails when no file path and config path is empty."""
-        config = FlextDbtLdifSettings.get_global()
+        config = FlextDbtLdifSettings.fetch_global()
         client = FlextDbtLdifClient.Client(config)
         result = client.run_full_pipeline()
         assert result.failure

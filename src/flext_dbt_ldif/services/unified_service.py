@@ -34,7 +34,7 @@ class FlextDbtLdifUnifiedService:
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
             self._settings = (
-                config if config is not None else FlextDbtLdifSettings.get_global()
+                config if config is not None else FlextDbtLdifSettings.fetch_global()
             )
 
         @override

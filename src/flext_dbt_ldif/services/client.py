@@ -5,10 +5,10 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import FlextLogger, r
+from flext_core import r
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t
 
-logger = FlextLogger(__name__)
+logger = u.fetch_logger(__name__)
 
 
 class FlextDbtLdifClient:
@@ -20,7 +20,7 @@ class FlextDbtLdifClient:
         def __init__(self, config: FlextDbtLdifSettings | None = None) -> None:
             """Initialize client with explicit or global settings."""
             self.config = (
-                config if config is not None else FlextDbtLdifSettings.get_global()
+                config if config is not None else FlextDbtLdifSettings.fetch_global()
             )
 
         def parse_ldif_file(

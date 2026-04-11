@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import sys
 
-from flext_core import FlextLogger, r
+from flext_core import r
 from flext_dbt_ldif import FlextDbtLdifServiceMixin, c
 
-logger = FlextLogger(__name__)
+logger = u.fetch_logger(__name__)
 
 
 class FlextDbtLdifCliService:
