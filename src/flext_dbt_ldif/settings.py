@@ -16,8 +16,7 @@ class FlextDbtLdifSettings(FlextSettings):
     """Runtime settings for DBT LDIF transformations."""
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
-        env_prefix="FLEXT_DBT_LDIF_",
-        extra="ignore",
+        env_prefix="FLEXT_DBT_LDIF_", extra="ignore"
     )
 
     ldif_file_path: Annotated[

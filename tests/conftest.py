@@ -103,7 +103,7 @@ def dbt_ldif_project_settings() -> Mapping[str, t.Tests.TestobjectSerializable]:
         name="flext_dbt_ldif_test",
         version="0.7.0",
         profile="test",
-        model_settings={
+        model_config={
             "materialized": "table",
             "ldif": {
                 "enable_ldif_functions": True,
@@ -195,14 +195,14 @@ def sample_ldif_entries() -> Sequence[t.ContainerMapping]:
     ]
 
 
-def pytest_settingsure(settings: pytest.Config) -> None:
+def pytest_configure(config: pytest.Config) -> None:
     """Configure pytest markers."""
-    settings.addinivalue_line("markers", "unit: Unit tests")
-    settings.addinivalue_line("markers", "integration: Integration tests")
-    settings.addinivalue_line("markers", "e2e: End-to-end tests")
-    settings.addinivalue_line("markers", "dbt: dbt-specific tests")
-    settings.addinivalue_line("markers", "ldif: LDIF integration tests")
-    settings.addinivalue_line("markers", "transformation: Data transformation tests")
-    settings.addinivalue_line("markers", "validation: Data validation tests")
-    settings.addinivalue_line("markers", "performance: Performance tests")
-    settings.addinivalue_line("markers", "slow: Slow tests")
+    config.addinivalue_line("markers", "unit: Unit tests")
+    config.addinivalue_line("markers", "integration: Integration tests")
+    config.addinivalue_line("markers", "e2e: End-to-end tests")
+    config.addinivalue_line("markers", "dbt: dbt-specific tests")
+    config.addinivalue_line("markers", "ldif: LDIF integration tests")
+    config.addinivalue_line("markers", "transformation: Data transformation tests")
+    config.addinivalue_line("markers", "validation: Data validation tests")
+    config.addinivalue_line("markers", "performance: Performance tests")
+    config.addinivalue_line("markers", "slow: Slow tests")
