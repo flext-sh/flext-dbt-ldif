@@ -12,8 +12,6 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
-from pydantic import RootModel, ValidationError
-
 from flext_core import FlextTypes, r
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
@@ -23,6 +21,7 @@ from flext_dbt_ldif import (
     FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
     FlextDbtLdifUnifiedService,
+    c,
     m,
     u,
 )
@@ -42,7 +41,7 @@ class FlextDbtLdif(
     """
 
     class _EntryListAdapter(
-        RootModel[Sequence[FlextTypes.ContainerValueMapping]],
+        m.RootModel[Sequence[FlextTypes.ContainerValueMapping]],
     ):
         """Adapter for parsed-entry lists."""
 
@@ -74,7 +73,7 @@ class FlextDbtLdif(
         current_config = self._config
         return u.try_(
             lambda: FlextDbtLdifSettings.model_validate(current_config.model_dump()),
-            catch=ValidationError,
+            catch=c.ValidationError,
         ).map_error(lambda _: "Invalid DBT LDIF settings")
 
     def generate_ldif_models(
@@ -92,7 +91,7 @@ class FlextDbtLdif(
         entries_raw = parsed.value
         try:
             entries = self._EntryListAdapter.model_validate(entries_raw).root
-        except ValidationError:
+        except c.ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload",
             )
@@ -122,4 +121,4 @@ class FlextDbtLdif(
 
 dbt_ldif = FlextDbtLdif
 
-__all__ = ["FlextDbtLdif", "dbt_ldif"]
+__all__: list[str] = ["FlextDbtLdif", "dbt_ldif"]

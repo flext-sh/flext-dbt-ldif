@@ -4,13 +4,12 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from flext_core import r
-from flext_dbt_ldif import m, t
+from flext_dbt_ldif import m
 from flext_ldif import FlextLdifProtocols
-from flext_meltano import FlextMeltanoProtocols
+from flext_meltano import p, r, t
 
 
-class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
+class FlextDbtLdifProtocols(p, FlextLdifProtocols):
     """Namespace for DBT LDIF protocol contracts."""
 
     class DbtLdif:
@@ -35,6 +34,6 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
                 ...
 
 
-__all__ = ["FlextDbtLdifProtocols", "p"]
+__all__: list[str] = ["FlextDbtLdifProtocols", "p"]
 
 p = FlextDbtLdifProtocols

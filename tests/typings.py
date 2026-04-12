@@ -1,7 +1,7 @@
 """Test type definitions for flext-dbt-ldif.
 
 Provides TestsFlextDbtLdifTypes, combining TestsFlextTypes with
-FlextDbtLdifTypes for test-specific type definitions.
+t for test-specific type definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -11,13 +11,13 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsTypes
 
-from flext_dbt_ldif import FlextDbtLdifTypes
+from flext_dbt_ldif import t
 
 
-class TestsFlextDbtLdifTypes(FlextTestsTypes, FlextDbtLdifTypes):
+class TestsFlextDbtLdifTypes(FlextTestsTypes, t):
     """Test types combining FlextTestsTypes with flext-dbt-ldif types."""
 
-    class DbtLdif(FlextDbtLdifTypes.DbtLdif):
+    class DbtLdif(t.DbtLdif):
         """DbtLdif test types namespace."""
 
         class Tests:
@@ -26,7 +26,7 @@ class TestsFlextDbtLdifTypes(FlextTestsTypes, FlextDbtLdifTypes):
 
 t = TestsFlextDbtLdifTypes
 
-__all__ = [
+__all__: list[str] = [
     "TestsFlextDbtLdifTypes",
     "t",
 ]

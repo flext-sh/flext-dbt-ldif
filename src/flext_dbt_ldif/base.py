@@ -42,4 +42,4 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
         return {"type": "file", "project": self.dbt_project_name}
 
 
-__all__ = ["FlextDbtLdifServiceBase"]
+__all__: list[str] = ["FlextDbtLdifServiceBase"]

@@ -5,8 +5,6 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from pydantic import RootModel
-
 from flext_core import FlextTypes, r
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
@@ -28,7 +26,7 @@ class FlextDbtLdifServiceMixin:
         """Orchestrates parsing, validation, model generation, and transformations."""
 
         class EntryContainerListAdapter(
-            RootModel[Sequence[FlextTypes.ContainerValueMapping]],
+            m.RootModel[Sequence[FlextTypes.ContainerValueMapping]],
         ):
             """Adapter for list of container entries."""
 

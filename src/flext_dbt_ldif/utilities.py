@@ -15,7 +15,7 @@ class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
 
 u = FlextDbtLdifUtilities
 
-__all__ = [
+__all__: list[str] = [
     "FlextDbtLdifUtilities",
     "u",
 ]

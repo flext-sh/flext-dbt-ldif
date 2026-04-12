@@ -4,21 +4,18 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from pydantic import Field
-
-from flext_core import r
-from flext_dbt_ldif import t
+from flext_dbt_ldif import r, t, u
 from flext_ldif import FlextLdifModels
-from flext_meltano import FlextMeltanoModels
+from flext_meltano import m
 
 
-class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
+class FlextDbtLdifModels(m, FlextLdifModels):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtLdif:
         """DBT LDIF model namespace."""
 
-        class DbtModel(FlextMeltanoModels.ArbitraryTypesModel):
+        class DbtModel(m.ArbitraryTypesModel):
             """Single DBT model definition payload."""
 
             name: str
@@ -27,10 +24,10 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             materialization: str = "view"
             sql_content: str
             description: str = ""
-            columns: Sequence[t.ContainerValueMapping] = Field(
+            columns: Sequence[t.ContainerValueMapping] = u.Field(
                 default_factory=lambda: list[t.ContainerValueMapping]()
             )
-            dependencies: t.StrSequence = Field(default_factory=list)
+            dependencies: t.StrSequence = u.Field(default_factory=list)
 
             def validate_business_rules(self) -> r[bool]:
                 """Validate minimal model constraints."""
@@ -42,34 +39,34 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
                     return r[bool].fail("SQL content cannot be empty")
                 return r[bool].ok(value=True)
 
-        class LdifValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class LdifValidationResult(m.ArbitraryTypesModel):
             """Validated LDIF quality metrics."""
 
             total_entries: int
             quality_score: float
             validation_status: str
 
-        class DbtTransformationResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class DbtTransformationResult(m.ArbitraryTypesModel):
             """DBT transformation execution summary."""
 
             records: int
-            models: t.StrSequence = Field(default_factory=list)
+            models: t.StrSequence = u.Field(default_factory=list)
             status: str
 
-        class ModelGenerationResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class ModelGenerationResult(m.ArbitraryTypesModel):
             """Generated model metadata summary."""
 
             models_generated: int
-            model_names: t.StrSequence = Field(default_factory=list)
+            model_names: t.StrSequence = u.Field(default_factory=list)
 
-        class ParseValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class ParseValidationResult(m.ArbitraryTypesModel):
             """Combined parse and validation payload."""
 
             entry_count: int
             quality_score: float
             validation_status: str
 
-        class WorkflowResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class WorkflowResult(m.ArbitraryTypesModel):
             """End-to-end service workflow result."""
 
             ldif_file: str
@@ -79,7 +76,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             transformation_status: str = ""
             workflow_status: str
 
-        class PipelineResult(FlextMeltanoModels.ArbitraryTypesModel):
+        class PipelineResult(m.ArbitraryTypesModel):
             """Client pipeline status payload."""
 
             parsed_entries: int
@@ -88,6 +85,6 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             pipeline_status: str
 
 
-__all__ = ["FlextDbtLdifModels", "m"]
+__all__: list[str] = ["FlextDbtLdifModels", "m"]
 
 m = FlextDbtLdifModels

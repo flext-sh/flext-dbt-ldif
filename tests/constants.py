@@ -13,18 +13,18 @@ from typing import Final
 
 from flext_tests import FlextTestsConstants
 
-from flext_dbt_ldif import FlextDbtLdifConstants
+from flext_dbt_ldif import c
 from tests import t
 
 
-class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
+class TestsFlextDbtLdifConstants(FlextTestsConstants, c):
     """Constants for flext-dbt-ldif tests.
 
-    Inherits from FlextTestsConstants and FlextDbtLdifConstants for
+    Inherits from FlextTestsConstants and c for
     full production constant access.
     """
 
-    class DbtLdif(FlextDbtLdifConstants.DbtLdif):
+    class DbtLdif(c.DbtLdif):
         """DbtLdif test constants namespace."""
 
         class Tests:
@@ -68,4 +68,4 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
 
 
 c = TestsFlextDbtLdifConstants
-__all__ = ["TestsFlextDbtLdifConstants", "c"]
+__all__: list[str] = ["TestsFlextDbtLdifConstants", "c"]

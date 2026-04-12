@@ -56,6 +56,6 @@ class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
         EXIT_CODE_FAILURE: Final[int] = 1
 
 
-__all__ = ["FlextDbtLdifConstants", "c"]
+__all__: list[str] = ["FlextDbtLdifConstants", "c"]
 
 c = FlextDbtLdifConstants
