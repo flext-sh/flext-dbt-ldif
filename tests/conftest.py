@@ -67,7 +67,7 @@ def ensure_shared_docker_container(
 
 
 @pytest.fixture
-def dbt_ldif_profile() -> t.ContainerMapping:
+def dbt_ldif_profile() -> t.RecursiveContainerMapping:
     """Dbt LDIF profile configuration for testing."""
     return {
         "settings": {
@@ -123,8 +123,8 @@ def dbt_ldif_project_settings() -> Mapping[str, t.Tests.TestobjectSerializable]:
 
 @pytest.fixture
 def ldif_source_settings(
-    shared_ldap_settings: t.ContainerMapping,
-) -> t.ContainerMapping:
+    shared_ldap_settings: t.RecursiveContainerMapping,
+) -> t.RecursiveContainerMapping:
     """LDIF source configuration for testing using shared container."""
     _ = shared_ldap_settings
     return {
@@ -147,7 +147,7 @@ def ldif_source_settings(
 
 
 @pytest.fixture
-def sample_ldif_entries() -> Sequence[t.ContainerMapping]:
+def sample_ldif_entries() -> Sequence[t.RecursiveContainerMapping]:
     """Sample LDIF entries for testing using shared container domain."""
     return [
         {
