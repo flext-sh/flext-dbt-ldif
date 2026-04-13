@@ -6,14 +6,13 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextTypes, p, r, s
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t
 
 
 class FlextDbtLdifUnifiedService:
     """Mixin providing UnifiedService for dbt-ldif utilities."""
 
-    class UnifiedService(s[FlextTypes.ContainerMapping]):
+    class UnifiedService(s[t.ContainerMapping]):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
         name: str = "ldif_generator"
@@ -26,23 +25,20 @@ class FlextDbtLdifUnifiedService:
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service with project and settings context."""
-            super().__init__(
-                settings_type=FlextDbtLdifSettings,
-                settings_overrides=None,
-                initial_context=None,
-            )
-            self.name = name
-            self.project_dir = Path(project_dir or Path.cwd())
-            self._settings = (
+            resolved_settings = (
                 settings
                 if settings is not None
                 else FlextDbtLdifSettings.fetch_global()
             )
+            super().__init__()
+            self.name = name
+            self.project_dir = Path(project_dir or Path.cwd())
+            self._settings = resolved_settings
 
         @override
-        def execute(self) -> p.Result[FlextTypes.ContainerMapping]:
+        def execute(self) -> p.Result[t.ContainerMapping]:
             """Execute service and return metadata payload."""
-            return r[FlextTypes.ContainerMapping].ok({
+            return r[t.ContainerMapping].ok({
                 "name": self.name,
                 "project_dir": str(self.project_dir),
                 "status": c.DbtLdif.WORKFLOW_STATUS_READY,
@@ -69,7 +65,7 @@ class FlextDbtLdifUnifiedService:
 
         def generate_staging_models(
             self,
-            entries: Sequence[FlextTypes.ContainerValueMapping],
+            entries: Sequence[t.ContainerValueMapping],
         ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:

@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import Self, override
 
-from flext_core import e
-from flext_dbt_ldif import c, t
+from flext_dbt_ldif import c, e, t
 
 
 class FlextDbtLdifError:

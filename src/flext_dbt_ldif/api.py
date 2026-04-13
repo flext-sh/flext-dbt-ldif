@@ -12,17 +12,18 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_core import FlextTypes, r
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifCliService,
     FlextDbtLdifCore,
-    FlextDbtLdifError as FlextDbtLdifErrorMixin,
+    FlextDbtLdifError,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
     FlextDbtLdifUnifiedService,
     c,
     m,
+    p,
+    r,
     u,
 )
 
@@ -31,7 +32,7 @@ class FlextDbtLdif(
     FlextDbtLdifCliService,
     FlextDbtLdifClient,
     FlextDbtLdifCore,
-    FlextDbtLdifErrorMixin,
+    FlextDbtLdifError,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifUnifiedService,
 ):
@@ -41,11 +42,11 @@ class FlextDbtLdif(
     """
 
     class _EntryListAdapter(
-        m.RootModel[Sequence[FlextTypes.ContainerValueMapping]],
+        m.RootModel[Sequence[t.ContainerValueMapping]],
     ):
         """Adapter for parsed-entry lists."""
 
-        root: Sequence[FlextTypes.ContainerValueMapping]
+        root: Sequence[t.ContainerValueMapping]
 
     _instance: ClassVar[Self | None] = None
 

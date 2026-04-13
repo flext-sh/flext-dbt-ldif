@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import sys
 
-from flext_core import p, r
-from flext_dbt_ldif import FlextDbtLdifServiceMixin, c, u
+from flext_dbt_ldif import FlextDbtLdifServiceMixin, c, p, r, u
 
 logger = u.fetch_logger(__name__)
 
@@ -25,7 +24,7 @@ class FlextDbtLdifCliService:
                     return r[str].fail(result.error or "Model generation failed")
                 logger.info(
                     "Model generation completed: %s",
-                    result.value,
+                    result.value.model_dump(mode="json"),
                 )
                 return r[str].ok("Generate message displayed")
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
@@ -59,7 +58,7 @@ class FlextDbtLdifCliService:
                     return r[str].fail(result.error or "Validation failed")
                 logger.info(
                     "Validation completed: %s",
-                    result.value,
+                    result.value.model_dump(mode="json"),
                 )
                 return r[str].ok("Validate message displayed")
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
@@ -67,7 +66,7 @@ class FlextDbtLdifCliService:
 
         def generate(self) -> None:
             """Generate dbt models from LDIF schema definitions."""
-            result: r[str] = self.display_generate_message()
+            result: p.Result[str] = self.display_generate_message()
             if result.failure:
                 logger.error("Generate command failed: %s", result.error)
 
@@ -101,6 +100,6 @@ class FlextDbtLdifCliService:
 
         def validate(self) -> None:
             """Validate dbt models and configurations."""
-            result: r[str] = self.display_validate_message()
+            result: p.Result[str] = self.display_validate_message()
             if result.failure:
                 logger.error("Validate command failed: %s", result.error)

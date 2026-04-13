@@ -5,8 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import p, r
-from flext_dbt_ldif import c, t
+from flext_dbt_ldif import c, p, r, t
 
 
 class FlextDbtLdifCore:

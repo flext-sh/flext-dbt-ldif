@@ -5,8 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import p, r
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t, u
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
 
 logger = u.fetch_logger(__name__)
 

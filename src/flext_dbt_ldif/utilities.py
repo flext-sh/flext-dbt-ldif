@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from flext_ldif import FlextLdifUtilities
-from flext_meltano import FlextMeltanoUtilities
+from flext_meltano import u
 
 
-class FlextDbtLdifUtilities(FlextMeltanoUtilities, FlextLdifUtilities):
+class FlextDbtLdifUtilities(u, FlextLdifUtilities):
     """Utilities for dbt-ldif operations inheriting LDIF processing capabilities."""
 
     class DbtLdif:

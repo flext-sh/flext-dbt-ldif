@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from flext_ldif import FlextLdifTypes
-from flext_meltano import FlextMeltanoTypes
+from flext_ldif.typings import FlextLdifTypes
+from flext_meltano.typings import FlextMeltanoTypes
 
 
 class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
