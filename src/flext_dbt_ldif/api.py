@@ -68,7 +68,7 @@ class FlextDbtLdif(
         """Return bound workflow service."""
         return self._service
 
-    def execute(self) -> r[FlextDbtLdifSettings]:
+    def execute(self) -> p.Result[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
         current_config = self._config
         return u.try_(
@@ -81,7 +81,7 @@ class FlextDbtLdif(
         ldif_file: Path | str,
         *,
         overwrite: bool = False,
-    ) -> r[m.DbtLdif.ModelGenerationResult]:
+    ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
@@ -103,7 +103,7 @@ class FlextDbtLdif(
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> r[m.DbtLdif.WorkflowResult]:
+    ) -> p.Result[m.DbtLdif.WorkflowResult]:
         """Execute end-to-end LDIF workflow."""
         return self.service.run_complete_workflow(
             ldif_file=ldif_file,
@@ -114,7 +114,7 @@ class FlextDbtLdif(
     def validate_ldif_quality(
         self,
         ldif_file: Path | str,
-    ) -> r[m.DbtLdif.ParseValidationResult]:
+    ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
 

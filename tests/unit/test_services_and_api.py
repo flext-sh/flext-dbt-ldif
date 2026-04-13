@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from flext_core import r
+from flext_core import p, r
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifServiceMixin
 from tests import m, t
 
@@ -35,12 +35,12 @@ def test_parse_and_validate_ldif_ok(
 
     def _parse_ldif_file(
         _ldif_file: Path | str,
-    ) -> r[Sequence[t.ContainerValueMapping]]:
+    ) -> p.Result[Sequence[t.ContainerValueMapping]]:
         return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[m.DbtLdif.LdifValidationResult]:
+    ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
                 total_entries=1,
@@ -90,12 +90,12 @@ def test_generate_and_write_models_ok(
 
     def _generate_staging_models(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+    ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
         _models: Sequence[m.DbtLdif.DbtModel],
-    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+    ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     gen = service.model_generator
@@ -121,7 +121,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
         generate_models: bool = True,
         run_transformations: bool = False,
         model_names: t.StrSequence | None = None,
-    ) -> r[m.DbtLdif.WorkflowResult]:
+    ) -> p.Result[m.DbtLdif.WorkflowResult]:
         return r[m.DbtLdif.WorkflowResult].ok(
             m.DbtLdif.WorkflowResult(
                 ldif_file=str(ldif_file),
@@ -145,7 +145,7 @@ def test_api_validate_ldif_quality(
     def _run_quality(
         _self: FlextDbtLdifServiceMixin.Service,
         _ldif_file: Path | str,
-    ) -> r[m.DbtLdif.ParseValidationResult]:
+    ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         return r[m.DbtLdif.ParseValidationResult].ok(
             m.DbtLdif.ParseValidationResult(
                 entry_count=0,
@@ -174,7 +174,7 @@ def test_api_generate_ldif_models(
         _entries: Sequence[t.ContainerValueMapping],
         *,
         overwrite: bool = False,
-    ) -> r[m.DbtLdif.ModelGenerationResult]:
+    ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
         _ = overwrite
         return r[m.DbtLdif.ModelGenerationResult].ok(
             m.DbtLdif.ModelGenerationResult(

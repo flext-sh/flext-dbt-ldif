@@ -57,7 +57,7 @@ class FlextDbtLdifServiceMixin:
             entries: Sequence[t.ContainerValueMapping],
             *,
             overwrite: bool = False,
-        ) -> r[m.DbtLdif.ModelGenerationResult]:
+        ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
             """Generate staging and analytics models for entries."""
             _ = overwrite
             staging_payload: Sequence[t.ContainerValueMapping] = [
@@ -86,7 +86,7 @@ class FlextDbtLdifServiceMixin:
         def parse_and_validate_ldif(
             self,
             ldif_file: Path | str,
-        ) -> r[m.DbtLdif.ParseValidationResult]:
+        ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Parse and validate LDIF file in one operation."""
             adapter = FlextDbtLdifServiceMixin.Service.EntryContainerListAdapter
             parse_result = self.client.parse_ldif_file(ldif_file)
@@ -115,7 +115,7 @@ class FlextDbtLdifServiceMixin:
             generate_models: bool = True,
             run_transformations: bool = True,
             model_names: t.StrSequence | None = None,
-        ) -> r[m.DbtLdif.WorkflowResult]:
+        ) -> p.Result[m.DbtLdif.WorkflowResult]:
             """Execute complete LDIF to DBT workflow."""
             adapter = FlextDbtLdifServiceMixin.Service.EntryContainerListAdapter
             parse_result = self.client.parse_ldif_file(ldif_file)
@@ -161,6 +161,6 @@ class FlextDbtLdifServiceMixin:
         def run_data_quality_assessment(
             self,
             ldif_file: Path | str,
-        ) -> r[m.DbtLdif.ParseValidationResult]:
+        ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Run quality assessment focused workflow."""
             return self.parse_and_validate_ldif(ldif_file)

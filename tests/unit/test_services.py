@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from flext_core import r
+from flext_core import p, r
 from flext_dbt_ldif import FlextDbtLdifServiceMixin
 from tests import m, t
 
@@ -35,12 +35,12 @@ def test_parse_and_validate_ldif_ok(
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[t.ContainerValueMapping]]:
+    ) -> p.Result[Sequence[t.ContainerValueMapping]]:
         return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[m.DbtLdif.LdifValidationResult]:
+    ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
                 total_entries=1,
@@ -69,7 +69,7 @@ def test_parse_and_validate_ldif_parse_fails(
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[t.ContainerValueMapping]]:
+    ) -> p.Result[Sequence[t.ContainerValueMapping]]:
         return r[Sequence[t.ContainerValueMapping]].fail("Parse error")
 
     result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
@@ -100,12 +100,12 @@ def test_generate_and_write_models_ok(
 
     def _generate_staging_models(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+    ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
         _models: Sequence[m.DbtLdif.DbtModel],
-    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+    ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     gen = svc.model_generator
@@ -136,12 +136,12 @@ def test_run_complete_workflow_all(
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[t.ContainerValueMapping]]:
+    ) -> p.Result[Sequence[t.ContainerValueMapping]]:
         return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[m.DbtLdif.LdifValidationResult]:
+    ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
                 total_entries=1,
@@ -153,7 +153,7 @@ def test_run_complete_workflow_all(
     def _transform_with_dbt(
         _entries: Sequence[t.ContainerValueMapping],
         _model_names: t.StrSequence | None,
-    ) -> r[m.DbtLdif.DbtTransformationResult]:
+    ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
         return r[m.DbtLdif.DbtTransformationResult].ok(
             m.DbtLdif.DbtTransformationResult(
                 records=1,
@@ -181,12 +181,12 @@ def test_run_complete_workflow_all(
 
     def _generate_staging_models(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+    ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
         _models: Sequence[m.DbtLdif.DbtModel],
-    ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+    ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
     gen = svc.model_generator
@@ -217,12 +217,12 @@ def test_run_data_quality_assessment(
 
     def _parse_ldif_file(
         _fp: Path | str,
-    ) -> r[Sequence[t.ContainerValueMapping]]:
+    ) -> p.Result[Sequence[t.ContainerValueMapping]]:
         return r[Sequence[t.ContainerValueMapping]].ok(entries)
 
     def _validate_ldif_data(
         _entries: Sequence[t.ContainerValueMapping],
-    ) -> r[m.DbtLdif.LdifValidationResult]:
+    ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
                 total_entries=1,

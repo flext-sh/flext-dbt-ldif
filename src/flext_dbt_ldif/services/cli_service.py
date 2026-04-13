@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 
-from flext_core import r
+from flext_core import p, r
 from flext_dbt_ldif import FlextDbtLdifServiceMixin, c, u
 
 logger = u.fetch_logger(__name__)
@@ -16,7 +16,7 @@ class FlextDbtLdifCliService:
     class CliService:
         """FLEXT dbt LDIF CLI service using flext-cli foundation exclusively."""
 
-        def display_generate_message(self) -> r[str]:
+        def display_generate_message(self) -> p.Result[str]:
             """Generate dbt models from LDIF schema definitions."""
             try:
                 service = FlextDbtLdifServiceMixin.Service()
@@ -31,7 +31,7 @@ class FlextDbtLdifCliService:
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
                 return r[str].fail(f"Generate message display failed: {exc}")
 
-        def display_info(self) -> r[str]:
+        def display_info(self) -> p.Result[str]:
             """Display package info using flext-cli."""
             info_data = {
                 "name": "FLEXT dbt LDIF",
@@ -50,7 +50,7 @@ class FlextDbtLdifCliService:
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
                 return r[str].fail(f"Package info display failed: {exc}")
 
-        def display_validate_message(self) -> r[str]:
+        def display_validate_message(self) -> p.Result[str]:
             """Validate dbt models and configurations."""
             try:
                 service = FlextDbtLdifServiceMixin.Service()

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from flext_dbt_ldif import r, t, u
+from flext_dbt_ldif import p, r, t, u
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
 
@@ -29,7 +29,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             )
             dependencies: t.StrSequence = u.Field(default_factory=list)
 
-            def validate_business_rules(self) -> r[bool]:
+            def validate_business_rules(self) -> p.Result[bool]:
                 """Validate minimal model constraints."""
                 if not self.name.strip():
                     return r[bool].fail("Model name cannot be empty")

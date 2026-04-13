@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import r
+from flext_core import p, r
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, t, u
 
 logger = u.fetch_logger(__name__)
@@ -28,7 +28,7 @@ class FlextDbtLdifClient:
         def parse_ldif_file(
             self,
             file_path: Path | str | None = None,
-        ) -> r[Sequence[t.ContainerValueMapping]]:
+        ) -> p.Result[Sequence[t.ContainerValueMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
                 str(file_path)
@@ -47,7 +47,7 @@ class FlextDbtLdifClient:
             self,
             file_path: Path | str | None = None,
             model_names: t.StrSequence | None = None,
-        ) -> r[m.DbtLdif.PipelineResult]:
+        ) -> p.Result[m.DbtLdif.PipelineResult]:
             """Run parse, validate, and transform pipeline."""
             parse_result = self.parse_ldif_file(file_path)
             if parse_result.failure:
@@ -81,7 +81,7 @@ class FlextDbtLdifClient:
             self,
             entries: Sequence[t.ContainerValueMapping],
             model_names: t.StrSequence | None = None,
-        ) -> r[m.DbtLdif.DbtTransformationResult]:
+        ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
             """Return synthetic DBT transformation metadata."""
             selected_models = model_names or [
                 c.DbtLdif.STAGING_MODEL_NAME,
@@ -98,7 +98,7 @@ class FlextDbtLdifClient:
         def validate_ldif_data(
             self,
             entries: Sequence[t.ContainerValueMapping],
-        ) -> r[m.DbtLdif.LdifValidationResult]:
+        ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score."""
             total_entries = len(entries)
             if total_entries == 0:

@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
-from flext_core import FlextTypes, r, s
+from flext_core import FlextTypes, p, r, s
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m
 
 
@@ -40,7 +40,7 @@ class FlextDbtLdifUnifiedService:
             )
 
         @override
-        def execute(self) -> r[FlextTypes.ContainerMapping]:
+        def execute(self) -> p.Result[FlextTypes.ContainerMapping]:
             """Execute service and return metadata payload."""
             return r[FlextTypes.ContainerMapping].ok({
                 "name": self.name,
@@ -51,7 +51,7 @@ class FlextDbtLdifUnifiedService:
         def generate_analytics_models(
             self,
             staging_models: Sequence[m.DbtLdif.DbtModel],
-        ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+        ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set."""
             if not staging_models:
                 return r[Sequence[m.DbtLdif.DbtModel]].ok([])
@@ -70,7 +70,7 @@ class FlextDbtLdifUnifiedService:
         def generate_staging_models(
             self,
             entries: Sequence[FlextTypes.ContainerValueMapping],
-        ) -> r[Sequence[m.DbtLdif.DbtModel]]:
+        ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:
                 return r[Sequence[m.DbtLdif.DbtModel]].ok([])
