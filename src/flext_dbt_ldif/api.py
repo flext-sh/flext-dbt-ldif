@@ -8,7 +8,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 from pathlib import Path
 from typing import ClassVar, Self
 
@@ -24,6 +23,7 @@ from flext_dbt_ldif import (
     m,
     p,
     r,
+    t,
     u,
 )
 
@@ -32,7 +32,6 @@ class FlextDbtLdif(
     FlextDbtLdifCliService,
     FlextDbtLdifClient,
     FlextDbtLdifCore,
-    FlextDbtLdifError,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifUnifiedService,
 ):
@@ -41,12 +40,7 @@ class FlextDbtLdif(
     All domain behavior comes from service mixins via MRO.
     """
 
-    class _EntryListAdapter(
-        m.RootModel[Sequence[t.ContainerValueMapping]],
-    ):
-        """Adapter for parsed-entry lists."""
-
-        root: Sequence[t.ContainerValueMapping]
+    Error = FlextDbtLdifError.Error
 
     _instance: ClassVar[Self | None] = None
 
@@ -91,7 +85,9 @@ class FlextDbtLdif(
             )
         entries_raw = parsed.value
         try:
-            entries = self._EntryListAdapter.model_validate(entries_raw).root
+            entries = t.DbtLdif.ENTRY_CONTAINER_SEQUENCE_ADAPTER.validate_python(
+                entries_raw,
+            )
         except c.ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload",

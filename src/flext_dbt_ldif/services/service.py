@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_core import FlextTypes
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifSettings,
@@ -26,13 +25,6 @@ class FlextDbtLdifServiceMixin:
 
     class Service:
         """Orchestrates parsing, validation, model generation, and transformations."""
-
-        class EntryContainerListAdapter(
-            m.RootModel[Sequence[FlextTypes.ContainerValueMapping]],
-        ):
-            """Adapter for list of container entries."""
-
-            root: Sequence[FlextTypes.ContainerValueMapping]
 
         def __init__(
             self,
@@ -90,13 +82,14 @@ class FlextDbtLdifServiceMixin:
             ldif_file: Path | str,
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Parse and validate LDIF file in one operation."""
-            adapter = FlextDbtLdifServiceMixin.Service.EntryContainerListAdapter
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
                 return r[m.DbtLdif.ParseValidationResult].fail(
                     parse_result.error or "Parse failed",
                 )
-            entries = adapter.model_validate(parse_result.value).root
+            entries = t.DbtLdif.ENTRY_CONTAINER_SEQUENCE_ADAPTER.validate_python(
+                parse_result.value,
+            )
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
                 return r[m.DbtLdif.ParseValidationResult].fail(
@@ -119,13 +112,14 @@ class FlextDbtLdifServiceMixin:
             model_names: t.StrSequence | None = None,
         ) -> p.Result[m.DbtLdif.WorkflowResult]:
             """Execute complete LDIF to DBT workflow."""
-            adapter = FlextDbtLdifServiceMixin.Service.EntryContainerListAdapter
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
                 return r[m.DbtLdif.WorkflowResult].fail(
                     parse_result.error or "Parse failed",
                 )
-            entries = adapter.model_validate(parse_result.value).root
+            entries = t.DbtLdif.ENTRY_CONTAINER_SEQUENCE_ADAPTER.validate_python(
+                parse_result.value,
+            )
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
                 return r[m.DbtLdif.WorkflowResult].fail(

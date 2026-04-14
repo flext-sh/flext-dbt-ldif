@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_dbt_ldif import m
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import p, t
+
+if TYPE_CHECKING:
+    from flext_dbt_ldif import m
 
 
 class FlextDbtLdifProtocols(p, FlextLdifProtocols):

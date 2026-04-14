@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t, u
 
 
 class FlextDbtLdifUnifiedService:
@@ -15,8 +15,15 @@ class FlextDbtLdifUnifiedService:
     class UnifiedService(s[t.ContainerMapping]):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
-        name: str = "ldif_generator"
-        project_dir: Path = Path.cwd()
+        name: str = u.Field(
+            "ldif_generator",
+            description="Service name used in generated metadata payloads.",
+            validate_default=True,
+        )
+        project_dir: Path = u.Field(
+            default_factory=Path.cwd,
+            description="Project directory used to emit generated artifacts.",
+        )
 
         def __init__(
             self,
@@ -25,15 +32,14 @@ class FlextDbtLdifUnifiedService:
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service with project and settings context."""
-            resolved_settings = (
+            super().__init__()
+            self.name = name
+            self.project_dir = Path(project_dir or Path.cwd())
+            self._settings = (
                 settings
                 if settings is not None
                 else FlextDbtLdifSettings.fetch_global()
             )
-            super().__init__()
-            self.name = name
-            self.project_dir = Path(project_dir or Path.cwd())
-            self._settings = resolved_settings
 
         @override
         def execute(self) -> p.Result[t.ContainerMapping]:
