@@ -15,6 +15,19 @@ _LAZY_IMPORTS = build_lazy_import_map(
         ".test_services": ("test_services",),
         ".test_services_and_api": ("test_services_and_api",),
         ".test_version": ("test_version",),
+        "flext_dbt_ldif": (
+            "c",
+            "d",
+            "e",
+            "h",
+            "m",
+            "p",
+            "r",
+            "s",
+            "t",
+            "u",
+            "x",
+        ),
     },
 )
 

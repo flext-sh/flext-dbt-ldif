@@ -5,8 +5,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from flext_dbt_ldif import u
-from flext_ldif.typings import FlextLdifTypes
-from flext_meltano.typings import FlextMeltanoTypes
+from flext_ldif import FlextLdifTypes
+from flext_meltano import FlextMeltanoTypes
 
 
 class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
