@@ -59,6 +59,12 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "FlextDbtLdifProtocols",
                 "p",
             ),
+            ".services.cli_service": ("FlextDbtLdifCliService",),
+            ".services.client": ("FlextDbtLdifClient",),
+            ".services.core": ("FlextDbtLdifCore",),
+            ".services.error": ("FlextDbtLdifError",),
+            ".services.service": ("FlextDbtLdifServiceMixin",),
+            ".services.unified_service": ("FlextDbtLdifUnifiedService",),
             ".settings": ("FlextDbtLdifSettings",),
             ".typings": (
                 "FlextDbtLdifTypes",
