@@ -6,18 +6,18 @@ from collections.abc import Sequence
 
 from flext_dbt_ldif import u
 from flext_ldif import FlextLdifTypes
-from flext_meltano import FlextMeltanoTypes
+from flext_meltano import t
 
 
-class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
+class FlextDbtLdifTypes(t, FlextLdifTypes):
     """Type namespace for DBT LDIF domain."""
 
     class DbtLdif:
         """DBT LDIF namespace."""
 
         ENTRY_CONTAINER_SEQUENCE_ADAPTER: u.TypeAdapter[
-            Sequence[FlextMeltanoTypes.ContainerValueMapping]
-        ] = u.TypeAdapter(Sequence[FlextMeltanoTypes.ContainerValueMapping])
+            Sequence[t.ContainerValueMapping]
+        ] = u.TypeAdapter(Sequence[t.ContainerValueMapping])
 
 
 t = FlextDbtLdifTypes
