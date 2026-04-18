@@ -19,6 +19,10 @@ if _t.TYPE_CHECKING:
     from tests.models import TestsFlextDbtLdifModels, m
     from tests.protocols import TestsFlextDbtLdifProtocols, p
     from tests.typings import TestsFlextDbtLdifTypes, t
+    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
+    from tests.unit.test_core import TestAnalytics, TestModelGenerator
+    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
+    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
     from tests.utilities import TestsFlextDbtLdifUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
     (".unit",),
@@ -39,6 +43,19 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ".typings": (
                 "TestsFlextDbtLdifTypes",
                 "t",
+            ),
+            ".unit.test_cli": (
+                "TestFlextDbtLdifCliService",
+                "TestMainEntryPoint",
+            ),
+            ".unit.test_core": (
+                "TestAnalytics",
+                "TestModelGenerator",
+            ),
+            ".unit.test_dbt_client": ("TestFlextDbtLdifClient",),
+            ".unit.test_dbt_models": (
+                "TestDbtModel",
+                "TestFlextDbtLdifUnifiedService",
             ),
             ".utilities": (
                 "TestsFlextDbtLdifUtilities",
@@ -77,6 +94,13 @@ _LAZY_IMPORTS = merge_lazy_imports(
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
 
 __all__: list[str] = [
+    "TestAnalytics",
+    "TestDbtModel",
+    "TestFlextDbtLdifCliService",
+    "TestFlextDbtLdifClient",
+    "TestFlextDbtLdifUnifiedService",
+    "TestMainEntryPoint",
+    "TestModelGenerator",
     "TestsFlextDbtLdifConstants",
     "TestsFlextDbtLdifModels",
     "TestsFlextDbtLdifProtocols",

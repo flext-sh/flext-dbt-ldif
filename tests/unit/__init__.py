@@ -8,26 +8,22 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 _LAZY_IMPORTS = build_lazy_import_map(
     {
         ".test_api_surface": ("test_api_surface",),
-        ".test_cli": ("test_cli",),
-        ".test_core": ("test_core",),
-        ".test_dbt_client": ("test_dbt_client",),
-        ".test_dbt_models": ("test_dbt_models",),
+        ".test_cli": (
+            "TestFlextDbtLdifCliService",
+            "TestMainEntryPoint",
+        ),
+        ".test_core": (
+            "TestAnalytics",
+            "TestModelGenerator",
+        ),
+        ".test_dbt_client": ("TestFlextDbtLdifClient",),
+        ".test_dbt_models": (
+            "TestDbtModel",
+            "TestFlextDbtLdifUnifiedService",
+        ),
         ".test_services": ("test_services",),
         ".test_services_and_api": ("test_services_and_api",),
         ".test_version": ("test_version",),
-        "flext_dbt_ldif": (
-            "c",
-            "d",
-            "e",
-            "h",
-            "m",
-            "p",
-            "r",
-            "s",
-            "t",
-            "u",
-            "x",
-        ),
     },
 )
 
