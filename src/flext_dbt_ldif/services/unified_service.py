@@ -12,7 +12,7 @@ from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t, u
 class FlextDbtLdifUnifiedService:
     """Mixin providing UnifiedService for dbt-ldif utilities."""
 
-    class UnifiedService(s[t.ContainerMapping]):
+    class UnifiedService(s[t.FlatContainerMapping]):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
         name: str = u.Field(
@@ -42,9 +42,9 @@ class FlextDbtLdifUnifiedService:
             )
 
         @override
-        def execute(self) -> p.Result[t.ContainerMapping]:
+        def execute(self) -> p.Result[t.FlatContainerMapping]:
             """Execute service and return metadata payload."""
-            return r[t.ContainerMapping].ok({
+            return r[t.FlatContainerMapping].ok({
                 "name": self.name,
                 "project_dir": str(self.project_dir),
                 "status": c.DbtLdif.WORKFLOW_STATUS_READY,
