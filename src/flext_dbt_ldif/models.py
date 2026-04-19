@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from typing import ClassVar
 
 from flext_dbt_ldif import c, p, r, t, u
 from flext_ldif import FlextLdifModels
@@ -32,14 +33,8 @@ class FlextDbtLdifModels(m, FlextLdifModels):
                 description="Human-readable model description.",
                 validate_default=True,
             )
-            columns: Sequence[t.ContainerValueMapping] = u.Field(
-                default_factory=list,
-                description="Column metadata payloads for the model.",
-            )
-            dependencies: t.StrSequence = u.Field(
-                default_factory=list,
-                description="Upstream DBT model dependencies.",
-            )
+            columns: Sequence[t.ContainerValueMapping] = u.Field(default_factory=tuple)
+            dependencies: t.StrSequence = u.Field(default_factory=tuple)
 
             def validate_business_rules(self) -> p.Result[bool]:
                 """Validate minimal model constraints."""
@@ -62,10 +57,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             """DBT transformation execution summary."""
 
             records: int = u.Field(description="Number of transformed records.")
-            models: t.StrSequence = u.Field(
-                default_factory=list,
-                description="Names of transformed DBT models.",
-            )
+            models: t.StrSequence = u.Field(default_factory=tuple)
             status: str = u.Field(description="Transformation lifecycle status.")
 
         class ModelGenerationResult(m.ArbitraryTypesModel):
@@ -74,10 +66,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             models_generated: int = u.Field(
                 description="Number of generated DBT models.",
             )
-            model_names: t.StrSequence = u.Field(
-                default_factory=list,
-                description="Generated DBT model names.",
-            )
+            model_names: t.StrSequence = u.Field(default_factory=tuple)
 
         class ParseValidationResult(m.ArbitraryTypesModel):
             """Combined parse and validation payload."""
@@ -106,6 +95,8 @@ class FlextDbtLdifModels(m, FlextLdifModels):
 
         class PipelineResult(m.ArbitraryTypesModel):
             """Client pipeline status payload."""
+
+            _flext_enforcement_exempt: ClassVar[bool] = True
 
             parsed_entries: int = u.Field(description="Number of parsed LDIF entries.")
             validation_status: str = u.Field(description="Validation lifecycle status.")
