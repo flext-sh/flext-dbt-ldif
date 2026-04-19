@@ -15,7 +15,6 @@ from flext_dbt_ldif import (
     FlextDbtLdifClient,
     FlextDbtLdifCliService,
     FlextDbtLdifCore,
-    FlextDbtLdifError,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
     FlextDbtLdifUnifiedService,
@@ -39,8 +38,6 @@ class FlextDbtLdif(
 
     All domain behavior comes from service mixins via MRO.
     """
-
-    Error = FlextDbtLdifError.Error
 
     _instance: ClassVar[Self | None] = None
 

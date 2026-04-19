@@ -12,9 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from flext_core import r
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifServiceMixin
-from tests import m, p, t
+from tests import m, p, r, t
 
 
 @pytest.fixture
