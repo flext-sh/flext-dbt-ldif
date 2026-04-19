@@ -37,7 +37,7 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     @override
     @property
     @override
-    def connection_profile(self) -> t.RecursiveContainerMapping:
+    def connection_profile(self) -> Mapping[str, t.Container]:
         """Dbt connection profile for LDIF (file-based, no DB)."""
         return {"type": "file", "project": self.dbt_project_name}
 
