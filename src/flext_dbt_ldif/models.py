@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import (
+    Sequence,
+)
 from typing import ClassVar
 
 from flext_dbt_ldif import c, p, r, t, u

@@ -7,7 +7,9 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import (
+    Sequence,
+)
 from pathlib import Path
 
 from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
