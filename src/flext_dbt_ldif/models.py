@@ -107,6 +107,14 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             )
             pipeline_status: str = u.Field(description="Overall pipeline status.")
 
+        class UnifiedServicePayload(m.ArbitraryTypesModel):
+            """Wrapper for UnifiedService execution payload."""
+
+            payload: t.FlatContainerMapping = u.Field(
+                default_factory=dict,
+                description="Service execution result as mapping.",
+            )
+
 
 __all__: list[str] = ["FlextDbtLdifModels", "m"]
 
