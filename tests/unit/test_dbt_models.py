@@ -14,6 +14,7 @@ from collections.abc import (
 from pathlib import Path
 
 from flext_core import FlextTypes
+
 from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService
 from tests import m
 

@@ -6,9 +6,10 @@ from collections.abc import (
     Sequence,
 )
 
-from flext_dbt_ldif import u
 from flext_ldif import FlextLdifTypes
 from flext_meltano import t
+
+from flext_dbt_ldif import u
 
 
 class FlextDbtLdifTypes(t, FlextLdifTypes):

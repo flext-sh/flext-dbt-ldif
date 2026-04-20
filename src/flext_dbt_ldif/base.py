@@ -16,8 +16,9 @@ from collections.abc import (
 from typing import override
 
 from flext_core import FlextSettings
-from flext_dbt_ldif import t
 from flext_meltano import FlextMeltanoDbtServiceBase, FlextMeltanoSettings
+
+from flext_dbt_ldif import t
 
 
 class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
