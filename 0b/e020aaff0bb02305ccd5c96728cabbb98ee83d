@@ -1,0 +1,14 @@
+src/flext_dbt_ldif/constants.py
+  h_9db9d35f50cf33 9,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "0be020aaff0bb02305ccd5c96728cabbb98ee83d",
+  "prompts": {},
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
