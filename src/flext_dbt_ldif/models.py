@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import (
     Sequence,
 )
-from typing import ClassVar
 
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
@@ -98,8 +97,6 @@ class FlextDbtLdifModels(m, FlextLdifModels):
 
         class PipelineResult(m.ArbitraryTypesModel):
             """Client pipeline status payload."""
-
-            _flext_enforcement_exempt: ClassVar[bool] = True
 
             parsed_entries: int = u.Field(description="Number of parsed LDIF entries.")
             validation_status: str = u.Field(description="Validation lifecycle status.")
