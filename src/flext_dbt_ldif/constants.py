@@ -6,10 +6,10 @@ from enum import StrEnum, unique
 from typing import Final
 
 from flext_ldif import FlextLdifConstants
-from flext_meltano import FlextMeltanoConstants
+from flext_meltano import c
 
 
-class FlextDbtLdifConstants(FlextMeltanoConstants, FlextLdifConstants):
+class FlextDbtLdifConstants(c, FlextLdifConstants):
     """Typed constants used by DBT LDIF modules."""
 
     class DbtLdif:

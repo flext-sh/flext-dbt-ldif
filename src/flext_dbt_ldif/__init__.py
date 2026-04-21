@@ -14,7 +14,7 @@ from flext_core.lazy import (
 from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
-    from flext_ldif import d, e, h, r, s, x
+    from flext_meltano import d, e, h, r, s, x
 
     from flext_dbt_ldif.api import FlextDbtLdif, dbt_ldif
     from flext_dbt_ldif.base import FlextDbtLdifServiceBase
@@ -76,7 +76,7 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "FlextDbtLdifUtilities",
                 "u",
             ),
-            "flext_ldif": (
+            "flext_meltano": (
                 "d",
                 "e",
                 "h",
