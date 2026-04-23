@@ -35,12 +35,12 @@ def test_parse_and_validate_ldif_ok(
     ]
 
     def _parse_ldif_file(
-        _ldif_file: Path | str,
+        ldif_file: Path | str,
     ) -> p.Result[Sequence[t.JsonMapping]]:
         return r[Sequence[t.JsonMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -90,12 +90,12 @@ def test_generate_and_write_models_ok(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: Sequence[m.DbtLdif.DbtModel],
+        models: Sequence[m.DbtLdif.DbtModel],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
@@ -145,7 +145,7 @@ def test_api_validate_ldif_quality(
 
     def _run_quality(
         _self: FlextDbtLdifServiceMixin.Service,
-        _ldif_file: Path | str,
+        ldif_file: Path | str,
     ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         return r[m.DbtLdif.ParseValidationResult].ok(
             m.DbtLdif.ParseValidationResult(
@@ -172,7 +172,7 @@ def test_api_generate_ldif_models(
 
     def _gen_models(
         _self: FlextDbtLdifServiceMixin.Service,
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
         *,
         overwrite: bool = False,
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:

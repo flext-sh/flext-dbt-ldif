@@ -43,10 +43,10 @@ class FlextDbtLdif(
 
     def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
-        self._config = (
+        self.config = (
             settings if settings is not None else FlextDbtLdifSettings.fetch_global()
         )
-        self._service = self.Service(settings=self._config)
+        self._service = self.Service(settings=self.config)
 
     @classmethod
     def get_instance(cls) -> Self:
@@ -62,7 +62,7 @@ class FlextDbtLdif(
 
     def execute(self) -> p.Result[FlextDbtLdifSettings]:
         """Return current settings payload for service contracts."""
-        current_config = self._config
+        current_config = self.config
         return u.try_(
             lambda: FlextDbtLdifSettings.model_validate(current_config.model_dump()),
             catch=c.ValidationError,

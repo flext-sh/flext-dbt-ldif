@@ -40,7 +40,7 @@ def test_parse_and_validate_ldif_ok(
         return r[Sequence[t.JsonMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -105,12 +105,12 @@ def test_generate_and_write_models_ok(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: Sequence[m.DbtLdif.DbtModel],
+        models: Sequence[m.DbtLdif.DbtModel],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
@@ -146,7 +146,7 @@ def test_run_complete_workflow_all(
         return r[Sequence[t.JsonMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -157,7 +157,7 @@ def test_run_complete_workflow_all(
         )
 
     def _transform_with_dbt(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
         _model_names: t.StrSequence | None,
     ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
         return r[m.DbtLdif.DbtTransformationResult].ok(
@@ -186,12 +186,12 @@ def test_run_complete_workflow_all(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
     def _generate_analytics_models(
-        _models: Sequence[m.DbtLdif.DbtModel],
+        models: Sequence[m.DbtLdif.DbtModel],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
@@ -231,7 +231,7 @@ def test_run_data_quality_assessment(
         return r[Sequence[t.JsonMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
