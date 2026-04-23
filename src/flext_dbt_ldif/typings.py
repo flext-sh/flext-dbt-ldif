@@ -18,9 +18,9 @@ class FlextDbtLdifTypes(t, FlextLdifTypes):
     class DbtLdif:
         """DBT LDIF namespace."""
 
-        ENTRY_CONTAINER_SEQUENCE_ADAPTER: u.TypeAdapter[
-            Sequence[t.ContainerValueMapping]
-        ] = u.TypeAdapter(Sequence[t.ContainerValueMapping])
+        ENTRY_CONTAINER_SEQUENCE_ADAPTER: u.TypeAdapter[Sequence[t.JsonMapping]] = (
+            u.TypeAdapter(Sequence[t.JsonMapping])
+        )
 
 
 t = FlextDbtLdifTypes

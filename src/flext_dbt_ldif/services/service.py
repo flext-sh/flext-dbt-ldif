@@ -50,13 +50,13 @@ class FlextDbtLdifServiceMixin:
 
         def generate_and_write_models(
             self,
-            entries: Sequence[t.ContainerValueMapping],
+            entries: Sequence[t.JsonMapping],
             *,
             overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
             """Generate staging and analytics models for entries."""
             _ = overwrite
-            staging_payload: Sequence[t.ContainerValueMapping] = [
+            staging_payload: Sequence[t.JsonMapping] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
@@ -141,7 +141,7 @@ class FlextDbtLdifServiceMixin:
                     )
                 workflow_result.models_generated = model_result.value.models_generated
             if run_transformations:
-                transform_payload: Sequence[t.ContainerValueMapping] = [
+                transform_payload: Sequence[t.JsonMapping] = [
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(

@@ -77,7 +77,7 @@ class FlextDbtLdifUnifiedService:
 
         def generate_staging_models(
             self,
-            entries: Sequence[t.ContainerValueMapping],
+            entries: Sequence[t.JsonMapping],
         ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:

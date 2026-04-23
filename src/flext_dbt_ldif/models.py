@@ -35,7 +35,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
                 description="Human-readable model description.",
                 validate_default=True,
             )
-            columns: Sequence[t.ContainerValueMapping] = u.Field(default_factory=tuple)
+            columns: Sequence[t.JsonMapping] = u.Field(default_factory=tuple)
             dependencies: t.StrSequence = u.Field(default_factory=tuple)
 
             def validate_business_rules(self) -> p.Result[bool]:
@@ -108,7 +108,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
         class UnifiedServicePayload(m.ArbitraryTypesModel):
             """Wrapper for UnifiedService execution payload."""
 
-            payload: t.FlatContainerMapping = u.Field(
+            payload: t.JsonMapping = u.Field(
                 default_factory=dict,
                 description="Service execution result as mapping.",
             )

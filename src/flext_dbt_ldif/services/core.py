@@ -47,9 +47,9 @@ class FlextDbtLdifCore:
             def analyze_entry_patterns(
                 self,
                 entries: Sequence[t.StrMapping],
-            ) -> p.Result[t.ContainerValueMapping]:
+            ) -> p.Result[t.JsonMapping]:
                 """Analyze input entries and return summary payload."""
-                return r[t.ContainerValueMapping].ok({
+                return r[t.JsonMapping].ok({
                     "total_entries": len(entries),
                     "unique_dns": len({entry.get("dn", "") for entry in entries}),
                 })

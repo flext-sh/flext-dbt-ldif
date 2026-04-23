@@ -29,7 +29,7 @@ class FlextDbtLdifClient:
         def parse_ldif_file(
             self,
             file_path: Path | str | None = None,
-        ) -> p.Result[Sequence[t.ContainerValueMapping]]:
+        ) -> p.Result[Sequence[t.JsonMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
                 str(file_path)
@@ -37,10 +37,10 @@ class FlextDbtLdifClient:
                 else self.settings.ldif_file_path
             )
             if not selected_path:
-                return r[Sequence[t.ContainerValueMapping]].fail(
+                return r[Sequence[t.JsonMapping]].fail(
                     "LDIF file path is required",
                 )
-            return r[Sequence[t.ContainerValueMapping]].ok([
+            return r[Sequence[t.JsonMapping]].ok([
                 {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path},
             ])
 
@@ -80,7 +80,7 @@ class FlextDbtLdifClient:
 
         def transform_with_dbt(
             self,
-            entries: Sequence[t.ContainerValueMapping],
+            entries: Sequence[t.JsonMapping],
             model_names: t.StrSequence | None = None,
         ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
             """Return synthetic DBT transformation metadata."""
@@ -98,7 +98,7 @@ class FlextDbtLdifClient:
 
         def validate_ldif_data(
             self,
-            entries: Sequence[t.ContainerValueMapping],
+            entries: Sequence[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score."""
             total_entries = len(entries)

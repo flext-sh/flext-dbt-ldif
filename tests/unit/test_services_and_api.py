@@ -30,17 +30,17 @@ def test_parse_and_validate_ldif_ok(
     tmp_path: Path,
 ) -> None:
     """Test parsing and validating LDIF via service."""
-    entries: Sequence[t.ContainerValueMapping] = [
+    entries: Sequence[t.JsonMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
 
     def _parse_ldif_file(
         _ldif_file: Path | str,
-    ) -> p.Result[Sequence[t.ContainerValueMapping]]:
-        return r[Sequence[t.ContainerValueMapping]].ok(entries)
+    ) -> p.Result[Sequence[t.JsonMapping]]:
+        return r[Sequence[t.JsonMapping]].ok(entries)
 
     def _validate_ldif_data(
-        _entries: Sequence[t.ContainerValueMapping],
+        _entries: Sequence[t.JsonMapping],
     ) -> p.Result[m.DbtLdif.LdifValidationResult]:
         return r[m.DbtLdif.LdifValidationResult].ok(
             m.DbtLdif.LdifValidationResult(
@@ -90,7 +90,7 @@ def test_generate_and_write_models_ok(
     )
 
     def _generate_staging_models(
-        _entries: Sequence[t.ContainerValueMapping],
+        _entries: Sequence[t.JsonMapping],
     ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
         return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
@@ -102,7 +102,7 @@ def test_generate_and_write_models_ok(
     gen = service.model_generator
     object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
     object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
-    entries: Sequence[t.ContainerValueMapping] = [
+    entries: Sequence[t.JsonMapping] = [
         {"dn": "cn=test,dc=example,dc=org"},
     ]
     result = service.generate_and_write_models(entries)
@@ -172,7 +172,7 @@ def test_api_generate_ldif_models(
 
     def _gen_models(
         _self: FlextDbtLdifServiceMixin.Service,
-        _entries: Sequence[t.ContainerValueMapping],
+        _entries: Sequence[t.JsonMapping],
         *,
         overwrite: bool = False,
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
