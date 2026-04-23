@@ -8,15 +8,12 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from collections.abc import (
-    Mapping,
     Sequence,
 )
 from pathlib import Path
 
-from flext_core import FlextTypes
-
 from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService
-from tests import m
+from tests import m, t
 
 
 class TestFlextDbtLdifUnifiedService:
@@ -38,7 +35,7 @@ class TestFlextDbtLdifUnifiedService:
         )
         result = gen.execute()
         assert result.success
-        data = result.value or {}
+        data: t.JsonMapping = result.value or {}
         assert data["name"] == "ldif_generator"
         assert data["status"] == "ready"
 
@@ -47,7 +44,7 @@ class TestFlextDbtLdifUnifiedService:
         gen = FlextDbtLdifUnifiedService.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global()
         )
-        entries: Sequence[Mapping[str, FlextTypes.Scalar]] = [
+        entries: Sequence[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
         result = gen.generate_staging_models(entries)

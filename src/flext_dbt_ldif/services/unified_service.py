@@ -14,7 +14,7 @@ from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t, u
 class FlextDbtLdifUnifiedService:
     """Mixin providing UnifiedService for dbt-ldif utilities."""
 
-    class UnifiedService(s[m.DbtLdif.UnifiedServicePayload]):
+    class UnifiedService(s):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
         name: str = u.Field(
@@ -44,17 +44,14 @@ class FlextDbtLdifUnifiedService:
             )
 
         @override
-        def execute(self) -> p.Result[m.DbtLdif.UnifiedServicePayload]:
+        def execute(self) -> p.Result[t.JsonMapping]:
             """Execute service and return metadata payload."""
-            return r[m.DbtLdif.UnifiedServicePayload].ok(
-                m.DbtLdif.UnifiedServicePayload(
-                    payload={
-                        "name": self.name,
-                        "project_dir": str(self.project_dir),
-                        "status": c.DbtLdif.WORKFLOW_STATUS_READY,
-                    }
-                )
-            )
+            payload: t.JsonMapping = {
+                "name": self.name,
+                "project_dir": str(self.project_dir),
+                "status": c.DbtLdif.WORKFLOW_STATUS_READY,
+            }
+            return r[t.JsonMapping].ok(payload)
 
         def generate_analytics_models(
             self,
