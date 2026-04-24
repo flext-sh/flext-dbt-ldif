@@ -16,7 +16,7 @@ from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService
 from tests import m, t
 
 
-class TestFlextDbtLdifUnifiedService:
+class TestsFlextDbtLdifDbtModels:
     """Test cases for FlextDbtLdifUnifiedService."""
 
     def test_initialization(self, tmp_path: Path) -> None:
@@ -95,10 +95,6 @@ class TestFlextDbtLdifUnifiedService:
         assert result.success
         models = result.value or []
         assert not models
-
-
-class TestDbtModel:
-    """Test cases for m.DbtLdif.DbtModel."""
 
     def test_create_model(self) -> None:
         """Test creating a DbtModel instance."""

@@ -12,7 +12,7 @@ from pathlib import Path
 from flext_dbt_ldif import FlextDbtLdifCore
 
 
-class TestModelGenerator:
+class TestsFlextDbtLdifCore:
     """Test cases for FlextDbtLdifCore.Core.ModelGenerator."""
 
     def test_initialization_default(self) -> None:
@@ -44,10 +44,6 @@ class TestModelGenerator:
         analytics = models[0]
         assert analytics["name"] == "analytics_ldif_insights"
         assert "description" in analytics
-
-
-class TestAnalytics:
-    """Test cases for FlextDbtLdifCore.Core.Analytics."""
 
     def test_analyze_entry_patterns_empty(self) -> None:
         """Test pattern analysis with empty data."""

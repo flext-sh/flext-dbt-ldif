@@ -20,9 +20,9 @@ if _t.TYPE_CHECKING:
     from tests.protocols import TestsFlextDbtLdifProtocols, p
     from tests.typings import TestsFlextDbtLdifTypes, t
     from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
-    from tests.unit.test_core import TestAnalytics, TestModelGenerator
-    from tests.unit.test_dbt_client import TestFlextDbtLdifClient
-    from tests.unit.test_dbt_models import TestDbtModel, TestFlextDbtLdifUnifiedService
+    from tests.unit.test_core import TestsFlextDbtLdifCore
+    from tests.unit.test_dbt_client import TestsFlextDbtLdifClient
+    from tests.unit.test_dbt_models import TestsFlextDbtLdifDbtModels
     from tests.utilities import TestsFlextDbtLdifUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
     (".unit",),
@@ -48,15 +48,9 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "TestFlextDbtLdifCliService",
                 "TestMainEntryPoint",
             ),
-            ".unit.test_core": (
-                "TestAnalytics",
-                "TestModelGenerator",
-            ),
-            ".unit.test_dbt_client": ("TestFlextDbtLdifClient",),
-            ".unit.test_dbt_models": (
-                "TestDbtModel",
-                "TestFlextDbtLdifUnifiedService",
-            ),
+            ".unit.test_core": ("TestsFlextDbtLdifCore",),
+            ".unit.test_dbt_client": ("TestsFlextDbtLdifClient",),
+            ".unit.test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
             ".utilities": (
                 "TestsFlextDbtLdifUtilities",
                 "u",
@@ -94,14 +88,12 @@ _LAZY_IMPORTS = merge_lazy_imports(
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
 
 __all__: list[str] = [
-    "TestAnalytics",
-    "TestDbtModel",
     "TestFlextDbtLdifCliService",
-    "TestFlextDbtLdifClient",
-    "TestFlextDbtLdifUnifiedService",
     "TestMainEntryPoint",
-    "TestModelGenerator",
+    "TestsFlextDbtLdifClient",
     "TestsFlextDbtLdifConstants",
+    "TestsFlextDbtLdifCore",
+    "TestsFlextDbtLdifDbtModels",
     "TestsFlextDbtLdifModels",
     "TestsFlextDbtLdifProtocols",
     "TestsFlextDbtLdifTypes",

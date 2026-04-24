@@ -16,7 +16,7 @@ from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
 from tests import t
 
 
-class TestFlextDbtLdifClient:
+class TestsFlextDbtLdifClient:
     """Test cases for FlextDbtLdifClient."""
 
     def test_initialization_default(self) -> None:
