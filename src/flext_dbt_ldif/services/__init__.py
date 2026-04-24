@@ -10,7 +10,6 @@ _LAZY_IMPORTS = build_lazy_import_map(
         ".cli_service": ("FlextDbtLdifCliService",),
         ".client": ("FlextDbtLdifClient",),
         ".core": ("FlextDbtLdifCore",),
-        ".error": ("FlextDbtLdifError",),
         ".service": ("FlextDbtLdifServiceMixin",),
         ".unified_service": ("FlextDbtLdifUnifiedService",),
     },

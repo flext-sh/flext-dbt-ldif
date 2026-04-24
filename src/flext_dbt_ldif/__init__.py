@@ -24,7 +24,6 @@ if _t.TYPE_CHECKING:
     from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
     from flext_dbt_ldif.services.client import FlextDbtLdifClient
     from flext_dbt_ldif.services.core import FlextDbtLdifCore
-    from flext_dbt_ldif.services.error import FlextDbtLdifError
     from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
     from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
@@ -64,7 +63,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ".services.cli_service": ("FlextDbtLdifCliService",),
             ".services.client": ("FlextDbtLdifClient",),
             ".services.core": ("FlextDbtLdifCore",),
-            ".services.error": ("FlextDbtLdifError",),
             ".services.service": ("FlextDbtLdifServiceMixin",),
             ".services.unified_service": ("FlextDbtLdifUnifiedService",),
             ".settings": ("FlextDbtLdifSettings",),
@@ -107,7 +105,6 @@ __all__: list[str] = [
     "FlextDbtLdifClient",
     "FlextDbtLdifConstants",
     "FlextDbtLdifCore",
-    "FlextDbtLdifError",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifServiceBase",
