@@ -12,15 +12,9 @@ _LAZY_IMPORTS = build_lazy_import_map(
             "TestFlextDbtLdifCliService",
             "TestMainEntryPoint",
         ),
-        ".test_core": (
-            "TestAnalytics",
-            "TestModelGenerator",
-        ),
-        ".test_dbt_client": ("TestFlextDbtLdifClient",),
-        ".test_dbt_models": (
-            "TestDbtModel",
-            "TestFlextDbtLdifUnifiedService",
-        ),
+        ".test_core": ("TestsFlextDbtLdifCore",),
+        ".test_dbt_client": ("TestsFlextDbtLdifClient",),
+        ".test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
         ".test_services": ("test_services",),
         ".test_services_and_api": ("test_services_and_api",),
         ".test_version": ("test_version",),
