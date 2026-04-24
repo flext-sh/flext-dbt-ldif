@@ -123,6 +123,7 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
         run_transformations: bool = False,
         model_names: t.StrSequence | None = None,
     ) -> p.Result[m.DbtLdif.WorkflowResult]:
+        del generate_models, run_transformations, model_names
         return r[m.DbtLdif.WorkflowResult].ok(
             m.DbtLdif.WorkflowResult(
                 ldif_file=str(ldif_file),
@@ -132,6 +133,11 @@ def test_api_process_ldif_file(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) 
             ),
         )
 
+    monkeypatch.setattr(
+        FlextDbtLdifServiceMixin.Service,
+        "process_ldif_file",
+        _run,
+    )
     api = FlextDbtLdif()
     result = api.process_ldif_file(tmp_path / "f.ldif")
     assert result.success
