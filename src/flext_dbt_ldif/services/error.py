@@ -22,7 +22,7 @@ class FlextDbtLdifError:
             self,
             message: str,
             *,
-            error_code: c.DbtLdif.ErrorCode = c.DbtLdif.ErrorCode.DBT_LDIF_ERROR,
+            error_code: c.ErrorCode = c.ErrorCode.DBT_LDIF_ERROR,
             **context: t.Scalar,
         ) -> None:
             """Initialize LDIF DBT error with error code and context.
@@ -47,7 +47,7 @@ class FlextDbtLdifError:
             """Create authentication error."""
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.AUTHENTICATION_ERROR,
+                error_code=c.ErrorCode.AUTHENTICATION_ERROR,
                 **context,
             )
 
@@ -60,7 +60,7 @@ class FlextDbtLdifError:
             """Create configuration error."""
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.CONFIGURATION_ERROR,
+                error_code=c.ErrorCode.CONFIGURATION_ERROR,
                 **context,
             )
 
@@ -73,7 +73,7 @@ class FlextDbtLdifError:
             """Create connection error."""
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.CONNECTION_ERROR,
+                error_code=c.ErrorCode.CONNECTION_ERROR,
                 **context,
             )
 
@@ -94,7 +94,7 @@ class FlextDbtLdifError:
                 context["model_type"] = model_type
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.MODEL_ERROR,
+                error_code=c.ErrorCode.MODEL_ERROR,
                 **context,
             )
 
@@ -115,7 +115,7 @@ class FlextDbtLdifError:
                 context["entry_dn"] = entry_dn
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.PARSE_ERROR,
+                error_code=c.ErrorCode.PARSE_ERROR,
                 **context,
             )
 
@@ -128,7 +128,7 @@ class FlextDbtLdifError:
             """Create processing error."""
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.PROCESSING_ERROR,
+                error_code=c.ErrorCode.PROCESSING_ERROR,
                 **context,
             )
 
@@ -149,7 +149,7 @@ class FlextDbtLdifError:
                 context["model_name"] = model_name
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.TEST_ERROR,
+                error_code=c.ErrorCode.TEST_ERROR,
                 **context,
             )
 
@@ -162,7 +162,7 @@ class FlextDbtLdifError:
             """Create timeout error."""
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.TIMEOUT_ERROR,
+                error_code=c.ErrorCode.TIMEOUT_ERROR,
                 **context,
             )
 
@@ -183,7 +183,7 @@ class FlextDbtLdifError:
                 context["model_name"] = model_name
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.TRANSFORMATION_ERROR,
+                error_code=c.ErrorCode.TRANSFORMATION_ERROR,
                 **context,
             )
 
@@ -196,23 +196,23 @@ class FlextDbtLdifError:
             """Create validation error."""
             return cls(
                 message,
-                error_code=c.DbtLdif.ErrorCode.VALIDATION_ERROR,
+                error_code=c.ErrorCode.VALIDATION_ERROR,
                 **context,
             )
 
         def is_configuration_error(self) -> bool:
             """Check if this is a configuration error."""
-            return self.error_code == c.DbtLdif.ErrorCode.CONFIGURATION_ERROR
+            return self.error_code == c.ErrorCode.CONFIGURATION_ERROR
 
         def is_processing_error(self) -> bool:
             """Check if this is a processing error."""
             return self.error_code in {
-                c.DbtLdif.ErrorCode.PROCESSING_ERROR,
-                c.DbtLdif.ErrorCode.PARSE_ERROR,
-                c.DbtLdif.ErrorCode.MODEL_ERROR,
-                c.DbtLdif.ErrorCode.TRANSFORMATION_ERROR,
+                c.ErrorCode.PROCESSING_ERROR,
+                c.ErrorCode.PARSE_ERROR,
+                c.ErrorCode.MODEL_ERROR,
+                c.ErrorCode.TRANSFORMATION_ERROR,
             }
 
         def is_validation_error(self) -> bool:
             """Check if this is a validation error."""
-            return self.error_code == c.DbtLdif.ErrorCode.VALIDATION_ERROR
+            return self.error_code == c.ErrorCode.VALIDATION_ERROR
