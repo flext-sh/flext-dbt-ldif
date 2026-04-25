@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import (
     Sequence,
 )
+from types import MappingProxyType
 
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
@@ -109,7 +110,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             """Wrapper for UnifiedService execution payload."""
 
             payload: t.JsonMapping = u.Field(
-                default_factory=dict,
+                default_factory=lambda: MappingProxyType({}),
                 description="Service execution result as mapping.",
             )
 
