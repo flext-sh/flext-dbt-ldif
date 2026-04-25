@@ -1,3 +1,9 @@
+<!-- TOC START -->
+- [Source of Truth](#source-of-truth)
+- [Generated Pages](#generated-pages)
+- [Surface Summary](#surface-summary)
+<!-- TOC END -->
+
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
 # flext-dbt-ldif API Reference
@@ -19,7 +25,7 @@ This section is generated from public exports and real docstrings.
 
 ## Surface Summary
 
-- Primary facades: `FlextDbtLdifProtocols`, `FlextDbtLdifTypes`, `FlextDbtLdifServiceBase`, `FlextDbtLdifServiceMixin`, `FlextDbtLdif`, `FlextDbtLdifConstants` (+7 more)
+- Primary facades: `FlextDbtLdifServiceBase`, `FlextDbtLdifCliService`, `FlextDbtLdifCore`, `FlextDbtLdifSettings`, `FlextDbtLdifTypes`, `FlextDbtLdifClient` (+7 more)
 - Generated module pages: `14`
 
 - [Back to project docs](../index.md)
