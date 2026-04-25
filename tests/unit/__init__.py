@@ -13,7 +13,7 @@ _LAZY_IMPORTS = build_lazy_import_map(
         ".test_dbt_client": ("TestsFlextDbtLdifClient",),
         ".test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
         ".test_services": ("TestsFlextDbtLdifServices",),
-        ".test_services_and_api": ("test_services_and_api",),
+        ".test_services_and_api": ("TestsFlextDbtLdifServicesAndApi",),
         ".test_version": ("TestsFlextDbtLdifVersion",),
     },
 )

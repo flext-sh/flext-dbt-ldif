@@ -25,6 +25,7 @@ if _t.TYPE_CHECKING:
     from tests.unit.test_dbt_client import TestsFlextDbtLdifClient
     from tests.unit.test_dbt_models import TestsFlextDbtLdifDbtModels
     from tests.unit.test_services import TestsFlextDbtLdifServices
+    from tests.unit.test_services_and_api import TestsFlextDbtLdifServicesAndApi
     from tests.unit.test_version import TestsFlextDbtLdifVersion
     from tests.utilities import TestsFlextDbtLdifUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
@@ -53,6 +54,7 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ".unit.test_dbt_client": ("TestsFlextDbtLdifClient",),
             ".unit.test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
             ".unit.test_services": ("TestsFlextDbtLdifServices",),
+            ".unit.test_services_and_api": ("TestsFlextDbtLdifServicesAndApi",),
             ".unit.test_version": ("TestsFlextDbtLdifVersion",),
             ".utilities": (
                 "TestsFlextDbtLdifUtilities",
@@ -110,6 +112,7 @@ __all__: list[str] = [
     "TestsFlextDbtLdifModels",
     "TestsFlextDbtLdifProtocols",
     "TestsFlextDbtLdifServices",
+    "TestsFlextDbtLdifServicesAndApi",
     "TestsFlextDbtLdifTypes",
     "TestsFlextDbtLdifUtilities",
     "TestsFlextDbtLdifVersion",
