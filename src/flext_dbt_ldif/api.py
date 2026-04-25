@@ -49,8 +49,8 @@ class FlextDbtLdif(
         self._service = self.Service(settings=self.config)
 
     @classmethod
-    def get_instance(cls) -> Self:
-        """Return the shared facade instance."""
+    def fetch_instance(cls) -> Self:
+        """Return the shared facade instance, creating it on first call."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
