@@ -19,10 +19,13 @@ if _t.TYPE_CHECKING:
     from tests.models import TestsFlextDbtLdifModels, m
     from tests.protocols import TestsFlextDbtLdifProtocols, p
     from tests.typings import TestsFlextDbtLdifTypes, t
-    from tests.unit.test_cli import TestFlextDbtLdifCliService, TestMainEntryPoint
+    from tests.unit.test_api_surface import TestsFlextDbtLdifApiSurface
+    from tests.unit.test_cli import TestsFlextDbtLdifCli
     from tests.unit.test_core import TestsFlextDbtLdifCore
     from tests.unit.test_dbt_client import TestsFlextDbtLdifClient
     from tests.unit.test_dbt_models import TestsFlextDbtLdifDbtModels
+    from tests.unit.test_services import TestsFlextDbtLdifServices
+    from tests.unit.test_version import TestsFlextDbtLdifVersion
     from tests.utilities import TestsFlextDbtLdifUtilities, u
 _LAZY_IMPORTS = merge_lazy_imports(
     (".unit",),
@@ -44,13 +47,13 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "TestsFlextDbtLdifTypes",
                 "t",
             ),
-            ".unit.test_cli": (
-                "TestFlextDbtLdifCliService",
-                "TestMainEntryPoint",
-            ),
+            ".unit.test_api_surface": ("TestsFlextDbtLdifApiSurface",),
+            ".unit.test_cli": ("TestsFlextDbtLdifCli",),
             ".unit.test_core": ("TestsFlextDbtLdifCore",),
             ".unit.test_dbt_client": ("TestsFlextDbtLdifClient",),
             ".unit.test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
+            ".unit.test_services": ("TestsFlextDbtLdifServices",),
+            ".unit.test_version": ("TestsFlextDbtLdifVersion",),
             ".utilities": (
                 "TestsFlextDbtLdifUtilities",
                 "u",
@@ -98,16 +101,18 @@ _LAZY_IMPORTS = merge_lazy_imports(
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
 
 __all__: list[str] = [
-    "TestFlextDbtLdifCliService",
-    "TestMainEntryPoint",
+    "TestsFlextDbtLdifApiSurface",
+    "TestsFlextDbtLdifCli",
     "TestsFlextDbtLdifClient",
     "TestsFlextDbtLdifConstants",
     "TestsFlextDbtLdifCore",
     "TestsFlextDbtLdifDbtModels",
     "TestsFlextDbtLdifModels",
     "TestsFlextDbtLdifProtocols",
+    "TestsFlextDbtLdifServices",
     "TestsFlextDbtLdifTypes",
     "TestsFlextDbtLdifUtilities",
+    "TestsFlextDbtLdifVersion",
     "c",
     "d",
     "e",

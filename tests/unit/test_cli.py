@@ -12,7 +12,7 @@ from unittest.mock import patch
 from flext_dbt_ldif import FlextDbtLdifCliService
 
 
-class TestFlextDbtLdifCliService:
+class TestsFlextDbtLdifCli:
     """Test cases for FlextDbtLdifCliService.CliService."""
 
     def test_initialization(self) -> None:
@@ -57,8 +57,6 @@ class TestFlextDbtLdifCliService:
         service = FlextDbtLdifCliService.CliService()
         service.validate()
 
-
-class TestMainEntryPoint:
     """Test cases for FlextDbtLdifCliService.CliService.main() entry point."""
 
     def test_main_no_args_exits_zero(self) -> None:
