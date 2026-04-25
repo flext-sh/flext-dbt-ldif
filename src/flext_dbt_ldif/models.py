@@ -10,7 +10,7 @@ from types import MappingProxyType
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
 
-from flext_dbt_ldif import c, p, r, t, u
+from flext_dbt_ldif import c, e, p, r, t, u
 
 
 class FlextDbtLdifModels(m, FlextLdifModels):
@@ -42,11 +42,11 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             def validate_business_rules(self) -> p.Result[bool]:
                 """Validate minimal model constraints."""
                 if not self.name.strip():
-                    return r[bool].fail("Model name cannot be empty")
+                    return e.fail_validation("name", error="cannot be empty")
                 if not self.ldif_source.strip():
-                    return r[bool].fail("LDIF source cannot be empty")
+                    return e.fail_validation("ldif_source", error="cannot be empty")
                 if not self.sql_content.strip():
-                    return r[bool].fail("SQL content cannot be empty")
+                    return e.fail_validation("sql_content", error="cannot be empty")
                 return r[bool].ok(value=True)
 
         class LdifValidationResult(m.ArbitraryTypesModel):
