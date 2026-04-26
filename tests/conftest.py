@@ -12,7 +12,6 @@ import tempfile
 from collections.abc import (
     Generator,
     Mapping,
-    Sequence,
 )
 
 import pytest
@@ -146,55 +145,6 @@ def ldif_source_settings(
         "timeout": 30,
         "search_scope": "SUBTREE",
     }
-
-
-@pytest.fixture
-def sample_ldif_entries() -> Sequence[t.JsonMapping]:
-    """Sample LDIF entries for testing using shared container domain."""
-    return [
-        {
-            "dn": "cn=john.doe,ou=people,dc=flext,dc=local",
-            "attributes": {
-                "cn": ["john.doe"],
-                "uid": ["jdoe"],
-                "mail": ["john.doe@internal.invalid"],
-                "givenName": ["John"],
-                "sn": ["Doe"],
-                "employeeNumber": ["12345"],
-                "departmentNumber": ["IT"],
-                "title": ["Software Engineer"],
-                "telephoneNumber": ["+1-555-1234"],
-                "objectClass": ["inetOrgPerson", "organizationalPerson", "person"],
-            },
-        },
-        {
-            "dn": "cn=jane.smith,ou=people,dc=flext,dc=local",
-            "attributes": {
-                "cn": ["jane.smith"],
-                "uid": ["jsmith"],
-                "mail": ["jane.smith@internal.invalid"],
-                "givenName": ["Jane"],
-                "sn": ["Smith"],
-                "employeeNumber": ["12346"],
-                "departmentNumber": ["HR"],
-                "title": ["HR Manager"],
-                "telephoneNumber": ["+1-555-5678"],
-                "objectClass": ["inetOrgPerson", "organizationalPerson", "person"],
-            },
-        },
-        {
-            "dn": "cn=developers,ou=groups,dc=flext,dc=local",
-            "attributes": {
-                "cn": ["developers"],
-                "description": ["Software Developers Group"],
-                "member": [
-                    "cn=john.doe,ou=people,dc=flext,dc=local",
-                    "cn=bob.johnson,ou=people,dc=flext,dc=local",
-                ],
-                "objectClass": ["groupOfNames"],
-            },
-        },
-    ]
 
 
 def pytest_configure(config: pytest.Config) -> None:
