@@ -7,10 +7,9 @@ from collections.abc import (
 )
 from types import MappingProxyType
 
+from flext_dbt_ldif import c, e, p, r, t, u
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
-
-from flext_dbt_ldif import c, e, p, r, t, u
 
 
 class FlextDbtLdifModels(m, FlextLdifModels):

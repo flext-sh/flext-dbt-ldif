@@ -10,12 +10,9 @@ from flext_core.lazy import (
     install_lazy_exports,
     merge_lazy_imports,
 )
-
 from flext_dbt_ldif.__version__ import *
 
 if _t.TYPE_CHECKING:
-    from flext_meltano import d, e, h, r, s, x
-
     from flext_dbt_ldif.api import FlextDbtLdif, dbt_ldif
     from flext_dbt_ldif.base import FlextDbtLdifServiceBase
     from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
@@ -29,6 +26,7 @@ if _t.TYPE_CHECKING:
     from flext_dbt_ldif.settings import FlextDbtLdifSettings
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
     from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
+    from flext_meltano import d, e, h, r, s, x
 _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
     build_lazy_import_map(

@@ -13,9 +13,8 @@ from __future__ import annotations
 from typing import override
 
 from flext_core import FlextSettings
-from flext_meltano import FlextMeltanoDbtServiceBase, FlextMeltanoSettings
-
 from flext_dbt_ldif import t
+from flext_meltano import FlextMeltanoDbtServiceBase, FlextMeltanoSettings
 
 
 class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
