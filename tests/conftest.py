@@ -68,36 +68,6 @@ def ensure_shared_docker_container(
 
 
 @pytest.fixture
-def dbt_ldif_profile() -> t.JsonMapping:
-    """Dbt LDIF profile configuration for testing."""
-    return {
-        "settings": {
-            "partial_parse": True,
-            "printer_width": 120,
-            "send_anonymous_usage_stats": False,
-            "use_colors": True,
-        },
-        "test": {
-            "outputs": {
-                "default": {
-                    "type": "postgres",
-                    "host": "localhost",
-                    "port": 5432,
-                    "database": "ldif_warehouse",
-                    "schema": "ldif_transformed",
-                    "user": "dbt_ldif_user",
-                    "password": "dbt_ldif_pass",
-                    "threads": 4,
-                    "keepalives_idle": 0,
-                    "search_path": "ldif_transformed",
-                },
-            },
-            "target": "default",
-        },
-    }
-
-
-@pytest.fixture
 def dbt_ldif_project_settings() -> Mapping[str, t.Tests.TestobjectSerializable]:
     """Dbt LDIF project configuration for testing."""
     project_settings = td.build_dbt_project_settings(
