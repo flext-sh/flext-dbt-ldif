@@ -19,7 +19,7 @@ This section is generated from public exports and real docstrings.
 
 ## Surface Summary
 
-- Primary facades: `FlextDbtLdif`, `FlextDbtLdifConstants`, `FlextDbtLdifServiceBase`, `FlextDbtLdifModels`, `FlextDbtLdifUtilities`, `FlextDbtLdifCliService` (+7 more)
+- Primary facades: `FlextDbtLdifCliService`, `FlextDbtLdifServiceBase`, `FlextDbtLdifUtilities`, `FlextDbtLdifUnifiedService`, `FlextDbtLdifSettings`, `FlextDbtLdifModels` (+7 more)
 - Generated module pages: `14`
 
 - [Back to project docs](../index.md)

@@ -7,9 +7,9 @@
 - Description: FLEXT dbt LDAP - dbt Models for LDIF Data Transformation
 - Project class: `integration`
 - Keywords: `data-transformation`, `dbt`, `enterprise`, `flext`, `sql`, `typed`
-- Main facades: `FlextDbtLdif`, `FlextDbtLdifConstants`, `FlextDbtLdifServiceBase`, `FlextDbtLdifModels`, `FlextDbtLdifUtilities`, `FlextDbtLdifCliService`, `FlextDbtLdifSettings`, `FlextDbtLdifClient` (+5 more)
+- Main facades: `FlextDbtLdifCliService`, `FlextDbtLdifServiceBase`, `FlextDbtLdifUtilities`, `FlextDbtLdifUnifiedService`, `FlextDbtLdifSettings`, `FlextDbtLdifModels`, `FlextDbtLdif`, `FlextDbtLdifConstants` (+5 more)
 - Alias exports: `c`, `d`, `e`, `h`, `m`, `p`, `r`, `s`, `t`, `u`, `x`
-- Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifConstants`, `FlextDbtLdifServiceBase`, `FlextDbtLdifModels`, `FlextDbtLdifUtilities`, `FlextDbtLdifCliService`, `FlextDbtLdifSettings`, `FlextDbtLdifClient`, `dbt_ldif`, `FlextDbtLdifTypes` (+4 more)
+- Public symbol exports: `FlextDbtLdifCliService`, `FlextDbtLdifServiceBase`, `FlextDbtLdifUtilities`, `FlextDbtLdifUnifiedService`, `dbt_ldif`, `FlextDbtLdifSettings`, `FlextDbtLdifModels`, `FlextDbtLdif`, `FlextDbtLdifConstants`, `FlextDbtLdifTypes` (+4 more)
 - Exported module shortcuts: _none_
 - Generated module pages: `14`
 
