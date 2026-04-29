@@ -35,8 +35,14 @@ class FlextDbtLdifModels(m, FlextLdifModels):
                 description="Human-readable model description.",
                 validate_default=True,
             )
-            columns: Sequence[t.JsonMapping] = u.Field(default_factory=tuple)
-            dependencies: t.StrSequence = u.Field(default_factory=tuple)
+            columns: Sequence[t.JsonMapping] = u.Field(
+                default_factory=tuple,
+                description="Column metadata for the DBT model",
+            )
+            dependencies: t.StrSequence = u.Field(
+                default_factory=tuple,
+                description="Upstream model dependencies",
+            )
 
             def validate_business_rules(self) -> p.Result[bool]:
                 """Validate minimal model constraints."""
@@ -59,7 +65,10 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             """DBT transformation execution summary."""
 
             records: int = u.Field(description="Number of transformed records.")
-            models: t.StrSequence = u.Field(default_factory=tuple)
+            models: t.StrSequence = u.Field(
+                default_factory=tuple,
+                description="Names of models produced by the transformation",
+            )
             status: str = u.Field(description="Transformation lifecycle status.")
 
         class ModelGenerationResult(m.ArbitraryTypesModel):
@@ -68,7 +77,10 @@ class FlextDbtLdifModels(m, FlextLdifModels):
             models_generated: int = u.Field(
                 description="Number of generated DBT models.",
             )
-            model_names: t.StrSequence = u.Field(default_factory=tuple)
+            model_names: t.StrSequence = u.Field(
+                default_factory=tuple,
+                description="Names of generated DBT models",
+            )
 
         class ParseValidationResult(m.ArbitraryTypesModel):
             """Combined parse and validation payload."""

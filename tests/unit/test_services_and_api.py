@@ -44,7 +44,7 @@ class TestsFlextDbtLdifServicesAndApi:
             )
 
         monkeypatch.setattr(
-            FlextDbtLdifServiceMixin.Service,
+            FlextDbtLdif,
             "process_ldif_file",
             _run,
         )
