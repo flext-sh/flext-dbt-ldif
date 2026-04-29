@@ -32,7 +32,7 @@ class TestsFlextDbtLdifCli:
         result = service.display_generate_message()
         assert result.success or result.failure
         if result.success:
-            assert "coming soon" not in str(result.value).lower()
+            assert "coming soon" not in result.value.lower()
 
     def test_display_validate_message(self) -> None:
         """Test display_validate_message calls real validation."""
@@ -40,7 +40,7 @@ class TestsFlextDbtLdifCli:
         result = service.display_validate_message()
         assert result.success or result.failure
         if result.success:
-            assert "coming soon" not in str(result.value).lower()
+            assert "coming soon" not in result.value.lower()
 
     def test_info_method(self) -> None:
         """Test info() method delegates to command handler."""

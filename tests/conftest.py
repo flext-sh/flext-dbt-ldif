@@ -13,6 +13,7 @@ from collections.abc import (
     Generator,
     Mapping,
 )
+from pathlib import Path
 
 import pytest
 from flext_tests import td, tk
@@ -23,7 +24,10 @@ from tests import t
 @pytest.fixture(scope="session")
 def docker_control() -> tk:
     """Provide tk instance for container management."""
-    return tk()
+    return tk.shared(
+        "flext-openldap-test",
+        workspace_root=Path(__file__).resolve().parents[2],
+    )
 
 
 @pytest.fixture(scope="session")
@@ -34,7 +38,7 @@ def shared_ldap_container(
 
     Container auto-starts if not running and remains running after tests.
     """
-    result = docker_control.start_existing_container("flext-openldap-test")
+    result = docker_control.execute()
     if result.failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
     return "flext-openldap-test"

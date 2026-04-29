@@ -40,7 +40,7 @@ class FlextDbtLdifServiceMixin:
                 else FlextDbtLdifSettings.fetch_global()
             )
             self.project_dir = project_dir or Path(
-                str(self.settings.ldif_file_path or "."),
+                self.settings.ldif_file_path or ".",
             )
             self.client = FlextDbtLdifClient.Client(self.settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
