@@ -11,12 +11,11 @@ import os
 import tempfile
 from collections.abc import (
     Generator,
-    Mapping,
 )
 from pathlib import Path
 
 import pytest
-from flext_tests import td, tk
+from flext_tests import tk
 
 from tests import t
 
@@ -69,31 +68,6 @@ def ensure_shared_docker_container(
     and ensures it's available for all tests in the session.
     """
     _ = shared_ldap_container
-
-
-@pytest.fixture
-def dbt_ldif_project_settings() -> Mapping[str, t.Tests.TestobjectSerializable]:
-    """Dbt LDIF project configuration for testing."""
-    project_settings = td.build_dbt_project_settings(
-        name="flext_dbt_ldif_test",
-        version="0.7.0",
-        profile="test",
-        model_config={
-            "materialized": "table",
-            "ldif": {
-                "enable_ldif_functions": True,
-                "ldap_server": "localhost:3390",
-                "base_dn": "dc=flext,dc=local",
-            },
-        },
-        variables={
-            "ldif_base_dn": "dc=flext,dc=local",
-            "ldif_users_ou": "ou=people",
-            "ldif_groups_ou": "ou=groups",
-            "enable_ldif_validation": True,
-        },
-    )
-    return dict(project_settings.items())
 
 
 @pytest.fixture
