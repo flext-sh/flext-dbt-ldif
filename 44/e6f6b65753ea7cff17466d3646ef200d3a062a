@@ -1,0 +1,16 @@
+tests/unit/test_services.py
+  h_9db9d35f50cf33 34,44,109,114,122,140,150,161,190,195,225,235
+docs/guides/troubleshooting.md
+  h_9db9d35f50cf33 797
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "44e6f6b65753ea7cff17466d3646ef200d3a062a",
+  "prompts": {},
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  }
+}
