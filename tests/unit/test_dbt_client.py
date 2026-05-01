@@ -7,9 +7,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import (
-    Sequence,
-)
 from pathlib import Path
 
 from flext_dbt_ldif import FlextDbtLdifClient, FlextDbtLdifSettings
@@ -49,7 +46,7 @@ class TestsFlextDbtLdifClient:
     def test_validate_ldif_data_ok(self) -> None:
         """Test validating LDIF data with entries."""
         client = FlextDbtLdifClient.Client()
-        entries: Sequence[t.JsonMapping] = [
+        entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"},
         ]
         result = client.validate_ldif_data(entries)
@@ -71,7 +68,7 @@ class TestsFlextDbtLdifClient:
     def test_transform_with_dbt_ok(self) -> None:
         """Test transforming with DBT returns metadata."""
         client = FlextDbtLdifClient.Client()
-        entries: Sequence[t.JsonMapping] = [
+        entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
         result = client.transform_with_dbt(entries, ["m1", "m2"])

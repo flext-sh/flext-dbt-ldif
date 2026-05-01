@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import (
-    Sequence,
-)
 from pathlib import Path
 
 from flext_dbt_ldif import c, p, r, t
@@ -23,7 +20,7 @@ class FlextDbtLdifCore:
                 """Initialize model generator."""
                 self.project_dir = project_dir or Path.cwd()
 
-            def generate_analytics_models(self) -> Sequence[t.StrMapping]:
+            def generate_analytics_models(self) -> t.SequenceOf[t.StrMapping]:
                 """Generate default analytics model metadata."""
                 return [
                     {
@@ -32,7 +29,7 @@ class FlextDbtLdifCore:
                     },
                 ]
 
-            def generate_staging_models(self) -> Sequence[t.StrMapping]:
+            def generate_staging_models(self) -> t.SequenceOf[t.StrMapping]:
                 """Generate default staging model metadata."""
                 return [
                     {
@@ -46,7 +43,7 @@ class FlextDbtLdifCore:
 
             def analyze_entry_patterns(
                 self,
-                entries: Sequence[t.StrMapping],
+                entries: t.SequenceOf[t.StrMapping],
             ) -> p.Result[t.JsonMapping]:
                 """Analyze input entries and return summary payload."""
                 return r[t.JsonMapping].ok({

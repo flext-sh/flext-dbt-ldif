@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
@@ -88,7 +87,7 @@ class TestsFlextDbtLdifServicesAndApi:
 
         def _gen_models(
             _self: FlextDbtLdifServiceMixin.Service,
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
             *,
             overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:

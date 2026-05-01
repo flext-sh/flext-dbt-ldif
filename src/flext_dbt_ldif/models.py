@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import (
-    Sequence,
-)
 from types import MappingProxyType
 
 from flext_dbt_ldif import c, e, p, r, t, u
@@ -35,7 +32,7 @@ class FlextDbtLdifModels(m, FlextLdifModels):
                 description="Human-readable model description.",
                 validate_default=True,
             )
-            columns: Sequence[t.JsonMapping] = u.Field(
+            columns: t.SequenceOf[t.JsonMapping] = u.Field(
                 default_factory=tuple,
                 description="Column metadata for the DBT model",
             )

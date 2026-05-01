@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import (
-    Sequence,
-)
 from pathlib import Path
 
 from flext_dbt_ldif import (
@@ -50,13 +47,13 @@ class FlextDbtLdifServiceMixin:
 
         def generate_and_write_models(
             self,
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
             *,
             overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
             """Generate staging and analytics models for entries."""
             _ = overwrite
-            staging_payload: Sequence[t.JsonMapping] = [
+            staging_payload: t.SequenceOf[t.JsonMapping] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
@@ -141,7 +138,7 @@ class FlextDbtLdifServiceMixin:
                     )
                 workflow_result.models_generated = model_result.value.models_generated
             if run_transformations:
-                transform_payload: Sequence[t.JsonMapping] = [
+                transform_payload: t.SequenceOf[t.JsonMapping] = [
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(

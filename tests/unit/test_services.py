@@ -31,7 +31,7 @@ class TestsFlextDbtLdifServices:
         tmp_path: Path,
     ) -> None:
         """Test parsing and validating LDIF succeeds."""
-        entries: Sequence[t.JsonMapping] = [
+        entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
 
@@ -41,7 +41,7 @@ class TestsFlextDbtLdifServices:
             return r[Sequence[t.JsonMapping]].ok(entries)
 
         def _validate_ldif_data(
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
@@ -106,12 +106,12 @@ class TestsFlextDbtLdifServices:
         )
 
         def _generate_staging_models(
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
         def _generate_analytics_models(
-            models: Sequence[m.DbtLdif.DbtModel],
+            models: t.SequenceOf[m.DbtLdif.DbtModel],
         ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
@@ -119,7 +119,7 @@ class TestsFlextDbtLdifServices:
         object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
         object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
-        entries: Sequence[t.JsonMapping] = [
+        entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
         result = svc.generate_and_write_models(entries)
@@ -137,7 +137,7 @@ class TestsFlextDbtLdifServices:
         tmp_path: Path,
     ) -> None:
         """Test complete workflow with all stages."""
-        entries: Sequence[t.JsonMapping] = [
+        entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
 
@@ -147,7 +147,7 @@ class TestsFlextDbtLdifServices:
             return r[Sequence[t.JsonMapping]].ok(entries)
 
         def _validate_ldif_data(
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
@@ -158,7 +158,7 @@ class TestsFlextDbtLdifServices:
             )
 
         def _transform_with_dbt(
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
             _model_names: t.StrSequence | None,
         ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
             return r[m.DbtLdif.DbtTransformationResult].ok(
@@ -187,12 +187,12 @@ class TestsFlextDbtLdifServices:
         )
 
         def _generate_staging_models(
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
         def _generate_analytics_models(
-            models: Sequence[m.DbtLdif.DbtModel],
+            models: t.SequenceOf[m.DbtLdif.DbtModel],
         ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
             return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
@@ -222,7 +222,7 @@ class TestsFlextDbtLdifServices:
         tmp_path: Path,
     ) -> None:
         """Test data quality assessment delegates to parse_and_validate."""
-        entries: Sequence[t.JsonMapping] = [
+        entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
 
@@ -232,7 +232,7 @@ class TestsFlextDbtLdifServices:
             return r[Sequence[t.JsonMapping]].ok(entries)
 
         def _validate_ldif_data(
-            entries: Sequence[t.JsonMapping],
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
