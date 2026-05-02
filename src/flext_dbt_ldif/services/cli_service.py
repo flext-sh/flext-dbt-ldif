@@ -28,7 +28,7 @@ class FlextDbtLdifCliService:
                 )
                 return r[str].ok("Generate message displayed")
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
-                return r[str].fail(f"Generate message display failed: {exc}")
+                return r[str].fail_op("Generate message display", exc)
 
         def display_info(self) -> p.Result[str]:
             """Display package info using flext-cli."""
@@ -47,7 +47,7 @@ class FlextDbtLdifCliService:
                 logger.info(str(info_data))
                 return r[str].ok("Package information displayed successfully")
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
-                return r[str].fail(f"Package info display failed: {exc}")
+                return r[str].fail_op("Package info display", exc)
 
         def display_validate_message(self) -> p.Result[str]:
             """Validate dbt models and configurations."""
@@ -62,7 +62,7 @@ class FlextDbtLdifCliService:
                 )
                 return r[str].ok("Validate message displayed")
             except c.Meltano.SINGER_SAFE_EXCEPTIONS as exc:
-                return r[str].fail(f"Validate message display failed: {exc}")
+                return r[str].fail_op("Validate message display", exc)
 
         def generate(self) -> None:
             """Generate dbt models from LDIF schema definitions."""
