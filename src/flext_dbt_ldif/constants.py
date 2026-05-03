@@ -22,7 +22,6 @@ class FlextDbtLdifConstants(c, FlextLdifConstants):
         class ErrorCode(StrEnum):
             """DBT LDIF error code identifiers."""
 
-            DBT_LDIF_ERROR = "DBT_LDIF_ERROR"
             VALIDATION_ERROR = "DBT_LDIF_VALIDATION_ERROR"
             CONFIGURATION_ERROR = "DBT_LDIF_CONFIGURATION_ERROR"
             CONNECTION_ERROR = "DBT_LDIF_CONNECTION_ERROR"
@@ -30,8 +29,6 @@ class FlextDbtLdifConstants(c, FlextLdifConstants):
             AUTHENTICATION_ERROR = "DBT_LDIF_AUTHENTICATION_ERROR"
             TIMEOUT_ERROR = "DBT_LDIF_TIMEOUT_ERROR"
             PARSE_ERROR = "DBT_LDIF_PARSE_ERROR"
-            MODEL_ERROR = "DBT_LDIF_MODEL_ERROR"
-            TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
             TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
         STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
