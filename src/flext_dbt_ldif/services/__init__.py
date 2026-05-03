@@ -7,7 +7,6 @@ from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 _LAZY_IMPORTS = build_lazy_import_map(
     {
-        ".cli_service": ("FlextDbtLdifCliService",),
         ".client": ("FlextDbtLdifClient",),
         ".core": ("FlextDbtLdifCore",),
         ".service": ("FlextDbtLdifServiceMixin",),

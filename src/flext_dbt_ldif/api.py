@@ -13,7 +13,6 @@ from typing import ClassVar, Self
 
 from flext_dbt_ldif import (
     FlextDbtLdifClient,
-    FlextDbtLdifCliService,
     FlextDbtLdifCore,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
@@ -28,7 +27,6 @@ from flext_dbt_ldif import (
 
 
 class FlextDbtLdif(
-    FlextDbtLdifCliService,
     FlextDbtLdifClient,
     FlextDbtLdifCore,
     FlextDbtLdifServiceMixin,

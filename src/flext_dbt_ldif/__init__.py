@@ -23,11 +23,9 @@ if _t.TYPE_CHECKING:
         __version_info__,
     )
     from flext_dbt_ldif.api import FlextDbtLdif, dbt_ldif
-    from flext_dbt_ldif.base import FlextDbtLdifServiceBase
     from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
     from flext_dbt_ldif.models import FlextDbtLdifModels, m
     from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
-    from flext_dbt_ldif.services.cli_service import FlextDbtLdifCliService
     from flext_dbt_ldif.services.client import FlextDbtLdifClient
     from flext_dbt_ldif.services.core import FlextDbtLdifCore
     from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
@@ -54,7 +52,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "FlextDbtLdif",
                 "dbt_ldif",
             ),
-            ".base": ("FlextDbtLdifServiceBase",),
             ".constants": (
                 "FlextDbtLdifConstants",
                 "c",
@@ -67,7 +64,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "FlextDbtLdifProtocols",
                 "p",
             ),
-            ".services.cli_service": ("FlextDbtLdifCliService",),
             ".services.client": ("FlextDbtLdifClient",),
             ".services.core": ("FlextDbtLdifCore",),
             ".services.service": ("FlextDbtLdifServiceMixin",),
@@ -118,13 +114,11 @@ install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
 
 __all__: list[str] = [
     "FlextDbtLdif",
-    "FlextDbtLdifCliService",
     "FlextDbtLdifClient",
     "FlextDbtLdifConstants",
     "FlextDbtLdifCore",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
-    "FlextDbtLdifServiceBase",
     "FlextDbtLdifServiceMixin",
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",

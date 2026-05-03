@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from types import MappingProxyType
-
 from flext_dbt_ldif import c, e, p, r, t, u
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
@@ -113,14 +111,6 @@ class FlextDbtLdifModels(m, FlextLdifModels):
                 description="Transformation lifecycle status.",
             )
             pipeline_status: str = u.Field(description="Overall pipeline status.")
-
-        class UnifiedServicePayload(m.ArbitraryTypesModel):
-            """Wrapper for UnifiedService execution payload."""
-
-            payload: t.JsonMapping = u.Field(
-                default_factory=lambda: MappingProxyType({}),
-                description="Service execution result as mapping.",
-            )
 
 
 __all__: list[str] = ["FlextDbtLdifModels", "m"]
