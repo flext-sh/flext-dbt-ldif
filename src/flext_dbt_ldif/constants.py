@@ -34,9 +34,6 @@ class FlextDbtLdifConstants(c, FlextLdifConstants):
             TRANSFORMATION_ERROR = "DBT_LDIF_TRANSFORMATION_ERROR"
             TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
-        CLI_COMMAND_INFO: Final[str] = "info"
-        CLI_COMMAND_GENERATE: Final[str] = "generate"
-        CLI_COMMAND_VALIDATE: Final[str] = "validate"
         STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
         STAGING_MODEL_DESCRIPTION: Final[str] = "Staging model for LDIF entries"
         ANALYTICS_MODEL_NAME: Final[str] = "analytics_ldif_insights"
@@ -52,8 +49,6 @@ class FlextDbtLdifConstants(c, FlextLdifConstants):
         TRANSFORMATION_STATUS_SUCCESS: Final[str] = "success"
         WORKFLOW_STATUS_COMPLETED: Final[str] = "completed"
         WORKFLOW_STATUS_READY: Final[str] = "ready"
-        EXIT_CODE_SUCCESS: Final[int] = 0
-        EXIT_CODE_FAILURE: Final[int] = 1
 
 
 __all__: list[str] = ["FlextDbtLdifConstants", "c"]
