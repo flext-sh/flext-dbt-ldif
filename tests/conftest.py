@@ -9,15 +9,11 @@ from __future__ import annotations
 
 import os
 import tempfile
-from collections.abc import (
-    Generator,
-)
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
 from flext_tests import tk
-
-from tests import t
 
 
 @pytest.fixture(scope="session")
@@ -30,13 +26,8 @@ def docker_control() -> tk:
 
 
 @pytest.fixture(scope="session")
-def shared_ldap_container(
-    docker_control: tk,
-) -> str:
-    """Start and maintain flext-openldap-test container.
-
-    Container auto-starts if not running and remains running after tests.
-    """
+def shared_ldap_container(docker_control: tk) -> str:
+    """Start and maintain flext-openldap-test container."""
     result = docker_control.execute()
     if result.failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
@@ -59,50 +50,6 @@ def set_test_environment() -> Generator[None]:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def ensure_shared_docker_container(
-    shared_ldap_container: str,
-) -> None:
-    """Ensure shared Docker container is started for the test session.
-
-    This fixture automatically starts the shared LDAP container if not running,
-    and ensures it's available for all tests in the session.
-    """
+def ensure_shared_docker_container(shared_ldap_container: str) -> None:
+    """Ensure shared Docker container is started for the test session."""
     _ = shared_ldap_container
-
-
-@pytest.fixture
-def ldif_source_settings(
-    shared_ldap_settings: t.JsonMapping,
-) -> t.JsonMapping:
-    """LDIF source configuration for testing using shared container."""
-    _ = shared_ldap_settings
-    return {
-        "server": "localhost",
-        "port": 3390,
-        "base_dn": "dc=flext,dc=local",
-        "bind_dn": os.environ.get(
-            "LDAP_BIND_DN",
-            "cn=REDACTED_LDAP_BIND_USER,dc=flext,dc=local",
-        ),
-        "bind_password": os.environ.get(
-            "LDAP_BIND_PASSWORD",
-            "REDACTED_LDAP_BIND_PASSWORD",
-        ),
-        "use_ssl": False,
-        "use_tls": False,
-        "timeout": 30,
-        "search_scope": "SUBTREE",
-    }
-
-
-def pytest_configure(config: pytest.Config) -> None:
-    """Configure pytest markers."""
-    config.addinivalue_line("markers", "unit: Unit tests")
-    config.addinivalue_line("markers", "integration: Integration tests")
-    config.addinivalue_line("markers", "e2e: End-to-end tests")
-    config.addinivalue_line("markers", "dbt: dbt-specific tests")
-    config.addinivalue_line("markers", "ldif: LDIF integration tests")
-    config.addinivalue_line("markers", "transformation: Data transformation tests")
-    config.addinivalue_line("markers", "validation: Data validation tests")
-    config.addinivalue_line("markers", "performance: Performance tests")
-    config.addinivalue_line("markers", "slow: Slow tests")
