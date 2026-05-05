@@ -4,12 +4,11 @@ from __future__ import annotations
 
 from typing import Annotated, ClassVar
 
-from flext_core import FlextSettings
+from flext_core import FlextSettingsBase
 from flext_dbt_ldif import c, m, u
 
 
-@FlextSettings.auto_register("dbt-ldif")
-class FlextDbtLdifSettings(FlextSettings):
+class FlextDbtLdifSettings(FlextSettingsBase):
     """Runtime settings for DBT LDIF transformations."""
 
     model_config: ClassVar[m.SettingsConfigDict] = m.SettingsConfigDict(
