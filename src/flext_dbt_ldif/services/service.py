@@ -86,7 +86,7 @@ class FlextDbtLdifServiceMixin:
                 return r[m.DbtLdif.ParseValidationResult].fail(
                     parse_result.error or "Parse failed",
                 )
-            entries = t.DbtLdif.ENTRY_CONTAINER_SEQUENCE_ADAPTER.validate_python(
+            entries = t.json_mapping_sequence_adapter().validate_python(
                 parse_result.value,
             )
             validation = self.client.validate_ldif_data(entries)
@@ -116,7 +116,7 @@ class FlextDbtLdifServiceMixin:
                 return r[m.DbtLdif.WorkflowResult].fail(
                     parse_result.error or "Parse failed",
                 )
-            entries = t.DbtLdif.ENTRY_CONTAINER_SEQUENCE_ADAPTER.validate_python(
+            entries = t.json_mapping_sequence_adapter().validate_python(
                 parse_result.value,
             )
             validation = self.client.validate_ldif_data(entries)

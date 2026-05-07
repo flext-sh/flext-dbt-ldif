@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from flext_dbt_ldif import u
 from flext_ldif import FlextLdifTypes
 from flext_meltano import t
 
@@ -13,9 +12,7 @@ class FlextDbtLdifTypes(t, FlextLdifTypes):
     class DbtLdif:
         """DBT LDIF namespace."""
 
-        ENTRY_CONTAINER_SEQUENCE_ADAPTER: u.TypeAdapter[list[t.JsonMapping]] = (
-            u.TypeAdapter(list[t.JsonMapping])
-        )
+        pass
 
 
 t = FlextDbtLdifTypes

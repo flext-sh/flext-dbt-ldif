@@ -62,7 +62,7 @@ class FlextDbtLdif(
         """Return current settings payload for service contracts."""
         current_config = self.config
         return u.try_(
-            lambda: FlextDbtLdifSettings.model_validate(current_config.model_dump()),
+            lambda: FlextDbtLdifSettings.model_validate(current_config),
             catch=c.ValidationError,
         ).map_error(lambda _: "Invalid DBT LDIF settings")
 
@@ -80,7 +80,7 @@ class FlextDbtLdif(
             )
         entries_raw = parsed.value
         try:
-            entries = t.DbtLdif.ENTRY_CONTAINER_SEQUENCE_ADAPTER.validate_python(
+            entries = t.json_mapping_sequence_adapter().validate_python(
                 entries_raw,
             )
         except c.ValidationError:
