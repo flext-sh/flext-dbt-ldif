@@ -1,0 +1,37 @@
+src/flext_dbt_ldif/services/service.py
+  s_552d8e4891a938::t_f810e796c2ad8a 89,119
+src/flext_dbt_ldif/typings.py
+  s_552d8e4891a938::t_f810e796c2ad8a 15
+src/flext_dbt_ldif/api.py
+  s_b15aa8dbf80823::t_03048cca4aed39 65
+  s_552d8e4891a938::t_f810e796c2ad8a 83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "3e008d62450da7bcaf1b6e8dfec60bd19023837a",
+  "prompts": {},
+  "humans": {
+    "h_9db9d35f50cf33": {
+      "author": "FLEXT Bot"
+    }
+  },
+  "sessions": {
+    "s_552d8e4891a938": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "35c0040b-2ae9-466e-90aa-7721509e1e19",
+        "model": "unknown"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>"
+    },
+    "s_b15aa8dbf80823": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d896ab0f-dd16-4dca-9ad4-b3d924a501e7",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "FLEXT Bot <team@flext.sh>"
+    }
+  }
+}
