@@ -7,13 +7,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import os
-import tempfile
 from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from flext_tests import tk
+
+from tests import tf, tk, u
 
 
 @pytest.fixture(scope="session")
@@ -37,16 +36,16 @@ def shared_ldap_container(docker_control: tk) -> str:
 @pytest.fixture(autouse=True)
 def set_test_environment() -> Generator[None]:
     """Set test environment variables."""
-    os.environ["FLEXT_ENV"] = "test"
-    os.environ["FLEXT_LOG_LEVEL"] = "DEBUG"
-    temp_dir = tempfile.mkdtemp(prefix="dbt_profiles_")
-    os.environ["DBT_PROFILES_DIR"] = temp_dir
-    os.environ["LDIF_TEST_MODE"] = "true"
-    yield
-    os.environ.pop("FLEXT_ENV", None)
-    os.environ.pop("FLEXT_LOG_LEVEL", None)
-    os.environ.pop("DBT_PROFILES_DIR", None)
-    os.environ.pop("LDIF_TEST_MODE", None)
+    with (
+        tf().temporary_directory() as temp_dir,
+        u.Tests.env_vars_context({
+            "FLEXT_ENV": "test",
+            "FLEXT_LOG_LEVEL": "DEBUG",
+            "DBT_PROFILES_DIR": temp_dir,
+            "LDIF_TEST_MODE": "true",
+        }),
+    ):
+        yield
 
 
 @pytest.fixture(scope="session", autouse=True)
