@@ -12,11 +12,7 @@ from pathlib import Path
 from typing import ClassVar, Self
 
 from flext_dbt_ldif import (
-    FlextDbtLdifClient,
-    FlextDbtLdifCore,
-    FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
-    FlextDbtLdifUnifiedService,
     c,
     m,
     p,
@@ -24,6 +20,10 @@ from flext_dbt_ldif import (
     t,
     u,
 )
+from flext_dbt_ldif.services.client import FlextDbtLdifClient
+from flext_dbt_ldif.services.core import FlextDbtLdifCore
+from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
 
 class FlextDbtLdif(

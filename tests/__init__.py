@@ -3,57 +3,12 @@
 
 from __future__ import annotations
 
-import typing as _t
-
 from flext_core.lazy import (
     build_lazy_import_map,
     install_lazy_exports,
     merge_lazy_imports,
 )
 
-if _t.TYPE_CHECKING:
-    from flext_tests import td as td, tf as tf, tk as tk, tm as tm, tv as tv
-
-    from flext_dbt_ldif import d as d, e as e, h as h, r as r, x as x
-    from tests.base import (
-        TestsFlextDbtLdifServiceBase as TestsFlextDbtLdifServiceBase,
-        s as s,
-    )
-    from tests.constants import (
-        TestsFlextDbtLdifConstants as TestsFlextDbtLdifConstants,
-        c as c,
-    )
-    from tests.models import TestsFlextDbtLdifModels as TestsFlextDbtLdifModels, m as m
-    from tests.protocols import (
-        TestsFlextDbtLdifProtocols as TestsFlextDbtLdifProtocols,
-        p as p,
-    )
-    from tests.settings import TestsFlextDbtLdifSettings as TestsFlextDbtLdifSettings
-    from tests.typings import TestsFlextDbtLdifTypes as TestsFlextDbtLdifTypes, t as t
-    from tests.unit.test_api_surface import (
-        TestsFlextDbtLdifApiSurface as TestsFlextDbtLdifApiSurface,
-    )
-    from tests.unit.test_cli import TestsFlextDbtLdifCli as TestsFlextDbtLdifCli
-    from tests.unit.test_core import TestsFlextDbtLdifCore as TestsFlextDbtLdifCore
-    from tests.unit.test_dbt_client import (
-        TestsFlextDbtLdifClient as TestsFlextDbtLdifClient,
-    )
-    from tests.unit.test_dbt_models import (
-        TestsFlextDbtLdifDbtModels as TestsFlextDbtLdifDbtModels,
-    )
-    from tests.unit.test_services import (
-        TestsFlextDbtLdifServices as TestsFlextDbtLdifServices,
-    )
-    from tests.unit.test_services_and_api import (
-        TestsFlextDbtLdifServicesAndApi as TestsFlextDbtLdifServicesAndApi,
-    )
-    from tests.unit.test_version import (
-        TestsFlextDbtLdifVersion as TestsFlextDbtLdifVersion,
-    )
-    from tests.utilities import (
-        TestsFlextDbtLdifUtilities as TestsFlextDbtLdifUtilities,
-        u as u,
-    )
 _LAZY_IMPORTS = merge_lazy_imports(
     (".unit",),
     build_lazy_import_map(
@@ -62,6 +17,7 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "TestsFlextDbtLdifServiceBase",
                 "s",
             ),
+            ".conftest": ("conftest",),
             ".constants": (
                 "TestsFlextDbtLdifConstants",
                 "c",
@@ -79,6 +35,10 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "TestsFlextDbtLdifTypes",
                 "t",
             ),
+            ".unit": ("unit",),
+            ".unit._services_parts.data_quality": (
+                "TestsFlextDbtLdifServicesDataQuality",
+            ),
             ".unit.test_api_surface": ("TestsFlextDbtLdifApiSurface",),
             ".unit.test_cli": ("TestsFlextDbtLdifCli",),
             ".unit.test_core": ("TestsFlextDbtLdifCore",),
@@ -91,19 +51,17 @@ _LAZY_IMPORTS = merge_lazy_imports(
                 "TestsFlextDbtLdifUtilities",
                 "u",
             ),
-            "flext_dbt_ldif": (
+            "flext_tests": (
                 "d",
                 "e",
                 "h",
                 "r",
-                "x",
-            ),
-            "flext_tests": (
                 "td",
                 "tf",
                 "tk",
                 "tm",
                 "tv",
+                "x",
             ),
         },
     ),
@@ -130,38 +88,9 @@ _LAZY_IMPORTS = merge_lazy_imports(
 )
 
 
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS)
-
-__all__: list[str] = [
-    "TestsFlextDbtLdifApiSurface",
-    "TestsFlextDbtLdifCli",
-    "TestsFlextDbtLdifClient",
-    "TestsFlextDbtLdifConstants",
-    "TestsFlextDbtLdifCore",
-    "TestsFlextDbtLdifDbtModels",
-    "TestsFlextDbtLdifModels",
-    "TestsFlextDbtLdifProtocols",
-    "TestsFlextDbtLdifServiceBase",
-    "TestsFlextDbtLdifServices",
-    "TestsFlextDbtLdifServicesAndApi",
-    "TestsFlextDbtLdifSettings",
-    "TestsFlextDbtLdifTypes",
-    "TestsFlextDbtLdifUtilities",
-    "TestsFlextDbtLdifVersion",
-    "c",
-    "d",
-    "e",
-    "h",
-    "m",
-    "p",
-    "r",
-    "s",
-    "t",
-    "td",
-    "tf",
-    "tk",
-    "tm",
-    "tv",
-    "u",
-    "x",
-]
+install_lazy_exports(
+    __name__,
+    globals(),
+    _LAZY_IMPORTS,
+    publish_all=False,
+)

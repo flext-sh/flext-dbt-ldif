@@ -9,14 +9,15 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from flext_tests import r
+
 from flext_dbt_ldif import (
     FlextDbtLdif,
-    FlextDbtLdifClient,
-    FlextDbtLdifServiceMixin,
     FlextDbtLdifSettings,
     __version__,
 )
-from tests import r
+from flext_dbt_ldif.services.client import FlextDbtLdifClient
+from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 
 
 class TestsFlextDbtLdifApiSurface:

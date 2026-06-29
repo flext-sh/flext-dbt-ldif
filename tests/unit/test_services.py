@@ -10,9 +10,12 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
+from flext_tests import r
 
-from flext_dbt_ldif import FlextDbtLdifServiceMixin
-from tests import m, p, r, t
+from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from tests.models import m
+from tests.protocols import p
+from tests.typings import t
 from tests.unit._services_parts.data_quality import (
     TestsFlextDbtLdifServicesDataQuality,
 )

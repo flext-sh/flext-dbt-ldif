@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifCore
+from flext_dbt_ldif.services.core import FlextDbtLdifCore
 
 
 class TestsFlextDbtLdifCore:

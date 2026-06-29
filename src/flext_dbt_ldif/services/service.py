@@ -5,9 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_dbt_ldif import (
-    FlextDbtLdifClient,
     FlextDbtLdifSettings,
-    FlextDbtLdifUnifiedService,
     c,
     m,
     p,
@@ -15,6 +13,8 @@ from flext_dbt_ldif import (
     t,
     u,
 )
+from flext_dbt_ldif.services.client import FlextDbtLdifClient
+from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
 
 class FlextDbtLdifServiceMixin:
