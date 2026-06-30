@@ -36,8 +36,21 @@ _EAGER_EXPORTS = (
     x,
 )
 
+
 _PUBLIC_EXPORTS: tuple[str, ...] = (
-    *_LAZY_IMPORTS,
+    "FlextDbtLdif",
+    "FlextDbtLdifClient",
+    "FlextDbtLdifConstants",
+    "FlextDbtLdifCore",
+    "FlextDbtLdifModels",
+    "FlextDbtLdifProtocols",
+    "FlextDbtLdifServiceBase",
+    "FlextDbtLdifServiceMixin",
+    "FlextDbtLdifSettings",
+    "FlextDbtLdifTypes",
+    "FlextDbtLdifUnifiedService",
+    "FlextDbtLdifUtilities",
+    "dbt_ldif",
     "__author__",
     "__author_email__",
     "__description__",
@@ -46,10 +59,16 @@ _PUBLIC_EXPORTS: tuple[str, ...] = (
     "__url__",
     "__version__",
     "__version_info__",
+    "c",
     "d",
     "e",
     "h",
+    "m",
+    "p",
     "r",
+    "s",
+    "t",
+    "u",
     "x",
 )
 
