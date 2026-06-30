@@ -3,12 +3,70 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from flext_core.lazy import (
     build_lazy_import_map,
     install_lazy_exports,
     merge_lazy_imports,
 )
 
+if TYPE_CHECKING:
+    from flext_tests import (
+        d as d,
+        e as e,
+        h as h,
+        r as r,
+        td as td,
+        tf as tf,
+        tk as tk,
+        tm as tm,
+        tv as tv,
+        x as x,
+    )
+
+    from tests.base import (
+        TestsFlextDbtLdifServiceBase as TestsFlextDbtLdifServiceBase,
+        s as s,
+    )
+    from tests.constants import (
+        TestsFlextDbtLdifConstants as TestsFlextDbtLdifConstants,
+        c as c,
+    )
+    from tests.models import TestsFlextDbtLdifModels as TestsFlextDbtLdifModels, m as m
+    from tests.protocols import (
+        TestsFlextDbtLdifProtocols as TestsFlextDbtLdifProtocols,
+        p as p,
+    )
+    from tests.settings import TestsFlextDbtLdifSettings as TestsFlextDbtLdifSettings
+    from tests.typings import TestsFlextDbtLdifTypes as TestsFlextDbtLdifTypes, t as t
+    from tests.unit._services_parts.data_quality import (
+        TestsFlextDbtLdifServicesDataQuality as TestsFlextDbtLdifServicesDataQuality,
+    )
+    from tests.unit.test_api_surface import (
+        TestsFlextDbtLdifApiSurface as TestsFlextDbtLdifApiSurface,
+    )
+    from tests.unit.test_cli import TestsFlextDbtLdifCli as TestsFlextDbtLdifCli
+    from tests.unit.test_core import TestsFlextDbtLdifCore as TestsFlextDbtLdifCore
+    from tests.unit.test_dbt_client import (
+        TestsFlextDbtLdifClient as TestsFlextDbtLdifClient,
+    )
+    from tests.unit.test_dbt_models import (
+        TestsFlextDbtLdifDbtModels as TestsFlextDbtLdifDbtModels,
+    )
+    from tests.unit.test_services import (
+        TestsFlextDbtLdifServices as TestsFlextDbtLdifServices,
+    )
+    from tests.unit.test_services_and_api import (
+        TestsFlextDbtLdifServicesAndApi as TestsFlextDbtLdifServicesAndApi,
+    )
+    from tests.unit.test_version import (
+        TestsFlextDbtLdifVersion as TestsFlextDbtLdifVersion,
+    )
+    from tests.utilities import (
+        TestsFlextDbtLdifUtilities as TestsFlextDbtLdifUtilities,
+        u as u,
+    )
 _LAZY_IMPORTS = merge_lazy_imports(
     (".unit",),
     build_lazy_import_map(
