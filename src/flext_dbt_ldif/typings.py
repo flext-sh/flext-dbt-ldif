@@ -3,12 +3,18 @@
 from __future__ import annotations
 
 from flext_ldif import FlextLdifTypes
-from flext_meltano import FlextMeltanoTypes
+from flext_meltano import t
 
 
-class FlextDbtLdifTypes(FlextMeltanoTypes, FlextLdifTypes):
+class FlextDbtLdifTypes(t, FlextLdifTypes):
     """Type namespace for DBT LDIF domain."""
+
+    class DbtLdif:
+        """DBT LDIF namespace."""
+
+        pass
 
 
 t = FlextDbtLdifTypes
-__all__ = ["FlextDbtLdifTypes", "t"]
+
+__all__: list[str] = ["FlextDbtLdifTypes", "t"]

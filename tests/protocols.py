@@ -1,6 +1,6 @@
 """Test protocol definitions for flext-dbt-ldif.
 
-Provides TestsFlextDbtLdifProtocols, combining FlextTestsProtocols with
+Provides TestsFlextDbtLdifProtocols, combining TestsFlextProtocols with
 FlextDbtLdifProtocols for test-specific protocol definitions.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -11,18 +11,18 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsProtocols
 
-from flext_dbt_ldif.protocols import FlextDbtLdifProtocols
+from flext_dbt_ldif import FlextDbtLdifProtocols
 
 
 class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
-    """Test protocols combining FlextTestsProtocols and FlextDbtLdifProtocols.
+    """Test protocols combining TestsFlextProtocols and FlextDbtLdifProtocols."""
 
-    Provides access to:
-    - p.Tests.Docker.* (from FlextTestsProtocols)
-    - p.Tests.Factory.* (from FlextTestsProtocols)
-    - p.DbtLdif.* (from FlextDbtLdifProtocols)
-    """
+    class DbtLdif(FlextDbtLdifProtocols.DbtLdif):
+        """DbtLdif test protocols namespace."""
+
+        class Tests:
+            """Project-specific test protocols."""
 
 
 p = TestsFlextDbtLdifProtocols
-__all__ = ["TestsFlextDbtLdifProtocols", "p"]
+__all__: list[str] = ["TestsFlextDbtLdifProtocols", "p"]

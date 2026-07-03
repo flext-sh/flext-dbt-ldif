@@ -9,36 +9,45 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings, FlextDbtLdifUnifiedService, t
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif import FlextDbtLdifSettings
+from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from tests.models import m
+from tests.typings import t
 
 
-class TestFlextDbtLdifUnifiedService:
+class TestsFlextDbtLdifDbtModels:
     """Test cases for FlextDbtLdifUnifiedService."""
 
     def test_initialization(self, tmp_path: Path) -> None:
         """Test service initialization with project dir."""
-        gen = FlextDbtLdifUnifiedService(
-            config=FlextDbtLdifSettings.get_global(), project_dir=tmp_path
+        gen = FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global(),
+            project_dir=tmp_path,
         )
         assert gen.project_dir == tmp_path
         assert gen.name == "ldif_generator"
 
     def test_execute(self) -> None:
         """Test execute returns metadata payload."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
+        gen = FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global()
+        )
         result = gen.execute()
-        assert result.is_success
-        data = result.value or {}
+        assert result.success
+        data: t.JsonMapping = result.value or {}
         assert data["name"] == "ldif_generator"
         assert data["status"] == "ready"
 
     def test_generate_staging_models_with_entries(self) -> None:
         """Test staging model generation with entries."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
-        entries: list[dict[str, t.Scalar]] = [{"dn": "cn=test,dc=example,dc=org"}]
+        gen = FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global()
+        )
+        entries: t.SequenceOf[t.JsonMapping] = [
+            {"dn": "cn=test,dc=example,dc=org"},
+        ]
         result = gen.generate_staging_models(entries)
-        assert result.is_success
+        assert result.success
         models = result.value or []
         assert len(models) == 1
         assert models[0].name == "stg_ldif_entries"
@@ -47,16 +56,20 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_staging_models_empty(self) -> None:
         """Test staging model generation with empty entries."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
+        gen = FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global()
+        )
         result = gen.generate_staging_models([])
-        assert result.is_success
+        assert result.success
         models = result.value or []
-        assert len(models) == 0
+        assert not models
 
     def test_generate_analytics_models_with_staging(self) -> None:
         """Test analytics model generation from staging models."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
-        staging_model = FlextDbtLdifModels.DbtModel(
+        gen = FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global()
+        )
+        staging_model = m.DbtLdif.DbtModel(
             name="stg_ldif_entries",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -65,7 +78,7 @@ class TestFlextDbtLdifUnifiedService:
             dependencies=[],
         )
         result = gen.generate_analytics_models([staging_model])
-        assert result.is_success
+        assert result.success
         models = result.value or []
         assert len(models) == 1
         assert models[0].name == "analytics_ldif_insights"
@@ -74,19 +87,17 @@ class TestFlextDbtLdifUnifiedService:
 
     def test_generate_analytics_models_empty(self) -> None:
         """Test analytics model generation with empty staging."""
-        gen = FlextDbtLdifUnifiedService(config=FlextDbtLdifSettings.get_global())
+        gen = FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global()
+        )
         result = gen.generate_analytics_models([])
-        assert result.is_success
+        assert result.success
         models = result.value or []
-        assert len(models) == 0
-
-
-class TestDbtModel:
-    """Test cases for FlextDbtLdifModels.DbtModel."""
+        assert not models
 
     def test_create_model(self) -> None:
         """Test creating a DbtModel instance."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -102,7 +113,7 @@ class TestDbtModel:
 
     def test_validate_business_rules_ok(self) -> None:
         """Test business rules pass for valid model."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -111,12 +122,12 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_success
+        assert result.success
         assert result.value is True
 
     def test_validate_business_rules_empty_name(self) -> None:
         """Test business rules fail for empty name."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="  ",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -125,11 +136,11 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_failure
+        assert result.failure
 
     def test_validate_business_rules_empty_source(self) -> None:
         """Test business rules fail for empty ldif_source."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="  ",
@@ -138,11 +149,11 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_failure
+        assert result.failure
 
     def test_validate_business_rules_empty_sql(self) -> None:
         """Test business rules fail for empty sql_content."""
-        model = FlextDbtLdifModels.DbtModel(
+        model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
             ldif_source="ldif_entries",
@@ -151,4 +162,4 @@ class TestDbtModel:
             dependencies=[],
         )
         result = model.validate_business_rules()
-        assert result.is_failure
+        assert result.failure

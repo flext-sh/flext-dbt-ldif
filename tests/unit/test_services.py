@@ -1,210 +1,222 @@
-"""Unit tests for DBT services functionality.
+"""Behavior contract for FlextDbtLdifServiceMixin services — public API only.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
-
 """
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
-from flext_core import r
+from flext_tests import r
 
-from flext_dbt_ldif import FlextDbtLdifService, t
-from flext_dbt_ldif.models import FlextDbtLdifModels
+from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from tests.models import m
+from tests.protocols import p
+from tests.typings import t
+from tests.unit._services_parts.data_quality import (
+    TestsFlextDbtLdifServicesDataQuality,
+)
 
 
 @pytest.fixture
-def svc(tmp_path: Path) -> FlextDbtLdifService:
+def svc(tmp_path: Path) -> FlextDbtLdifServiceMixin.Service:
     """Create a test service."""
-    return FlextDbtLdifService(project_dir=tmp_path)
+    return FlextDbtLdifServiceMixin.Service(project_dir=tmp_path)
 
 
-def test_parse_and_validate_ldif_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
-) -> None:
-    """Test parsing and validating LDIF succeeds."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
+    """Behavior contract for FlextDbtLdifServiceMixin.Service workflows."""
 
-    def _parse_ldif_file(_fp: Path | str) -> r[list[dict[str, t.ContainerValue]]]:
-        return r[list[dict[str, t.ContainerValue]]].ok(entries)
+    def test_parse_and_validate_ldif_ok(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
+    ) -> None:
+        """Test parsing and validating LDIF succeeds."""
+        entries: t.SequenceOf[t.JsonMapping] = [
+            {"dn": "cn=test,dc=example,dc=org"},
+        ]
 
-    def _validate_ldif_data(
-        _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[t.Dict]:
-        return r[t.Dict].ok({"quality_score": 0.9, "validation_status": "passed"})
+        def _parse_ldif_file(
+            _fp: Path | str,
+        ) -> p.Result[Sequence[t.JsonMapping]]:
+            return r[Sequence[t.JsonMapping]].ok(entries)
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
+        def _validate_ldif_data(
+            entries: t.SequenceOf[t.JsonMapping],
+        ) -> p.Result[m.DbtLdif.LdifValidationResult]:
+            return r[m.DbtLdif.LdifValidationResult].ok(
+                m.DbtLdif.LdifValidationResult(
+                    total_entries=1,
+                    quality_score=0.9,
+                    validation_status="passed",
+                ),
+            )
 
-    result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
-    assert result.is_success
-    data = result.value or {}
-    assert data["entry_count"] == 1
-    quality_score = data["quality_score"]
-    assert isinstance(quality_score, float)
-    assert 0.89 < quality_score < 0.91
-    assert data["validation_status"] == "passed"
+        monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
+        monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
 
+        result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
+        assert result.success
+        data = result.value
+        assert data is not None
+        assert data.entry_count == 1
+        quality_score = data.quality_score
+        assert isinstance(quality_score, float)
+        assert 0.89 < quality_score < 0.91
+        assert data.validation_status == "passed"
 
-def test_parse_and_validate_ldif_parse_fails(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
-) -> None:
-    """Test parse failure propagates."""
+    def test_parse_and_validate_ldif_parse_fails(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
+    ) -> None:
+        """Test parse failure propagates."""
 
-    def _parse_ldif_file(_fp: Path | str) -> r[list[dict[str, t.ContainerValue]]]:
-        return r[list[dict[str, t.ContainerValue]]].fail("Parse error")
+        def _parse_ldif_file(
+            _fp: Path | str,
+        ) -> p.Result[Sequence[t.JsonMapping]]:
+            return r[Sequence[t.JsonMapping]].fail("Parse error")
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
-    assert result.is_failure
+        monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
 
+        result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
+        assert result.failure
 
-def test_generate_and_write_models_ok(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-) -> None:
-    """Test model generation succeeds."""
-    staging_model = FlextDbtLdifModels.DbtModel(
-        name="stg_ldif_entries",
-        dbt_model_type="staging",
-        ldif_source="ldif_entries",
-        sql_content="select * from raw",
-        columns=[],
-        dependencies=[],
-    )
-    analytics_model = FlextDbtLdifModels.DbtModel(
-        name="analytics_ldif_insights",
-        dbt_model_type="analytics",
-        ldif_source="ldif_entries",
-        sql_content="select * from stg",
-        columns=[],
-        dependencies=["stg_ldif_entries"],
-    )
+    def test_generate_and_write_models_ok(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        svc: FlextDbtLdifServiceMixin.Service,
+    ) -> None:
+        """Test model generation succeeds."""
+        staging_model = m.DbtLdif.DbtModel(
+            name="stg_ldif_entries",
+            dbt_model_type="staging",
+            ldif_source="ldif_entries",
+            sql_content="select * from raw",
+            columns=[],
+            dependencies=[],
+        )
+        analytics_model = m.DbtLdif.DbtModel(
+            name="analytics_ldif_insights",
+            dbt_model_type="analytics",
+            ldif_source="ldif_entries",
+            sql_content="select * from stg",
+            columns=[],
+            dependencies=["stg_ldif_entries"],
+        )
 
-    def _generate_staging_models(
-        _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
-        return r[list[FlextDbtLdifModels.DbtModel]].ok([staging_model])
+        def _generate_staging_models(
+            entries: t.SequenceOf[t.JsonMapping],
+        ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
+            return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
-    def _generate_analytics_models(
-        _models: list[FlextDbtLdifModels.DbtModel],
-    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
-        return r[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model])
+        def _generate_analytics_models(
+            models: t.SequenceOf[m.DbtLdif.DbtModel],
+        ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
+            return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
-    monkeypatch.setattr(
-        svc.model_generator, "generate_staging_models", _generate_staging_models
-    )
-    monkeypatch.setattr(
-        svc.model_generator, "generate_analytics_models", _generate_analytics_models
-    )
+        gen = svc.model_generator
+        object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
+        object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
-    result = svc.generate_and_write_models(entries)
-    assert result.is_success
-    data = result.value or {}
-    assert data["models_generated"] == 2
-    model_names = str(data["model_names"])
-    assert "stg_ldif_entries" in model_names
-    assert "analytics_ldif_insights" in model_names
+        entries: t.SequenceOf[t.JsonMapping] = [
+            {"dn": "cn=test,dc=example,dc=org"},
+        ]
+        result = svc.generate_and_write_models(entries)
+        assert result.success
+        data = result.value
+        assert data is not None
+        assert data.models_generated == 2
+        assert "stg_ldif_entries" in data.model_names
+        assert "analytics_ldif_insights" in data.model_names
 
+    def test_run_complete_workflow_all(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
+    ) -> None:
+        """Test complete workflow with all stages."""
+        entries: t.SequenceOf[t.JsonMapping] = [
+            {"dn": "cn=test,dc=example,dc=org"},
+        ]
 
-def test_run_complete_workflow_all(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
-) -> None:
-    """Test complete workflow with all stages."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
+        def _parse_ldif_file(
+            _fp: Path | str,
+        ) -> p.Result[Sequence[t.JsonMapping]]:
+            return r[Sequence[t.JsonMapping]].ok(entries)
 
-    def _parse_ldif_file(_fp: Path | str) -> r[list[dict[str, t.ContainerValue]]]:
-        return r[list[dict[str, t.ContainerValue]]].ok(entries)
+        def _validate_ldif_data(
+            entries: t.SequenceOf[t.JsonMapping],
+        ) -> p.Result[m.DbtLdif.LdifValidationResult]:
+            return r[m.DbtLdif.LdifValidationResult].ok(
+                m.DbtLdif.LdifValidationResult(
+                    total_entries=1,
+                    quality_score=0.9,
+                    validation_status="passed",
+                ),
+            )
 
-    def _validate_ldif_data(
-        _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[t.Dict]:
-        return r[t.Dict].ok({"quality_score": 0.9, "validation_status": "passed"})
+        def _transform_with_dbt(
+            entries: t.SequenceOf[t.JsonMapping],
+            _model_names: t.StrSequence | None,
+        ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
+            return r[m.DbtLdif.DbtTransformationResult].ok(
+                m.DbtLdif.DbtTransformationResult(
+                    records=1,
+                    models=["m1"],
+                    status="success",
+                ),
+            )
 
-    def _transform_with_dbt(
-        _entries: list[dict[str, t.ContainerValue]],
-        _model_names: list[str] | None,
-    ) -> r[t.Dict]:
-        return r[t.Dict].ok({"status": "success"})
+        staging_model = m.DbtLdif.DbtModel(
+            name="stg_ldif_entries",
+            dbt_model_type="staging",
+            ldif_source="ldif_entries",
+            sql_content="select * from raw",
+            columns=[],
+            dependencies=[],
+        )
+        analytics_model = m.DbtLdif.DbtModel(
+            name="analytics_ldif_insights",
+            dbt_model_type="analytics",
+            ldif_source="ldif_entries",
+            sql_content="select * from stg",
+            columns=[],
+            dependencies=["stg_ldif_entries"],
+        )
 
-    staging_model = FlextDbtLdifModels.DbtModel(
-        name="stg_ldif_entries",
-        dbt_model_type="staging",
-        ldif_source="ldif_entries",
-        sql_content="select * from raw",
-        columns=[],
-        dependencies=[],
-    )
-    analytics_model = FlextDbtLdifModels.DbtModel(
-        name="analytics_ldif_insights",
-        dbt_model_type="analytics",
-        ldif_source="ldif_entries",
-        sql_content="select * from stg",
-        columns=[],
-        dependencies=["stg_ldif_entries"],
-    )
+        def _generate_staging_models(
+            entries: t.SequenceOf[t.JsonMapping],
+        ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
+            return r[Sequence[m.DbtLdif.DbtModel]].ok([staging_model])
 
-    def _generate_staging_models(
-        _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
-        return r[list[FlextDbtLdifModels.DbtModel]].ok([staging_model])
+        def _generate_analytics_models(
+            models: t.SequenceOf[m.DbtLdif.DbtModel],
+        ) -> p.Result[Sequence[m.DbtLdif.DbtModel]]:
+            return r[Sequence[m.DbtLdif.DbtModel]].ok([analytics_model])
 
-    def _generate_analytics_models(
-        _models: list[FlextDbtLdifModels.DbtModel],
-    ) -> r[list[FlextDbtLdifModels.DbtModel]]:
-        return r[list[FlextDbtLdifModels.DbtModel]].ok([analytics_model])
+        monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
+        monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
+        monkeypatch.setattr(svc.client, "transform_with_dbt", _transform_with_dbt)
 
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
-    monkeypatch.setattr(svc.client, "transform_with_dbt", _transform_with_dbt)
-    monkeypatch.setattr(
-        svc.model_generator, "generate_staging_models", _generate_staging_models
-    )
-    monkeypatch.setattr(
-        svc.model_generator, "generate_analytics_models", _generate_analytics_models
-    )
+        gen = svc.model_generator
+        object.__setattr__(gen, "generate_staging_models", _generate_staging_models)
+        object.__setattr__(gen, "generate_analytics_models", _generate_analytics_models)
 
-    result = svc.run_complete_workflow(
-        tmp_path / "f.ldif",
-        generate_models=True,
-        run_transformations=True,
-        model_names=["m1"],
-    )
-    assert result.is_success
-    data = result.value or {}
-    assert data.get("workflow_status") == "completed"
-
-
-def test_run_data_quality_assessment(
-    monkeypatch: pytest.MonkeyPatch,
-    svc: FlextDbtLdifService,
-    tmp_path: Path,
-) -> None:
-    """Test data quality assessment delegates to parse_and_validate."""
-    entries: list[dict[str, t.ContainerValue]] = [{"dn": "cn=test,dc=example,dc=org"}]
-
-    def _parse_ldif_file(_fp: Path | str) -> r[list[dict[str, t.ContainerValue]]]:
-        return r[list[dict[str, t.ContainerValue]]].ok(entries)
-
-    def _validate_ldif_data(
-        _entries: list[dict[str, t.ContainerValue]],
-    ) -> r[t.Dict]:
-        return r[t.Dict].ok({"quality_score": 0.88, "validation_status": "passed"})
-
-    monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
-    monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
-
-    result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
-    assert result.is_success
-    data = result.value or {}
-    assert "entry_count" in data
+        result = svc.run_complete_workflow(
+            tmp_path / "f.ldif",
+            generate_models=True,
+            run_transformations=True,
+            model_names=["m1"],
+        )
+        assert result.success
+        data = result.value
+        assert data is not None
+        assert data.workflow_status == "completed"
