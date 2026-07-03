@@ -25,45 +25,57 @@ if TYPE_CHECKING:
         x as x,
     )
 
-    from tests.base import (
+    from flext_dbt_ldif.tests.base import (
         TestsFlextDbtLdifServiceBase as TestsFlextDbtLdifServiceBase,
         s as s,
     )
-    from tests.constants import (
+    from flext_dbt_ldif.tests.constants import (
         TestsFlextDbtLdifConstants as TestsFlextDbtLdifConstants,
         c as c,
     )
-    from tests.models import TestsFlextDbtLdifModels as TestsFlextDbtLdifModels, m as m
-    from tests.protocols import (
+    from flext_dbt_ldif.tests.models import (
+        TestsFlextDbtLdifModels as TestsFlextDbtLdifModels,
+        m as m,
+    )
+    from flext_dbt_ldif.tests.protocols import (
         TestsFlextDbtLdifProtocols as TestsFlextDbtLdifProtocols,
         p as p,
     )
-    from tests.settings import TestsFlextDbtLdifSettings as TestsFlextDbtLdifSettings
-    from tests.typings import TestsFlextDbtLdifTypes as TestsFlextDbtLdifTypes, t as t
-    from tests.unit._services_parts.data_quality import (
+    from flext_dbt_ldif.tests.settings import (
+        TestsFlextDbtLdifSettings as TestsFlextDbtLdifSettings,
+    )
+    from flext_dbt_ldif.tests.typings import (
+        TestsFlextDbtLdifTypes as TestsFlextDbtLdifTypes,
+        t as t,
+    )
+    from flext_dbt_ldif.tests.unit._services_parts.data_quality import (
         TestsFlextDbtLdifServicesDataQuality as TestsFlextDbtLdifServicesDataQuality,
     )
-    from tests.unit.test_api_surface import (
+    from flext_dbt_ldif.tests.unit.test_api_surface import (
         TestsFlextDbtLdifApiSurface as TestsFlextDbtLdifApiSurface,
     )
-    from tests.unit.test_cli import TestsFlextDbtLdifCli as TestsFlextDbtLdifCli
-    from tests.unit.test_core import TestsFlextDbtLdifCore as TestsFlextDbtLdifCore
-    from tests.unit.test_dbt_client import (
+    from flext_dbt_ldif.tests.unit.test_cli import (
+        TestsFlextDbtLdifCli as TestsFlextDbtLdifCli,
+    )
+    from flext_dbt_ldif.tests.unit.test_core import (
+        TestsFlextDbtLdifCore as TestsFlextDbtLdifCore,
+    )
+    from flext_dbt_ldif.tests.unit.test_dbt_client import (
         TestsFlextDbtLdifClient as TestsFlextDbtLdifClient,
     )
-    from tests.unit.test_dbt_models import (
+    from flext_dbt_ldif.tests.unit.test_dbt_models import (
         TestsFlextDbtLdifDbtModels as TestsFlextDbtLdifDbtModels,
     )
-    from tests.unit.test_services import (
+    from flext_dbt_ldif.tests.unit.test_services import (
         TestsFlextDbtLdifServices as TestsFlextDbtLdifServices,
     )
-    from tests.unit.test_services_and_api import (
+    from flext_dbt_ldif.tests.unit.test_services_and_api import (
         TestsFlextDbtLdifServicesAndApi as TestsFlextDbtLdifServicesAndApi,
     )
-    from tests.unit.test_version import (
+    from flext_dbt_ldif.tests.unit.test_version import (
         TestsFlextDbtLdifVersion as TestsFlextDbtLdifVersion,
     )
-    from tests.utilities import (
+    from flext_dbt_ldif.tests.utilities import (
         TestsFlextDbtLdifUtilities as TestsFlextDbtLdifUtilities,
         u as u,
     )

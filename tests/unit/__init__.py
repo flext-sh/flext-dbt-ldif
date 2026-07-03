@@ -3,12 +3,42 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from flext_core.lazy import (
     build_lazy_import_map,
     install_lazy_exports,
     merge_lazy_imports,
 )
 
+if TYPE_CHECKING:
+    from flext_dbt_ldif.tests.unit._services_parts.data_quality import (
+        TestsFlextDbtLdifServicesDataQuality as TestsFlextDbtLdifServicesDataQuality,
+    )
+    from flext_dbt_ldif.tests.unit.test_api_surface import (
+        TestsFlextDbtLdifApiSurface as TestsFlextDbtLdifApiSurface,
+    )
+    from flext_dbt_ldif.tests.unit.test_cli import (
+        TestsFlextDbtLdifCli as TestsFlextDbtLdifCli,
+    )
+    from flext_dbt_ldif.tests.unit.test_core import (
+        TestsFlextDbtLdifCore as TestsFlextDbtLdifCore,
+    )
+    from flext_dbt_ldif.tests.unit.test_dbt_client import (
+        TestsFlextDbtLdifClient as TestsFlextDbtLdifClient,
+    )
+    from flext_dbt_ldif.tests.unit.test_dbt_models import (
+        TestsFlextDbtLdifDbtModels as TestsFlextDbtLdifDbtModels,
+    )
+    from flext_dbt_ldif.tests.unit.test_services import (
+        TestsFlextDbtLdifServices as TestsFlextDbtLdifServices,
+    )
+    from flext_dbt_ldif.tests.unit.test_services_and_api import (
+        TestsFlextDbtLdifServicesAndApi as TestsFlextDbtLdifServicesAndApi,
+    )
+    from flext_dbt_ldif.tests.unit.test_version import (
+        TestsFlextDbtLdifVersion as TestsFlextDbtLdifVersion,
+    )
 _LAZY_IMPORTS = merge_lazy_imports(
     ("._services_parts",),
     build_lazy_import_map(
@@ -23,24 +53,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ".test_services": ("TestsFlextDbtLdifServices",),
             ".test_services_and_api": ("TestsFlextDbtLdifServicesAndApi",),
             ".test_version": ("TestsFlextDbtLdifVersion",),
-            "flext_tests": (
-                "c",
-                "d",
-                "e",
-                "h",
-                "m",
-                "p",
-                "r",
-                "s",
-                "t",
-                "td",
-                "tf",
-                "tk",
-                "tm",
-                "tv",
-                "u",
-                "x",
-            ),
         },
     ),
     exclude_names=(
