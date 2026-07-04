@@ -19,25 +19,7 @@ if TYPE_CHECKING:
     from collections.abc import Generator
 
 
-@pytest.fixture(scope="session")
-def docker_control() -> tk:
-    """Provide tk instance for container management."""
-    return tk.shared(
-        "flext-openldap-test",
-        workspace_root=Path(__file__).resolve().parents[2],
-    )
-
-
-@pytest.fixture(scope="session")
-def shared_ldap_container(docker_control: tk) -> str:
-    """Start and maintain flext-openldap-test container."""
-    result = docker_control.execute()
-    if result.failure:
-        pytest.skip(f"Failed to start LDAP container: {result.error}")
-    return "flext-openldap-test"
-
-
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def set_test_environment() -> Generator[None]:
     """Set test environment variables."""
     with (
@@ -52,7 +34,16 @@ def set_test_environment() -> Generator[None]:
         yield
 
 
-@pytest.fixture(scope="session", autouse=True)
-def ensure_shared_docker_container(shared_ldap_container: str) -> None:
+def pytest_sessionstart(session: pytest.Session) -> None:
     """Ensure shared Docker container is started for the test session."""
-    _ = shared_ldap_container
+    _ = session
+    docker_control = tk.shared(
+        "flext-openldap-test",
+        workspace_root=Path(__file__).resolve().parents[2],
+    )
+    result = docker_control.execute()
+    if result.failure:
+        pytest.skip(
+            f"Failed to start LDAP container: {result.error}",
+            allow_module_level=True,
+        )
