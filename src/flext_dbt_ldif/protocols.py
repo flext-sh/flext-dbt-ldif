@@ -5,10 +5,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from flext_ldif import FlextLdifProtocols
-from flext_meltano import p, t
+from flext_meltano import p
 
 if TYPE_CHECKING:
     from flext_dbt_ldif import m
+    from flext_meltano import t
 
 
 class FlextDbtLdifProtocols(p, FlextLdifProtocols):

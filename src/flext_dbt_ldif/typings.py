@@ -12,8 +12,6 @@ class FlextDbtLdifTypes(t, FlextLdifTypes):
     class DbtLdif:
         """DBT LDIF namespace."""
 
-        pass
-
 
 t = FlextDbtLdifTypes
 

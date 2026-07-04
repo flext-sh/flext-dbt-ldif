@@ -12,7 +12,8 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
     """Runtime settings for DBT LDIF transformations."""
 
     model_config: ClassVar[m.SettingsConfigDict] = m.SettingsConfigDict(
-        env_prefix="FLEXT_DBT_LDIF_", extra="ignore"
+        env_prefix="FLEXT_DBT_LDIF_",
+        extra="ignore",
     )
 
     ldif_file_path: Annotated[
