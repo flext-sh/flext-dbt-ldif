@@ -48,18 +48,18 @@ class FlextDbtLdif(
 
     @classmethod
     def fetch_instance(cls) -> Self:
-        """Return the shared facade instance, creating it on first call."""
+        """The shared facade instance, creating it on first call."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
 
     @property
     def service(self) -> FlextDbtLdifServiceMixin.Service:
-        """Return bound workflow service."""
+        """The bound workflow service."""
         return self._service
 
     def execute(self) -> p.Result[FlextDbtLdifSettings]:
-        """Return current settings payload for service contracts."""
+        """The current settings payload for service contracts."""
         current_config = self.config
         return u.try_(
             lambda: FlextDbtLdifSettings.model_validate(current_config),

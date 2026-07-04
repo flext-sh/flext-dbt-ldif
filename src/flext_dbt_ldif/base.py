@@ -31,7 +31,7 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     @property
     @override
     def settings(self) -> FlextDbtLdifSettings:
-        """Return the typed dbt-ldif settings namespace."""
+        """The typed dbt-ldif settings namespace."""
         return FlextDbtLdifSettings.fetch_global()
 
     @property
