@@ -1,4 +1,4 @@
-"""Test DBT models for FLEXT DBT LDIF.
+"""Behavioral tests for FLEXT DBT LDIF unified service and model contract.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
+
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 from tests.models import m
@@ -18,12 +20,43 @@ if TYPE_CHECKING:
 
     from tests.typings import t
 
+__all__ = ["TestsFlextDbtLdifDbtModels"]
+
 
 class TestsFlextDbtLdifDbtModels:
-    """Test cases for FlextDbtLdifUnifiedService."""
+    """Public-contract tests for FlextDbtLdifUnifiedService and DbtModel."""
 
-    def test_initialization(self, tmp_path: Path) -> None:
-        """Test service initialization with project dir."""
+    @pytest.fixture
+    def service(self) -> FlextDbtLdifUnifiedService.UnifiedService:
+        """Provide a service instance backed by global settings."""
+        return FlextDbtLdifUnifiedService.UnifiedService(
+            settings=FlextDbtLdifSettings.fetch_global(),
+        )
+
+    @staticmethod
+    def _make_model(
+        *,
+        name: str = "test_model",
+        ldif_source: str = "ldif_entries",
+        sql_content: str = "select 1",
+    ) -> m.DbtLdif.DbtModel:
+        """Build a DbtModel via its public constructor."""
+        return m.DbtLdif.DbtModel(
+            name=name,
+            dbt_model_type="staging",
+            ldif_source=ldif_source,
+            sql_content=sql_content,
+            columns=[],
+            dependencies=[],
+        )
+
+    # -- service construction -------------------------------------------------
+
+    def test_service_exposes_configured_project_dir_and_default_name(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        """Constructor arguments surface through public fields."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
             project_dir=tmp_path,
@@ -31,139 +64,110 @@ class TestsFlextDbtLdifDbtModels:
         assert gen.project_dir == tmp_path
         assert gen.name == "ldif_generator"
 
-    def test_execute(self) -> None:
-        """Test execute returns metadata payload."""
-        gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
-        )
-        result = gen.execute()
+    # -- execute --------------------------------------------------------------
+
+    def test_execute_returns_ready_metadata_payload(
+        self,
+        service: FlextDbtLdifUnifiedService.UnifiedService,
+    ) -> None:
+        """Execute succeeds and reports the ready status contract."""
+        result = service.execute()
         assert result.success
-        data: t.JsonMapping = result.value or {}
+        data: t.JsonMapping = result.unwrap()
         assert data["name"] == "ldif_generator"
         assert data["status"] == "ready"
 
-    def test_generate_staging_models_with_entries(self) -> None:
-        """Test staging model generation with entries."""
+    def test_execute_metadata_reflects_project_dir(self, tmp_path: Path) -> None:
+        """Execute payload echoes the configured project directory."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
+            project_dir=tmp_path,
         )
+        data = gen.execute().unwrap()
+        assert data["project_dir"] == str(tmp_path)
+
+    # -- staging generation ---------------------------------------------------
+
+    def test_generate_staging_models_emits_view_model_for_entries(
+        self,
+        service: FlextDbtLdifUnifiedService.UnifiedService,
+    ) -> None:
+        """Non-empty entries yield exactly one staging view model."""
         entries: t.SequenceOf[t.JsonMapping] = [
             {"dn": "cn=test,dc=example,dc=org"},
         ]
-        result = gen.generate_staging_models(entries)
-        assert result.success
-        models = result.value or []
+        models = service.generate_staging_models(entries).unwrap()
         assert len(models) == 1
-        assert models[0].name == "stg_ldif_entries"
-        assert models[0].dbt_model_type == "staging"
-        assert models[0].materialization == "view"
+        model = models[0]
+        assert model.name == "stg_ldif_entries"
+        assert model.dbt_model_type == "staging"
+        assert model.materialization == "view"
 
-    def test_generate_staging_models_empty(self) -> None:
-        """Test staging model generation with empty entries."""
-        gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
-        )
-        result = gen.generate_staging_models([])
+    def test_generate_staging_models_returns_empty_without_entries(
+        self,
+        service: FlextDbtLdifUnifiedService.UnifiedService,
+    ) -> None:
+        """Empty entries yield an empty, successful result."""
+        result = service.generate_staging_models([])
         assert result.success
-        models = result.value or []
-        assert not models
+        assert result.unwrap() == []
 
-    def test_generate_analytics_models_with_staging(self) -> None:
-        """Test analytics model generation from staging models."""
-        gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
-        )
-        staging_model = m.DbtLdif.DbtModel(
-            name="stg_ldif_entries",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            sql_content="select * from raw",
-            columns=[],
-            dependencies=[],
-        )
-        result = gen.generate_analytics_models([staging_model])
-        assert result.success
-        models = result.value or []
+    # -- analytics generation -------------------------------------------------
+
+    def test_generate_analytics_models_emits_table_model_from_staging(
+        self,
+        service: FlextDbtLdifUnifiedService.UnifiedService,
+    ) -> None:
+        """A staging model produces one analytics table model."""
+        staging_model = self._make_model(name="stg_ldif_entries")
+        models = service.generate_analytics_models([staging_model]).unwrap()
         assert len(models) == 1
-        assert models[0].name == "analytics_ldif_insights"
-        assert models[0].dbt_model_type == "analytics"
-        assert models[0].materialization == "table"
+        model = models[0]
+        assert model.name == "analytics_ldif_insights"
+        assert model.dbt_model_type == "analytics"
+        assert model.materialization == "table"
 
-    def test_generate_analytics_models_empty(self) -> None:
-        """Test analytics model generation with empty staging."""
-        gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
-        )
-        result = gen.generate_analytics_models([])
+    def test_generate_analytics_models_returns_empty_without_staging(
+        self,
+        service: FlextDbtLdifUnifiedService.UnifiedService,
+    ) -> None:
+        """No staging models yields an empty, successful result."""
+        result = service.generate_analytics_models([])
         assert result.success
-        models = result.value or []
-        assert not models
+        assert result.unwrap() == []
 
-    def test_create_model(self) -> None:
-        """Test creating a DbtModel instance."""
-        model = m.DbtLdif.DbtModel(
-            name="test_model",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            sql_content="select 1",
-            columns=[],
-            dependencies=[],
-        )
+    # -- model contract -------------------------------------------------------
+
+    def test_dbt_model_defaults_exposed_via_public_api(self) -> None:
+        """Optional fields default to their documented values."""
+        model = self._make_model()
         assert model.name == "test_model"
         assert model.materialization == "view"
         assert model.description == ""
-        assert model.columns == []
-        assert model.dependencies == []
+        assert list(model.columns) == []
+        assert list(model.dependencies) == []
 
-    def test_validate_business_rules_ok(self) -> None:
-        """Test business rules pass for valid model."""
-        model = m.DbtLdif.DbtModel(
-            name="test_model",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            sql_content="select 1",
-            columns=[],
-            dependencies=[],
-        )
-        result = model.validate_business_rules()
+    def test_validate_business_rules_succeeds_for_complete_model(self) -> None:
+        """A fully populated model passes business validation."""
+        result = self._make_model().validate_business_rules()
         assert result.success
-        assert result.value is True
+        assert result.unwrap() is True
 
-    def test_validate_business_rules_empty_name(self) -> None:
-        """Test business rules fail for empty name."""
-        model = m.DbtLdif.DbtModel(
-            name="  ",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            sql_content="select 1",
-            columns=[],
-            dependencies=[],
-        )
-        result = model.validate_business_rules()
+    @pytest.mark.parametrize(
+        ("field", "kwargs"),
+        [
+            ("name", {"name": "  "}),
+            ("ldif_source", {"ldif_source": "  "}),
+            ("sql_content", {"sql_content": "  "}),
+        ],
+    )
+    def test_validate_business_rules_fails_on_blank_required_field(
+        self,
+        field: str,
+        kwargs: dict[str, str],
+    ) -> None:
+        """Blank required fields fail validation and name the offending field."""
+        result = self._make_model(**kwargs).validate_business_rules()
         assert result.failure
-
-    def test_validate_business_rules_empty_source(self) -> None:
-        """Test business rules fail for empty ldif_source."""
-        model = m.DbtLdif.DbtModel(
-            name="test_model",
-            dbt_model_type="staging",
-            ldif_source="  ",
-            sql_content="select 1",
-            columns=[],
-            dependencies=[],
-        )
-        result = model.validate_business_rules()
-        assert result.failure
-
-    def test_validate_business_rules_empty_sql(self) -> None:
-        """Test business rules fail for empty sql_content."""
-        model = m.DbtLdif.DbtModel(
-            name="test_model",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            sql_content="  ",
-            columns=[],
-            dependencies=[],
-        )
-        result = model.validate_business_rules()
-        assert result.failure
+        assert result.error is not None
+        assert field in result.error

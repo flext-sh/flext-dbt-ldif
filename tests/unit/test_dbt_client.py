@@ -1,4 +1,4 @@
-"""Unit tests for DBT client functionality.
+"""Behavioral tests for the FlextDbtLdifClient public contract.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_dbt_ldif import FlextDbtLdifSettings
+import pytest
+
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 
 if TYPE_CHECKING:
@@ -17,97 +19,158 @@ if TYPE_CHECKING:
 
     from tests.typings import t
 
+__all__: list[str] = [
+    "TestsFlextDbtLdifClient",
+]
+
 
 class TestsFlextDbtLdifClient:
-    """Test cases for FlextDbtLdifClient."""
+    """Behavioral contract of FlextDbtLdifClient.Client public operations."""
 
-    def test_initialization_default(self) -> None:
-        """Test client initialization with default settings."""
+    # ---- construction contract -------------------------------------------
+
+    def test_default_construction_yields_usable_global_settings(self) -> None:
+        """A client built without settings exposes usable global settings."""
         client = FlextDbtLdifClient.Client()
-        assert client.settings is not None
+        assert isinstance(client.settings, FlextDbtLdifSettings)
 
-    def test_initialization_with_config(self) -> None:
-        """Test client initialization with explicit settings."""
+    def test_explicit_settings_are_the_ones_used(self) -> None:
+        """Explicit settings are the settings the client operates on."""
         settings = FlextDbtLdifSettings.fetch_global()
         client = FlextDbtLdifClient.Client(settings)
         assert client.settings is settings
 
-    def test_parse_ldif_file_ok(self, tmp_path: Path) -> None:
-        """Test parsing LDIF file returns success."""
-        client = FlextDbtLdifClient.Client()
-        result = client.parse_ldif_file(tmp_path / "dummy.ldif")
-        assert result.success
-        assert isinstance(result.value, list)
-        assert result.value
+    # ---- parse_ldif_file contract ----------------------------------------
 
-    def test_parse_ldif_file_no_path(self) -> None:
-        """Test parsing without file path fails when settings path is empty."""
-        settings = FlextDbtLdifSettings.fetch_global()
-        client = FlextDbtLdifClient.Client(settings)
+    def test_parse_with_explicit_path_returns_entry_tagged_with_source(
+        self, tmp_path: Path,
+    ) -> None:
+        """Parsing echoes the requested path as the entry source."""
+        path = tmp_path / "dummy.ldif"
+        result = FlextDbtLdifClient.Client().parse_ldif_file(path)
+
+        entries = result.unwrap()
+        assert entries == [
+            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": str(path)},
+        ]
+
+    def test_parse_is_idempotent_for_same_path(self, tmp_path: Path) -> None:
+        """Parsing the same path twice yields equal payloads."""
+        client = FlextDbtLdifClient.Client()
+        path = tmp_path / "same.ldif"
+
+        assert client.parse_ldif_file(path).unwrap() == (
+            client.parse_ldif_file(path).unwrap()
+        )
+
+    def test_parse_without_path_and_empty_settings_fails_with_reason(self) -> None:
+        """Absent path plus empty settings path is a required-input failure."""
+        client = FlextDbtLdifClient.Client(FlextDbtLdifSettings.fetch_global())
         result = client.parse_ldif_file()
+
         assert result.failure
         assert "required" in (result.error or "").lower()
 
-    def test_validate_ldif_data_ok(self) -> None:
-        """Test validating LDIF data with entries."""
-        client = FlextDbtLdifClient.Client()
-        entries: t.SequenceOf[t.JsonMapping] = [
-            {"dn": "cn=test,dc=example,dc=org", "source": "test.ldif"},
-        ]
-        result = client.validate_ldif_data(entries)
-        assert result.success
-        data = result.value
-        assert data is not None
-        assert data.total_entries == 1
-        quality_score = data.quality_score
-        assert isinstance(quality_score, float)
-        assert 0.99 < quality_score < 1.01
-        assert data.validation_status == "passed"
+    # ---- validate_ldif_data contract -------------------------------------
 
-    def test_validate_ldif_data_empty(self) -> None:
-        """Test validating empty entries fails."""
-        client = FlextDbtLdifClient.Client()
-        result = client.validate_ldif_data([])
+    @pytest.mark.parametrize("entry_count", [1, 3, 10])
+    def test_validation_reports_entry_count_and_passing_status(
+        self, entry_count: int,
+    ) -> None:
+        """Non-empty entries validate as passed with matching totals."""
+        entries: t.SequenceOf[t.JsonMapping] = [
+            {"dn": f"cn=n{i},dc=example,dc=org", "source": "in.ldif"}
+            for i in range(entry_count)
+        ]
+        data = FlextDbtLdifClient.Client().validate_ldif_data(entries).unwrap()
+
+        assert isinstance(data, m.DbtLdif.LdifValidationResult)
+        assert data.total_entries == entry_count
+        assert data.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
+        assert data.quality_score == pytest.approx(c.DbtLdif.DEFAULT_QUALITY_SCORE)
+
+    def test_validation_of_empty_entries_fails_with_reason(self) -> None:
+        """Empty entries cannot validate and explain why."""
+        result = FlextDbtLdifClient.Client().validate_ldif_data([])
+
         assert result.failure
+        assert "no ldif entries" in (result.error or "").lower()
 
-    def test_transform_with_dbt_ok(self) -> None:
-        """Test transforming with DBT returns metadata."""
-        client = FlextDbtLdifClient.Client()
-        entries: t.SequenceOf[t.JsonMapping] = [
-            {"dn": "cn=test,dc=example,dc=org"},
-        ]
-        result = client.transform_with_dbt(entries, ["m1", "m2"])
-        assert result.success
-        data = result.value
-        assert data is not None
+    # ---- transform_with_dbt contract -------------------------------------
+
+    def test_transform_reports_record_count_and_requested_models(self) -> None:
+        """Transform metadata reflects inputs and reports success."""
+        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
+        data = (
+            FlextDbtLdifClient.Client()
+            .transform_with_dbt(entries, ["m1", "m2"])
+            .unwrap()
+        )
+
         assert data.records == 1
-        assert data.models == ["m1", "m2"]
-        assert data.status == "success"
+        assert list(data.models) == ["m1", "m2"]
+        assert data.status == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
 
-    def test_transform_with_dbt_default_models(self) -> None:
-        """Test transform uses default models when none specified."""
-        client = FlextDbtLdifClient.Client()
-        result = client.transform_with_dbt([], None)
-        assert result.success
-        data = result.value
-        assert data is not None
-        assert "stg_ldif_entries" in data.models
+    def test_transform_without_models_uses_default_staging_and_analytics(
+        self,
+    ) -> None:
+        """Omitting model names falls back to the default model set."""
+        data = FlextDbtLdifClient.Client().transform_with_dbt([], None).unwrap()
 
-    def test_run_full_pipeline_ok(self, tmp_path: Path) -> None:
-        """Test running full pipeline with valid file."""
-        client = FlextDbtLdifClient.Client()
-        result = client.run_full_pipeline(tmp_path / "f.ldif", ["m1"])
-        assert result.success
-        data = result.value
-        assert data is not None
-        assert data.pipeline_status == "completed"
+        assert list(data.models) == [
+            c.DbtLdif.STAGING_MODEL_NAME,
+            c.DbtLdif.ANALYTICS_MODEL_NAME,
+        ]
+        assert data.records == 0
+
+    # ---- run_full_pipeline contract --------------------------------------
+
+    def test_pipeline_completes_and_aggregates_stage_statuses(
+        self, tmp_path: Path,
+    ) -> None:
+        """A valid path drives parse+validate+transform to a completed result."""
+        result = FlextDbtLdifClient.Client().run_full_pipeline(
+            tmp_path / "f.ldif", ["m1"],
+        )
+        data = result.unwrap()
+
+        assert isinstance(data, m.DbtLdif.PipelineResult)
+        assert data.pipeline_status == c.DbtLdif.WORKFLOW_STATUS_COMPLETED
         assert data.parsed_entries == 1
-        assert data.validation_status == "passed"
-        assert data.transformation_status == "success"
+        assert data.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
+        assert data.transformation_status == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
 
-    def test_run_full_pipeline_no_path(self) -> None:
-        """Test pipeline fails when no file path and settings path is empty."""
-        settings = FlextDbtLdifSettings.fetch_global()
-        client = FlextDbtLdifClient.Client(settings)
+    def test_pipeline_propagates_parse_failure(self) -> None:
+        """A parse failure short-circuits the whole pipeline as a failure."""
+        client = FlextDbtLdifClient.Client(FlextDbtLdifSettings.fetch_global())
         result = client.run_full_pipeline()
+
         assert result.failure
+        assert "required" in (result.error or "").lower()
+
+    # ---- result composition contract -------------------------------------
+
+    def test_parse_result_chains_into_validation_via_flat_map(
+        self, tmp_path: Path,
+    ) -> None:
+        """Parse -> validate composes as monadic r[T] without manual unwrap."""
+        client = FlextDbtLdifClient.Client()
+        chained = client.parse_ldif_file(tmp_path / "c.ldif").flat_map(
+            client.validate_ldif_data,
+        )
+
+        assert chained.success
+        assert chained.unwrap().total_entries == 1
+
+    def test_transform_result_serializes_public_state_via_model_dump(self) -> None:
+        """Public model state is exposed through model_dump for consumers."""
+        data = (
+            FlextDbtLdifClient.Client()
+            .transform_with_dbt([{"dn": "cn=a"}], ["only"])
+            .unwrap()
+        )
+        dumped = data.model_dump()
+
+        assert dumped["records"] == 1
+        assert list(dumped["models"]) == ["only"]
+        assert dumped["status"] == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
