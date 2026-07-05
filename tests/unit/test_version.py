@@ -31,16 +31,13 @@ class TestsFlextDbtLdifVersion:
     def test_version_info_derives_from_version_string(self) -> None:
         """`__version_info__` is the parsed component view of `__version__`."""
         expected = tuple(
-            int(part) if part.isdigit() else part
-            for part in __version__.split(".")
+            int(part) if part.isdigit() else part for part in __version__.split(".")
         )
         assert __version_info__ == expected
 
     def test_version_info_components_are_int_or_str(self) -> None:
         """Every version component is either a numeric int or a string label."""
-        assert all(
-            isinstance(component, (int, str)) for component in __version_info__
-        )
+        assert all(isinstance(component, (int, str)) for component in __version_info__)
 
     def test_version_string_reassembles_from_info(self) -> None:
         """Joining string forms of the components reproduces the version string."""

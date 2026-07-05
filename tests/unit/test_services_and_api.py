@@ -39,7 +39,12 @@ class TestsFlextDbtLdifServicesAndApi:
         assert workflow.ldif_file == str(tmp_path / "f.ldif")
 
     @pytest.mark.parametrize(
-        ("generate_models", "run_transformations", "expected_models", "expected_status"),
+        (
+            "generate_models",
+            "run_transformations",
+            "expected_models",
+            "expected_status",
+        ),
         [
             (True, False, 2, ""),
             (False, False, 0, ""),

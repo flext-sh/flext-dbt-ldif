@@ -105,7 +105,8 @@ class TestsFlextDbtLdifCore:
         analytics = FlextDbtLdifCore.Core.Analytics()
         entries: t.SequenceOf[t.StrMapping] = [{"dn": "cn=a,dc=x"}]
         total = (
-            analytics.analyze_entry_patterns(entries)
+            analytics
+            .analyze_entry_patterns(entries)
             .map(lambda payload: payload["total_entries"])
             .unwrap()
         )

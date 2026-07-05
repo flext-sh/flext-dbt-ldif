@@ -43,7 +43,8 @@ class TestsFlextDbtLdifClient:
     # ---- parse_ldif_file contract ----------------------------------------
 
     def test_parse_with_explicit_path_returns_entry_tagged_with_source(
-        self, tmp_path: Path,
+        self,
+        tmp_path: Path,
     ) -> None:
         """Parsing echoes the requested path as the entry source."""
         path = tmp_path / "dummy.ldif"
@@ -75,7 +76,8 @@ class TestsFlextDbtLdifClient:
 
     @pytest.mark.parametrize("entry_count", [1, 3, 10])
     def test_validation_reports_entry_count_and_passing_status(
-        self, entry_count: int,
+        self,
+        entry_count: int,
     ) -> None:
         """Non-empty entries validate as passed with matching totals."""
         entries: t.SequenceOf[t.JsonMapping] = [
@@ -102,7 +104,8 @@ class TestsFlextDbtLdifClient:
         """Transform metadata reflects inputs and reports success."""
         entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
         data = (
-            FlextDbtLdifClient.Client()
+            FlextDbtLdifClient
+            .Client()
             .transform_with_dbt(entries, ["m1", "m2"])
             .unwrap()
         )
@@ -126,11 +129,13 @@ class TestsFlextDbtLdifClient:
     # ---- run_full_pipeline contract --------------------------------------
 
     def test_pipeline_completes_and_aggregates_stage_statuses(
-        self, tmp_path: Path,
+        self,
+        tmp_path: Path,
     ) -> None:
         """A valid path drives parse+validate+transform to a completed result."""
         result = FlextDbtLdifClient.Client().run_full_pipeline(
-            tmp_path / "f.ldif", ["m1"],
+            tmp_path / "f.ldif",
+            ["m1"],
         )
         data = result.unwrap()
 
@@ -151,7 +156,8 @@ class TestsFlextDbtLdifClient:
     # ---- result composition contract -------------------------------------
 
     def test_parse_result_chains_into_validation_via_flat_map(
-        self, tmp_path: Path,
+        self,
+        tmp_path: Path,
     ) -> None:
         """Parse -> validate composes as monadic r[T] without manual unwrap."""
         client = FlextDbtLdifClient.Client()
@@ -165,7 +171,8 @@ class TestsFlextDbtLdifClient:
     def test_transform_result_serializes_public_state_via_model_dump(self) -> None:
         """Public model state is exposed through model_dump for consumers."""
         data = (
-            FlextDbtLdifClient.Client()
+            FlextDbtLdifClient
+            .Client()
             .transform_with_dbt([{"dn": "cn=a"}], ["only"])
             .unwrap()
         )
