@@ -210,6 +210,7 @@ project-excludes = [
   "vendor/**",
 ]
 project-includes = [ "src/**/*.py*", "tests/**/*.py*" ]
+python-interpreter-path = "../.venv/bin/python"
 python-version = "3.13"
 search-path = [
   ".",
@@ -339,7 +340,6 @@ exclude = [
   ".venv",
 ]
 extraPaths = [ ".", "src" ]
-ignore = [ "**/*.pyi" ]
 include = [ "src", "tests" ]
 pythonPlatform = "Linux"
 pythonVersion = "3.13"

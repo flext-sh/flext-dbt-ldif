@@ -3,12 +3,53 @@
 
 from __future__ import annotations
 
-from flext_core.lazy import merge_lazy_imports
-from flext_dbt_ldif._exports_lazy_part_01 import FLEXT_DBT_LDIF_LAZY_IMPORTS_PART_01
+from flext_core.lazy import build_lazy_import_map, merge_lazy_imports
 
-_LOCAL_LAZY_IMPORTS = {
-    **FLEXT_DBT_LDIF_LAZY_IMPORTS_PART_01,
-}
+_LOCAL_LAZY_IMPORTS = build_lazy_import_map(
+    {
+        ".api": (
+            "FlextDbtLdif",
+            "dbt_ldif",
+        ),
+        ".base": (
+            "FlextDbtLdifServiceBase",
+            "s",
+        ),
+        ".constants": (
+            "FlextDbtLdifConstants",
+            "c",
+        ),
+        ".models": (
+            "FlextDbtLdifModels",
+            "m",
+        ),
+        ".protocols": (
+            "FlextDbtLdifProtocols",
+            "p",
+        ),
+        ".services": ("services",),
+        ".services.client": ("FlextDbtLdifClient",),
+        ".services.core": ("FlextDbtLdifCore",),
+        ".services.service": ("FlextDbtLdifServiceMixin",),
+        ".services.unified_service": ("FlextDbtLdifUnifiedService",),
+        ".settings": ("FlextDbtLdifSettings",),
+        ".typings": (
+            "FlextDbtLdifTypes",
+            "t",
+        ),
+        ".utilities": (
+            "FlextDbtLdifUtilities",
+            "u",
+        ),
+        "flext_core._root_typing_parts.facades": (
+            "d",
+            "e",
+            "h",
+            "r",
+            "x",
+        ),
+    },
+)
 
 FLEXT_DBT_LDIF_LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
