@@ -20,7 +20,6 @@ from flext_dbt_ldif._exports import FLEXT_DBT_LDIF_LAZY_IMPORTS
 
 if TYPE_CHECKING:
     from flext_core._root_typing_parts import d as d, e as e, h as h, r as r, x as x
-    from flext_dbt_ldif import services as services
     from flext_dbt_ldif.api import FlextDbtLdif as FlextDbtLdif, dbt_ldif as dbt_ldif
     from flext_dbt_ldif.base import (
         FlextDbtLdifServiceBase as FlextDbtLdifServiceBase,
@@ -96,7 +95,6 @@ _PUBLIC_EXPORTS: tuple[str, ...] = (
     "p",
     "r",
     "s",
-    "services",
     "t",
     "u",
     "x",
@@ -132,7 +130,6 @@ __all__: tuple[str, ...] = (
     "p",
     "r",
     "s",
-    "services",
     "t",
     "u",
     "x",
