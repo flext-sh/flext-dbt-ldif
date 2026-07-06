@@ -22,7 +22,7 @@ from flext_dbt_ldif.__version__ import (
 )
 
 if TYPE_CHECKING:
-    from flext_dbt_ldif.api import FlextDbtLdif
+    from flext_dbt_ldif.api import FlextDbtLdif, dbt_ldif
     from flext_dbt_ldif.base import FlextDbtLdifServiceBase, s
     from flext_dbt_ldif.constants import FlextDbtLdifConstants, c
     from flext_dbt_ldif.models import FlextDbtLdifModels, m
