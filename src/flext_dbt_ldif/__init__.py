@@ -22,6 +22,10 @@ from flext_dbt_ldif.__version__ import (
 )
 
 if TYPE_CHECKING:
+    from flext_dbt_ldif._settings import (
+        FlextDbtLdifSettings as FlextDbtLdifSettings,
+        settings as settings,
+    )
     from flext_dbt_ldif.api import FlextDbtLdif as FlextDbtLdif, dbt_ldif as dbt_ldif
     from flext_dbt_ldif.base import (
         FlextDbtLdifServiceBase as FlextDbtLdifServiceBase,
