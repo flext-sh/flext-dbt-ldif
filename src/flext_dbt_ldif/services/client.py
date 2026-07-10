@@ -24,7 +24,9 @@ class FlextDbtLdifClient:
         ) -> p.Result[list[t.JsonMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
-                str(file_path) if file_path is not None else settings.DbtLdif.ldif_file_path
+                str(file_path)
+                if file_path is not None
+                else settings.DbtLdif.ldif_file_path
             )
             if not selected_path:
                 return r[list[t.JsonMapping]].fail(
