@@ -44,7 +44,6 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.services.unified_service import (
         FlextDbtLdifUnifiedService as FlextDbtLdifUnifiedService,
     )
-    from flext_dbt_ldif.settings import FlextDbtLdifSettings as FlextDbtLdifSettings
     from flext_dbt_ldif.typings import FlextDbtLdifTypes as FlextDbtLdifTypes, t as t
     from flext_dbt_ldif.utilities import (
         FlextDbtLdifUtilities as FlextDbtLdifUtilities,
@@ -55,6 +54,7 @@ _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
     build_lazy_import_map(
         {
+            "._settings": ("FlextDbtLdifSettings", "settings"),
             ".api": (
                 "FlextDbtLdif",
                 "dbt_ldif",
@@ -79,7 +79,6 @@ _LAZY_IMPORTS = merge_lazy_imports(
             ".services.core": ("FlextDbtLdifCore",),
             ".services.service": ("FlextDbtLdifServiceMixin",),
             ".services.unified_service": ("FlextDbtLdifUnifiedService",),
-            ".settings": ("FlextDbtLdifSettings",),
             ".typings": (
                 "FlextDbtLdifTypes",
                 "t",
@@ -121,6 +120,8 @@ _LAZY_IMPORTS = merge_lazy_imports(
 
 
 __all__: tuple[str, ...] = (
+    "FlextDbtLdifSettings",
+    "settings",
     "FlextDbtLdif",
     "FlextDbtLdifClient",
     "FlextDbtLdifConstants",
@@ -129,7 +130,6 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifProtocols",
     "FlextDbtLdifServiceBase",
     "FlextDbtLdifServiceMixin",
-    "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",

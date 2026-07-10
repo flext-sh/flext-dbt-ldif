@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
+from flext_dbt_ldif import c, m, p, r, t, u
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -18,23 +18,13 @@ class FlextDbtLdifClient:
     class Client:
         """Client with typed parse, validate, and transform operations."""
 
-        def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
-            """Initialize client with explicit or global settings."""
-            self.settings = (
-                settings
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
-
         def parse_ldif_file(
             self,
             file_path: Path | str | None = None,
         ) -> p.Result[list[t.JsonMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
-                str(file_path)
-                if file_path is not None
-                else self.settings.ldif_file_path
+                str(file_path) if file_path is not None else settings.DbtLdif.ldif_file_path
             )
             if not selected_path:
                 return r[list[t.JsonMapping]].fail(
@@ -106,7 +96,7 @@ class FlextDbtLdifClient:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "No LDIF entries found",
                 )
-            if self.settings.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
+            if settings.DbtLdif.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met",
                 )

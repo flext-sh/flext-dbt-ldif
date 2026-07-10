@@ -33,7 +33,6 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     @override
     def settings(self) -> FlextDbtLdifSettings:
         """The typed dbt-ldif settings namespace."""
-        settings: FlextDbtLdifSettings = FlextDbtLdifSettings.fetch_global()
         return settings
 
     @property
@@ -42,7 +41,7 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
         """Dbt connection profile for LDIF-backed workflows."""
         return {
             "type": "ldif",
-            "path": self.settings.ldif_file_path,
+            "path": settings.DbtLdif.ldif_file_path,
             "project": self.dbt_project_name,
         }
 

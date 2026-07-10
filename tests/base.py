@@ -17,7 +17,6 @@ class TestsFlextDbtLdifServiceBase(tests_s):
     @override
     def fetch_settings(cls) -> TestsFlextDbtLdifSettings:
         """Return the typed DBT LDIF+Tests settings singleton."""
-        settings: TestsFlextDbtLdifSettings = TestsFlextDbtLdifSettings.fetch_global()
         return settings
 
     @classmethod

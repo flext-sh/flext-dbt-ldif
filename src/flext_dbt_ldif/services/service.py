@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_dbt_ldif import (
-    FlextDbtLdifSettings,
     c,
     m,
     p,
@@ -27,21 +26,15 @@ class FlextDbtLdifServiceMixin:
 
         def __init__(
             self,
-            settings: FlextDbtLdifSettings | None = None,
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service dependencies."""
-            self.settings = (
-                settings
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
             self.project_dir = project_dir or Path(
-                self.settings.ldif_file_path or ".",
+                settings.DbtLdif.ldif_file_path or ".",
             )
-            self.client = FlextDbtLdifClient.Client(self.settings)
+            self.client = FlextDbtLdifClient.Client(settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                settings=self.settings,
+                settings=settings,
                 project_dir=self.project_dir,
             )
 

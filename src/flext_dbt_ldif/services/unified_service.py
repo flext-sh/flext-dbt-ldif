@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t, u
+from flext_dbt_ldif import c, m, p, r, s, t, u
 
 
 class FlextDbtLdifUnifiedService:
@@ -27,18 +27,12 @@ class FlextDbtLdifUnifiedService:
         def __init__(
             self,
             name: str = "ldif_generator",
-            settings: FlextDbtLdifSettings | None = None,
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service with project and settings context."""
             super().__init__()
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
-            self._settings = (
-                settings
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
 
         @override
         def execute(self) -> p.Result[t.JsonMapping]:

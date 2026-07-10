@@ -36,7 +36,6 @@ class TestsFlextDbtLdifClient:
 
     def test_explicit_settings_are_the_ones_used(self) -> None:
         """Explicit settings are the settings the client operates on."""
-        settings = FlextDbtLdifSettings.fetch_global()
         client = FlextDbtLdifClient.Client(settings)
         assert client.settings is settings
 
