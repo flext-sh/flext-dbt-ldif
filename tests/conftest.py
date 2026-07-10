@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 import pytest
 from flext_tests import tf, tk
 
+from flext_dbt_ldif import FlextDbtLdifSettings
 from tests.utilities import u
 
 if TYPE_CHECKING:
@@ -32,6 +33,16 @@ def set_test_environment() -> Generator[None]:
         }),
     ):
         yield
+
+
+@pytest.fixture(autouse=True)
+def _reset_settings_singleton() -> Generator[None]:
+    """Isolate the settings singleton so per-test construction never leaks globally."""
+    # NOTE (multi-agent): mro-rn88 — constructing FlextDbtLdifSettings overwrites the
+    # fetch_global() singleton; reset around each test to prevent cross-test pollution.
+    FlextDbtLdifSettings.reset_for_testing()
+    yield
+    FlextDbtLdifSettings.reset_for_testing()
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:

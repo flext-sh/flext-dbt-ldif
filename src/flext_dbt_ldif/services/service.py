@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_dbt_ldif import (
+    FlextDbtLdifSettings,
     c,
     m,
     p,
@@ -26,15 +27,19 @@ class FlextDbtLdifServiceMixin:
 
         def __init__(
             self,
+            settings: FlextDbtLdifSettings | None = None,
             project_dir: Path | None = None,
         ) -> None:
-            """Initialize service dependencies."""
+            """Initialize service dependencies with optional injected settings."""
+            # NOTE (multi-agent): mro-rn88 — resolve effective settings (injected override
+            # or global) and inject the SAME instance into client + generator.
+            effective_settings = settings or FlextDbtLdifSettings.fetch_global()
             self.project_dir = project_dir or Path(
-                settings.DbtLdif.ldif_file_path or ".",
+                effective_settings.DbtLdif.ldif_file_path or ".",
             )
-            self.client = FlextDbtLdifClient.Client(settings)
+            self.client = FlextDbtLdifClient.Client(effective_settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                settings=settings,
+                settings=effective_settings,
                 project_dir=self.project_dir,
             )
 

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_dbt_ldif import c, m, p, r, t, u
+# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -18,6 +19,17 @@ class FlextDbtLdifClient:
     class Client:
         """Client with typed parse, validate, and transform operations."""
 
+        # NOTE (multi-agent): mro-rn88 — plain class holding the effective settings
+        # (injected override or global singleton); exposed via the `settings` property.
+        def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
+            """Wire the client with optional injected settings."""
+            self._settings = settings or FlextDbtLdifSettings.fetch_global()
+
+        @property
+        def settings(self) -> FlextDbtLdifSettings:
+            """The effective dbt-ldif settings for this client."""
+            return self._settings
+
         def parse_ldif_file(
             self,
             file_path: Path | str | None = None,
@@ -26,7 +38,7 @@ class FlextDbtLdifClient:
             selected_path = (
                 str(file_path)
                 if file_path is not None
-                else settings.DbtLdif.ldif_file_path
+                else self.settings.DbtLdif.ldif_file_path
             )
             if not selected_path:
                 return r[list[t.JsonMapping]].fail(
@@ -98,7 +110,7 @@ class FlextDbtLdifClient:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "No LDIF entries found",
                 )
-            if settings.DbtLdif.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
+            if self.settings.DbtLdif.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met",
                 )

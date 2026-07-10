@@ -6,7 +6,8 @@ from typing import override
 
 from flext_tests import s as tests_s
 
-from flext_dbt_ldif import m
+# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
+from flext_dbt_ldif import m, settings
 from tests.settings import TestsFlextDbtLdifSettings
 
 

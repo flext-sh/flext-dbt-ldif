@@ -121,14 +121,15 @@ class TestsFlextDbtLdifServicesAndApi:
 
     def test_execute_returns_configured_settings(self) -> None:
         """Execute surfaces the settings the facade was constructed with."""
-        settings = FlextDbtLdifSettings(min_quality_threshold=0.5)
+        # NOTE (multi-agent): mro-rn88 — project fields nest under the DbtLdif namespace.
+        settings = FlextDbtLdifSettings(DbtLdif={"min_quality_threshold": 0.5})
         api = FlextDbtLdif(settings=settings)
 
         result = api.execute()
 
         assert result.success
         assert isinstance(result.value, FlextDbtLdifSettings)
-        assert result.value.min_quality_threshold == pytest.approx(0.5)
+        assert result.value.DbtLdif.min_quality_threshold == pytest.approx(0.5)
 
     def test_service_property_exposes_workflow_service(self) -> None:
         """The service property exposes the bound workflow Service."""

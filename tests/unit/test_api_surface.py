@@ -33,9 +33,12 @@ class TestsFlextDbtLdifApiSurface:
     @pytest.fixture
     def settings(self) -> Settings:
         """Settings with a concrete LDIF path and a permissive threshold."""
+        # NOTE (multi-agent): mro-rn88 — project fields nest under the DbtLdif namespace.
         return FlextDbtLdifSettings(
-            ldif_file_path="/tmp/sample.ldif",
-            min_quality_threshold=0.5,
+            DbtLdif={
+                "ldif_file_path": "/tmp/sample.ldif",
+                "min_quality_threshold": 0.5,
+            },
         )
 
     @pytest.fixture
@@ -74,7 +77,7 @@ class TestsFlextDbtLdifApiSurface:
     def test_parse_fails_when_no_path_available(self) -> None:
         """Empty settings path with no argument yields a failure result."""
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings(ldif_file_path="", min_quality_threshold=0.5),
+            FlextDbtLdifSettings(DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}),
         )
 
         result = client.parse_ldif_file()
@@ -168,7 +171,7 @@ class TestsFlextDbtLdifApiSurface:
     def test_full_pipeline_propagates_parse_failure(self) -> None:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings(ldif_file_path="", min_quality_threshold=0.5),
+            FlextDbtLdifSettings(DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}),
         )
 
         result = client.run_full_pipeline()

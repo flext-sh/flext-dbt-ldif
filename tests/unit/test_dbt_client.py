@@ -11,7 +11,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m
+# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, settings
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 
 if TYPE_CHECKING:

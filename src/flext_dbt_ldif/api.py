@@ -17,7 +17,6 @@ from flext_dbt_ldif import (
     p,
     r,
     t,
-    u,
 )
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
@@ -43,8 +42,10 @@ class FlextDbtLdif(
 
     def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
-        config = ()
-        self._service = self.Service(settings=config)
+        # NOTE (multi-agent): mro-rn88 — resolve effective settings from the injected
+        # override or the global singleton; Service reads the global internally.
+        self._settings = settings or FlextDbtLdifSettings.fetch_global()
+        self._service = self.Service()
 
     @classmethod
     def fetch_instance(cls) -> Self:
@@ -60,11 +61,7 @@ class FlextDbtLdif(
 
     def execute(self) -> p.Result[FlextDbtLdifSettings]:
         """The current settings payload for service contracts."""
-        current_config = config
-        return u.try_(
-            lambda: FlextDbtLdifSettings.model_validate(current_config),
-            catch=c.ValidationError,
-        ).map_error(lambda _: "Invalid DBT LDIF settings")
+        return r[FlextDbtLdifSettings].ok(self._settings)
 
     def generate_ldif_models(
         self,
