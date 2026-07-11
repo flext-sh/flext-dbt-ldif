@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from flext_dbt_ldif import c, e, p, r, t, u
+from flext_dbt_ldif import c, t, u
 from flext_ldif import FlextLdifModels
 from flext_meltano import m
 
@@ -16,15 +16,17 @@ class FlextDbtLdifModels(m, FlextLdifModels):
         class DbtModel(m.ArbitraryTypesModel):
             """Single DBT model definition payload."""
 
-            name: str = u.Field(description="DBT model name.")
+            name: t.StrippedStr = u.Field(description="DBT model name.")
             dbt_model_type: str = u.Field(description="DBT model category.")
-            ldif_source: str = u.Field(description="LDIF source identifier.")
+            ldif_source: t.StrippedStr = u.Field(description="LDIF source identifier.")
             materialization: str = u.Field(
                 c.DbtLdif.DBT_MATERIALIZATION_VIEW,
                 description="DBT materialization strategy.",
                 validate_default=True,
             )
-            sql_content: str = u.Field(description="Rendered SQL for the DBT model.")
+            sql_content: t.StrippedStr = u.Field(
+                description="Rendered SQL for the DBT model.",
+            )
             description: str = u.Field(
                 "",
                 description="Human-readable model description.",
@@ -39,15 +41,10 @@ class FlextDbtLdifModels(m, FlextLdifModels):
                 description="Upstream model dependencies",
             )
 
-            def validate_business_rules(self) -> p.Result[bool]:
-                """Validate minimal model constraints."""
-                if not self.name.strip():
-                    return e.fail_validation("name", error="cannot be empty")
-                if not self.ldif_source.strip():
-                    return e.fail_validation("ldif_source", error="cannot be empty")
-                if not self.sql_content.strip():
-                    return e.fail_validation("sql_content", error="cannot be empty")
-                return r[bool].ok(value=True)
+            # NOTE (multi-agent, bead mro-wfc8): validate_business_rules() removed — the
+            # name/ldif_source/sql_content non-empty checks are now field-level via
+            # t.StrippedStr (strip + reject blank at construction). Models are pure
+            # pydantic-2-way (flext-law §2a): no methods.
 
         class LdifValidationResult(m.ArbitraryTypesModel):
             """Validated LDIF quality metrics."""

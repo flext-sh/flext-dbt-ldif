@@ -13,6 +13,7 @@ import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from tests.constants import c
 from tests.models import m
 
 if TYPE_CHECKING:
@@ -147,11 +148,12 @@ class TestsFlextDbtLdifDbtModels:
         assert list(model.columns) == []
         assert list(model.dependencies) == []
 
-    def test_validate_business_rules_succeeds_for_complete_model(self) -> None:
-        """A fully populated model passes business validation."""
-        result = self._make_model().validate_business_rules()
-        assert result.success
-        assert result.unwrap() is True
+    def test_complete_model_constructs_via_public_api(self) -> None:
+        """A fully populated model constructs successfully through its public API."""
+        model = self._make_model()
+        assert model.name == "test_model"
+        assert model.ldif_source == "ldif_entries"
+        assert model.sql_content == "select 1"
 
     @pytest.mark.parametrize(
         ("field", "kwargs"),
@@ -161,13 +163,12 @@ class TestsFlextDbtLdifDbtModels:
             ("sql_content", {"sql_content": "  "}),
         ],
     )
-    def test_validate_business_rules_fails_on_blank_required_field(
+    def test_blank_required_field_rejected_at_construction(
         self,
         field: str,
         kwargs: dict[str, str],
     ) -> None:
-        """Blank required fields fail validation and name the offending field."""
-        result = self._make_model(**kwargs).validate_business_rules()
-        assert result.failure
-        assert result.error is not None
-        assert field in result.error
+        """Blank required fields (t.StrippedStr) fail validation naming the field."""
+        with pytest.raises(c.ValidationError) as exc_info:
+            self._make_model(**kwargs)
+        assert field in str(exc_info.value)
