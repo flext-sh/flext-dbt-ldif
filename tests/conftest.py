@@ -58,3 +58,12 @@ def pytest_sessionstart(session: pytest.Session) -> None:
             f"Failed to start LDAP container: {result.error}",
             allow_module_level=True,
         )
+
+
+# NOTE (multi-agent, bead mro-d421): export fixtures/hooks so pyright sees them as
+# accessed (reportUnusedFunction) — the autouse fixture is invoked implicitly by pytest.
+__all__: list[str] = [
+    "_reset_settings_singleton",
+    "pytest_sessionstart",
+    "set_test_environment",
+]

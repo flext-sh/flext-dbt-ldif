@@ -33,12 +33,13 @@ class TestsFlextDbtLdifApiSurface:
     @pytest.fixture
     def settings(self) -> Settings:
         """Settings with a concrete LDIF path and a permissive threshold."""
-        # NOTE (multi-agent): mro-rn88 — project fields nest under the DbtLdif namespace.
+        # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a
+        # raw dict (U18: config/settings values are validated models, no model-less payload).
         return FlextDbtLdifSettings(
-            DbtLdif={
-                "ldif_file_path": "/tmp/sample.ldif",
-                "min_quality_threshold": 0.5,
-            },
+            DbtLdif=FlextDbtLdifSettings._DbtLdif(
+                ldif_file_path="/tmp/sample.ldif",
+                min_quality_threshold=0.5,
+            ),
         )
 
     @pytest.fixture
@@ -78,7 +79,10 @@ class TestsFlextDbtLdifApiSurface:
         """Empty settings path with no argument yields a failure result."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}
+                DbtLdif=FlextDbtLdifSettings._DbtLdif(
+                    ldif_file_path="",
+                    min_quality_threshold=0.5,
+                ),
             ),
         )
 
@@ -174,7 +178,10 @@ class TestsFlextDbtLdifApiSurface:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}
+                DbtLdif=FlextDbtLdifSettings._DbtLdif(
+                    ldif_file_path="",
+                    min_quality_threshold=0.5,
+                ),
             ),
         )
 

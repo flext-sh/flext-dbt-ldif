@@ -121,8 +121,11 @@ class TestsFlextDbtLdifServicesAndApi:
 
     def test_execute_returns_configured_settings(self) -> None:
         """Execute surfaces the settings the facade was constructed with."""
-        # NOTE (multi-agent): mro-rn88 — project fields nest under the DbtLdif namespace.
-        settings = FlextDbtLdifSettings(DbtLdif={"min_quality_threshold": 0.5})
+        # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a raw
+        # dict (U18: config/settings values are validated models, no model-less payload).
+        settings = FlextDbtLdifSettings(
+            DbtLdif=FlextDbtLdifSettings._DbtLdif(min_quality_threshold=0.5),
+        )
         api = FlextDbtLdif(settings=settings)
 
         result = api.execute()
