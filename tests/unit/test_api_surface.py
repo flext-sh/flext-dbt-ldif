@@ -77,7 +77,9 @@ class TestsFlextDbtLdifApiSurface:
     def test_parse_fails_when_no_path_available(self) -> None:
         """Empty settings path with no argument yields a failure result."""
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings(DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}),
+            FlextDbtLdifSettings(
+                DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}
+            ),
         )
 
         result = client.parse_ldif_file()
@@ -171,7 +173,9 @@ class TestsFlextDbtLdifApiSurface:
     def test_full_pipeline_propagates_parse_failure(self) -> None:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings(DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}),
+            FlextDbtLdifSettings(
+                DbtLdif={"ldif_file_path": "", "min_quality_threshold": 0.5}
+            ),
         )
 
         result = client.run_full_pipeline()
