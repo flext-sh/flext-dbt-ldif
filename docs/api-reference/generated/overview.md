@@ -11,7 +11,7 @@
 - Keywords: `data-transformation`, `dbt`, `enterprise`, `flext`, `sql`, `typed`
 - Main facades: _none_
 - Alias exports: `c`, `d`, `e`, `h`, `m`, `p`, `r`, `s`, `t`, `u`, `x`
-- Public symbol exports: `settings`, `FlextDbtLdifProtocols`, `FlextDbtLdifUtilities`, `FlextDbtLdifUnifiedService`, `FlextDbtLdifModels`, `FlextDbtLdifClient`, `FlextDbtLdifSettings`, `dbt_ldif`, `FlextDbtLdifTypes`, `FlextDbtLdifCore` (+4 more)
+- Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase`, `FlextDbtLdifModels`, `FlextDbtLdifClient`, `FlextDbtLdifUnifiedService`, `FlextDbtLdifTypes`, `settings`, `FlextDbtLdifServiceMixin`, `FlextDbtLdifConstants` (+4 more)
 - Exported module shortcuts: _none_
 - Generated module pages: `11`
 
