@@ -49,7 +49,7 @@ class FlextDbtLdif(
 
     @classmethod
     def fetch_instance(cls) -> Self:
-        """The shared facade instance, creating it on first call."""
+        """Return the shared facade instance, creating it on first call."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -60,7 +60,7 @@ class FlextDbtLdif(
         return self._service
 
     def execute(self) -> p.Result[FlextDbtLdifSettings]:
-        """The current settings payload for service contracts."""
+        """Return the current settings payload for service contracts."""
         return r[FlextDbtLdifSettings].ok(self._settings)
 
     def generate_ldif_models(
