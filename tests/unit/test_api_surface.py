@@ -32,7 +32,7 @@ class TestsFlextDbtLdifApiSurface:
 
     @pytest.fixture
     def settings(self) -> Settings:
-        """Settings with a concrete LDIF path and a permissive threshold."""
+        """Build settings with a concrete LDIF path and a permissive threshold."""
         # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a
         # raw dict (U18: config/settings values are validated models, no model-less payload).
         return FlextDbtLdifSettings(
