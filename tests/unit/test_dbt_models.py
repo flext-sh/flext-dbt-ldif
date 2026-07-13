@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
@@ -61,8 +62,8 @@ class TestsFlextDbtLdifDbtModels:
             settings=FlextDbtLdifSettings.fetch_global(),
             project_dir=tmp_path,
         )
-        assert gen.project_dir == tmp_path
-        assert gen.name == "ldif_generator"
+        tm.that(gen.project_dir, eq=tmp_path)
+        tm.that(gen.name, eq="ldif_generator")
 
     # -- execute --------------------------------------------------------------
 
@@ -72,10 +73,10 @@ class TestsFlextDbtLdifDbtModels:
     ) -> None:
         """Execute succeeds and reports the ready status contract."""
         result = service.execute()
-        assert result.success
+        tm.ok(result)
         data: t.JsonMapping = result.unwrap()
-        assert data["name"] == "ldif_generator"
-        assert data["status"] == "ready"
+        tm.that(data["name"], eq="ldif_generator")
+        tm.that(data["status"], eq="ready")
 
     def test_execute_metadata_reflects_project_dir(self, tmp_path: Path) -> None:
         """Execute payload echoes the configured project directory."""
@@ -84,7 +85,7 @@ class TestsFlextDbtLdifDbtModels:
             project_dir=tmp_path,
         )
         data = gen.execute().unwrap()
-        assert data["project_dir"] == str(tmp_path)
+        tm.that(data["project_dir"], eq=str(tmp_path))
 
     # -- staging generation ---------------------------------------------------
 
@@ -97,11 +98,11 @@ class TestsFlextDbtLdifDbtModels:
             {"dn": "cn=test,dc=example,dc=org"},
         ]
         models = service.generate_staging_models(entries).unwrap()
-        assert len(models) == 1
+        tm.that(len(models), eq=1)
         model = models[0]
-        assert model.name == "stg_ldif_entries"
-        assert model.dbt_model_type == "staging"
-        assert model.materialization == "view"
+        tm.that(model.name, eq="stg_ldif_entries")
+        tm.that(model.dbt_model_type, eq="staging")
+        tm.that(model.materialization, eq="view")
 
     def test_generate_staging_models_returns_empty_without_entries(
         self,
@@ -109,8 +110,8 @@ class TestsFlextDbtLdifDbtModels:
     ) -> None:
         """Empty entries yield an empty, successful result."""
         result = service.generate_staging_models([])
-        assert result.success
-        assert result.unwrap() == []
+        tm.ok(result)
+        tm.that(result.unwrap(), eq=[])
 
     # -- analytics generation -------------------------------------------------
 
@@ -121,11 +122,11 @@ class TestsFlextDbtLdifDbtModels:
         """A staging model produces one analytics table model."""
         staging_model = self._make_model(name="stg_ldif_entries")
         models = service.generate_analytics_models([staging_model]).unwrap()
-        assert len(models) == 1
+        tm.that(len(models), eq=1)
         model = models[0]
-        assert model.name == "analytics_ldif_insights"
-        assert model.dbt_model_type == "analytics"
-        assert model.materialization == "table"
+        tm.that(model.name, eq="analytics_ldif_insights")
+        tm.that(model.dbt_model_type, eq="analytics")
+        tm.that(model.materialization, eq="table")
 
     def test_generate_analytics_models_returns_empty_without_staging(
         self,
@@ -133,26 +134,26 @@ class TestsFlextDbtLdifDbtModels:
     ) -> None:
         """No staging models yields an empty, successful result."""
         result = service.generate_analytics_models([])
-        assert result.success
-        assert result.unwrap() == []
+        tm.ok(result)
+        tm.that(result.unwrap(), eq=[])
 
     # -- model contract -------------------------------------------------------
 
     def test_dbt_model_defaults_exposed_via_public_api(self) -> None:
         """Optional fields default to their documented values."""
         model = self._make_model()
-        assert model.name == "test_model"
-        assert model.materialization == "view"
-        assert model.description == ""
-        assert list(model.columns) == []
-        assert list(model.dependencies) == []
+        tm.that(model.name, eq="test_model")
+        tm.that(model.materialization, eq="view")
+        tm.that(model.description, eq="")
+        tm.that(list(model.columns), eq=[])
+        tm.that(list(model.dependencies), eq=[])
 
     def test_complete_model_constructs_via_public_api(self) -> None:
         """A fully populated model constructs successfully through its public API."""
         model = self._make_model()
-        assert model.name == "test_model"
-        assert model.ldif_source == "ldif_entries"
-        assert model.sql_content == "select 1"
+        tm.that(model.name, eq="test_model")
+        tm.that(model.ldif_source, eq="ldif_entries")
+        tm.that(model.sql_content, eq="select 1")
 
     @pytest.mark.parametrize(
         ("field", "kwargs"),
@@ -170,4 +171,4 @@ class TestsFlextDbtLdifDbtModels:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:
             self._make_model(**kwargs)
-        assert field in str(exc_info.value)
+        tm.that(str(exc_info.value), has=field)

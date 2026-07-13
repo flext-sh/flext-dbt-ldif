@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
-from flext_tests import r
+from flext_tests import r, tm
 
 from tests import m, t
 
@@ -52,10 +52,10 @@ class TestsFlextDbtLdifServicesDataQuality:
         monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
 
         result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
-        assert result.success
+        tm.ok(result)
         data = result.value
-        assert data is not None
-        assert data.entry_count == 1
+        tm.that(data, none=False)
+        tm.that(data.entry_count, eq=1)
 
 
 __all__: list[str] = ["TestsFlextDbtLdifServicesDataQuality"]

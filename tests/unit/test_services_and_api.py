@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, c
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
@@ -31,12 +32,12 @@ class TestsFlextDbtLdifServicesAndApi:
 
         result = api.process_ldif_file(tmp_path / "f.ldif")
 
-        assert result.success
+        tm.ok(result)
         workflow = result.value
-        assert workflow.workflow_status == c.DbtLdif.WORKFLOW_STATUS_COMPLETED
-        assert workflow.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
-        assert workflow.entry_count == 1
-        assert workflow.ldif_file == str(tmp_path / "f.ldif")
+        tm.that(workflow.workflow_status, eq=c.DbtLdif.WORKFLOW_STATUS_COMPLETED)
+        tm.that(workflow.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
+        tm.that(workflow.entry_count, eq=1)
+        tm.that(workflow.ldif_file, eq=str(tmp_path / "f.ldif"))
 
     @pytest.mark.parametrize(
         (
@@ -70,10 +71,10 @@ class TestsFlextDbtLdifServicesAndApi:
             run_transformations=run_transformations,
         )
 
-        assert result.success
+        tm.ok(result)
         workflow = result.value
-        assert workflow.models_generated == expected_models
-        assert workflow.transformation_status == expected_status
+        tm.that(workflow.models_generated, eq=expected_models)
+        tm.that(workflow.transformation_status, eq=expected_status)
 
     def test_validate_ldif_quality_reports_passing_metrics(
         self,
@@ -84,11 +85,11 @@ class TestsFlextDbtLdifServicesAndApi:
 
         result = api.validate_ldif_quality(tmp_path / "f.ldif")
 
-        assert result.success
+        tm.ok(result)
         report = result.value
-        assert report.entry_count == 1
-        assert report.quality_score == c.DbtLdif.DEFAULT_QUALITY_SCORE
-        assert report.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
+        tm.that(report.entry_count, eq=1)
+        tm.that(report.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
+        tm.that(report.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
 
     def test_generate_ldif_models_produces_staging_and_analytics(
         self,
@@ -99,13 +100,16 @@ class TestsFlextDbtLdifServicesAndApi:
 
         result = api.generate_ldif_models(tmp_path / "f.ldif")
 
-        assert result.success
+        tm.ok(result)
         generation = result.value
-        assert generation.models_generated == 2
-        assert list(generation.model_names) == [
-            c.DbtLdif.STAGING_MODEL_NAME,
-            c.DbtLdif.ANALYTICS_MODEL_NAME,
-        ]
+        tm.that(generation.models_generated, eq=2)
+        tm.that(
+            list(generation.model_names),
+            eq=[
+                c.DbtLdif.STAGING_MODEL_NAME,
+                c.DbtLdif.ANALYTICS_MODEL_NAME,
+            ],
+        )
 
     def test_generate_ldif_models_dump_exposes_public_state(
         self,
@@ -116,8 +120,8 @@ class TestsFlextDbtLdifServicesAndApi:
 
         dumped = api.generate_ldif_models(tmp_path / "f.ldif").value.model_dump()
 
-        assert dumped["models_generated"] == 2
-        assert c.DbtLdif.STAGING_MODEL_NAME in dumped["model_names"]
+        tm.that(dumped["models_generated"], eq=2)
+        tm.that(dumped["model_names"], has=c.DbtLdif.STAGING_MODEL_NAME)
 
     def test_execute_returns_configured_settings(self) -> None:
         """Execute surfaces the settings the facade was constructed with."""
@@ -130,15 +134,15 @@ class TestsFlextDbtLdifServicesAndApi:
 
         result = api.execute()
 
-        assert result.success
-        assert isinstance(result.value, FlextDbtLdifSettings)
-        assert result.value.DbtLdif.min_quality_threshold == pytest.approx(0.5)
+        tm.ok(result)
+        tm.that(result.value, is_=FlextDbtLdifSettings)
+        tm.that(result.value.DbtLdif.min_quality_threshold, eq=pytest.approx(0.5))
 
     def test_service_property_exposes_workflow_service(self) -> None:
         """The service property exposes the bound workflow Service."""
         api = FlextDbtLdif()
 
-        assert isinstance(api.service, FlextDbtLdifServiceMixin.Service)
+        tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
 
     def test_fetch_instance_returns_shared_singleton(self) -> None:
         """fetch_instance returns the same facade instance on repeated calls."""
