@@ -35,13 +35,17 @@ def set_test_environment() -> Generator[None]:
         yield
 
 
-@pytest.fixture(autouse=True)
-def _reset_settings_singleton() -> Generator[None]:
-    """Isolate the settings singleton so per-test construction never leaks globally."""
+def pytest_runtest_setup(item: pytest.Item) -> None:
+    """Reset the settings singleton before each test."""
+    _ = item
     # NOTE (multi-agent): mro-rn88 — constructing FlextDbtLdifSettings overwrites the
     # fetch_global() singleton; reset around each test to prevent cross-test pollution.
     FlextDbtLdifSettings.reset_for_testing()
-    yield
+
+
+def pytest_runtest_teardown(item: pytest.Item) -> None:
+    """Reset the settings singleton after each test."""
+    _ = item
     FlextDbtLdifSettings.reset_for_testing()
 
 
@@ -60,10 +64,11 @@ def pytest_sessionstart(session: pytest.Session) -> None:
         )
 
 
-# NOTE (multi-agent, bead mro-d421): export fixtures/hooks so pyright sees them as
-# accessed (reportUnusedFunction) — the autouse fixture is invoked implicitly by pytest.
+# NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
+# sees the plugin surface as accessed.
 __all__: list[str] = [
-    "_reset_settings_singleton",
+    "pytest_runtest_setup",
+    "pytest_runtest_teardown",
     "pytest_sessionstart",
     "set_test_environment",
 ]
