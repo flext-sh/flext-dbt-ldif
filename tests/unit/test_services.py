@@ -6,20 +6,16 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
-
-from flext_dbt_ldif import c
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests import t
-from tests.unit._services_parts.data_quality import (
 from flext_tests import tm
+
+from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from tests import c, t
+from tests.unit._services_parts.data_quality import (
     TestsFlextDbtLdifServicesDataQuality,
 )
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 @pytest.fixture

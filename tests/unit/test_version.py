@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from flext_dbt_ldif import (
 from flext_tests import tm
+
+from flext_dbt_ldif import (
     __version__,
     __version__ as version,
     __version_info__,
 )
-
-__all__ = ["TestsFlextDbtLdifVersion"]
 
 
 class TestsFlextDbtLdifVersion:
@@ -51,3 +50,6 @@ class TestsFlextDbtLdifVersion:
         major = __version_info__[0]
         tm.that(major, is_=int)
         assert major >= 0
+
+
+__all__ = ["TestsFlextDbtLdifVersion"]
