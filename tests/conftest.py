@@ -14,7 +14,7 @@ import pytest
 from flext_tests import tf, tk
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from tests.utilities import u
+from tests import u
 
 if TYPE_CHECKING:
     from collections.abc import Generator

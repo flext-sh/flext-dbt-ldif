@@ -7,8 +7,7 @@ from typing import TYPE_CHECKING
 
 from flext_tests import r
 
-from tests.models import m
-from tests.typings import t
+from tests import m, t
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -16,7 +15,7 @@ if TYPE_CHECKING:
     import pytest
 
     from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-    from tests.protocols import p
+    from tests import p
 
 
 class TestsFlextDbtLdifServicesDataQuality:

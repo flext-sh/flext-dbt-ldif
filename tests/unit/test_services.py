@@ -12,7 +12,7 @@ import pytest
 
 from flext_dbt_ldif import c
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests.typings import t
+from tests import t
 from tests.unit._services_parts.data_quality import (
     TestsFlextDbtLdifServicesDataQuality,
 )

@@ -18,7 +18,7 @@ from flext_dbt_ldif.services.client import FlextDbtLdifClient
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from tests.typings import t
+    from tests import t
 
 __all__: list[str] = [
     "TestsFlextDbtLdifClient",
