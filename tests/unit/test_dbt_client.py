@@ -7,23 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from flext_tests import tm
 
-# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, settings
+from flext_dbt_ldif import FlextDbtLdifSettings, settings
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from tests import t
-
-__all__: list[str] = [
-    "TestsFlextDbtLdifClient",
-]
+from tests import c, m, t
 
 
 class TestsFlextDbtLdifClient:
@@ -189,3 +180,8 @@ class TestsFlextDbtLdifClient:
         tm.that(dumped["records"], eq=1)
         tm.that(list(dumped["models"]), eq=["only"])
         tm.that(dumped["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
+
+
+__all__: list[str] = [
+    "TestsFlextDbtLdifClient",
+]

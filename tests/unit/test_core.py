@@ -15,8 +15,6 @@ from flext_tests import tm
 from flext_dbt_ldif import c, t
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
 
-__all__ = ["TestsFlextDbtLdifCore"]
-
 
 class TestsFlextDbtLdifCore:
     """Behavioral contract for FlextDbtLdifCore.Core helpers."""
@@ -112,3 +110,6 @@ class TestsFlextDbtLdifCore:
             .unwrap()
         )
         tm.that(total, eq=1)
+
+
+__all__ = ["TestsFlextDbtLdifCore"]

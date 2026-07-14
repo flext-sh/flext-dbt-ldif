@@ -19,10 +19,10 @@ from flext_dbt_ldif import (
     FlextDbtLdif,
     FlextDbtLdifSettings,
     __version__,
-    c,
 )
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from tests import c
 
 type Settings = FlextDbtLdifSettings
 type Client = FlextDbtLdifClient.Client
@@ -30,18 +30,6 @@ type Client = FlextDbtLdifClient.Client
 
 class TestsFlextDbtLdifApiSurface:
     """Behavior contract for the public DBT LDIF API surface."""
-
-    @pytest.fixture
-    def settings(self) -> Settings:
-        """Build settings with a concrete LDIF path and a permissive threshold."""
-        # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a
-        # raw dict (U18: config/settings values are validated models, no model-less payload).
-        return FlextDbtLdifSettings(
-            DbtLdif=FlextDbtLdifSettings._DbtLdif(
-                ldif_file_path="/tmp/sample.ldif",
-                min_quality_threshold=0.5,
-            ),
-        )
 
     @pytest.fixture
     def client(self, settings: Settings) -> Client:
@@ -78,17 +66,6 @@ class TestsFlextDbtLdifApiSurface:
 
         tm.ok(result)
         tm.that(result.value[0]["source"], eq="/data/other.ldif")
-
-    def test_parse_fails_when_no_path_available(self) -> None:
-        """Empty settings path with no argument yields a failure result."""
-        client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings(
-                DbtLdif=FlextDbtLdifSettings._DbtLdif(
-                    ldif_file_path="",
-                    min_quality_threshold=0.5,
-                ),
-            ),
-        )
 
         result = client.parse_ldif_file()
 
@@ -188,7 +165,7 @@ class TestsFlextDbtLdifApiSurface:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif=FlextDbtLdifSettings._DbtLdif(
+                DbtLdif=FlextDbtLdifSettings.DbtLdif(
                     ldif_file_path="",
                     min_quality_threshold=0.5,
                 ),

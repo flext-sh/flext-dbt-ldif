@@ -7,21 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
-from tests import c, m
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from tests import t
-
-__all__ = ["TestsFlextDbtLdifDbtModels"]
+from tests import c, m, t
 
 
 class TestsFlextDbtLdifDbtModels:
@@ -172,3 +165,6 @@ class TestsFlextDbtLdifDbtModels:
         with pytest.raises(c.ValidationError) as exc_info:
             self._make_model(**kwargs)
         tm.that(str(exc_info.value), has=field)
+
+
+__all__ = ["TestsFlextDbtLdifDbtModels"]

@@ -8,7 +8,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Self
+from pathlib import Path
+from typing import ClassVar, Self
 
 from flext_dbt_ldif import (
     FlextDbtLdifSettings,
@@ -22,9 +23,6 @@ from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class FlextDbtLdif(
