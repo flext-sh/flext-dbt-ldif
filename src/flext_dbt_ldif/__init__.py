@@ -38,7 +38,7 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.models import FlextDbtLdifModels as FlextDbtLdifModels, m as m
     from flext_dbt_ldif.protocols import (
         FlextDbtLdifProtocols as FlextDbtLdifProtocols,
-        p as p,
+        p,
     )
     from flext_dbt_ldif.services.client import FlextDbtLdifClient as FlextDbtLdifClient
     from flext_dbt_ldif.services.core import FlextDbtLdifCore as FlextDbtLdifCore
@@ -51,7 +51,7 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.typings import FlextDbtLdifTypes as FlextDbtLdifTypes, t as t
     from flext_dbt_ldif.utilities import (
         FlextDbtLdifUtilities as FlextDbtLdifUtilities,
-        u as u,
+        u,
     )
     from flext_ldif import d as d, e as e, h as h, r as r, x as x
 _LAZY_IMPORTS = merge_lazy_imports(

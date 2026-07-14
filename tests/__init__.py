@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from tests.models import TestsFlextDbtLdifModels as TestsFlextDbtLdifModels, m as m
     from tests.protocols import (
         TestsFlextDbtLdifProtocols as TestsFlextDbtLdifProtocols,
-        p as p,
+        p,
     )
     from tests.settings import TestsFlextDbtLdifSettings as TestsFlextDbtLdifSettings
     from tests.typings import TestsFlextDbtLdifTypes as TestsFlextDbtLdifTypes, t as t
@@ -65,7 +65,7 @@ if TYPE_CHECKING:
     )
     from tests.utilities import (
         TestsFlextDbtLdifUtilities as TestsFlextDbtLdifUtilities,
-        u as u,
+        u,
     )
 _LAZY_IMPORTS = merge_lazy_imports(
     (".unit",),
