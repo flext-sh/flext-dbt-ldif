@@ -7,22 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
+from flext_tests import tm
 
-# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, settings
+from flext_dbt_ldif import FlextDbtLdifSettings, settings
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from tests import t
-
-__all__: list[str] = [
-    "TestsFlextDbtLdifClient",
-]
+from tests import c, m, t
 
 
 class TestsFlextDbtLdifClient:
@@ -33,7 +25,7 @@ class TestsFlextDbtLdifClient:
     def test_default_construction_yields_usable_global_settings(self) -> None:
         """A client built without settings exposes usable global settings."""
         client = FlextDbtLdifClient.Client()
-        assert isinstance(client.settings, FlextDbtLdifSettings)
+        tm.that(client.settings, is_=FlextDbtLdifSettings)
 
     def test_explicit_settings_are_the_ones_used(self) -> None:
         """Explicit settings are the settings the client operates on."""
@@ -51,17 +43,21 @@ class TestsFlextDbtLdifClient:
         result = FlextDbtLdifClient.Client().parse_ldif_file(path)
 
         entries = result.unwrap()
-        assert entries == [
-            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": str(path)},
-        ]
+        tm.that(
+            entries,
+            eq=[
+                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": str(path)},
+            ],
+        )
 
     def test_parse_is_idempotent_for_same_path(self, tmp_path: Path) -> None:
         """Parsing the same path twice yields equal payloads."""
         client = FlextDbtLdifClient.Client()
         path = tmp_path / "same.ldif"
 
-        assert client.parse_ldif_file(path).unwrap() == (
-            client.parse_ldif_file(path).unwrap()
+        tm.that(
+            client.parse_ldif_file(path).unwrap(),
+            eq=(client.parse_ldif_file(path).unwrap()),
         )
 
     def test_parse_without_path_and_empty_settings_fails_with_reason(self) -> None:
@@ -69,8 +65,8 @@ class TestsFlextDbtLdifClient:
         client = FlextDbtLdifClient.Client(FlextDbtLdifSettings.fetch_global())
         result = client.parse_ldif_file()
 
-        assert result.failure
-        assert "required" in (result.error or "").lower()
+        tm.fail(result)
+        tm.that((result.error or "").lower(), has="required")
 
     # ---- validate_ldif_data contract -------------------------------------
 
@@ -86,17 +82,17 @@ class TestsFlextDbtLdifClient:
         ]
         data = FlextDbtLdifClient.Client().validate_ldif_data(entries).unwrap()
 
-        assert isinstance(data, m.DbtLdif.LdifValidationResult)
-        assert data.total_entries == entry_count
-        assert data.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
-        assert data.quality_score == pytest.approx(c.DbtLdif.DEFAULT_QUALITY_SCORE)
+        tm.that(data, is_=m.DbtLdif.LdifValidationResult)
+        tm.that(data.total_entries, eq=entry_count)
+        tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
+        tm.that(data.quality_score, eq=pytest.approx(c.DbtLdif.DEFAULT_QUALITY_SCORE))
 
     def test_validation_of_empty_entries_fails_with_reason(self) -> None:
         """Empty entries cannot validate and explain why."""
         result = FlextDbtLdifClient.Client().validate_ldif_data([])
 
-        assert result.failure
-        assert "no ldif entries" in (result.error or "").lower()
+        tm.fail(result)
+        tm.that((result.error or "").lower(), has="no ldif entries")
 
     # ---- transform_with_dbt contract -------------------------------------
 
@@ -110,9 +106,9 @@ class TestsFlextDbtLdifClient:
             .unwrap()
         )
 
-        assert data.records == 1
-        assert list(data.models) == ["m1", "m2"]
-        assert data.status == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
+        tm.that(data.records, eq=1)
+        tm.that(list(data.models), eq=["m1", "m2"])
+        tm.that(data.status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
     def test_transform_without_models_uses_default_staging_and_analytics(
         self,
@@ -120,11 +116,14 @@ class TestsFlextDbtLdifClient:
         """Omitting model names falls back to the default model set."""
         data = FlextDbtLdifClient.Client().transform_with_dbt([], None).unwrap()
 
-        assert list(data.models) == [
-            c.DbtLdif.STAGING_MODEL_NAME,
-            c.DbtLdif.ANALYTICS_MODEL_NAME,
-        ]
-        assert data.records == 0
+        tm.that(
+            list(data.models),
+            eq=[
+                c.DbtLdif.STAGING_MODEL_NAME,
+                c.DbtLdif.ANALYTICS_MODEL_NAME,
+            ],
+        )
+        tm.that(data.records, eq=0)
 
     # ---- run_full_pipeline contract --------------------------------------
 
@@ -139,19 +138,19 @@ class TestsFlextDbtLdifClient:
         )
         data = result.unwrap()
 
-        assert isinstance(data, m.DbtLdif.PipelineResult)
-        assert data.pipeline_status == c.DbtLdif.WORKFLOW_STATUS_COMPLETED
-        assert data.parsed_entries == 1
-        assert data.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
-        assert data.transformation_status == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
+        tm.that(data, is_=m.DbtLdif.PipelineResult)
+        tm.that(data.pipeline_status, eq=c.DbtLdif.WORKFLOW_STATUS_COMPLETED)
+        tm.that(data.parsed_entries, eq=1)
+        tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
+        tm.that(data.transformation_status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
     def test_pipeline_propagates_parse_failure(self) -> None:
         """A parse failure short-circuits the whole pipeline as a failure."""
         client = FlextDbtLdifClient.Client(FlextDbtLdifSettings.fetch_global())
         result = client.run_full_pipeline()
 
-        assert result.failure
-        assert "required" in (result.error or "").lower()
+        tm.fail(result)
+        tm.that((result.error or "").lower(), has="required")
 
     # ---- result composition contract -------------------------------------
 
@@ -165,8 +164,8 @@ class TestsFlextDbtLdifClient:
             client.validate_ldif_data,
         )
 
-        assert chained.success
-        assert chained.unwrap().total_entries == 1
+        tm.ok(chained)
+        tm.that(chained.unwrap().total_entries, eq=1)
 
     def test_transform_result_serializes_public_state_via_model_dump(self) -> None:
         """Public model state is exposed through model_dump for consumers."""
@@ -178,6 +177,11 @@ class TestsFlextDbtLdifClient:
         )
         dumped = data.model_dump()
 
-        assert dumped["records"] == 1
-        assert list(dumped["models"]) == ["only"]
-        assert dumped["status"] == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
+        tm.that(dumped["records"], eq=1)
+        tm.that(list(dumped["models"]), eq=["only"])
+        tm.that(dumped["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
+
+
+__all__: list[str] = [
+    "TestsFlextDbtLdifClient",
+]

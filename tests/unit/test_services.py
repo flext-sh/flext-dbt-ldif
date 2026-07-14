@@ -6,19 +6,16 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
+from flext_tests import tm
 
-from flext_dbt_ldif import c
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests import t
+from tests import c, t
 from tests.unit._services_parts.data_quality import (
     TestsFlextDbtLdifServicesDataQuality,
 )
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 @pytest.fixture
@@ -44,11 +41,11 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         """A valid LDIF path yields a passed validation with a quality score."""
         result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
 
-        assert result.success
+        tm.ok(result)
         data = result.unwrap()
-        assert data.entry_count == 1
-        assert data.quality_score == c.DbtLdif.DEFAULT_QUALITY_SCORE
-        assert data.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
+        tm.that(data.entry_count, eq=1)
+        tm.that(data.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
+        tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
 
     def test_parse_and_validate_ldif_is_idempotent(
         self,
@@ -62,7 +59,7 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         second = svc.parse_and_validate_ldif(target)
 
         assert first.success and second.success
-        assert first.unwrap().model_dump() == second.unwrap().model_dump()
+        tm.that(first.unwrap().model_dump(), eq=second.unwrap().model_dump())
 
     def test_parse_and_validate_ldif_empty_path_fails(
         self,
@@ -71,9 +68,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         """An empty path surfaces a required-path failure via the result channel."""
         result = svc.parse_and_validate_ldif("")
 
-        assert result.failure
-        assert result.error is not None
-        assert "required" in result.error.lower()
+        tm.fail(result)
+        tm.that(result.error, none=False)
+        tm.that(result.error.lower(), has="required")
 
     def test_run_data_quality_assessment_equals_parse_and_validate(
         self,
@@ -87,7 +84,7 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         parsed = svc.parse_and_validate_ldif(target)
 
         assert assessed.success and parsed.success
-        assert assessed.unwrap().model_dump() == parsed.unwrap().model_dump()
+        tm.that(assessed.unwrap().model_dump(), eq=parsed.unwrap().model_dump())
 
     def test_generate_and_write_models_produces_staging_and_analytics(
         self,
@@ -97,11 +94,11 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         """Model generation yields one staging and one analytics model."""
         result = svc.generate_and_write_models(entries)
 
-        assert result.success
+        tm.ok(result)
         data = result.unwrap()
-        assert data.models_generated == 2
-        assert c.DbtLdif.STAGING_MODEL_NAME in data.model_names
-        assert c.DbtLdif.ANALYTICS_MODEL_NAME in data.model_names
+        tm.that(data.models_generated, eq=2)
+        tm.that(data.model_names, has=c.DbtLdif.STAGING_MODEL_NAME)
+        tm.that(data.model_names, has=c.DbtLdif.ANALYTICS_MODEL_NAME)
 
     def test_generate_and_write_models_empty_entries_yields_no_models(
         self,
@@ -110,10 +107,10 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         """No entries produce an empty, well-formed generation result."""
         result = svc.generate_and_write_models([])
 
-        assert result.success
+        tm.ok(result)
         data = result.unwrap()
-        assert data.models_generated == 0
-        assert data.model_names == []
+        tm.that(data.models_generated, eq=0)
+        tm.that(data.model_names, eq=[])
 
     def test_run_complete_workflow_all_stages_completes(
         self,
@@ -127,13 +124,13 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
             run_transformations=True,
         )
 
-        assert result.success
+        tm.ok(result)
         data = result.unwrap()
-        assert data.workflow_status == c.DbtLdif.WORKFLOW_STATUS_COMPLETED
-        assert data.entry_count == 1
-        assert data.validation_status == c.DbtLdif.VALIDATION_STATUS_PASSED
-        assert data.models_generated == 2
-        assert data.transformation_status == c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS
+        tm.that(data.workflow_status, eq=c.DbtLdif.WORKFLOW_STATUS_COMPLETED)
+        tm.that(data.entry_count, eq=1)
+        tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
+        tm.that(data.models_generated, eq=2)
+        tm.that(data.transformation_status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
     @pytest.mark.parametrize(
         ("generate_models", "run_transformations", "expected_models"),
@@ -158,14 +155,14 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
             run_transformations=run_transformations,
         )
 
-        assert result.success
+        tm.ok(result)
         data = result.unwrap()
-        assert data.workflow_status == c.DbtLdif.WORKFLOW_STATUS_COMPLETED
-        assert data.models_generated == expected_models
+        tm.that(data.workflow_status, eq=c.DbtLdif.WORKFLOW_STATUS_COMPLETED)
+        tm.that(data.models_generated, eq=expected_models)
         expected_status = (
             c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS if run_transformations else ""
         )
-        assert data.transformation_status == expected_status
+        tm.that(data.transformation_status, eq=expected_status)
 
     def test_run_complete_workflow_records_source_file(
         self,
@@ -177,8 +174,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
         result = svc.run_complete_workflow(target)
 
-        assert result.success
-        assert result.unwrap().ldif_file == str(target)
+        tm.ok(result)
+        tm.that(result.unwrap().ldif_file, eq=str(target))
 
 
 __all__: list[str] = ["TestsFlextDbtLdifServices"]

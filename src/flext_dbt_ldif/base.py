@@ -12,8 +12,8 @@ from __future__ import annotations
 
 from typing import Annotated, override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, t
-from flext_meltano import FlextMeltanoDbtServiceBase, p, u
+from flext_dbt_ldif import FlextDbtLdifSettings, m, p, t, u
+from flext_meltano import FlextMeltanoDbtServiceBase
 
 
 class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
@@ -28,17 +28,6 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     def _runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
         """Return runtime bootstrap options for DBT LDIF services."""
         return m.RuntimeBootstrapOptions(settings_type=FlextDbtLdifSettings)
-
-    @property
-    @override
-    def settings(self) -> FlextDbtLdifSettings:
-        """Typed dbt-ldif settings from the INJECTED runtime (not the global)."""
-        # NOTE (multi-agent): mro-rn88 — narrow the runtime-injected settings so test
-        # overrides are honored; fall back to the typed global singleton.
-        runtime_settings = super().settings
-        if isinstance(runtime_settings, FlextDbtLdifSettings):
-            return runtime_settings
-        return FlextDbtLdifSettings.fetch_global()
 
     @property
     @override
