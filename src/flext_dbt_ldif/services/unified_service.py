@@ -32,7 +32,7 @@ class FlextDbtLdifUnifiedService:
         ) -> None:
             """Initialize service with optional injected settings + project context."""
             # NOTE (multi-agent): mro-rn88 — accept injected settings and pass them to the
-            # ServiceBase runtime so self.settings resolves the injected instance.
+            # ServiceBase runtime so settings resolves the injected instance.
             super().__init__()
             if settings is not None:
                 self.runtime_settings = settings

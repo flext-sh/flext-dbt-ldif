@@ -5,11 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import (
-    build_lazy_import_map,
-    install_lazy_exports,
-    merge_lazy_imports,
-)
+from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 from flext_dbt_ldif.__version__ import (
     __author__,
     __author_email__,
@@ -22,119 +18,136 @@ from flext_dbt_ldif.__version__ import (
 )
 
 if TYPE_CHECKING:
-    from flext_dbt_ldif._settings import (
-        FlextDbtLdifSettings as FlextDbtLdifSettings,
-        settings as settings,
-    )
-    from flext_dbt_ldif.api import FlextDbtLdif as FlextDbtLdif, dbt_ldif as dbt_ldif
-    from flext_dbt_ldif.base import (
-        FlextDbtLdifServiceBase as FlextDbtLdifServiceBase,
-        s as s,
-    )
-    from flext_dbt_ldif.constants import (
-        FlextDbtLdifConstants as FlextDbtLdifConstants,
-        c as c,
-    )
-    from flext_dbt_ldif.models import FlextDbtLdifModels as FlextDbtLdifModels, m as m
-    from flext_dbt_ldif.protocols import (
-        FlextDbtLdifProtocols as FlextDbtLdifProtocols,
+    from flext_ldif import d, e, h, r, x
+
+    from ._settings import FlextDbtLdifSettings, settings
+    from .api import FlextDbtLdif, dbt_ldif
+    from .base import FlextDbtLdifServiceBase, s
+    from .constants import FlextDbtLdifConstants, FlextDbtLdifConstants as c
+    from .models import FlextDbtLdifModels, FlextDbtLdifModels as m
+    from .protocols import FlextDbtLdifProtocols, FlextDbtLdifProtocols as p
+    from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
+    from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
+
+    _ = (
+        c,
+        FlextDbtLdifConstants,
+        t,
+        FlextDbtLdifTypes,
         p,
-    )
-    from flext_dbt_ldif.services.client import FlextDbtLdifClient as FlextDbtLdifClient
-    from flext_dbt_ldif.services.core import FlextDbtLdifCore as FlextDbtLdifCore
-    from flext_dbt_ldif.services.service import (
-        FlextDbtLdifServiceMixin as FlextDbtLdifServiceMixin,
-    )
-    from flext_dbt_ldif.services.unified_service import (
-        FlextDbtLdifUnifiedService as FlextDbtLdifUnifiedService,
-    )
-    from flext_dbt_ldif.typings import FlextDbtLdifTypes as FlextDbtLdifTypes, t as t
-    from flext_dbt_ldif.utilities import (
-        FlextDbtLdifUtilities as FlextDbtLdifUtilities,
+        FlextDbtLdifProtocols,
+        m,
+        FlextDbtLdifModels,
         u,
+        FlextDbtLdifUtilities,
+        d,
+        e,
+        h,
+        r,
+        x,
+        s,
+        FlextDbtLdifServiceBase,
+        FlextDbtLdifSettings,
+        settings,
+        FlextDbtLdif,
+        dbt_ldif,
     )
-    from flext_ldif import d as d, e as e, h as h, r as r, x as x
-_LAZY_IMPORTS = merge_lazy_imports(
-    (".services",),
-    build_lazy_import_map(
-        {
-            "._settings": ("FlextDbtLdifSettings", "settings"),
-            ".api": (
-                "FlextDbtLdif",
-                "dbt_ldif",
-            ),
-            ".base": (
-                "FlextDbtLdifServiceBase",
-                "s",
-            ),
-            ".constants": (
-                "FlextDbtLdifConstants",
-                "c",
-            ),
-            ".models": (
-                "FlextDbtLdifModels",
-                "m",
-            ),
-            ".protocols": (
-                "FlextDbtLdifProtocols",
-                "p",
-            ),
-            ".services.client": ("FlextDbtLdifClient",),
-            ".services.core": ("FlextDbtLdifCore",),
-            ".services.service": ("FlextDbtLdifServiceMixin",),
-            ".services.unified_service": ("FlextDbtLdifUnifiedService",),
-            ".typings": (
-                "FlextDbtLdifTypes",
-                "t",
-            ),
-            ".utilities": (
-                "FlextDbtLdifUtilities",
-                "u",
-            ),
-            "flext_ldif": (
-                "d",
-                "e",
-                "h",
-                "r",
-                "x",
-            ),
-        },
+
+
+_LAZY_MODULES: dict[str, tuple[str, ...]] = {
+    "._settings": (
+        "FlextDbtLdifSettings",
+        "settings",
     ),
-    exclude_names=(
-        "cleanup_submodule_namespace",
-        "install_lazy_exports",
-        "lazy_getattr",
-        "logger",
-        "merge_lazy_imports",
-        "output",
-        "output_reporting",
-        "pytest_addoption",
-        "pytest_collect_file",
-        "pytest_collection_modifyitems",
-        "pytest_configure",
-        "pytest_runtest_setup",
-        "pytest_runtest_teardown",
-        "pytest_sessionfinish",
-        "pytest_sessionstart",
-        "pytest_terminal_summary",
-        "pytest_warning_recorded",
+    ".api": (
+        "FlextDbtLdif",
+        "dbt_ldif",
     ),
-    module_name=__name__,
+    ".base": (
+        "FlextDbtLdifServiceBase",
+        "s",
+    ),
+    ".constants": (
+        "FlextDbtLdifConstants",
+        "c",
+    ),
+    ".models": (
+        "FlextDbtLdifModels",
+        "m",
+    ),
+    ".protocols": (
+        "FlextDbtLdifProtocols",
+        "p",
+    ),
+    ".typings": (
+        "FlextDbtLdifTypes",
+        "t",
+    ),
+    ".utilities": (
+        "FlextDbtLdifUtilities",
+        "u",
+    ),
+    "flext_ldif": (
+        "d",
+        "e",
+        "h",
+        "r",
+        "x",
+    ),
+}
+
+
+_LAZY_ALIAS_GROUPS: dict[str, tuple[tuple[str, str], ...]] = {}
+
+
+_LAZY_IMPORTS = build_lazy_import_map(
+    _LAZY_MODULES,
+    alias_groups=_LAZY_ALIAS_GROUPS,
+    sort_keys=False,
 )
 
-
-__all__: tuple[str, ...] = (
+_DIRECT_IMPORTS: tuple[str, ...] = (
     "FlextDbtLdif",
-    "FlextDbtLdifClient",
     "FlextDbtLdifConstants",
-    "FlextDbtLdifCore",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifServiceBase",
-    "FlextDbtLdifServiceMixin",
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
-    "FlextDbtLdifUnifiedService",
+    "FlextDbtLdifUtilities",
+    "__author__",
+    "__author_email__",
+    "__description__",
+    "__license__",
+    "__title__",
+    "__url__",
+    "__version__",
+    "__version_info__",
+    "build_lazy_import_map",
+    "c",
+    "d",
+    "dbt_ldif",
+    "e",
+    "h",
+    "install_lazy_exports",
+    "m",
+    "p",
+    "r",
+    "s",
+    "settings",
+    "t",
+    "u",
+    "x",
+)
+
+__all__: tuple[str, ...] = (
+    "FlextDbtLdif",
+    "FlextDbtLdifConstants",
+    "FlextDbtLdifModels",
+    "FlextDbtLdifProtocols",
+    "FlextDbtLdifServiceBase",
+    "FlextDbtLdifSettings",
+    "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
     "__author__",
     "__author_email__",

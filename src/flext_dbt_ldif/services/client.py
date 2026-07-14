@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 # NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 logger = u.fetch_logger(__name__)
 
@@ -38,7 +35,7 @@ class FlextDbtLdifClient:
             selected_path = (
                 str(file_path)
                 if file_path is not None
-                else self.settings.DbtLdif.ldif_file_path
+                else settings.DbtLdif.ldif_file_path
             )
             if not selected_path:
                 return r[list[t.JsonMapping]].fail(
@@ -110,10 +107,7 @@ class FlextDbtLdifClient:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "No LDIF entries found",
                 )
-            if (
-                self.settings.DbtLdif.min_quality_threshold
-                > c.DbtLdif.DEFAULT_QUALITY_SCORE
-            ):
+            if settings.DbtLdif.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met",
                 )
