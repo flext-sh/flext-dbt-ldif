@@ -47,3 +47,7 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
 
 settings: FlextDbtLdifSettings = FlextDbtLdifSettings.fetch_global()
 """Pre-instantiated project settings singleton — ``from flext_dbt_ldif import settings``."""
+
+
+# NOTE(mro-wkii.17.26, agent codex): root lazy exports consume the explicit settings contract.
+__all__: list[str] = ["FlextDbtLdifSettings", "settings"]
