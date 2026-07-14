@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
-
-logger = u.fetch_logger(__name__)
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, settings, t, u
 
 
 class FlextDbtLdifClient:
@@ -69,7 +66,7 @@ class FlextDbtLdifClient:
                 return r[m.DbtLdif.PipelineResult].fail(
                     transform_result.error or "Transform failed",
                 )
-            logger.info("Completed LDIF to DBT pipeline")
+            u.logger.info("Completed LDIF to DBT pipeline")
             return r[m.DbtLdif.PipelineResult].ok(
                 m.DbtLdif.PipelineResult(
                     parsed_entries=len(parse_result.value),
