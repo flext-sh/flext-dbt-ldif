@@ -123,7 +123,7 @@ class TestsFlextDbtLdifServicesAndApi:
         # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a raw
         # dict (U18: config/settings values are validated models, no model-less payload).
         settings = FlextDbtLdifSettings(
-            DbtLdif=FlextDbtLdifSettings.DbtLdif(min_quality_threshold=0.5),
+            DbtLdif=FlextDbtLdifSettings._DbtLdif(min_quality_threshold=0.5),
         )
         api = FlextDbtLdif(settings=settings)
 

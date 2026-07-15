@@ -48,7 +48,7 @@ class TestsFlextDbtLdifVersion:
     def test_version_info_leading_component_is_numeric(self) -> None:
         """The leading version component is a non-negative integer (major)."""
         major = __version_info__[0]
-        assert major is int
+        assert isinstance(major, int)
         assert major >= 0
 
 
