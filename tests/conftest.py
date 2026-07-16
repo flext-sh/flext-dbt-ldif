@@ -32,6 +32,15 @@ def set_test_environment() -> Generator[None]:
         yield
 
 
+@pytest.fixture
+def settings() -> FlextDbtLdifSettings:
+    """Provide a typed FlextDbtLdifSettings instance with a sample LDIF path."""
+    FlextDbtLdifSettings.reset_for_testing()
+    return FlextDbtLdifSettings(
+        DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="/tmp/sample.ldif"),
+    )
+
+
 def pytest_runtest_setup(item: pytest.Item) -> None:
     """Reset the settings singleton before each test."""
     _ = item
