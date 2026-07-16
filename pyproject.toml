@@ -20,11 +20,11 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "flext-core",
-  "flext-ldif",
-  "flext-meltano",
-  "pydantic-core>=2.46.3",
-  "pydantic>=2.13.3",
+    "flext-core @ git+https://github.com/flext-sh/flext-core.git@0.12.0-dev",
+    "flext-ldif @ git+https://github.com/flext-sh/flext-ldif.git@0.12.0-dev",
+    "flext-meltano @ git+https://github.com/flext-sh/flext-meltano.git@0.12.0-dev",
+    "pydantic-core>=2.46.3",
+    "pydantic>=2.13.3",
 ]
 description = "FLEXT dbt LDAP - dbt Models for LDIF Data Transformation"
 keywords = [ "data-transformation", "dbt", "enterprise", "flext", "sql", "typed" ]
@@ -733,16 +733,6 @@ all = true
 in_place = true
 sort_first = [ "build-system", "dependency-groups", "project", "tool" ]
 
-[tool.uv.sources.flext-core]
-workspace = true
-
-[tool.uv.sources.flext-ldif]
-workspace = true
-
-[tool.uv.sources.flext-meltano]
-workspace = true
-
-# [MANAGED] yamlfix
 [tool.yamlfix]
 explicit_start = false
 line_length = 88
