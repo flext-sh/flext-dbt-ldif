@@ -6,7 +6,7 @@ from typing import Protocol, runtime_checkable
 
 from flext_dbt_ldif import t
 from flext_ldif import FlextLdifProtocols
-from flext_meltano import m, p
+from flext_meltano import p
 
 
 class FlextDbtLdifProtocols(p, FlextLdifProtocols):
@@ -22,14 +22,14 @@ class FlextDbtLdifProtocols(p, FlextLdifProtocols):
             def run_dbt_models(
                 self,
                 models: t.StrSequence | None = None,
-            ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
+            ) -> p.Result[p.DbtLdif.DbtTransformationResult]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
                 self,
                 models: t.StrSequence | None = None,
-            ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
+            ) -> p.Result[p.DbtLdif.DbtTransformationResult]:
                 """Run DBT tests and return status payload."""
                 ...
 

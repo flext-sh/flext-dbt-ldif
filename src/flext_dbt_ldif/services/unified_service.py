@@ -51,11 +51,11 @@ class FlextDbtLdifUnifiedService:
 
         def generate_analytics_models(
             self,
-            staging_models: t.SequenceOf[m.DbtLdif.DbtModel],
-        ) -> p.Result[list[m.DbtLdif.DbtModel]]:
+            staging_models: t.SequenceOf[p.DbtLdif.DbtModel],
+        ) -> p.Result[list[p.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set."""
             if not staging_models:
-                return r[list[m.DbtLdif.DbtModel]].ok([])
+                return r[list[p.DbtLdif.DbtModel]].ok([])
             analytics = m.DbtLdif.DbtModel(
                 name=c.DbtLdif.ANALYTICS_MODEL_NAME,
                 dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_ANALYTICS,
@@ -66,15 +66,15 @@ class FlextDbtLdifUnifiedService:
                 columns=[],
                 dependencies=[c.DbtLdif.STAGING_MODEL_NAME],
             )
-            return r[list[m.DbtLdif.DbtModel]].ok([analytics])
+            return r[list[p.DbtLdif.DbtModel]].ok([analytics])
 
         def generate_staging_models(
             self,
             entries: t.SequenceOf[t.JsonMapping],
-        ) -> p.Result[list[m.DbtLdif.DbtModel]]:
+        ) -> p.Result[list[p.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:
-                return r[list[m.DbtLdif.DbtModel]].ok([])
+                return r[list[p.DbtLdif.DbtModel]].ok([])
             model = m.DbtLdif.DbtModel(
                 name=c.DbtLdif.STAGING_MODEL_NAME,
                 dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
@@ -85,4 +85,4 @@ class FlextDbtLdifUnifiedService:
                 columns=[],
                 dependencies=[],
             )
-            return r[list[m.DbtLdif.DbtModel]].ok([model])
+            return r[list[p.DbtLdif.DbtModel]].ok([model])

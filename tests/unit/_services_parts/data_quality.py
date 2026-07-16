@@ -33,8 +33,8 @@ class TestsFlextDbtLdifServicesDataQuality:
 
         def _validate_ldif_data(
             entries: t.SequenceOf[t.JsonMapping],
-        ) -> p.Result[m.DbtLdif.LdifValidationResult]:
-            return r[m.DbtLdif.LdifValidationResult].ok(
+        ) -> p.Result[p.DbtLdif.LdifValidationResult]:
+            return r[p.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
                     total_entries=1,
                     quality_score=0.88,

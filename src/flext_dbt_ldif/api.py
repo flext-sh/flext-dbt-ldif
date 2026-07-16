@@ -14,7 +14,6 @@ from typing import ClassVar, Self
 from flext_dbt_ldif import (
     FlextDbtLdifSettings,
     c,
-    m,
     p,
     r,
     t,
@@ -66,11 +65,11 @@ class FlextDbtLdif(
         ldif_file: Path | str,
         *,
         overwrite: bool = False,
-    ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
+    ) -> p.Result[p.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
-            return r[m.DbtLdif.ModelGenerationResult].fail(
+            return r[p.DbtLdif.ModelGenerationResult].fail(
                 parsed.error or "Parsing failed",
             )
         entries_raw = parsed.value
@@ -79,7 +78,7 @@ class FlextDbtLdif(
                 entries_raw,
             )
         except c.ValidationError:
-            return r[m.DbtLdif.ModelGenerationResult].fail(
+            return r[p.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload",
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
@@ -90,7 +89,7 @@ class FlextDbtLdif(
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> p.Result[m.DbtLdif.WorkflowResult]:
+    ) -> p.Result[p.DbtLdif.WorkflowResult]:
         """Execute end-to-end LDIF workflow."""
         return self.service.run_complete_workflow(
             ldif_file=ldif_file,
@@ -101,7 +100,7 @@ class FlextDbtLdif(
     def validate_ldif_quality(
         self,
         ldif_file: Path | str,
-    ) -> p.Result[m.DbtLdif.ParseValidationResult]:
+    ) -> p.Result[p.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)
 

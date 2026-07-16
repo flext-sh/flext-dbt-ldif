@@ -33,7 +33,7 @@ class TestsFlextDbtLdifDbtModels:
         name: str = "test_model",
         ldif_source: str = "ldif_entries",
         sql_content: str = "select 1",
-    ) -> m.DbtLdif.DbtModel:
+    ) -> p.DbtLdif.DbtModel:
         """Build a DbtModel via its public constructor."""
         return m.DbtLdif.DbtModel(
             name=name,
