@@ -14,7 +14,7 @@ from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
-from tests import c, m, t
+from tests import c, m, p, t
 
 
 class TestsFlextDbtLdifDbtModels:
