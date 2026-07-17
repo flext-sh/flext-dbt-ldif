@@ -31,6 +31,12 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
 
     @property
     @override
+    def settings(self) -> FlextDbtLdifSettings:
+        """The typed dbt-ldif settings namespace."""
+        return settings
+
+    @property
+    @override
     def connection_profile(self) -> p.Meltano.DbtConnectionProfile:
         """Dbt connection profile for LDIF-backed workflows."""
         # NOTE (multi-agent): mro-rn88 ADR-006 thin-driver — read INJECTED settings.
