@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_dbt_ldif import m, t
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import p
+
+if TYPE_CHECKING:
+    from flext_dbt_ldif import m, t
 
 
 class FlextDbtLdifProtocols(p, FlextLdifProtocols):
@@ -22,14 +24,14 @@ class FlextDbtLdifProtocols(p, FlextLdifProtocols):
             def run_dbt_models(
                 self,
                 models: t.StrSequence | None = None,
-            ) -> p.Result[p.DbtLdif.DbtTransformationResult]:
+            ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
                 self,
                 models: t.StrSequence | None = None,
-            ) -> p.Result[p.DbtLdif.DbtTransformationResult]:
+            ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT tests and return status payload."""
                 ...
 

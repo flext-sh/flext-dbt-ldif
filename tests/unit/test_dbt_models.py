@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from flext_tests import tm
@@ -15,6 +15,9 @@ from flext_tests import tm
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 from tests import c, m, p, t
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestsFlextDbtLdifDbtModels:

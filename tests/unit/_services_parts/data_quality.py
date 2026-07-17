@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-import pytest
 from flext_tests import r, tm
 
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from tests import m, p, t
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pytest
+
+    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 
 
 class TestsFlextDbtLdifServicesDataQuality:
