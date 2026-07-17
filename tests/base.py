@@ -6,7 +6,7 @@ from typing import override
 
 from flext_tests import s
 
-from tests import TestsFlextDbtLdifSettings, m
+from tests import TestsFlextDbtLdifSettings, m, p
 
 
 class TestsFlextDbtLdifServiceBase(s):
