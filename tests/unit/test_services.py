@@ -69,8 +69,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         result = svc.parse_and_validate_ldif("")
 
         tm.fail(result)
-        tm.that(result.error, none=False)
-        tm.that(result.error.lower(), has="required")
+        error = result.error
+        assert error is not None
+        tm.that(error.lower(), has="required")
 
     def test_run_data_quality_assessment_equals_parse_and_validate(
         self,

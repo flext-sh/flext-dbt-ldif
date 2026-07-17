@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Annotated, override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, p, t, u
+from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t, u
 from flext_meltano import FlextMeltanoDbtServiceBase
 
 
@@ -28,6 +28,12 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     def _runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
         """Return runtime bootstrap options for DBT LDIF services."""
         return m.RuntimeBootstrapOptions(settings_type=FlextDbtLdifSettings)
+
+    @property
+    @override
+    def settings(self) -> FlextDbtLdifSettings:
+        """The typed dbt-ldif settings namespace."""
+        return settings
 
     @property
     @override
