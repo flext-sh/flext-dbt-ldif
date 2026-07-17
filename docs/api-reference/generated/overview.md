@@ -3,7 +3,7 @@
 # flext-dbt-ldif API Overview
 
 - Package: `flext_dbt_ldif`
-- Version: `0.12.0`
+- Version: `0.20.0`
 - Description: FLEXT dbt LDAP - dbt Models for LDIF Data Transformation
 - Doc summary: Flext Dbt Ldif package.
 - Classifiers: `Development Status :: 3 - Alpha`, `Intended Audience :: Developers`, `Operating System :: OS Independent`, `Programming Language :: Python :: 3 :: Only`, `Programming Language :: Python :: 3.13`, `Topic :: Database` (+2 more)

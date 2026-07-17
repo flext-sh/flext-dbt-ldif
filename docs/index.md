@@ -2,7 +2,7 @@
 
 # flext-dbt-ldif Documentation
 
-- Version: `0.12.0`
+- Version: `0.20.0`
 - Project class: `integration`
 - Package: `flext_dbt_ldif`
 - Description: FLEXT dbt LDAP - dbt Models for LDIF Data Transformation
