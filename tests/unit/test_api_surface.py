@@ -15,11 +15,7 @@ from __future__ import annotations
 import pytest
 from flext_tests import tm
 
-from flext_dbt_ldif import (
-    FlextDbtLdif,
-    FlextDbtLdifSettings,
-    __version__,
-)
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from tests import c

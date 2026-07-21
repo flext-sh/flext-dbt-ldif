@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Annotated, override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t, u
+from flext_dbt_ldif import m, p, settings, t, u
 from flext_meltano import FlextMeltanoDbtServiceBase
 
 

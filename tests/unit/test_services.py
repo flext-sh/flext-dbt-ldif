@@ -13,9 +13,7 @@ from flext_tests import tm
 
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from tests import c, t
-from tests.unit._services_parts.data_quality import (
-    TestsFlextDbtLdifServicesDataQuality,
-)
+from tests.unit._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
 
 if TYPE_CHECKING:
     from pathlib import Path

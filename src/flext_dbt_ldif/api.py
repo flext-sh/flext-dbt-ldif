@@ -10,14 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar, Self
 
-from flext_dbt_ldif import (
-    FlextDbtLdifSettings,
-    c,
-    m,
-    p,
-    r,
-    t,
-)
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
