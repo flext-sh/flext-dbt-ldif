@@ -10,10 +10,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
 from flext_dbt_ldif import c, t
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
+from flext_tests import tm
+import operator
 
 
 class TestsFlextDbtLdifCore:
@@ -54,10 +55,7 @@ class TestsFlextDbtLdifCore:
         [
             pytest.param([], 0, 0, id="empty"),
             pytest.param(
-                [{"dn": "cn=user1,dc=example,dc=com"}],
-                1,
-                1,
-                id="single-entry",
+                [{"dn": "cn=user1,dc=example,dc=com"}], 1, 1, id="single-entry"
             ),
             pytest.param(
                 [
@@ -106,7 +104,7 @@ class TestsFlextDbtLdifCore:
         total = (
             analytics
             .analyze_entry_patterns(entries)
-            .map(lambda payload: payload["total_entries"])
+            .map(operator.itemgetter("total_entries"))
             .unwrap()
         )
         tm.that(total, eq=1)

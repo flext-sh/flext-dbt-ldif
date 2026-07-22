@@ -56,50 +56,21 @@ if TYPE_CHECKING:
     from flext_ldif import d as d, e as e, h as h, r as r, x as x
 _LAZY_IMPORTS = merge_lazy_imports(
     (".services",),
-    build_lazy_import_map(
-        {
-            "._settings": ("FlextDbtLdifSettings", "settings"),
-            ".api": (
-                "FlextDbtLdif",
-                "dbt_ldif",
-            ),
-            ".base": (
-                "FlextDbtLdifServiceBase",
-                "s",
-            ),
-            ".constants": (
-                "FlextDbtLdifConstants",
-                "c",
-            ),
-            ".models": (
-                "FlextDbtLdifModels",
-                "m",
-            ),
-            ".protocols": (
-                "FlextDbtLdifProtocols",
-                "p",
-            ),
-            ".services.client": ("FlextDbtLdifClient",),
-            ".services.core": ("FlextDbtLdifCore",),
-            ".services.service": ("FlextDbtLdifServiceMixin",),
-            ".services.unified_service": ("FlextDbtLdifUnifiedService",),
-            ".typings": (
-                "FlextDbtLdifTypes",
-                "t",
-            ),
-            ".utilities": (
-                "FlextDbtLdifUtilities",
-                "u",
-            ),
-            "flext_ldif": (
-                "d",
-                "e",
-                "h",
-                "r",
-                "x",
-            ),
-        },
-    ),
+    build_lazy_import_map({
+        "._settings": ("FlextDbtLdifSettings", "settings"),
+        ".api": ("FlextDbtLdif", "dbt_ldif"),
+        ".base": ("FlextDbtLdifServiceBase", "s"),
+        ".constants": ("FlextDbtLdifConstants", "c"),
+        ".models": ("FlextDbtLdifModels", "m"),
+        ".protocols": ("FlextDbtLdifProtocols", "p"),
+        ".services.client": ("FlextDbtLdifClient",),
+        ".services.core": ("FlextDbtLdifCore",),
+        ".services.service": ("FlextDbtLdifServiceMixin",),
+        ".services.unified_service": ("FlextDbtLdifUnifiedService",),
+        ".typings": ("FlextDbtLdifTypes", "t"),
+        ".utilities": ("FlextDbtLdifUtilities", "u"),
+        "flext_ldif": ("d", "e", "h", "r", "x"),
+    }),
     exclude_names=(
         "cleanup_submodule_namespace",
         "install_lazy_exports",
@@ -160,9 +131,4 @@ __all__: tuple[str, ...] = (
 )
 
 
-install_lazy_exports(
-    __name__,
-    globals(),
-    _LAZY_IMPORTS,
-    public_exports=__all__,
-)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

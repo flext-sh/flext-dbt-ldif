@@ -23,15 +23,13 @@ class FlextDbtLdifProtocols(p, FlextLdifProtocols):
             """Protocol for DBT model execution and testing."""
 
             def run_dbt_models(
-                self,
-                models: t.StrSequence | None = None,
+                self, models: t.StrSequence | None = None
             ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT models and return execution payload."""
                 ...
 
             def test_dbt_models(
-                self,
-                models: t.StrSequence | None = None,
+                self, models: t.StrSequence | None = None
             ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
                 """Run DBT tests and return status payload."""
                 ...

@@ -2,14 +2,10 @@
 
 from __future__ import annotations
 
-from flext_tests import tm
 from packaging.version import Version
 
-from flext_dbt_ldif import (
-    __version__,
-    __version__ as version,
-    __version_info__,
-)
+from flext_dbt_ldif import __version__, __version__ as version, __version_info__
+from flext_tests import tm
 
 
 class TestsFlextDbtLdifVersion:

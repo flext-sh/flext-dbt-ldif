@@ -6,7 +6,6 @@ from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from flext_tests import r, tm
-
 from tests import m, t
 
 if TYPE_CHECKING:
@@ -28,13 +27,9 @@ class TestsFlextDbtLdifServicesDataQuality:
         tmp_path: Path,
     ) -> None:
         """Test data quality assessment delegates to parse_and_validate."""
-        entries: t.SequenceOf[t.JsonMapping] = [
-            {"dn": "cn=test,dc=example,dc=org"},
-        ]
+        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
 
-        def _parse_ldif_file(
-            _fp: Path | str,
-        ) -> p.Result[Sequence[t.JsonMapping]]:
+        def _parse_ldif_file(_fp: Path | str) -> p.Result[Sequence[t.JsonMapping]]:
             return r[Sequence[t.JsonMapping]].ok(entries)
 
         def _validate_ldif_data(
@@ -42,10 +37,8 @@ class TestsFlextDbtLdifServicesDataQuality:
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
-                    total_entries=1,
-                    quality_score=0.88,
-                    validation_status="passed",
-                ),
+                    total_entries=1, quality_score=0.88, validation_status="passed"
+                )
             )
 
         monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)

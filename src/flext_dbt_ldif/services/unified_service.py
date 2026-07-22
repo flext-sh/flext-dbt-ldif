@@ -50,8 +50,7 @@ class FlextDbtLdifUnifiedService:
             return r[t.JsonMapping].ok(payload)
 
         def generate_analytics_models(
-            self,
-            staging_models: t.SequenceOf[m.DbtLdif.DbtModel],
+            self, staging_models: t.SequenceOf[m.DbtLdif.DbtModel]
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set."""
             if not staging_models:
@@ -69,8 +68,7 @@ class FlextDbtLdifUnifiedService:
             return r[list[m.DbtLdif.DbtModel]].ok([analytics])
 
         def generate_staging_models(
-            self,
-            entries: t.SequenceOf[t.JsonMapping],
+            self, entries: t.SequenceOf[t.JsonMapping]
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:

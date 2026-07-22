@@ -9,19 +9,16 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, c
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_tests import tm
 
 
 class TestsFlextDbtLdifServicesAndApi:
     """Observable behavior of the FlextDbtLdif facade public methods."""
 
-    def test_process_ldif_file_returns_completed_workflow(
-        self,
-        tmp_path: Path,
-    ) -> None:
+    def test_process_ldif_file_returns_completed_workflow(self, tmp_path: Path) -> None:
         """process_ldif_file yields a completed, validated workflow result."""
         api = FlextDbtLdif()
 
@@ -72,8 +69,7 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(workflow.transformation_status, eq=expected_status)
 
     def test_validate_ldif_quality_reports_passing_metrics(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """validate_ldif_quality returns the parse/validation quality contract."""
         api = FlextDbtLdif()
@@ -87,8 +83,7 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(report.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
 
     def test_generate_ldif_models_produces_staging_and_analytics(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """generate_ldif_models emits the staging and analytics model names."""
         api = FlextDbtLdif()
@@ -100,15 +95,11 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(generation.models_generated, eq=2)
         tm.that(
             list(generation.model_names),
-            eq=[
-                c.DbtLdif.STAGING_MODEL_NAME,
-                c.DbtLdif.ANALYTICS_MODEL_NAME,
-            ],
+            eq=[c.DbtLdif.STAGING_MODEL_NAME, c.DbtLdif.ANALYTICS_MODEL_NAME],
         )
 
     def test_generate_ldif_models_dump_exposes_public_state(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """The generation result serializes its public fields via model_dump."""
         api = FlextDbtLdif()
@@ -123,7 +114,7 @@ class TestsFlextDbtLdifServicesAndApi:
         # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a raw
         # dict (U18: config/settings values are validated models, no model-less payload).
         settings = FlextDbtLdifSettings(
-            DbtLdif=FlextDbtLdifSettings._DbtLdif(min_quality_threshold=0.5),
+            DbtLdif=FlextDbtLdifSettings._DbtLdif(min_quality_threshold=0.5)
         )
         api = FlextDbtLdif(settings=settings)
 

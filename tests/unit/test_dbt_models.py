@@ -10,10 +10,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_tests import tm
 from tests import c, m, t
 
 
@@ -24,7 +24,7 @@ class TestsFlextDbtLdifDbtModels:
     def service(self) -> FlextDbtLdifUnifiedService.UnifiedService:
         """Provide a service instance backed by global settings."""
         return FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
+            settings=FlextDbtLdifSettings.fetch_global()
         )
 
     @staticmethod
@@ -47,13 +47,11 @@ class TestsFlextDbtLdifDbtModels:
     # -- service construction -------------------------------------------------
 
     def test_service_exposes_configured_project_dir_and_default_name(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """Constructor arguments surface through public fields."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
-            project_dir=tmp_path,
+            settings=FlextDbtLdifSettings.fetch_global(), project_dir=tmp_path
         )
         tm.that(gen.project_dir, eq=tmp_path)
         tm.that(gen.name, eq="ldif_generator")
@@ -61,8 +59,7 @@ class TestsFlextDbtLdifDbtModels:
     # -- execute --------------------------------------------------------------
 
     def test_execute_returns_ready_metadata_payload(
-        self,
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        self, service: FlextDbtLdifUnifiedService.UnifiedService
     ) -> None:
         """Execute succeeds and reports the ready status contract."""
         result = service.execute()
@@ -74,8 +71,7 @@ class TestsFlextDbtLdifDbtModels:
     def test_execute_metadata_reflects_project_dir(self, tmp_path: Path) -> None:
         """Execute payload echoes the configured project directory."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(),
-            project_dir=tmp_path,
+            settings=FlextDbtLdifSettings.fetch_global(), project_dir=tmp_path
         )
         data = gen.execute().unwrap()
         tm.that(data["project_dir"], eq=str(tmp_path))
@@ -83,13 +79,10 @@ class TestsFlextDbtLdifDbtModels:
     # -- staging generation ---------------------------------------------------
 
     def test_generate_staging_models_emits_view_model_for_entries(
-        self,
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        self, service: FlextDbtLdifUnifiedService.UnifiedService
     ) -> None:
         """Non-empty entries yield exactly one staging view model."""
-        entries: t.SequenceOf[t.JsonMapping] = [
-            {"dn": "cn=test,dc=example,dc=org"},
-        ]
+        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
         models = service.generate_staging_models(entries).unwrap()
         tm.that(len(models), eq=1)
         model = models[0]
@@ -98,8 +91,7 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.materialization, eq="view")
 
     def test_generate_staging_models_returns_empty_without_entries(
-        self,
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        self, service: FlextDbtLdifUnifiedService.UnifiedService
     ) -> None:
         """Empty entries yield an empty, successful result."""
         result = service.generate_staging_models([])
@@ -109,8 +101,7 @@ class TestsFlextDbtLdifDbtModels:
     # -- analytics generation -------------------------------------------------
 
     def test_generate_analytics_models_emits_table_model_from_staging(
-        self,
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        self, service: FlextDbtLdifUnifiedService.UnifiedService
     ) -> None:
         """A staging model produces one analytics table model."""
         staging_model = self._make_model(name="stg_ldif_entries")
@@ -122,8 +113,7 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.materialization, eq="table")
 
     def test_generate_analytics_models_returns_empty_without_staging(
-        self,
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        self, service: FlextDbtLdifUnifiedService.UnifiedService
     ) -> None:
         """No staging models yields an empty, successful result."""
         result = service.generate_analytics_models([])
@@ -157,9 +147,7 @@ class TestsFlextDbtLdifDbtModels:
         ],
     )
     def test_blank_required_field_rejected_at_construction(
-        self,
-        field: str,
-        kwargs: dict[str, str],
+        self, field: str, kwargs: dict[str, str]
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:
