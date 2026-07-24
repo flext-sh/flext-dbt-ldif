@@ -27,13 +27,9 @@ class TestsFlextDbtLdifServicesDataQuality:
         tmp_path: Path,
     ) -> None:
         """Test data quality assessment delegates to parse_and_validate."""
-        entries: t.SequenceOf[t.JsonMapping] = [
-            {"dn": "cn=test,dc=example,dc=org"},
-        ]
+        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
 
-        def _parse_ldif_file(
-            _fp: Path | str,
-        ) -> p.Result[Sequence[t.JsonMapping]]:
+        def _parse_ldif_file(_fp: Path | str) -> p.Result[Sequence[t.JsonMapping]]:
             return r[Sequence[t.JsonMapping]].ok(entries)
 
         def _validate_ldif_data(
@@ -41,10 +37,8 @@ class TestsFlextDbtLdifServicesDataQuality:
         ) -> p.Result[p.DbtLdif.LdifValidationResult]:
             return r[p.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
-                    total_entries=1,
-                    quality_score=0.88,
-                    validation_status="passed",
-                ),
+                    total_entries=1, quality_score=0.88, validation_status="passed"
+                )
             )
 
         monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)

@@ -57,25 +57,20 @@ class FlextDbtLdif(
         return r[FlextDbtLdifSettings].ok(self._settings)
 
     def generate_ldif_models(
-        self,
-        ldif_file: Path | str,
-        *,
-        overwrite: bool = False,
+        self, ldif_file: Path | str, *, overwrite: bool = False
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                parsed.error or "Parsing failed",
+                parsed.error or "Parsing failed"
             )
         entries_raw = parsed.value
         try:
-            entries = t.json_mapping_sequence_adapter().validate_python(
-                entries_raw,
-            )
+            entries = t.json_mapping_sequence_adapter().validate_python(entries_raw)
         except c.ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                "Invalid parsed entries payload",
+                "Invalid parsed entries payload"
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
@@ -94,8 +89,7 @@ class FlextDbtLdif(
         )
 
     def validate_ldif_quality(
-        self,
-        ldif_file: Path | str,
+        self, ldif_file: Path | str
     ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)

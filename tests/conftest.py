@@ -40,7 +40,7 @@ def settings() -> FlextDbtLdifSettings:
     """Provide a typed FlextDbtLdifSettings instance with a sample LDIF path."""
     FlextDbtLdifSettings.reset_for_testing()
     return FlextDbtLdifSettings(
-        DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="/tmp/sample.ldif"),
+        DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="/tmp/sample.ldif")
     )
 
 
@@ -62,14 +62,12 @@ def pytest_sessionstart(session: pytest.Session) -> None:
     """Ensure shared Docker container is started for the test session."""
     _ = session
     docker_control = tk.shared(
-        "flext-openldap-test",
-        workspace_root=Path(__file__).resolve().parents[2],
+        "flext-openldap-test", workspace_root=Path(__file__).resolve().parents[2]
     )
     result = docker_control.execute()
     if result.failure:
         pytest.skip(
-            f"Failed to start LDAP container: {result.error}",
-            allow_module_level=True,
+            f"Failed to start LDAP container: {result.error}", allow_module_level=True
         )
 
 

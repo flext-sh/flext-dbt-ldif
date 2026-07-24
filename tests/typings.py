@@ -26,7 +26,4 @@ class TestsFlextDbtLdifTypes(FlextTestsTypes, t):
 
 t = TestsFlextDbtLdifTypes
 
-__all__: list[str] = [
-    "TestsFlextDbtLdifTypes",
-    "t",
-]
+__all__: list[str] = ["TestsFlextDbtLdifTypes", "t"]

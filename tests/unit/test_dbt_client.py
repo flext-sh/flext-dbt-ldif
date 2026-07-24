@@ -38,20 +38,14 @@ class TestsFlextDbtLdifClient:
     # ---- parse_ldif_file contract ----------------------------------------
 
     def test_parse_with_explicit_path_returns_entry_tagged_with_source(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """Parsing echoes the requested path as the entry source."""
         path = tmp_path / "dummy.ldif"
         result = FlextDbtLdifClient.Client().parse_ldif_file(path)
 
         entries = result.unwrap()
-        tm.that(
-            entries,
-            eq=[
-                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": str(path)},
-            ],
-        )
+        tm.that(entries, eq=[{"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": str(path)}])
 
     def test_parse_is_idempotent_for_same_path(self, tmp_path: Path) -> None:
         """Parsing the same path twice yields equal payloads."""
@@ -75,8 +69,7 @@ class TestsFlextDbtLdifClient:
 
     @pytest.mark.parametrize("entry_count", [1, 3, 10])
     def test_validation_reports_entry_count_and_passing_status(
-        self,
-        entry_count: int,
+        self, entry_count: int
     ) -> None:
         """Non-empty entries validate as passed with matching totals."""
         entries: t.SequenceOf[t.JsonMapping] = [
@@ -113,31 +106,24 @@ class TestsFlextDbtLdifClient:
         tm.that(list(data.models), eq=["m1", "m2"])
         tm.that(data.status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
-    def test_transform_without_models_uses_default_staging_and_analytics(
-        self,
-    ) -> None:
+    def test_transform_without_models_uses_default_staging_and_analytics(self) -> None:
         """Omitting model names falls back to the default model set."""
         data = FlextDbtLdifClient.Client().transform_with_dbt([], None).unwrap()
 
         tm.that(
             list(data.models),
-            eq=[
-                c.DbtLdif.STAGING_MODEL_NAME,
-                c.DbtLdif.ANALYTICS_MODEL_NAME,
-            ],
+            eq=[c.DbtLdif.STAGING_MODEL_NAME, c.DbtLdif.ANALYTICS_MODEL_NAME],
         )
         tm.that(data.records, eq=0)
 
     # ---- run_full_pipeline contract --------------------------------------
 
     def test_pipeline_completes_and_aggregates_stage_statuses(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """A valid path drives parse+validate+transform to a completed result."""
         result = FlextDbtLdifClient.Client().run_full_pipeline(
-            tmp_path / "f.ldif",
-            ["m1"],
+            tmp_path / "f.ldif", ["m1"]
         )
         data = result.unwrap()
 
@@ -158,13 +144,12 @@ class TestsFlextDbtLdifClient:
     # ---- result composition contract -------------------------------------
 
     def test_parse_result_chains_into_validation_via_flat_map(
-        self,
-        tmp_path: Path,
+        self, tmp_path: Path
     ) -> None:
         """Parse -> validate composes as monadic r[T] without manual unwrap."""
         client = FlextDbtLdifClient.Client()
         chained = client.parse_ldif_file(tmp_path / "c.ldif").flat_map(
-            client.validate_ldif_data,
+            client.validate_ldif_data
         )
 
         tm.ok(chained)
@@ -185,6 +170,4 @@ class TestsFlextDbtLdifClient:
         tm.that(dumped["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
 
-__all__: list[str] = [
-    "TestsFlextDbtLdifClient",
-]
+__all__: list[str] = ["TestsFlextDbtLdifClient"]

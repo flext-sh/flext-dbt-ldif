@@ -54,10 +54,7 @@ class TestsFlextDbtLdifCore:
         [
             pytest.param([], 0, 0, id="empty"),
             pytest.param(
-                [{"dn": "cn=user1,dc=example,dc=com"}],
-                1,
-                1,
-                id="single-entry",
+                [{"dn": "cn=user1,dc=example,dc=com"}], 1, 1, id="single-entry"
             ),
             pytest.param(
                 [

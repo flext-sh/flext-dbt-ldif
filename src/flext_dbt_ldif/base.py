@@ -35,8 +35,7 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
         """Dbt connection profile for LDIF-backed workflows."""
         # NOTE (multi-agent): mro-rn88 ADR-006 thin-driver — read INJECTED settings.
         return m.DbtLdif.DbtConnectionProfile(
-            path=settings.DbtLdif.ldif_file_path,
-            project=self.dbt_project_name,
+            path=settings.DbtLdif.ldif_file_path, project=self.dbt_project_name
         )
 
 
