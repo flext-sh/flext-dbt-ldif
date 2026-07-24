@@ -26,19 +26,18 @@ class FlextDbtLdifUnifiedService:
 
         def __init__(
             self,
-            name: str = "ldif_generator",
             settings: FlextDbtLdifSettings | None = None,
+            name: str = "ldif_generator",
             project_dir: Path | None = None,
         ) -> None:
-            """Initialize service with project and settings context."""
+            """Initialize service with optional injected settings + project context."""
+            # NOTE (multi-agent): mro-rn88 — accept injected settings and pass them to the
+            # ServiceBase runtime so self.settings resolves the injected instance.
             super().__init__()
+            if settings is not None:
+                self.runtime_settings = settings
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
-            self._settings = (
-                settings
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
 
         @override
         def execute(self) -> p.Result[t.JsonMapping]:
@@ -51,8 +50,7 @@ class FlextDbtLdifUnifiedService:
             return r[t.JsonMapping].ok(payload)
 
         def generate_analytics_models(
-            self,
-            staging_models: t.SequenceOf[m.DbtLdif.DbtModel],
+            self, staging_models: t.SequenceOf[m.DbtLdif.DbtModel]
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set."""
             if not staging_models:
@@ -70,8 +68,7 @@ class FlextDbtLdifUnifiedService:
             return r[list[m.DbtLdif.DbtModel]].ok([analytics])
 
         def generate_staging_models(
-            self,
-            entries: t.SequenceOf[t.JsonMapping],
+            self, entries: t.SequenceOf[t.JsonMapping]
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries."""
             if not entries:

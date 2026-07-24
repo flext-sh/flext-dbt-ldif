@@ -79,7 +79,7 @@
 {% if execute %}
 
     {% set joined = sources_yaml | join ('\n') %}
-    {{ print(joined) }}
+    {{ u.Cli.print(joined) }}
     {% do return(joined) %}
 
 {% endif %}

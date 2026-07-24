@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
+# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = u.fetch_logger(__name__)
 
@@ -15,30 +19,30 @@ class FlextDbtLdifClient:
     class Client:
         """Client with typed parse, validate, and transform operations."""
 
+        # NOTE (multi-agent): mro-rn88 — plain class holding the effective settings
+        # (injected override or global singleton); exposed via the `settings` property.
         def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
-            """Initialize client with explicit or global settings."""
-            self.settings = (
-                settings
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
+            """Wire the client with optional injected settings."""
+            self._settings = settings or FlextDbtLdifSettings.fetch_global()
+
+        @property
+        def settings(self) -> FlextDbtLdifSettings:
+            """The effective dbt-ldif settings for this client."""
+            return self._settings
 
         def parse_ldif_file(
-            self,
-            file_path: Path | str | None = None,
+            self, file_path: Path | str | None = None
         ) -> p.Result[list[t.JsonMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
                 str(file_path)
                 if file_path is not None
-                else self.settings.ldif_file_path
+                else self.settings.DbtLdif.ldif_file_path
             )
             if not selected_path:
-                return r[list[t.JsonMapping]].fail(
-                    "LDIF file path is required",
-                )
+                return r[list[t.JsonMapping]].fail("LDIF file path is required")
             return r[list[t.JsonMapping]].ok([
-                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path},
+                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
             ])
 
         def run_full_pipeline(
@@ -50,20 +54,17 @@ class FlextDbtLdifClient:
             parse_result = self.parse_ldif_file(file_path)
             if parse_result.failure:
                 return r[m.DbtLdif.PipelineResult].fail(
-                    parse_result.error or "Parse failed",
+                    parse_result.error or "Parse failed"
                 )
             validate_result = self.validate_ldif_data(parse_result.value)
             if validate_result.failure:
                 return r[m.DbtLdif.PipelineResult].fail(
-                    validate_result.error or "Validation failed",
+                    validate_result.error or "Validation failed"
                 )
-            transform_result = self.transform_with_dbt(
-                parse_result.value,
-                model_names,
-            )
+            transform_result = self.transform_with_dbt(parse_result.value, model_names)
             if transform_result.failure:
                 return r[m.DbtLdif.PipelineResult].fail(
-                    transform_result.error or "Transform failed",
+                    transform_result.error or "Transform failed"
                 )
             logger.info("Completed LDIF to DBT pipeline")
             return r[m.DbtLdif.PipelineResult].ok(
@@ -72,7 +73,7 @@ class FlextDbtLdifClient:
                     validation_status=validate_result.value.validation_status,
                     transformation_status=transform_result.value.status,
                     pipeline_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-                ),
+                )
             )
 
         def transform_with_dbt(
@@ -90,27 +91,27 @@ class FlextDbtLdifClient:
                     records=len(entries),
                     models=selected_models,
                     status=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
-                ),
+                )
             )
 
         def validate_ldif_data(
-            self,
-            entries: t.SequenceOf[t.JsonMapping],
+            self, entries: t.SequenceOf[t.JsonMapping]
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score."""
             total_entries = len(entries)
             if total_entries == 0:
+                return r[m.DbtLdif.LdifValidationResult].fail("No LDIF entries found")
+            if (
+                self.settings.DbtLdif.min_quality_threshold
+                > c.DbtLdif.DEFAULT_QUALITY_SCORE
+            ):
                 return r[m.DbtLdif.LdifValidationResult].fail(
-                    "No LDIF entries found",
-                )
-            if self.settings.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
-                return r[m.DbtLdif.LdifValidationResult].fail(
-                    "Quality threshold not met",
+                    "Quality threshold not met"
                 )
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
                     total_entries=total_entries,
                     quality_score=c.DbtLdif.DEFAULT_QUALITY_SCORE,
                     validation_status=c.DbtLdif.VALIDATION_STATUS_PASSED,
-                ),
+                )
             )

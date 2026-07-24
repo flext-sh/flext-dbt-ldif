@@ -1,4 +1,4 @@
-"""Behavior contract for FlextDbtLdif services + API delegation.
+"""Behavior contract for FlextDbtLdif public API delegation.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,104 +9,133 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import r
 
-from flext_dbt_ldif import FlextDbtLdif
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, c
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests.models import m
-from tests.protocols import p
-from tests.typings import t
+from flext_tests import tm
 
 
 class TestsFlextDbtLdifServicesAndApi:
-    """Behavior contract for FlextDbtLdif API delegation (services covered in test_services.py)."""
+    """Observable behavior of the FlextDbtLdif facade public methods."""
 
-    def test_api_process_ldif_file(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-    ) -> None:
-        """Test FlextDbtLdif.process_ldif_file delegates correctly."""
-
-        def _run(
-            _self: FlextDbtLdifServiceMixin.Service,
-            ldif_file: Path | str,
-            *,
-            generate_models: bool = True,
-            run_transformations: bool = False,
-            model_names: t.StrSequence | None = None,
-        ) -> p.Result[m.DbtLdif.WorkflowResult]:
-            del generate_models, run_transformations, model_names
-            return r[m.DbtLdif.WorkflowResult].ok(
-                m.DbtLdif.WorkflowResult(
-                    ldif_file=str(ldif_file),
-                    entry_count=0,
-                    validation_status="passed",
-                    workflow_status="completed",
-                ),
-            )
-
-        monkeypatch.setattr(
-            FlextDbtLdif,
-            "process_ldif_file",
-            _run,
-        )
+    def test_process_ldif_file_returns_completed_workflow(self, tmp_path: Path) -> None:
+        """process_ldif_file yields a completed, validated workflow result."""
         api = FlextDbtLdif()
+
         result = api.process_ldif_file(tmp_path / "f.ldif")
-        assert result.success
 
-    def test_api_validate_ldif_quality(
+        tm.ok(result)
+        workflow = result.value
+        tm.that(workflow.workflow_status, eq=c.DbtLdif.WORKFLOW_STATUS_COMPLETED)
+        tm.that(workflow.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
+        tm.that(workflow.entry_count, eq=1)
+        tm.that(workflow.ldif_file, eq=str(tmp_path / "f.ldif"))
+
+    @pytest.mark.parametrize(
+        (
+            "generate_models",
+            "run_transformations",
+            "expected_models",
+            "expected_status",
+        ),
+        [
+            (True, False, 2, ""),
+            (False, False, 0, ""),
+            (True, True, 2, c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS),
+            (False, True, 0, c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS),
+        ],
+    )
+    def test_process_ldif_file_honors_generation_and_transformation_flags(
         self,
-        monkeypatch: pytest.MonkeyPatch,
         tmp_path: Path,
+        *,
+        generate_models: bool,
+        run_transformations: bool,
+        expected_models: int,
+        expected_status: str,
     ) -> None:
-        """Test FlextDbtLdif.validate_ldif_quality delegates correctly."""
-
-        def _run_quality(
-            _self: FlextDbtLdifServiceMixin.Service,
-            ldif_file: Path | str,
-        ) -> p.Result[m.DbtLdif.ParseValidationResult]:
-            return r[m.DbtLdif.ParseValidationResult].ok(
-                m.DbtLdif.ParseValidationResult(
-                    entry_count=0,
-                    quality_score=1.0,
-                    validation_status="passed",
-                ),
-            )
-
-        monkeypatch.setattr(
-            FlextDbtLdifServiceMixin.Service,
-            "run_data_quality_assessment",
-            _run_quality,
-        )
+        """Model generation and transformation flags drive the workflow result."""
         api = FlextDbtLdif()
-        assert api.validate_ldif_quality(tmp_path / "f.ldif").success
 
-    def test_api_generate_ldif_models(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
+        result = api.process_ldif_file(
+            tmp_path / "f.ldif",
+            generate_models=generate_models,
+            run_transformations=run_transformations,
+        )
+
+        tm.ok(result)
+        workflow = result.value
+        tm.that(workflow.models_generated, eq=expected_models)
+        tm.that(workflow.transformation_status, eq=expected_status)
+
+    def test_validate_ldif_quality_reports_passing_metrics(
+        self, tmp_path: Path
     ) -> None:
-        """Test FlextDbtLdif.generate_ldif_models delegates correctly."""
-
-        def _gen_models(
-            _self: FlextDbtLdifServiceMixin.Service,
-            entries: t.SequenceOf[t.JsonMapping],
-            *,
-            overwrite: bool = False,
-        ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
-            _ = overwrite
-            return r[m.DbtLdif.ModelGenerationResult].ok(
-                m.DbtLdif.ModelGenerationResult(
-                    models_generated=0,
-                    model_names=[],
-                ),
-            )
-
-        monkeypatch.setattr(
-            FlextDbtLdifServiceMixin.Service,
-            "generate_and_write_models",
-            _gen_models,
-        )
+        """validate_ldif_quality returns the parse/validation quality contract."""
         api = FlextDbtLdif()
-        assert api.generate_ldif_models(tmp_path / "f.ldif").success
+
+        result = api.validate_ldif_quality(tmp_path / "f.ldif")
+
+        tm.ok(result)
+        report = result.value
+        tm.that(report.entry_count, eq=1)
+        tm.that(report.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
+        tm.that(report.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
+
+    def test_generate_ldif_models_produces_staging_and_analytics(
+        self, tmp_path: Path
+    ) -> None:
+        """generate_ldif_models emits the staging and analytics model names."""
+        api = FlextDbtLdif()
+
+        result = api.generate_ldif_models(tmp_path / "f.ldif")
+
+        tm.ok(result)
+        generation = result.value
+        tm.that(generation.models_generated, eq=2)
+        tm.that(
+            list(generation.model_names),
+            eq=[c.DbtLdif.STAGING_MODEL_NAME, c.DbtLdif.ANALYTICS_MODEL_NAME],
+        )
+
+    def test_generate_ldif_models_dump_exposes_public_state(
+        self, tmp_path: Path
+    ) -> None:
+        """The generation result serializes its public fields via model_dump."""
+        api = FlextDbtLdif()
+
+        dumped = api.generate_ldif_models(tmp_path / "f.ldif").value.model_dump()
+
+        tm.that(dumped["models_generated"], eq=2)
+        tm.that(dumped["model_names"], has=c.DbtLdif.STAGING_MODEL_NAME)
+
+    def test_execute_returns_configured_settings(self) -> None:
+        """Execute surfaces the settings the facade was constructed with."""
+        # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed _DbtLdif model, not a raw
+        # dict (U18: config/settings values are validated models, no model-less payload).
+        settings = FlextDbtLdifSettings(
+            DbtLdif=FlextDbtLdifSettings._DbtLdif(min_quality_threshold=0.5)
+        )
+        api = FlextDbtLdif(settings=settings)
+
+        result = api.execute()
+
+        tm.ok(result)
+        tm.that(result.value, is_=FlextDbtLdifSettings)
+        tm.that(result.value.DbtLdif.min_quality_threshold, eq=pytest.approx(0.5))
+
+    def test_service_property_exposes_workflow_service(self) -> None:
+        """The service property exposes the bound workflow Service."""
+        api = FlextDbtLdif()
+
+        tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
+
+    def test_fetch_instance_returns_shared_singleton(self) -> None:
+        """fetch_instance returns the same facade instance on repeated calls."""
+        first = FlextDbtLdif.fetch_instance()
+        second = FlextDbtLdif.fetch_instance()
+
+        assert first is second
+
+
+__all__: list[str] = ["TestsFlextDbtLdifServicesAndApi"]

@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-import pytest
-from flext_tests import r
+from flext_tests import r, tm
+from tests import m, t
 
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests.models import m
-from tests.protocols import p
-from tests.typings import t
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pytest
+
+    from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+    from tests import p
 
 
 class TestsFlextDbtLdifServicesDataQuality:
@@ -24,13 +27,9 @@ class TestsFlextDbtLdifServicesDataQuality:
         tmp_path: Path,
     ) -> None:
         """Test data quality assessment delegates to parse_and_validate."""
-        entries: t.SequenceOf[t.JsonMapping] = [
-            {"dn": "cn=test,dc=example,dc=org"},
-        ]
+        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
 
-        def _parse_ldif_file(
-            _fp: Path | str,
-        ) -> p.Result[Sequence[t.JsonMapping]]:
+        def _parse_ldif_file(_fp: Path | str) -> p.Result[Sequence[t.JsonMapping]]:
             return r[Sequence[t.JsonMapping]].ok(entries)
 
         def _validate_ldif_data(
@@ -38,20 +37,18 @@ class TestsFlextDbtLdifServicesDataQuality:
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
-                    total_entries=1,
-                    quality_score=0.88,
-                    validation_status="passed",
-                ),
+                    total_entries=1, quality_score=0.88, validation_status="passed"
+                )
             )
 
         monkeypatch.setattr(svc.client, "parse_ldif_file", _parse_ldif_file)
         monkeypatch.setattr(svc.client, "validate_ldif_data", _validate_ldif_data)
 
         result = svc.run_data_quality_assessment(tmp_path / "f.ldif")
-        assert result.success
+        tm.ok(result)
         data = result.value
-        assert data is not None
-        assert data.entry_count == 1
+        tm.that(data, none=False)
+        tm.that(data.entry_count, eq=1)
 
 
 __all__: list[str] = ["TestsFlextDbtLdifServicesDataQuality"]

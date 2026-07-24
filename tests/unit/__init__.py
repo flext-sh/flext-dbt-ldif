@@ -11,38 +11,36 @@ from flext_core.lazy import (
 
 _LAZY_IMPORTS = merge_lazy_imports(
     ("._services_parts",),
-    build_lazy_import_map(
-        {
-            "._services_parts": ("_services_parts",),
-            "._services_parts.data_quality": ("TestsFlextDbtLdifServicesDataQuality",),
-            ".test_api_surface": ("TestsFlextDbtLdifApiSurface",),
-            ".test_cli": ("TestsFlextDbtLdifCli",),
-            ".test_core": ("TestsFlextDbtLdifCore",),
-            ".test_dbt_client": ("TestsFlextDbtLdifClient",),
-            ".test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
-            ".test_services": ("TestsFlextDbtLdifServices",),
-            ".test_services_and_api": ("TestsFlextDbtLdifServicesAndApi",),
-            ".test_version": ("TestsFlextDbtLdifVersion",),
-            "flext_tests": (
-                "c",
-                "d",
-                "e",
-                "h",
-                "m",
-                "p",
-                "r",
-                "s",
-                "t",
-                "td",
-                "tf",
-                "tk",
-                "tm",
-                "tv",
-                "u",
-                "x",
-            ),
-        },
-    ),
+    build_lazy_import_map({
+        "._services_parts": ("_services_parts",),
+        "._services_parts.data_quality": ("TestsFlextDbtLdifServicesDataQuality",),
+        ".test_api_surface": ("TestsFlextDbtLdifApiSurface",),
+        ".test_cli": ("TestsFlextDbtLdifCli",),
+        ".test_core": ("TestsFlextDbtLdifCore",),
+        ".test_dbt_client": ("TestsFlextDbtLdifClient",),
+        ".test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
+        ".test_services": ("TestsFlextDbtLdifServices",),
+        ".test_services_and_api": ("TestsFlextDbtLdifServicesAndApi",),
+        ".test_version": ("TestsFlextDbtLdifVersion",),
+        "flext_tests": (
+            "c",
+            "d",
+            "e",
+            "h",
+            "m",
+            "p",
+            "r",
+            "s",
+            "t",
+            "td",
+            "tf",
+            "tk",
+            "tm",
+            "tv",
+            "u",
+            "x",
+        ),
+    }),
     exclude_names=(
         "cleanup_submodule_namespace",
         "install_lazy_exports",
@@ -66,9 +64,4 @@ _LAZY_IMPORTS = merge_lazy_imports(
 )
 
 
-install_lazy_exports(
-    __name__,
-    globals(),
-    _LAZY_IMPORTS,
-    publish_all=False,
-)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, publish_all=False)

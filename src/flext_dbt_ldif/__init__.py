@@ -3,7 +3,13 @@
 
 from __future__ import annotations
 
-from flext_core.lazy import install_lazy_exports
+from typing import TYPE_CHECKING
+
+from flext_core.lazy import (
+    build_lazy_import_map,
+    install_lazy_exports,
+    merge_lazy_imports,
+)
 from flext_dbt_ldif.__version__ import (
     __author__,
     __author_email__,
@@ -14,24 +20,81 @@ from flext_dbt_ldif.__version__ import (
     __version__,
     __version_info__,
 )
-from flext_dbt_ldif._exports import FLEXT_DBT_LDIF_LAZY_IMPORTS
 
-_LAZY_IMPORTS = FLEXT_DBT_LDIF_LAZY_IMPORTS
-
-
-_EAGER_EXPORTS = (
-    __author__,
-    __author_email__,
-    __description__,
-    __license__,
-    __title__,
-    __url__,
-    __version__,
-    __version_info__,
+if TYPE_CHECKING:
+    from flext_dbt_ldif._settings import (
+        FlextDbtLdifSettings as FlextDbtLdifSettings,
+        settings as settings,
+    )
+    from flext_dbt_ldif.api import FlextDbtLdif as FlextDbtLdif, dbt_ldif as dbt_ldif
+    from flext_dbt_ldif.base import (
+        FlextDbtLdifServiceBase as FlextDbtLdifServiceBase,
+        s as s,
+    )
+    from flext_dbt_ldif.constants import (
+        FlextDbtLdifConstants as FlextDbtLdifConstants,
+        c as c,
+    )
+    from flext_dbt_ldif.models import FlextDbtLdifModels as FlextDbtLdifModels, m as m
+    from flext_dbt_ldif.protocols import (
+        FlextDbtLdifProtocols as FlextDbtLdifProtocols,
+        p,
+    )
+    from flext_dbt_ldif.services.client import FlextDbtLdifClient as FlextDbtLdifClient
+    from flext_dbt_ldif.services.core import FlextDbtLdifCore as FlextDbtLdifCore
+    from flext_dbt_ldif.services.service import (
+        FlextDbtLdifServiceMixin as FlextDbtLdifServiceMixin,
+    )
+    from flext_dbt_ldif.services.unified_service import (
+        FlextDbtLdifUnifiedService as FlextDbtLdifUnifiedService,
+    )
+    from flext_dbt_ldif.typings import FlextDbtLdifTypes as FlextDbtLdifTypes, t as t
+    from flext_dbt_ldif.utilities import (
+        FlextDbtLdifUtilities as FlextDbtLdifUtilities,
+        u,
+    )
+    from flext_ldif import d as d, e as e, h as h, r as r, x as x
+_LAZY_IMPORTS = merge_lazy_imports(
+    (".services",),
+    build_lazy_import_map({
+        "._settings": ("FlextDbtLdifSettings", "settings"),
+        ".api": ("FlextDbtLdif", "dbt_ldif"),
+        ".base": ("FlextDbtLdifServiceBase", "s"),
+        ".constants": ("FlextDbtLdifConstants", "c"),
+        ".models": ("FlextDbtLdifModels", "m"),
+        ".protocols": ("FlextDbtLdifProtocols", "p"),
+        ".services.client": ("FlextDbtLdifClient",),
+        ".services.core": ("FlextDbtLdifCore",),
+        ".services.service": ("FlextDbtLdifServiceMixin",),
+        ".services.unified_service": ("FlextDbtLdifUnifiedService",),
+        ".typings": ("FlextDbtLdifTypes", "t"),
+        ".utilities": ("FlextDbtLdifUtilities", "u"),
+        "flext_ldif": ("d", "e", "h", "r", "x"),
+    }),
+    exclude_names=(
+        "cleanup_submodule_namespace",
+        "install_lazy_exports",
+        "lazy_getattr",
+        "logger",
+        "merge_lazy_imports",
+        "output",
+        "output_reporting",
+        "pytest_addoption",
+        "pytest_collect_file",
+        "pytest_collection_modifyitems",
+        "pytest_configure",
+        "pytest_runtest_setup",
+        "pytest_runtest_teardown",
+        "pytest_sessionfinish",
+        "pytest_sessionstart",
+        "pytest_terminal_summary",
+        "pytest_warning_recorded",
+    ),
+    module_name=__name__,
 )
 
 
-_PUBLIC_EXPORTS: tuple[str, ...] = (
+__all__: tuple[str, ...] = (
     "FlextDbtLdif",
     "FlextDbtLdifClient",
     "FlextDbtLdifConstants",
@@ -44,7 +107,6 @@ _PUBLIC_EXPORTS: tuple[str, ...] = (
     "FlextDbtLdifTypes",
     "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
-    "dbt_ldif",
     "__author__",
     "__author_email__",
     "__description__",
@@ -55,21 +117,18 @@ _PUBLIC_EXPORTS: tuple[str, ...] = (
     "__version_info__",
     "c",
     "d",
+    "dbt_ldif",
     "e",
     "h",
     "m",
     "p",
     "r",
     "s",
+    "settings",
     "t",
     "u",
     "x",
 )
 
 
-install_lazy_exports(
-    __name__,
-    globals(),
-    _LAZY_IMPORTS,
-    public_exports=_PUBLIC_EXPORTS,
-)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

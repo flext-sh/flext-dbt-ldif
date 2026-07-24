@@ -7,11 +7,11 @@ echo $(which dbt)
 dbt --version
 
 # Set the profile
-cd integration_tests
+cd integration_tests || exit
 export DBT_PROFILES_DIR=.
 
 # Show the location of the profiles directory and test the connection
-dbt debug --target $1
+dbt debug --target "$1"
 
-dbt deps --target $1 || exit 1
+dbt deps --target "$1" || exit 1
 dbt build --target $1 --full-refresh || exit 1

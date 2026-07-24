@@ -7,34 +7,20 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from collections.abc import Generator
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
+
+from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_tests import tf, tk
+from tests import u
 
-from tests.utilities import u
-
-
-@pytest.fixture(scope="session")
-def docker_control() -> tk:
-    """Provide tk instance for container management."""
-    return tk.shared(
-        "flext-openldap-test",
-        workspace_root=Path(__file__).resolve().parents[2],
-    )
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
-@pytest.fixture(scope="session")
-def shared_ldap_container(docker_control: tk) -> str:
-    """Start and maintain flext-openldap-test container."""
-    result = docker_control.execute()
-    if result.failure:
-        pytest.skip(f"Failed to start LDAP container: {result.error}")
-    return "flext-openldap-test"
-
-
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def set_test_environment() -> Generator[None]:
     """Set test environment variables."""
     with (
@@ -49,7 +35,47 @@ def set_test_environment() -> Generator[None]:
         yield
 
 
-@pytest.fixture(scope="session", autouse=True)
-def ensure_shared_docker_container(shared_ldap_container: str) -> None:
+@pytest.fixture
+def settings() -> FlextDbtLdifSettings:
+    """Provide a typed FlextDbtLdifSettings instance with a sample LDIF path."""
+    FlextDbtLdifSettings.reset_for_testing()
+    return FlextDbtLdifSettings(
+        DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="/tmp/sample.ldif")
+    )
+
+
+def pytest_runtest_setup(item: pytest.Item) -> None:
+    """Reset the settings singleton before each test."""
+    _ = item
+    # NOTE (multi-agent): mro-rn88 — constructing FlextDbtLdifSettings overwrites the
+    # fetch_global() singleton; reset around each test to prevent cross-test pollution.
+    FlextDbtLdifSettings.reset_for_testing()
+
+
+def pytest_runtest_teardown(item: pytest.Item) -> None:
+    """Reset the settings singleton after each test."""
+    _ = item
+    FlextDbtLdifSettings.reset_for_testing()
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
     """Ensure shared Docker container is started for the test session."""
-    _ = shared_ldap_container
+    _ = session
+    docker_control = tk.shared(
+        "flext-openldap-test", workspace_root=Path(__file__).resolve().parents[2]
+    )
+    result = docker_control.execute()
+    if result.failure:
+        pytest.skip(
+            f"Failed to start LDAP container: {result.error}", allow_module_level=True
+        )
+
+
+# NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
+# sees the plugin surface as accessed.
+__all__: list[str] = [
+    "pytest_runtest_setup",
+    "pytest_runtest_teardown",
+    "pytest_sessionstart",
+    "set_test_environment",
+]

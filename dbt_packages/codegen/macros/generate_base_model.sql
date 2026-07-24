@@ -42,7 +42,7 @@ select * from renamed
 
 {% if execute %}
 
-{{ print(base_model_sql) }}
+{{ u.Cli.print(base_model_sql) }}
 {% do return(base_model_sql) %}
 
 {% endif %}

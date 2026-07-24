@@ -1,0 +1,3 @@
+DbtLdif:
+  name: flext-dbt-ldif
+  version: "0.12.0-dev"

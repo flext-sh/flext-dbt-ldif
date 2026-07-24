@@ -16,19 +16,12 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.services.unified_service import (
         FlextDbtLdifUnifiedService as FlextDbtLdifUnifiedService,
     )
-_LAZY_IMPORTS = build_lazy_import_map(
-    {
-        ".client": ("FlextDbtLdifClient",),
-        ".core": ("FlextDbtLdifCore",),
-        ".service": ("FlextDbtLdifServiceMixin",),
-        ".unified_service": ("FlextDbtLdifUnifiedService",),
-    },
-)
+_LAZY_IMPORTS = build_lazy_import_map({
+    ".client": ("FlextDbtLdifClient",),
+    ".core": ("FlextDbtLdifCore",),
+    ".service": ("FlextDbtLdifServiceMixin",),
+    ".unified_service": ("FlextDbtLdifUnifiedService",),
+})
 
 
-install_lazy_exports(
-    __name__,
-    globals(),
-    _LAZY_IMPORTS,
-    publish_all=False,
-)
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, publish_all=False)

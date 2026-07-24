@@ -15,7 +15,4 @@ class FlextDbtLdifUtilities(u, FlextLdifUtilities):
 
 u = FlextDbtLdifUtilities
 
-__all__: list[str] = [
-    "FlextDbtLdifUtilities",
-    "u",
-]
+__all__: list[str] = ["FlextDbtLdifUtilities", "u"]
