@@ -12,6 +12,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
@@ -44,14 +46,20 @@ class TestsFlextDbtLdifApiSurface:
         tm.ok(result)
         entries = result.value
         tm.that(
-            entries, eq=[{"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": "/tmp/sample.ldif"}]
+            entries,
+            eq=[
+                {
+                    "dn": c.DbtLdif.SAMPLE_LDIF_DN,
+                    "source": client.settings.DbtLdif.ldif_file_path,
+                }
+            ],
         )
 
     def test_parse_prefers_explicit_path_over_settings(self) -> None:
         """An explicit path overrides the configured default."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="")
+                DbtLdif=FlextDbtLdifSettings.build_dbt_ldif(ldif_file_path="")
             )
         )
         result = client.parse_ldif_file("/data/other.ldif")
@@ -89,7 +97,9 @@ class TestsFlextDbtLdifApiSurface:
         tm.fail(result)
         tm.that(result.error, eq="No LDIF entries found")
 
-    def test_validate_passes_at_maximum_threshold_boundary(self) -> None:
+    def test_validate_passes_at_maximum_threshold_boundary(
+        self, tmp_path: Path
+    ) -> None:
         """Threshold equal to the achievable score is the passing boundary.
 
         ``min_quality_threshold`` is capped at 1.0 by the settings contract
@@ -99,7 +109,7 @@ class TestsFlextDbtLdifApiSurface:
         """
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                ldif_file_path="/tmp/sample.ldif", min_quality_threshold=1.0
+                ldif_file_path=str(tmp_path / "sample.ldif"), min_quality_threshold=1.0
             )
         )
 
@@ -151,7 +161,7 @@ class TestsFlextDbtLdifApiSurface:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif=FlextDbtLdifSettings._DbtLdif(
+                DbtLdif=FlextDbtLdifSettings.build_dbt_ldif(
                     ldif_file_path="", min_quality_threshold=0.5
                 )
             )
@@ -163,12 +173,12 @@ class TestsFlextDbtLdifApiSurface:
         tm.that(result.error, eq="LDIF file path is required")
 
     def test_service_parse_and_validate_reports_entry_count(
-        self, settings: Settings
+        self, settings: Settings, tmp_path: Path
     ) -> None:
         """The service one-shot parse+validate reports counts and status."""
         service = FlextDbtLdifServiceMixin.Service(settings)
 
-        result = service.parse_and_validate_ldif("/tmp/sample.ldif")
+        result = service.parse_and_validate_ldif(tmp_path / "sample.ldif")
 
         tm.ok(result)
         tm.that(
@@ -189,11 +199,13 @@ class TestsFlextDbtLdifApiSurface:
         tm.ok(result)
         tm.that(result.value, is_=FlextDbtLdifSettings)
 
-    def test_facade_service_is_bound_workflow_service(self, settings: Settings) -> None:
+    def test_facade_service_is_bound_workflow_service(
+        self, settings: Settings, tmp_path: Path
+    ) -> None:
         """The facade exposes a usable bound Service via its public property."""
         facade = FlextDbtLdif(settings)
 
-        result = facade.service.parse_and_validate_ldif("/tmp/sample.ldif")
+        result = facade.service.parse_and_validate_ldif(tmp_path / "sample.ldif")
 
         tm.ok(result)
         tm.that(result.value.entry_count, eq=1)
@@ -203,12 +215,12 @@ class TestsFlextDbtLdifApiSurface:
         assert FlextDbtLdif.fetch_instance() is FlextDbtLdif.fetch_instance()
 
     def test_process_ldif_file_runs_end_to_end_workflow(
-        self, settings: Settings
+        self, settings: Settings, tmp_path: Path
     ) -> None:
         """Processing a file drives the end-to-end workflow to a result."""
         facade = FlextDbtLdif(settings)
 
-        result = facade.process_ldif_file("/tmp/sample.ldif")
+        result = facade.process_ldif_file(tmp_path / "sample.ldif")
 
         tm.ok(result)
         payload = result.value.model_dump()

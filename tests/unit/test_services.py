@@ -129,6 +129,7 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         self,
         svc: FlextDbtLdifServiceMixin.Service,
         tmp_path: Path,
+        *,
         generate_models: bool,
         run_transformations: bool,
         expected_models: int,

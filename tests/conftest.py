@@ -36,11 +36,13 @@ def set_test_environment() -> Generator[None]:
 
 
 @pytest.fixture
-def settings() -> FlextDbtLdifSettings:
+def settings(tmp_path: Path) -> FlextDbtLdifSettings:
     """Provide a typed FlextDbtLdifSettings instance with a sample LDIF path."""
     FlextDbtLdifSettings.reset_for_testing()
     return FlextDbtLdifSettings(
-        DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="/tmp/sample.ldif")
+        DbtLdif=FlextDbtLdifSettings.build_dbt_ldif(
+            ldif_file_path=str(tmp_path / "sample.ldif")
+        )
     )
 
 

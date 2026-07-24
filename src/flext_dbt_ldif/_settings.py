@@ -33,6 +33,11 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
             ),
         ]
 
+    @classmethod
+    def build_dbt_ldif(cls, **kwargs: object) -> _DbtLdif:
+        """Build a validated nested DbtLdif settings model."""
+        return cls._DbtLdif(**kwargs)
+
     if TYPE_CHECKING:
         DbtLdif: _DbtLdif
     else:
