@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import operator
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,6 @@ import pytest
 from flext_dbt_ldif import c, t
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
 from flext_tests import tm
-import operator
 
 
 class TestsFlextDbtLdifCore:
