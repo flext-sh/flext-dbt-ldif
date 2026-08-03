@@ -11,15 +11,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_dbt_ldif import (
-    FlextDbtLdifSettings,
-    c,
-    m,
-    p,
-    r,
-    t,
-    u,
-)
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
@@ -41,10 +33,10 @@ class FlextDbtLdif(
 
     def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
         """Initialize facade with optional settings override."""
-        self.config = (
-            settings if settings is not None else FlextDbtLdifSettings.fetch_global()
-        )
-        self._service = self.Service(settings=self.config)
+        # NOTE (multi-agent): mro-rn88 — resolve effective settings from the injected
+        # override or the global singleton; Service reads the global internally.
+        self._settings = settings or FlextDbtLdifSettings.fetch_global()
+        self._service = self.Service()
 
     @classmethod
     def fetch_instance(cls) -> Self:
@@ -55,37 +47,28 @@ class FlextDbtLdif(
 
     @property
     def service(self) -> FlextDbtLdifServiceMixin.Service:
-        """Return bound workflow service."""
+        """The bound workflow service."""
         return self._service
 
     def execute(self) -> p.Result[FlextDbtLdifSettings]:
-        """Return current settings payload for service contracts."""
-        current_config = self.config
-        return u.try_(
-            lambda: FlextDbtLdifSettings.model_validate(current_config),
-            catch=c.ValidationError,
-        ).map_error(lambda _: "Invalid DBT LDIF settings")
+        """Return the current settings payload for service contracts."""
+        return r[FlextDbtLdifSettings].ok(self._settings)
 
     def generate_ldif_models(
-        self,
-        ldif_file: Path | str,
-        *,
-        overwrite: bool = False,
+        self, ldif_file: Path | str, *, overwrite: bool = False
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                parsed.error or "Parsing failed",
+                parsed.error or "Parsing failed"
             )
         entries_raw = parsed.value
         try:
-            entries = t.json_mapping_sequence_adapter().validate_python(
-                entries_raw,
-            )
+            entries = t.json_mapping_sequence_adapter().validate_python(entries_raw)
         except c.ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                "Invalid parsed entries payload",
+                "Invalid parsed entries payload"
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
@@ -104,8 +87,7 @@ class FlextDbtLdif(
         )
 
     def validate_ldif_quality(
-        self,
-        ldif_file: Path | str,
+        self, ldif_file: Path | str
     ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow."""
         return self.service.run_data_quality_assessment(ldif_file)

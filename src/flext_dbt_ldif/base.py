@@ -12,37 +12,37 @@ from __future__ import annotations
 
 from typing import Annotated, override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, t
-from flext_meltano import FlextMeltanoDbtServiceBase, u
+from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t, u
+from flext_meltano import FlextMeltanoDbtServiceBase
 
 
 class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     """Base class for flext-dbt-ldif services."""
 
-    settings_type: Annotated[
-        type | None,
-        u.Field(description="Settings class for DBT LDIF service initialization"),
-    ] = FlextDbtLdifSettings
     dbt_project_name: Annotated[
         t.NonEmptyStr,
         u.Field(description="Canonical dbt project name for DBT LDIF services"),
     ] = "dbt-ldif"
 
-    @property
-    @override
-    def settings(self) -> FlextDbtLdifSettings:
-        """Return the typed dbt-ldif settings namespace."""
-        return FlextDbtLdifSettings.fetch_global()
+    @classmethod
+    def _runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
+        """Return runtime bootstrap options for DBT LDIF services."""
+        return m.RuntimeBootstrapOptions(settings_type=FlextDbtLdifSettings)
 
     @property
     @override
-    def connection_profile(self) -> t.JsonMapping:
+    def settings(self) -> FlextDbtLdifSettings:
+        """The typed dbt-ldif settings namespace."""
+        return settings
+
+    @property
+    @override
+    def connection_profile(self) -> p.Meltano.DbtConnectionProfile:
         """Dbt connection profile for LDIF-backed workflows."""
-        return {
-            "type": "ldif",
-            "path": self.settings.ldif_file_path,
-            "project": self.dbt_project_name,
-        }
+        # NOTE (multi-agent): mro-rn88 ADR-006 thin-driver — read INJECTED self.settings.
+        return m.DbtLdif.DbtConnectionProfile(
+            path=self.settings.DbtLdif.ldif_file_path, project=self.dbt_project_name
+        )
 
 
 s = FlextDbtLdifServiceBase

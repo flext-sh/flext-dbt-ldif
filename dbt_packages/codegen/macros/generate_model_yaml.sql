@@ -57,7 +57,7 @@
 {% if execute %}
 
     {% set joined = model_yaml | join ('\n') %}
-    {{ print(joined) }}
+    {{ u.Cli.print(joined) }}
     {% do return(joined) %}
 
 {% endif %}
