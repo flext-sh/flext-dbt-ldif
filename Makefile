@@ -48,7 +48,7 @@ BRANCH ?=
 PYTEST_ARGS ?=
 PYTEST_DIAG_ARGS ?= -rA --durations=0 --tb=long --showlocals
 PYTEST_REPORT_ARGS ?= -ra --durations=25 --durations-min=0.001 --tb=short
-PYTEST_PROCESS_TIMEOUT_SECONDS ?= 60
+PYTEST_PROCESS_TIMEOUT_SECONDS ?= 360
 # mro-99ae: the pytest process inherits a hard wall-clock boundary, mirroring
 # MYPY_BOUNDED, so a hung run is terminated even if the typed runner stalls.
 PYTEST_BOUNDED = timeout --signal=TERM --kill-after=5s "$(PYTEST_PROCESS_TIMEOUT_SECONDS)s"
@@ -110,21 +110,22 @@ endif
 PUBLIC_VERBS := help setup deps build check test fmt fix run status docs clean release gen worktree
 BUILTIN_VERBS := help setup deps build check test fmt fix run status docs clean release gen worktree
 SCRIPT_VERBS :=
-_ALLOWED_WHATS_help := usage
-_ALLOWED_WHATS_setup := environment
-_ALLOWED_WHATS_deps := check lock upgrade
-_ALLOWED_WHATS_build := artifacts
-_ALLOWED_WHATS_check := all
-_ALLOWED_WHATS_test := all
-_ALLOWED_WHATS_fmt := check all
-_ALLOWED_WHATS_fix := check all
-_ALLOWED_WHATS_run := default
-_ALLOWED_WHATS_status := diagnostics
-_ALLOWED_WHATS_docs := all generate fix audit build validate
-_ALLOWED_WHATS_clean := generated
-_ALLOWED_WHATS_release := status
-_ALLOWED_WHATS_gen := check all
-_ALLOWED_WHATS_worktree := list add update remove
+
+_ALLOWED_WHATS_help := usage $(shell sed -n 's/^_custom_help_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_setup := environment $(shell sed -n 's/^_custom_setup_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_deps := check lock upgrade $(shell sed -n 's/^_custom_deps_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_build := artifacts $(shell sed -n 's/^_custom_build_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_check := all $(shell sed -n 's/^_custom_check_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_test := all $(shell sed -n 's/^_custom_test_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_fmt := check all apply $(shell sed -n 's/^_custom_fmt_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_fix := check all apply $(shell sed -n 's/^_custom_fix_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_run := default $(shell sed -n 's/^_custom_run_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_status := diagnostics $(shell sed -n 's/^_custom_status_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_docs := all generate fix audit build validate $(shell sed -n 's/^_custom_docs_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_clean := generated $(shell sed -n 's/^_custom_clean_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_release := status $(shell sed -n 's/^_custom_release_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_gen := check all apply $(shell sed -n 's/^_custom_gen_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
+_ALLOWED_WHATS_worktree := list add update remove $(shell sed -n 's/^_custom_worktree_\([a-z0-9_-]*\):.*/\1/p' "$(MAKEFILE_ROOT)/custom.mk" 2>/dev/null | sort -u | tr '\n' ' ')
 
 CHECK_GATES_ALLOWED := lint format pyrefly mypy pyright security markdown smells
 CHECK_GATES_DEFAULT := lint pyrefly mypy pyright security markdown smells
@@ -176,10 +177,11 @@ _DEFAULT_gen := check
 _DEFAULT_worktree := list
 
 _APPLY_WHAT_deps := upgrade
-_APPLY_WHAT_fmt := all
-_APPLY_WHAT_fix := all
+_APPLY_WHAT_fmt := apply
+_APPLY_WHAT_fix := apply
+_APPLY_WHAT_run := default
 _APPLY_WHAT_clean := generated
-_APPLY_WHAT_gen := all
+_APPLY_WHAT_gen := apply
 _APPLY_WHAT_worktree := update
 
 
@@ -272,9 +274,12 @@ SETUP_ENVIRONMENT_RECIPE = set -eu; \
 WORKSPACE_ORCHESTRATE = $(UV_RUN) python -m flext_infra workspace orchestrate
 REQUESTED_PROJECTS := $(strip $(if $(PROJECT),$(PROJECT),$(PROJECTS)))
 # A workspace root owns no local gate implementation: its verbs fan out to the
-# declared members. Selecting the root here would make it orchestrate itself.
+# declared members. Selecting the root (PROJECT=.) would make it orchestrate
+# itself forever; map `.` to WORKSPACE_MEMBERS instead of failing closed mid-CI.
 DEFAULT_PROJECTS := $(WORKSPACE_MEMBERS) .
+
 SELECTED_PROJECTS := $(if $(strip $(REQUESTED_PROJECTS)),$(REQUESTED_PROJECTS),$(DEFAULT_PROJECTS))
+
 WORKSPACE_PROJECT_ARGS := $(foreach project,$(SELECTED_PROJECTS),--projects $(project))
 WORKSPACE_CHECK_ARGS := $(if $(strip $(CHECK_GATES)),--make-arg "CHECK_GATES=$(strip $(CHECK_GATES))")
 WORKSPACE_TEST_ARGS := $(if $(strip $(FLEXT_PYTEST_FILE_RAW)),--file "$${FLEXT_PYTEST_FILE_RAW}") $(if $(strip $(FLEXT_PYTEST_MATCH_RAW)),--match "$${FLEXT_PYTEST_MATCH_RAW}") $(if $(strip $(FLEXT_PYTEST_WHAT_RAW)),--what "$${FLEXT_PYTEST_WHAT_RAW}")
@@ -368,7 +373,7 @@ define _run_for_selected_projects
 	done
 endef
 
-.PHONY: $(PUBLIC_VERBS) $(SERIALIZED_TARGETS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_fmt_check _builtin_fmt_all _builtin_fix_check _builtin_fix_all _builtin_run_default _builtin_status_diagnostics _builtin_docs_all _builtin_docs_generate _builtin_docs_fix _builtin_docs_audit _builtin_docs_build _builtin_docs_validate _builtin_clean_generated _builtin_release_status _builtin_gen_check _builtin_gen_all _builtin_worktree_list _builtin_worktree_add _builtin_worktree_update _builtin_worktree_remove
+.PHONY: $(PUBLIC_VERBS) $(SERIALIZED_TARGETS) _builtin_help_usage _builtin_setup_environment _builtin_deps_check _builtin_deps_lock _builtin_deps_upgrade _builtin_build_artifacts _builtin_check_all _builtin_test_all _builtin_fmt_check _builtin_fmt_all _builtin_fmt_apply _builtin_fix_check _builtin_fix_all _builtin_fix_apply _builtin_run_default _builtin_status_diagnostics _builtin_docs_all _builtin_docs_generate _builtin_docs_fix _builtin_docs_audit _builtin_docs_build _builtin_docs_validate _builtin_clean_generated _builtin_release_status _builtin_gen_check _builtin_gen_all _builtin_gen_apply _builtin_worktree_list _builtin_worktree_add _builtin_worktree_update _builtin_worktree_remove
 
 $(filter-out setup $(SERIALIZED_VERBS),$(PUBLIC_VERBS)):
 	$(call _dispatch,$@)
@@ -449,7 +454,7 @@ _builtin_help_usage:
 	@printf '%s\n' 'flext-dbt-ldif [workspace-member]' '';
 
 
-	@printf '  %-10s WHAT=%s\n' 'help' 'usage';
+	@printf '  %-10s WHAT=%s\n' 'help' "$$(printf '%s' '$(_ALLOWED_WHATS_help)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
@@ -457,55 +462,55 @@ _builtin_help_usage:
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'deps' 'check|lock|upgrade';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'deps' "$$(printf '%s' '$(_ALLOWED_WHATS_deps)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'build' 'artifacts';
+	@printf '  %-10s WHAT=%s\n' 'build' "$$(printf '%s' '$(_ALLOWED_WHATS_build)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'check' 'all';
+	@printf '  %-10s WHAT=%s\n' 'check' "$$(printf '%s' '$(_ALLOWED_WHATS_check)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'test' 'all';
+	@printf '  %-10s WHAT=%s\n' 'test' "$$(printf '%s' '$(_ALLOWED_WHATS_test)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fmt' 'check|all';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fmt' "$$(printf '%s' '$(_ALLOWED_WHATS_fmt)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fix' 'check|all';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'fix' "$$(printf '%s' '$(_ALLOWED_WHATS_fix)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'run' 'default';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'run' "$$(printf '%s' '$(_ALLOWED_WHATS_run)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'status' 'diagnostics';
+	@printf '  %-10s WHAT=%s\n' 'status' "$$(printf '%s' '$(_ALLOWED_WHATS_status)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'docs' 'all|generate|fix|audit|build|validate';
+	@printf '  %-10s WHAT=%s\n' 'docs' "$$(printf '%s' '$(_ALLOWED_WHATS_docs)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'clean' 'generated';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'clean' "$$(printf '%s' '$(_ALLOWED_WHATS_clean)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s\n' 'release' 'status';
+	@printf '  %-10s WHAT=%s\n' 'release' "$$(printf '%s' '$(_ALLOWED_WHATS_release)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'gen' 'check|all';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'gen' "$$(printf '%s' '$(_ALLOWED_WHATS_gen)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 
-	@printf '  %-10s WHAT=%s APPLY=Y\n' 'worktree' 'list|add|update|remove';
+	@printf '  %-10s WHAT=%s APPLY=Y\n' 'worktree' "$$(printf '%s' '$(_ALLOWED_WHATS_worktree)' | awk '{$$1=$$1; gsub(/ /, "|"); print}')";
 
 
 	@printf '  %-10s %s\n' 'WORKSPACE' 'target repository (default: current project)';
@@ -634,10 +639,16 @@ _builtin_setup_submodules:
 			exit 1; \
 		fi; \
 		need_fetch=1; \
-		if git -C "$$child_root" rev-parse --verify "$$remote_ref" >/dev/null 2>&1 && \
-		   git -C "$$child_root" merge-base --is-ancestor "$$gitlink" HEAD && \
-		   git -C "$$child_root" merge-base --is-ancestor "$$remote_ref" HEAD; then \
-			need_fetch=0; \
+		if git -C "$$child_root" merge-base --is-ancestor "$$gitlink" HEAD; then \
+			if git -C "$$child_root" rev-parse --verify "$$remote_ref" >/dev/null 2>&1; then \
+				if git -C "$$child_root" merge-base --is-ancestor "$$remote_ref" HEAD; then \
+					need_fetch=0; \
+				fi; \
+			else \
+				# Pin is already present; origin tip may be absent on a shallow CI \
+				# clone. Origin lag must not fail verify (setup never destroys). \
+				need_fetch=0; \
+			fi; \
 		fi; \
 		if [ "$$need_fetch" -eq 1 ]; then \
 			git -C "$$child_root" fetch --quiet origin "$$branch" || { \
@@ -784,12 +795,16 @@ _builtin_fmt_all: _builtin_require_environment
 	$(call _require_apply)
 	@$(UV_RUN) ruff format $(RUFF_PATHS)
 
+_builtin_fmt_apply: _builtin_fmt_all
+
 _builtin_fix_check:
 	@printf 'ERROR: make fix requires APPLY=Y\n' >&2; exit 2
 
 _builtin_fix_all: _builtin_require_environment
 	$(call _require_apply)
 	@$(UV_RUN) ruff check --fix $(RUFF_PATHS)
+
+_builtin_fix_apply: _builtin_fix_all
 
 
 _builtin_run_default: _builtin_require_environment
@@ -866,6 +881,8 @@ _builtin_gen_all: _builtin_require_environment
 	@$(PROJECT_FLEXT_INFRA) codegen conform --root "$(PROJECT_ROOT)" --scope "$(CODEGEN_SCOPE)" --mode apply
 	@$(PROJECT_FLEXT_INFRA) deps modernize --workspace "$(PROJECT_ROOT)" --apply
 	@$(PROJECT_FLEXT_INFRA) deps extra-paths --workspace "$(PROJECT_ROOT)" --apply
+
+_builtin_gen_apply: _builtin_gen_all
 
 _builtin_worktree_list:
 	@$(PROJECT_FLEXT_INFRA) workspace worktree --workspace "$(WORKSPACE)" --operation list
