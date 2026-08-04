@@ -32,10 +32,7 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
             ),
         ]
 
-    @classmethod
-    def build_dbt_ldif(cls, **kwargs: object) -> _DbtLdif:
-        """Build a validated nested DbtLdif settings model."""
-        return cls._DbtLdif.model_validate(kwargs)
+    # Why: mro-4p0t — nested namespace uses default_factory only; no build_* wrapper.
 
     if TYPE_CHECKING:
         DbtLdif: _DbtLdif

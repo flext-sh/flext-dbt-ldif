@@ -1,8 +1,12 @@
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
-# flext_dbt_ldif.services.cli_service
+# flext_dbt_ldif.settings
 
-::: flext_dbt_ldif.services.cli_service
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
+::: flext_dbt_ldif.settings
     options:
       show_root_heading: true
       show_root_full_path: false
