@@ -14,4 +14,4 @@ export DBT_PROFILES_DIR=.
 dbt debug --target "$1"
 
 dbt deps --target "$1" || exit 1
-dbt build --target $1 --full-refresh || exit 1
+dbt build --target "$1" --full-refresh || exit 1
