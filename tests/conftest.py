@@ -40,11 +40,7 @@ def settings(tmp_path: Path) -> FlextDbtLdifSettings:
     """Provide a typed FlextDbtLdifSettings instance with a sample LDIF path."""
     FlextDbtLdifSettings.reset_for_testing()
     # Why: mro-4p0t — nested settings are typed models, not build_* wrappers.
-    return FlextDbtLdifSettings(
-        DbtLdif=FlextDbtLdifSettings._DbtLdif(
-            ldif_file_path=str(tmp_path / "sample.ldif")
-        )
-    )
+    return FlextDbtLdifSettings.model_validate({"DbtLdif": {"ldif_file_path": str(tmp_path / "sample.ldif")}})
 
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
