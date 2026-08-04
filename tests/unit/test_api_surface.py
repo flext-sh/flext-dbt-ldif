@@ -158,7 +158,9 @@ class TestsFlextDbtLdifApiSurface:
     def test_full_pipeline_propagates_parse_failure(self) -> None:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings.model_validate({"DbtLdif": {"ldif_file_path": "", "min_quality_threshold": 0.5}})
+            FlextDbtLdifSettings.model_validate({
+                "DbtLdif": {"ldif_file_path": "", "min_quality_threshold": 0.5}
+            })
         )
 
         result = client.run_full_pipeline()

@@ -113,7 +113,9 @@ class TestsFlextDbtLdifServicesAndApi:
         """Execute surfaces the settings the facade was constructed with."""
         # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed nested model, not a raw
         # dict (U18: config/settings values are validated models, no model-less payload).
-        settings = FlextDbtLdifSettings.model_validate({"DbtLdif": {"min_quality_threshold": 0.5}})
+        settings = FlextDbtLdifSettings.model_validate({
+            "DbtLdif": {"min_quality_threshold": 0.5}
+        })
         api = FlextDbtLdif(settings=settings)
 
         result = api.execute()
