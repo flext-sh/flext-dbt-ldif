@@ -59,7 +59,7 @@ class TestsFlextDbtLdifApiSurface:
         """An explicit path overrides the configured default."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif=FlextDbtLdifSettings.build_dbt_ldif(ldif_file_path="")
+                DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="")
             )
         )
         result = client.parse_ldif_file("/data/other.ldif")
@@ -161,7 +161,7 @@ class TestsFlextDbtLdifApiSurface:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                DbtLdif=FlextDbtLdifSettings.build_dbt_ldif(
+                DbtLdif=FlextDbtLdifSettings._DbtLdif(
                     ldif_file_path="", min_quality_threshold=0.5
                 )
             )

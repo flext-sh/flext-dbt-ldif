@@ -2,6 +2,10 @@
 
 # flext_dbt_ldif.protocols
 
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 ::: flext_dbt_ldif.protocols
     options:
       show_root_heading: true

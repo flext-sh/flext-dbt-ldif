@@ -2,6 +2,10 @@
 
 # flext_dbt_ldif.services.unified_service
 
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 ::: flext_dbt_ldif.services.unified_service
     options:
       show_root_heading: true

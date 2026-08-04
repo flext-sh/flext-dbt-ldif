@@ -2,6 +2,10 @@
 
 # flext_dbt_ldif.utilities
 
+<!-- TOC START -->
+- No sections found
+<!-- TOC END -->
+
 ::: flext_dbt_ldif.utilities
     options:
       show_root_heading: true
