@@ -1,9 +1,11 @@
-# @generated AUTO-GENERATED FILE — Regenerate with: make gen
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Flext Dbt Ldif package."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
+from types import MappingProxyType
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
@@ -17,59 +19,18 @@ from .__version__ import __version__ as __version__
 from .__version__ import __version_info__ as __version_info__
 
 if TYPE_CHECKING:
-    from flext_ldif import d as d
-    from flext_ldif import e as e
-    from flext_ldif import h as h
-    from flext_ldif import r as r
-    from flext_ldif import x as x
+    from flext_ldif import d, e, h, r, x
 
-    from ._config import FlextDbtLdifConfig as FlextDbtLdifConfig
-    from ._config import config as config
-    from ._settings import FlextDbtLdifSettings as FlextDbtLdifSettings
-    from ._settings import settings as settings
-    from .api import FlextDbtLdif as FlextDbtLdif
-    from .api import dbt_ldif as dbt_ldif
-    from .base import FlextDbtLdifServiceBase as FlextDbtLdifServiceBase
-
-    s: type[FlextDbtLdifServiceBase]
-    from .constants import FlextDbtLdifConstants as FlextDbtLdifConstants
-
-    c: type[FlextDbtLdifConstants]
-    from .models import FlextDbtLdifModels as FlextDbtLdifModels
-
-    m: type[FlextDbtLdifModels]
-    from .protocols import FlextDbtLdifProtocols as FlextDbtLdifProtocols
-
-    p: type[FlextDbtLdifProtocols]
-    from .typings import FlextDbtLdifTypes as FlextDbtLdifTypes
-
-    t: type[FlextDbtLdifTypes]
-    from .utilities import FlextDbtLdifUtilities as FlextDbtLdifUtilities
-
-    u: type[FlextDbtLdifUtilities]
-
-_LAZY_MODULES: dict[str, tuple[str, ...]] = {
-    "._config": ("FlextDbtLdifConfig", "config"),
-    "._settings": ("FlextDbtLdifSettings", "settings"),
-    ".api": ("FlextDbtLdif", "dbt_ldif"),
-    ".base": ("FlextDbtLdifServiceBase", "s"),
-    ".constants": ("FlextDbtLdifConstants", "c"),
-    ".models": ("FlextDbtLdifModels", "m"),
-    ".protocols": ("FlextDbtLdifProtocols", "p"),
-    ".typings": ("FlextDbtLdifTypes", "t"),
-    ".utilities": ("FlextDbtLdifUtilities", "u"),
-    "flext_ldif": ("d", "e", "h", "r", "x"),
-}
-
-
-_LAZY_ALIAS_GROUPS: dict[str, tuple[tuple[str, str], ...]] = {}
-
-
-_LAZY_IMPORTS = build_lazy_import_map(
-    _LAZY_MODULES, alias_groups=_LAZY_ALIAS_GROUPS, sort_keys=False
-)
-
-_PUBLIC_EXPORTS: tuple[str, ...] = (
+    from ._config import FlextDbtLdifConfig, config
+    from ._settings import FlextDbtLdifSettings, settings
+    from .api import FlextDbtLdif, dbt_ldif
+    from .base import FlextDbtLdifServiceBase, FlextDbtLdifServiceBase as s
+    from .constants import FlextDbtLdifConstants, FlextDbtLdifConstants as c
+    from .models import FlextDbtLdifModels, FlextDbtLdifModels as m
+    from .protocols import FlextDbtLdifProtocols, FlextDbtLdifProtocols as p
+    from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
+    from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
+__all__: tuple[str, ...] = (
     "FlextDbtLdif",
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
@@ -103,6 +64,26 @@ _PUBLIC_EXPORTS: tuple[str, ...] = (
     "x",
 )
 
-__all__: tuple[str, ...] = tuple(_PUBLIC_EXPORTS)
-
-install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)
+install_lazy_exports(
+    __name__,
+    globals(),
+    MappingProxyType(
+        build_lazy_import_map(
+            MappingProxyType({
+                "._config": ("FlextDbtLdifConfig", "config"),
+                "._settings": ("FlextDbtLdifSettings", "settings"),
+                ".api": ("FlextDbtLdif", "dbt_ldif"),
+                ".base": ("FlextDbtLdifServiceBase", "s"),
+                ".constants": ("FlextDbtLdifConstants", "c"),
+                ".models": ("FlextDbtLdifModels", "m"),
+                ".protocols": ("FlextDbtLdifProtocols", "p"),
+                ".typings": ("FlextDbtLdifTypes", "t"),
+                ".utilities": ("FlextDbtLdifUtilities", "u"),
+                "flext_ldif": ("d", "e", "h", "r", "x"),
+            }),
+            alias_groups=MappingProxyType({}),
+            sort_keys=False,
+        )
+    ),
+    public_exports=__all__,
+)
