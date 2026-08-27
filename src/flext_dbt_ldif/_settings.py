@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from pydantic import BaseModel, Field
 from pydantic_settings import SettingsConfigDict
 
-from flext_meltano import FlextMeltanoSettings
+from flext_meltano import FlextMeltanoSettings, m
 
 
 class FlextDbtLdifSettings(FlextMeltanoSettings):
@@ -17,15 +16,15 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
         env_prefix="FLEXT_DBT_LDIF_", env_nested_delimiter="__", extra="ignore"
     )
 
-    class _DbtLdif(BaseModel):
+    class _DbtLdif(m.BaseModel):
         """Namespaced dbt-LDIF transformation settings."""
 
         ldif_file_path: Annotated[
-            str, Field(default="", description="Path to LDIF file for processing")
+            str, m.Field(default="", description="Path to LDIF file for processing")
         ]
         min_quality_threshold: Annotated[
             float,
-            Field(
+            m.Field(
                 default=0.8,
                 ge=0.0,
                 le=1.0,
@@ -33,15 +32,12 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
             ),
         ]
 
-    @classmethod
-    def build_dbt_ldif(cls, **kwargs: object) -> _DbtLdif:
-        """Build a validated nested DbtLdif settings model."""
-        return cls._DbtLdif(**kwargs)
+    # Why: mro-4p0t — nested namespace uses default_factory only; no build_* wrapper.
 
     if TYPE_CHECKING:
         DbtLdif: _DbtLdif
     else:
-        DbtLdif: _DbtLdif = Field(
+        DbtLdif: _DbtLdif = m.Field(
             default_factory=_DbtLdif, description="Namespaced dbt-LDIF settings."
         )
 
