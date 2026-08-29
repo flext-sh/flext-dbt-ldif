@@ -1622,7 +1622,6 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
 
 > Dependency versions are not predictable if the lock file (uv.lock, poetry.lock, pdm.lock or pylock.toml) is missing.
 
-
 **Decisão**: pendente
 
 ### 88 · ⚪ MINOR · CODE_SMELL · `python:S7504`
