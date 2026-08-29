@@ -46,7 +46,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        53                        echo "test_adapters=$SUPPORTED_ADAPTERS" >> $GITHUB_OUTPUT
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 2 · 🔴 BLOCKER · VULNERABILITY · `githubactions:S7630`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:55` · **Effort**: 1h
@@ -65,7 +65,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        59                id: supported-adapters
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 3 · 🔴 BLOCKER · CODE_SMELL · `python:S1845`
 **Local**: `src/flext_dbt_ldif/api.py:49` · **Effort**: 10min
@@ -84,7 +84,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        53      def execute(self) -> p.Result[FlextDbtLdifSettings]:
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 4 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:47` · **Effort**: 10min
@@ -103,7 +103,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        51            where <something> is enclosed by (` or [ or " or ')
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 5 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:65` · **Effort**: 10min
@@ -122,7 +122,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        69              (from|join)\s+
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 6 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:81` · **Effort**: 10min
@@ -141,7 +141,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        85              (\)\s*}})
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 7 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:88` · **Effort**: 4min
@@ -160,7 +160,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        92              # from or join followed by at least 1 whitespace character
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 8 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:89` · **Effort**: 10min
@@ -179,7 +179,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        93              (from|join)\s+
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 9 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:105` · **Effort**: 10min
@@ -198,7 +198,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       109              (,)
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 10 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:121` · **Effort**: 10min
@@ -217,7 +217,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       125              (\)\s*}})
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 11 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:129` · **Effort**: 10min
@@ -236,7 +236,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       133              (from|join)\s+
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 12 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:145` · **Effort**: 10min
@@ -255,7 +255,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       149              (\)\s*}})
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 13 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:153` · **Effort**: 10min
@@ -274,7 +274,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       157              (from|join)\s+
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 14 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:169` · **Effort**: 10min
@@ -293,7 +293,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       173              (,)
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 15 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:185` · **Effort**: 10min
@@ -312,7 +312,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       189              (\)\s*}})
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 16 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:192` · **Effort**: 4min
@@ -331,7 +331,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       196              # from or join followed by at least 1 whitespace character            
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 17 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:193` · **Effort**: 10min
@@ -350,7 +350,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       197              (from|join)\s+
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 18 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:217` · **Effort**: 10min
@@ -369,7 +369,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       221              (\w+)
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 19 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:227` · **Effort**: 10min
@@ -388,7 +388,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       231              # first matching group
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 20 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:228` · **Effort**: 10min
@@ -407,7 +407,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       232              # from or join followed by at least 1 whitespace character 
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 21 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:245` · **Effort**: 10min
@@ -426,7 +426,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       249              (\.)
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 22 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:269` · **Effort**: 10min
@@ -445,7 +445,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       273              (\w+)
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 23 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:279` · **Effort**: 10min
@@ -464,7 +464,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       283              # first matching group
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 24 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:280` · **Effort**: 10min
@@ -483,7 +483,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       284              # from or join followed by at least 1 whitespace character             
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 25 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:297` · **Effort**: 10min
@@ -502,7 +502,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       301      } -%}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 26 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:300` · **Effort**: 4min
@@ -521,7 +521,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       304      {%- set config_list = [] -%}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 27 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/codegen/macros/generate_model_import_ctes.sql:326` · **Effort**: 4min
@@ -540,7 +540,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       330                  {%- do from_list.append(match_tuple) -%}                     
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 28 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:12` · **Effort**: 10min
@@ -559,7 +559,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        16      {% endif %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 29 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:18` · **Effort**: 10min
@@ -578,7 +578,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        22          {% endfor %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 30 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:19` · **Effort**: 10min
@@ -597,7 +597,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        23      {% endfor %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 31 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:34` · **Effort**: 10min
@@ -616,7 +616,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        38      {% endif %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 32 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:45` · **Effort**: 10min
@@ -635,7 +635,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        49              {% if model_path == directory and model.name.startswith(prefix) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 33 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:73` · **Effort**: 10min
@@ -654,7 +654,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        77  {% macro default__data_type_format_source(column) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 34 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:79` · **Effort**: 10min
@@ -673,7 +673,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        83    {{ return(adapter.dispatch('data_type_format_model', 'codegen')(column)) }}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 35 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/codegen/macros/helpers/helpers.sql:83` · **Effort**: 10min
@@ -692,7 +692,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        87  {% macro default__data_type_format_model(column) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 36 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/integration_tests/models/sql/test_get_column_values.sql:2` · **Effort**: 4min
@@ -708,7 +708,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 37 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/integration_tests/models/sql/test_get_single_value.sql:8` · **Effort**: 4min
@@ -727,7 +727,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        12      select float_value from {{ ref('data_get_single_value') }}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 38 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/dbt_utils/integration_tests/tests/assert_get_query_results_as_dict_objects_equal.sql:23` · **Effort**: 10min
@@ -746,7 +746,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        27  {% set ns = namespace(
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 39 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/dbt_utils/integration_tests/tests/generic/expect_table_columns_to_match_set.sql:3` · **Effort**: 10min
@@ -763,7 +763,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         7  #}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 40 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/dbt_utils/integration_tests/tests/generic/expect_table_columns_to_match_set.sql:31` · **Effort**: 10min
@@ -782,7 +782,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        35      input_columns as (
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 41 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/generic_tests/equality.sql:2` · **Effort**: 4min
@@ -798,7 +798,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 42 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/generic_tests/equality.sql:58` · **Effort**: 4min
@@ -817,7 +817,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        62          {%- set compare_model_columns_set = set(compare_model_columns | map(attribute='quoted') | map("lower")) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 43 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/generic_tests/mutually_exclusive_ranges.sql:1` · **Effort**: 4min
@@ -832,7 +832,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         5  {% macro default__test_mutually_exclusive_ranges(model, lower_bound_column, upper_bound_column, partition_by=None, gaps='allowed', zero_length_range_allowed=False) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 44 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/date_spine.sql:2` · **Effort**: 4min
@@ -848,7 +848,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6      {%- call statement('get_intervals_between', fetch_result=True) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 45 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_column_values.sql:2` · **Effort**: 4min
@@ -864,7 +864,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6      {#-- Prevent querying of db in parsing mode. This works because this macro does not create any new refs. #}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 46 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_filtered_columns_in_relation.sql:2` · **Effort**: 4min
@@ -880,7 +880,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6      {%- do dbt_utils._is_relation(from, 'get_filtered_columns_in_relation') -%}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 47 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_table_types_sql.sql:7` · **Effort**: 4min
@@ -899,7 +899,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        11              end as {{ adapter.quote('table_type') }}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 48 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_table_types_sql.sql:7` · **Effort**: 4min
@@ -918,7 +918,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        11              end as {{ adapter.quote('table_type') }}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 49 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_table_types_sql.sql:9` · **Effort**: 4min
@@ -937,7 +937,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        13  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 50 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_table_types_sql.sql:9` · **Effort**: 4min
@@ -956,7 +956,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        13  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 51 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_table_types_sql.sql:11` · **Effort**: 4min
@@ -975,7 +975,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        15  {% macro postgres__get_table_types_sql() %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 52 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_tables_by_pattern_sql.sql:9` · **Effort**: 4min
@@ -994,7 +994,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        13          where table_schema ilike '{{ schema_pattern }}'
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 53 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_tables_by_pattern_sql.sql:10` · **Effort**: 4min
@@ -1013,7 +1013,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        14          and table_name ilike '{{ table_pattern }}'
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 54 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_tables_by_pattern_sql.sql:13` · **Effort**: 4min
@@ -1032,7 +1032,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        17  {% endmacro %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 55 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_tables_by_pattern_sql.sql:14` · **Effort**: 4min
@@ -1051,7 +1051,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        18  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 56 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/get_tables_by_pattern_sql.sql:15` · **Effort**: 4min
@@ -1070,7 +1070,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        19  {% macro redshift__get_tables_by_pattern_sql(schema_pattern, table_pattern, exclude='', database=target.database) %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 57 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/nullcheck_table.sql:2` · **Effort**: 4min
@@ -1086,7 +1086,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 58 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/dbt_utils/macros/sql/safe_add.sql:9` · **Effort**: 10min
@@ -1105,7 +1105,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        13  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 59 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/dbt_utils/macros/sql/safe_subtract.sql:9` · **Effort**: 10min
@@ -1124,7 +1124,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        13  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 60 · 🟠 CRITICAL · CODE_SMELL · `plsql:LiteralsNonPrintableCharactersCheck`
 **Local**: `dbt_packages/dbt_utils/macros/sql/surrogate_key.sql:8` · **Effort**: 10min
@@ -1143,7 +1143,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        12  macro, add a global variable in dbt_project.yml called \
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 61 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/union.sql:2` · **Effort**: 4min
@@ -1159,7 +1159,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 62 · 🟠 CRITICAL · CODE_SMELL · `plsql:S1192`
 **Local**: `dbt_packages/dbt_utils/macros/sql/unpivot.sql:16` · **Effort**: 4min
@@ -1178,7 +1178,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        20  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 63 · 🟠 CRITICAL · CODE_SMELL · `python:S1192`
 **Local**: `src/flext_dbt_ldif/models.py:52` · **Effort**: 8min
@@ -1197,7 +1197,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        56  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 64 · 🟠 CRITICAL · CODE_SMELL · `python:S1192`
 **Local**: `src/flext_dbt_ldif/models.py:62` · **Effort**: 6min
@@ -1216,7 +1216,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        66  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 65 · 🟡 MAJOR · CODE_SMELL · `shelldre:S7688`
 **Local**: `.github/scripts/install-git-hooks.sh:55` · **Effort**: 2min
@@ -1235,7 +1235,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        59  import os
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 66 · 🟡 MAJOR · CODE_SMELL · `shelldre:S7688`
 **Local**: `.github/scripts/install-git-hooks.sh:104` · **Effort**: 2min
@@ -1254,7 +1254,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       108  
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 67 · 🟡 MAJOR · CODE_SMELL · `shelldre:S7688`
 **Local**: `.github/scripts/install-git-hooks.sh:106` · **Effort**: 2min
@@ -1272,7 +1272,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       109  echo "install-git-hooks: prepare-commit-msg guarded (BD_ALLOW_AGENT_COMMIT_TRAILERS opt-in)"
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 68 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8264`
 **Local**: `.github/workflows/docs.yml:18` · **Effort**: 5min
@@ -1291,7 +1291,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        22  concurrency:
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 69 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8233`
 **Local**: `.github/workflows/docs.yml:19` · **Effort**: 5min
@@ -1310,7 +1310,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        23    group: pages
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 70 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8233`
 **Local**: `.github/workflows/docs.yml:20` · **Effort**: 5min
@@ -1329,7 +1329,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        24    cancel-in-progress: false
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 71 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7637`
 **Local**: `dbt_packages/codegen/.github/workflows/ci.yml:21` · **Effort**: 30min
@@ -1348,7 +1348,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        25        with:
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 72 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7637`
 **Local**: `dbt_packages/codegen/.github/workflows/stale.yml:30` · **Effort**: 30min
@@ -1363,7 +1363,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
 >>>    30      uses: dbt-labs/actions/.github/workflows/stale-bot-matrix.yml@main
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 73 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7637`
 **Local**: `dbt_packages/codegen/.github/workflows/triage-labels.yml:27` · **Effort**: 30min
@@ -1382,7 +1382,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        31      secrets: inherit
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 74 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7635`
 **Local**: `dbt_packages/codegen/.github/workflows/triage-labels.yml:31` · **Effort**: 10min
@@ -1397,7 +1397,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
 >>>    31      secrets: inherit
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 75 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8544`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:43` · **Effort**: 1h
@@ -1416,7 +1416,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        47                id: list-adapters
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 76 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8541`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:44` · **Effort**: 1h
@@ -1435,7 +1435,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        48                run: |
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 77 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8544`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:44` · **Effort**: 1h
@@ -1454,7 +1454,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        48                run: |
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 78 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8544`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:106` · **Effort**: 1h
@@ -1473,7 +1473,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       110                run: |
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 79 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8544`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:107` · **Effort**: 1h
@@ -1492,7 +1492,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       111                    python -m pip install --upgrade pip
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 80 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8544`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:111` · **Effort**: 1h
@@ -1511,7 +1511,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       115                run: |
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 81 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8541`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:112` · **Effort**: 1h
@@ -1530,7 +1530,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       116                    tox -e dbt_integration_${{ matrix.adapter }}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 82 · 🟡 MAJOR · VULNERABILITY · `githubactions:S8544`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/ci.yml:112` · **Effort**: 1h
@@ -1549,7 +1549,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
       116                    tox -e dbt_integration_${{ matrix.adapter }}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 83 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7637`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/create-table-of-contents.yml:28` · **Effort**: 30min
@@ -1566,7 +1566,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        30            commit_message: Auto update table of contents
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 84 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7637`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/stale.yml:30` · **Effort**: 30min
@@ -1581,7 +1581,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
 >>>    30      uses: dbt-labs/actions/.github/workflows/stale-bot-matrix.yml@main
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 85 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7637`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/triage-labels.yml:27` · **Effort**: 30min
@@ -1600,7 +1600,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        31      secrets: inherit
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 86 · 🟡 MAJOR · VULNERABILITY · `githubactions:S7635`
 **Local**: `dbt_packages/dbt_utils/.github/workflows/triage-labels.yml:31` · **Effort**: 10min
@@ -1615,7 +1615,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
 >>>    31      secrets: inherit
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 87 · 🟡 MAJOR · VULNERABILITY · `text:S8565`
 **Local**: `pyproject.toml:-` · **Effort**: 5min
@@ -1623,7 +1623,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
 > Dependency versions are not predictable if the lock file (uv.lock, poetry.lock, pdm.lock or pylock.toml) is missing.
 
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 88 · ⚪ MINOR · CODE_SMELL · `python:S7504`
 **Local**: `conftest.py:20` · **Effort**: 5min
@@ -1642,7 +1642,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
        24                  sys.modules.pop(module_name, None)
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 89 · ⚪ MINOR · CODE_SMELL · `plsql:SingleLineCommentsSyntaxCheck`
 **Local**: `dbt_packages/dbt_utils/integration_tests/models/sql/test_star_aggregate.sql:1` · **Effort**: 1min
@@ -1657,7 +1657,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         5  with data as (
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 90 · ⚪ INFO · CODE_SMELL · `plsql:S1135`
 **Local**: `dbt_packages/dbt_utils/integration_tests/models/sql/test_pivot.sql:2` · **Effort**: 0min
@@ -1673,7 +1673,7 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6      {% set cmp = 'ilike' %}
 ```
 
-**Decisão**: 
+**Decisão**: pendente
 
 ### 91 · ⚪ INFO · CODE_SMELL · `plsql:S1135`
 **Local**: `dbt_packages/dbt_utils/integration_tests/models/sql/test_pivot_apostrophe.sql:2` · **Effort**: 0min
@@ -1689,5 +1689,4 @@ Cada issue traz a **mensagem do SonarQube** (descreve o problema e o impacto), o
         6      {% set cmp = 'ilike' %}
 ```
 
-**Decisão**: 
-
+**Decisão**: pendente
