@@ -19,7 +19,9 @@ from .__version__ import __version__ as __version__
 from .__version__ import __version_info__ as __version_info__
 
 if TYPE_CHECKING:
-    from flext_ldif import d, e, h, r, x
+    from enum import StrEnum, unique
+    from flext_ldif import FlextLdifConstants, d, e, h, r, x
+    from typing import Final
 
     from ._config import FlextDbtLdifConfig, config
     from ._settings import FlextDbtLdifSettings, settings
@@ -31,6 +33,7 @@ if TYPE_CHECKING:
     from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
     from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
 __all__: tuple[str, ...] = (
+    "Final",
     "FlextDbtLdif",
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
@@ -40,6 +43,8 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
+    "FlextLdifConstants",
+    "StrEnum",
     "__author__",
     "__author_email__",
     "__description__",
@@ -61,29 +66,29 @@ __all__: tuple[str, ...] = (
     "settings",
     "t",
     "u",
+    "unique",
     "x",
 )
 
-install_lazy_exports(
-    __name__,
-    globals(),
-    MappingProxyType(
-        build_lazy_import_map(
-            MappingProxyType({
-                "._config": ("FlextDbtLdifConfig", "config"),
-                "._settings": ("FlextDbtLdifSettings", "settings"),
-                ".api": ("FlextDbtLdif", "dbt_ldif"),
-                ".base": ("FlextDbtLdifServiceBase", "s"),
-                ".constants": ("FlextDbtLdifConstants", "c"),
-                ".models": ("FlextDbtLdifModels", "m"),
-                ".protocols": ("FlextDbtLdifProtocols", "p"),
-                ".typings": ("FlextDbtLdifTypes", "t"),
-                ".utilities": ("FlextDbtLdifUtilities", "u"),
-                "flext_ldif": ("d", "e", "h", "r", "x"),
-            }),
-            alias_groups=MappingProxyType({}),
-            sort_keys=False,
-        )
-    ),
-    public_exports=__all__,
+_LAZY_IMPORTS = MappingProxyType(
+    build_lazy_import_map(
+        MappingProxyType({
+            "._config": ("FlextDbtLdifConfig", "config"),
+            "._settings": ("FlextDbtLdifSettings", "settings"),
+            ".api": ("FlextDbtLdif", "dbt_ldif"),
+            ".base": ("FlextDbtLdifServiceBase", "s"),
+            ".constants": ("FlextDbtLdifConstants", "c"),
+            ".models": ("FlextDbtLdifModels", "m"),
+            ".protocols": ("FlextDbtLdifProtocols", "p"),
+            ".typings": ("FlextDbtLdifTypes", "t"),
+            ".utilities": ("FlextDbtLdifUtilities", "u"),
+            "enum": ("StrEnum", "unique"),
+            "flext_ldif": ("FlextLdifConstants", "d", "e", "h", "r", "x"),
+            "typing": ("Final",),
+        }),
+        alias_groups=MappingProxyType({}),
+        sort_keys=False,
+    )
 )
+
+install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)
