@@ -3,22 +3,16 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from types import MappingProxyType
+from typing import TYPE_CHECKING
 
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from . import _services_parts as _services_parts
     from flext_tests import c, d, e, h, m, p, r, s, t, td, tf, tk, tm, tv, u, x
 
-    from ._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
+    from . import _services_parts as _services_parts
     from .test_api_surface import TestsFlextDbtLdifApiSurface
-    from .test_cli import TestsFlextDbtLdifCli
-    from .test_connection_profile import (
-        test_connection_profile_returns_typed_ldif_wire_shape,
-    )
     from .test_core import TestsFlextDbtLdifCore
     from .test_dbt_client import TestsFlextDbtLdifClient
     from .test_dbt_models import TestsFlextDbtLdifDbtModels
@@ -27,13 +21,11 @@ if TYPE_CHECKING:
     from .test_version import TestsFlextDbtLdifVersion
 __all__: tuple[str, ...] = (
     "TestsFlextDbtLdifApiSurface",
-    "TestsFlextDbtLdifCli",
     "TestsFlextDbtLdifClient",
     "TestsFlextDbtLdifCore",
     "TestsFlextDbtLdifDbtModels",
     "TestsFlextDbtLdifServices",
     "TestsFlextDbtLdifServicesAndApi",
-    "TestsFlextDbtLdifServicesDataQuality",
     "TestsFlextDbtLdifVersion",
     "_services_parts",
     "c",
@@ -46,7 +38,6 @@ __all__: tuple[str, ...] = (
     "s",
     "t",
     "td",
-    "test_connection_profile_returns_typed_ldif_wire_shape",
     "tf",
     "tk",
     "tm",
@@ -59,12 +50,7 @@ _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
             "._services_parts": ("_services_parts",),
-            "._services_parts.data_quality": ("TestsFlextDbtLdifServicesDataQuality",),
             ".test_api_surface": ("TestsFlextDbtLdifApiSurface",),
-            ".test_cli": ("TestsFlextDbtLdifCli",),
-            ".test_connection_profile": (
-                "test_connection_profile_returns_typed_ldif_wire_shape",
-            ),
             ".test_core": ("TestsFlextDbtLdifCore",),
             ".test_dbt_client": ("TestsFlextDbtLdifClient",),
             ".test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
