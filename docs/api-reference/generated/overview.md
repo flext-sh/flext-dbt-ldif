@@ -23,7 +23,7 @@
 - Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifConfig`,
   `FlextDbtLdifConstants`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
   `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings`, `FlextDbtLdifTypes`,
-  `FlextDbtLdifUtilities`, `config` (+2 more)
+  `FlextDbtLdifUtilities`, `config` (+1 more)
 - Exported module shortcuts: _none_
 - Generated module pages: `7`
 
