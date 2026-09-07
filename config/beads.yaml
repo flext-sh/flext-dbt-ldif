@@ -1,4 +1,4 @@
 version: 1
-workspace: flext-dbt-ldif
-database: flext-dbt-ldif
-issue_prefix: flext-dbt-ldif
+workspace: flext
+database: flext
+issue_prefix: flext

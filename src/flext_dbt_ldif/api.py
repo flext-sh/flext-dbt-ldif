@@ -60,9 +60,7 @@ class FlextDbtLdif(
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
-            return r[m.DbtLdif.ModelGenerationResult].fail(
-                parsed.error or "Parsing failed"
-            )
+            return r[m.DbtLdif.ModelGenerationResult].from_failure(parsed)
         entries_raw = parsed.value
         try:
             entries = t.json_mapping_sequence_adapter().validate_python(entries_raw)
