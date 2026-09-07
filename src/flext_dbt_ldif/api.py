@@ -91,4 +91,6 @@ class FlextDbtLdif(
         return self.service.run_data_quality_assessment(ldif_file)
 
 
-__all__: list[str] = ["FlextDbtLdif"]
+dbt_ldif = FlextDbtLdif
+
+__all__: list[str] = ["FlextDbtLdif", "dbt_ldif"]
