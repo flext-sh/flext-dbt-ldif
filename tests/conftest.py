@@ -63,7 +63,7 @@ def pytest_sessionstart(session: pytest.Session) -> None:
     """Ensure shared Docker container is started for the test session."""
     _ = session
     docker_control = tk.shared(
-        "flext-openldap-test", workspace_root=Path(__file__).resolve().parents[2]
+        "flext-openldap-test", repository_root=Path(__file__).resolve().parents[2]
     )
     result = docker_control.execute()
     if result.failure:
