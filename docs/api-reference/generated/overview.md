@@ -24,8 +24,8 @@
   `FlextDbtLdifConstants`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
   `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings`, `FlextDbtLdifTypes`,
   `FlextDbtLdifUtilities`, `config` (+2 more)
-- Exported module shortcuts: _none_
-- Generated module pages: `7`
+- Exported module shortcuts: `services`
+- Generated module pages: `8`
 
 ## Next Pages
 
