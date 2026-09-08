@@ -91,6 +91,6 @@ class FlextDbtLdif(
         return self.service.run_data_quality_assessment(ldif_file)
 
 
-dbt_ldif = FlextDbtLdif
+dbt_ldif: FlextDbtLdif = FlextDbtLdif.fetch_instance()
 
 __all__: list[str] = ["FlextDbtLdif", "dbt_ldif"]

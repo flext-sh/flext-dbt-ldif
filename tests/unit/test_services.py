@@ -13,7 +13,8 @@ import pytest
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from flext_tests import tm
 from tests import c, t
-from tests.unit._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
+
+from ._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
 
 
 @pytest.fixture

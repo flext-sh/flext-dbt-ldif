@@ -20,11 +20,9 @@ from .__version__ import (
 )
 
 if TYPE_CHECKING:
-    from enum import StrEnum, unique
-    from typing import Final
-
     from flext_ldif import FlextLdifConstants, d, e, h, r, x
 
+    from . import services as services
     from ._config import FlextDbtLdifConfig, config
     from ._settings import FlextDbtLdifSettings, settings
     from .api import FlextDbtLdif, dbt_ldif
@@ -35,7 +33,6 @@ if TYPE_CHECKING:
     from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
     from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
 __all__: tuple[str, ...] = (
-    "Final",
     "FlextDbtLdif",
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
@@ -46,7 +43,6 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
     "FlextLdifConstants",
-    "StrEnum",
     "__author__",
     "__author_email__",
     "__description__",
@@ -65,10 +61,10 @@ __all__: tuple[str, ...] = (
     "p",
     "r",
     "s",
+    "services",
     "settings",
     "t",
     "u",
-    "unique",
     "x",
 )
 
@@ -82,11 +78,10 @@ _LAZY_IMPORTS = MappingProxyType(
             ".constants": ("FlextDbtLdifConstants", "c"),
             ".models": ("FlextDbtLdifModels", "m"),
             ".protocols": ("FlextDbtLdifProtocols", "p"),
+            ".services": ("services",),
             ".typings": ("FlextDbtLdifTypes", "t"),
             ".utilities": ("FlextDbtLdifUtilities", "u"),
-            "enum": ("StrEnum", "unique"),
             "flext_ldif": ("FlextLdifConstants", "d", "e", "h", "r", "x"),
-            "typing": ("Final",),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
