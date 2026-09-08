@@ -22,7 +22,7 @@ from .__version__ import (
 if TYPE_CHECKING:
     from flext_ldif import FlextLdifConstants, d, e, h, r, x
 
-    from . import services as services
+    from . import services
     from ._config import FlextDbtLdifConfig, config
     from ._settings import FlextDbtLdifSettings, settings
     from .api import FlextDbtLdif, dbt_ldif
