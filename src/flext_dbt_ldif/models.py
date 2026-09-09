@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from flext_dbt_ldif import c, t
 from flext_ldif import FlextLdifModels
 from flext_meltano import m, u
+
+from flext_dbt_ldif import c, t
 
 
 class FlextDbtLdifModels(m, FlextLdifModels):

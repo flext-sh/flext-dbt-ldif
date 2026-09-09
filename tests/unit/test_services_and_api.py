@@ -9,10 +9,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, c
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from flext_tests import tm
 
 
 class TestsFlextDbtLdifServicesAndApi:

@@ -9,9 +9,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from flext_tests import tm
 
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from flext_tests import tm
 from tests import c, t
 
 from ._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality

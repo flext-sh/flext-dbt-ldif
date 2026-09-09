@@ -11,10 +11,10 @@ import operator
 from pathlib import Path
 
 import pytest
+from flext_tests import tm
 
 from flext_dbt_ldif import c, t
 from flext_dbt_ldif.services.core import FlextDbtLdifCore
-from flext_tests import tm
 
 
 class TestsFlextDbtLdifCore:
