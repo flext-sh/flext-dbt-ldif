@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from flext_dbt_ldif import FlextDbtLdifServiceBase, m
 from flext_meltano import p
+
+from flext_dbt_ldif import FlextDbtLdifServiceBase, m
 
 
 def test_connection_profile_returns_typed_ldif_wire_shape() -> None:

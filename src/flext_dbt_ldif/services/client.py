@@ -53,19 +53,13 @@ class FlextDbtLdifClient:
             """Run parse, validate, and transform pipeline."""
             parse_result = self.parse_ldif_file(file_path)
             if parse_result.failure:
-                return r[m.DbtLdif.PipelineResult].fail(
-                    parse_result.error or "Parse failed"
-                )
+                return r[m.DbtLdif.PipelineResult].from_failure(parse_result)
             validate_result = self.validate_ldif_data(parse_result.value)
             if validate_result.failure:
-                return r[m.DbtLdif.PipelineResult].fail(
-                    validate_result.error or "Validation failed"
-                )
+                return r[m.DbtLdif.PipelineResult].from_failure(validate_result)
             transform_result = self.transform_with_dbt(parse_result.value, model_names)
             if transform_result.failure:
-                return r[m.DbtLdif.PipelineResult].fail(
-                    transform_result.error or "Transform failed"
-                )
+                return r[m.DbtLdif.PipelineResult].from_failure(transform_result)
             logger.info("Completed LDIF to DBT pipeline")
             return r[m.DbtLdif.PipelineResult].ok(
                 m.DbtLdif.PipelineResult(
