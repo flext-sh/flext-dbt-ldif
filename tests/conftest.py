@@ -71,10 +71,8 @@ def _ldap_container() -> Generator[None]:
     )
     result = docker_control.execute()
     if result.failure:
-        pytest.skip(
-            f"Failed to start LDAP container: {result.error}",
-        )
-    yield
+        pytest.skip(f"Failed to start LDAP container: {result.error}")
+    return
 
 
 # NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
