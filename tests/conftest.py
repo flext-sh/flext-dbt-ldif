@@ -59,17 +59,22 @@ def pytest_runtest_teardown(item: pytest.Item) -> None:
     FlextDbtLdifSettings.reset_for_testing()
 
 
-def pytest_sessionstart(session: pytest.Session) -> None:
-    """Ensure shared Docker container is started for the test session."""
-    _ = session
+@pytest.fixture(scope="session", autouse=True)
+def _ldap_container() -> Generator[None]:
+    """Ensure shared Docker container is started for the test session.
+
+    Skips every test cleanly when the container cannot start (e.g. no Docker
+    daemon), so the JUnit XML records skips rather than no-tests-collected.
+    """
     docker_control = tk.shared(
         "flext-openldap-test", repository_root=Path(__file__).resolve().parents[2]
     )
     result = docker_control.execute()
     if result.failure:
         pytest.skip(
-            f"Failed to start LDAP container: {result.error}", allow_module_level=True
+            f"Failed to start LDAP container: {result.error}",
         )
+    yield
 
 
 # NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
@@ -77,6 +82,5 @@ def pytest_sessionstart(session: pytest.Session) -> None:
 __all__: list[str] = [
     "pytest_runtest_setup",
     "pytest_runtest_teardown",
-    "pytest_sessionstart",
     "set_test_environment",
 ]
