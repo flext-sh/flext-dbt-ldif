@@ -7,17 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
 from flext_tests import tf, tk
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from tests import u
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
 
 
 @pytest.fixture
@@ -60,7 +57,7 @@ def pytest_runtest_teardown(item: pytest.Item) -> None:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _ldap_container() -> Generator[None]:
+def _ldap_container() -> None:
     """Ensure shared Docker container is started for the test session.
 
     Skips every test cleanly when the container cannot start (e.g. no Docker
@@ -72,7 +69,6 @@ def _ldap_container() -> Generator[None]:
     result = docker_control.execute()
     if result.failure:
         pytest.skip(f"Failed to start LDAP container: {result.error}")
-    return
 
 
 # NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
