@@ -1,6 +1,7 @@
 # flext-dbt-ldif
 
 <!-- TOC START -->
+
 - [Purpose](#purpose)
 - [Module Map](#module-map)
 - [Collection Rules](#collection-rules)
@@ -25,11 +26,11 @@ FLEXT dbt LDAP - dbt Models for LDIF Data Transformation
 ## Module Map
 
 ::: flext_dbt_ldif
-    options:
-      members: false
-      show_root_heading: false
-      show_root_toc_entry: false
-      show_source: false
+options:
+members: false
+show_root_heading: false
+show_root_toc_entry: false
+show_source: false
 
 ## Collection Rules
 
