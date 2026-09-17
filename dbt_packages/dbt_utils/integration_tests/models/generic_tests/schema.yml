@@ -7,7 +7,7 @@ seeds:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.not_constant:
-              group_by_columns: ['col_a']
+              group_by_columns: ["col_a"]
 
   - name: data_test_at_least_one
     columns:
@@ -17,7 +17,7 @@ seeds:
       - name: value
         data_tests:
           - dbt_utils.at_least_one:
-              group_by_columns: ['field']
+              group_by_columns: ["field"]
               error_if: "<1"
               warn_if: "<0"
 
@@ -54,7 +54,7 @@ seeds:
       - name: city
         data_tests:
           - dbt_utils.not_accepted_values:
-              values: ['Madrid', 'Berlin']
+              values: ["Madrid", "Berlin"]
 
   - name: data_test_relationships_where_table_2
     columns:
@@ -140,7 +140,7 @@ seeds:
               at_most: 0.5
           - dbt_utils.not_null_proportion:
               at_least: 0
-              group_by_columns: ['point_9']
+              group_by_columns: ["point_9"]
       - name: point_9
         data_tests:
           - dbt_utils.not_null_proportion:
@@ -178,7 +178,7 @@ seeds:
 
   - name: data_test_equality_floats_columns_a
     data_tests:
-    # Positive assertion tests
+      # Positive assertion tests
       - dbt_utils.equality:
           compare_model: ref('data_test_equality_floats_columns_b')
           compare_columns:
@@ -190,7 +190,7 @@ seeds:
           exclude_columns:
             - to_ignore
           precision: 4
-    # all columns should fail even with rounding
+      # all columns should fail even with rounding
       - dbt_utils.equality:
           compare_model: ref('data_test_equality_floats_columns_b')
           precision: 4
@@ -208,12 +208,12 @@ models:
           datepart: day
           field: created_at
           interval: 1
-          group_by_columns: ['col1']
+          group_by_columns: ["col1"]
       - dbt_utils.recency:
           datepart: day
           field: created_at
           interval: 1
-          group_by_columns: ['col1', 'col2']
+          group_by_columns: ["col1", "col2"]
 
   - name: recency_time_excluded
     data_tests:
@@ -236,7 +236,7 @@ models:
           compare_model: ref('test_equal_rowcount')
       - dbt_utils.equal_rowcount:
           compare_model: ref('test_equal_rowcount')
-          group_by_columns: ['field']
+          group_by_columns: ["field"]
 
   - name: test_equal_column_subset
     data_tests:
@@ -253,7 +253,7 @@ models:
           compare_model: ref('data_test_fewer_rows_than_table_2')
       - dbt_utils.fewer_rows_than:
           compare_model: ref('data_test_fewer_rows_than_table_2')
-          group_by_columns: ['col_a']
+          group_by_columns: ["col_a"]
 
   - name: equality_less_columns
     data_tests:

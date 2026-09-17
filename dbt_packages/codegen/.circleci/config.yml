@@ -1,7 +1,6 @@
 version: 2
 
 jobs:
-
   integration-postgres:
     docker:
       - image: cimg/python:3.11
@@ -11,7 +10,7 @@ jobs:
     environment:
       POSTGRES_HOST: localhost
       POSTGRES_USER: root
-      DBT_ENV_SECRET_POSTGRES_PASS: ''
+      DBT_ENV_SECRET_POSTGRES_PASS: ""
       POSTGRES_PORT: 5432
       POSTGRES_DATABASE: circle_test
       POSTGRES_SCHEMA: codegen_integration_tests_postgres
