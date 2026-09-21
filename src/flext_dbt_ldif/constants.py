@@ -5,11 +5,11 @@ from __future__ import annotations
 from enum import StrEnum, unique
 from typing import Final
 
-from flext_ldif import FlextLdifConstants
+from flext_ldif import c as _ldif_c
 from flext_meltano import c
 
 
-class FlextDbtLdifConstants(c, FlextLdifConstants):
+class FlextDbtLdifConstants(c, _ldif_c):
     """Typed constants used by DBT LDIF modules."""
 
     class DbtLdif:

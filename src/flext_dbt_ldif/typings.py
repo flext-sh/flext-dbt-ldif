@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from flext_ldif import FlextLdifTypes
+from flext_ldif import t as _ldif_t
 from flext_meltano import t
 
 
-class FlextDbtLdifTypes(t, FlextLdifTypes):
+class FlextDbtLdifTypes(t, _ldif_t):
     """Type namespace for DBT LDIF domain."""
 
     class DbtLdif:

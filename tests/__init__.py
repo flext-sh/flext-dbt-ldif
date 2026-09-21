@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
     from . import unit
     from .base import TestsFlextDbtLdifServiceBase, TestsFlextDbtLdifServiceBase as s
+    from .conftest import set_test_environment
     from .constants import TestsFlextDbtLdifConstants, TestsFlextDbtLdifConstants as c
     from .models import TestsFlextDbtLdifModels, TestsFlextDbtLdifModels as m
     from .protocols import TestsFlextDbtLdifProtocols, TestsFlextDbtLdifProtocols as p
@@ -36,6 +37,7 @@ __all__: tuple[str, ...] = (
     "p",
     "r",
     "s",
+    "set_test_environment",
     "t",
     "td",
     "tf",
@@ -51,6 +53,7 @@ _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
             ".base": ("TestsFlextDbtLdifServiceBase", "s"),
+            ".conftest": ("set_test_environment",),
             ".constants": ("TestsFlextDbtLdifConstants", "c"),
             ".models": ("TestsFlextDbtLdifModels", "m"),
             ".protocols": ("TestsFlextDbtLdifProtocols", "p"),

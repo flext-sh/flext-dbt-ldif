@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from flext_ldif import FlextLdifConstants, d, e, h, r, x
 
     from . import services
+    from .__version__ import FlextDbtLdifVersion
     from ._config import FlextDbtLdifConfig, config
     from ._settings import FlextDbtLdifSettings, settings
     from .api import FlextDbtLdif, dbt_ldif
@@ -42,6 +43,7 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
+    "FlextDbtLdifVersion",
     "FlextLdifConstants",
     "__author__",
     "__author_email__",
@@ -71,6 +73,7 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
+            ".__version__": ("FlextDbtLdifVersion",),
             "._config": ("FlextDbtLdifConfig", "config"),
             "._settings": ("FlextDbtLdifSettings", "settings"),
             ".api": ("FlextDbtLdif", "dbt_ldif"),

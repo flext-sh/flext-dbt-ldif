@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from flext_ldif import FlextLdifProtocols
+from flext_ldif import p as _ldif_p
 from flext_meltano import p
 
 from flext_dbt_ldif import t
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from flext_dbt_ldif.models import m
 
 
-class FlextDbtLdifProtocols(p, FlextLdifProtocols):
+class FlextDbtLdifProtocols(p, _ldif_p):
     """Namespace for DBT LDIF protocol contracts."""
 
     class DbtLdif:

@@ -5,13 +5,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Annotated
 
 from flext_meltano import FlextMeltanoSettings, m
-from pydantic_settings import SettingsConfigDict
 
 
 class FlextDbtLdifSettings(FlextMeltanoSettings):
     """Runtime settings for DBT LDIF transformations."""
 
-    model_config = SettingsConfigDict(
+    model_config = m.SettingsConfigDict(
         env_prefix="FLEXT_DBT_LDIF_", env_nested_delimiter="__", extra="ignore"
     )
 

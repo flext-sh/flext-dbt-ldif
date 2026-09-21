@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from flext_ldif import FlextLdifModels
+from flext_ldif import m as _ldif_m
 from flext_meltano import m, u
 
 from flext_dbt_ldif import c, t
 
 
-class FlextDbtLdifModels(m, FlextLdifModels):
+class FlextDbtLdifModels(m, _ldif_m):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtLdif:

@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from flext_ldif import FlextLdifUtilities
+from flext_ldif import u as _ldif_u
 from flext_meltano import u
 
 
-class FlextDbtLdifUtilities(u, FlextLdifUtilities):
+class FlextDbtLdifUtilities(u, _ldif_u):
     """Utilities for dbt-ldif operations inheriting LDIF processing capabilities."""
 
     class DbtLdif:
