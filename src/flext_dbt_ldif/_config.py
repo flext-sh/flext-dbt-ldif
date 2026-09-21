@@ -10,6 +10,8 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from typing import Annotated
+
 from flext_meltano import FlextMeltanoConfig, m
 
 
@@ -22,7 +24,10 @@ class _DbtLdifNamespace(m.BaseModel):
 class FlextDbtLdifConfig(FlextMeltanoConfig):
     """DbtLdif config auto-loaded model-less from ``config/*.yaml``."""
 
-    DbtLdif: _DbtLdifNamespace = _DbtLdifNamespace()
+    DbtLdif: Annotated[
+        _DbtLdifNamespace,
+        m.Field(description="Open namespace exposing ``config/*.yaml`` under ``DbtLdif``."),
+    ] = _DbtLdifNamespace()
 
 
 config: FlextDbtLdifConfig = FlextDbtLdifConfig.fetch_global()
