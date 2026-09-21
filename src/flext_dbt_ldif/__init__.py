@@ -9,18 +9,12 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 from .__version__ import (
-    __author__ as __author__,
-    __author_email__ as __author_email__,
-    __description__ as __description__,
-    __license__ as __license__,
-    __title__ as __title__,
-    __url__ as __url__,
-    __version__ as __version__,
-    __version_info__ as __version_info__,
+    __author__ as __author__, __author_email__ as __author_email__, __description__ as __description__, __license__ as __license__,
+    __title__ as __title__, __url__ as __url__, __version__ as __version__, __version_info__ as __version_info__,
 )
 
 if TYPE_CHECKING:
-    from flext_ldif import FlextLdifConstants, d, e, h, r, x
+    from flext_ldif import d, e, h, r, x
 
     from . import services
     from .__version__ import FlextDbtLdifVersion
@@ -34,39 +28,14 @@ if TYPE_CHECKING:
     from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
     from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
 __all__: tuple[str, ...] = (
-    "FlextDbtLdif",
-    "FlextDbtLdifConfig",
-    "FlextDbtLdifConstants",
-    "FlextDbtLdifModels",
-    "FlextDbtLdifProtocols",
-    "FlextDbtLdifServiceBase",
-    "FlextDbtLdifSettings",
-    "FlextDbtLdifTypes",
-    "FlextDbtLdifUtilities",
-    "FlextDbtLdifVersion",
-    "FlextLdifConstants",
-    "__author__",
-    "__author_email__",
-    "__description__",
-    "__license__",
-    "__title__",
-    "__url__",
-    "__version__",
-    "__version_info__",
-    "c",
-    "config",
-    "d",
-    "dbt_ldif",
-    "e",
-    "h",
-    "m",
-    "p",
-    "r",
-    "s",
-    "services",
-    "settings",
-    "t",
-    "u",
+    "FlextDbtLdif", "FlextDbtLdifConfig", "FlextDbtLdifConstants", "FlextDbtLdifModels",
+    "FlextDbtLdifProtocols", "FlextDbtLdifServiceBase", "FlextDbtLdifSettings", "FlextDbtLdifTypes",
+    "FlextDbtLdifUtilities", "FlextDbtLdifVersion", "__author__", "__author_email__",
+    "__description__", "__license__", "__title__", "__url__",
+    "__version__", "__version_info__", "c", "config",
+    "d", "dbt_ldif", "e", "h",
+    "m", "p", "r", "s",
+    "services", "settings", "t", "u",
     "x",
 )
 
@@ -84,7 +53,7 @@ _LAZY_IMPORTS = MappingProxyType(
             ".services": ("services",),
             ".typings": ("FlextDbtLdifTypes", "t"),
             ".utilities": ("FlextDbtLdifUtilities", "u"),
-            "flext_ldif": ("FlextLdifConstants", "d", "e", "h", "r", "x"),
+            "flext_ldif": ("d", "e", "h", "r", "x"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
