@@ -1,4 +1,4 @@
-"""Test configuration and fixtures for flext-dbt-ldif.
+"""Test configuration and local-file fixtures for flext-dbt-ldif.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -11,7 +11,7 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from flext_tests import tf, tk
+from flext_tests import tf
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from tests import u
@@ -54,21 +54,6 @@ def pytest_runtest_teardown(item: pytest.Item) -> None:
     """Reset the settings singleton after each test."""
     _ = item
     FlextDbtLdifSettings.reset_for_testing()
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _ldap_container() -> None:
-    """Ensure shared Docker container is started for the test session.
-
-    Skips every test cleanly when the container cannot start (e.g. no Docker
-    daemon), so the JUnit XML records skips rather than no-tests-collected.
-    """
-    docker_control = tk.shared(
-        "flext-openldap-test", repository_root=Path(__file__).resolve().parents[2]
-    )
-    result = docker_control.execute()
-    if result.failure:
-        pytest.skip(f"Failed to start LDAP container: {result.error}")
 
 
 # NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
