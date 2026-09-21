@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 
     from . import _services_parts
     from .test_api_surface import TestsFlextDbtLdifApiSurface
-    from .test_cli import TestsFlextDbtLdifCli
     from .test_core import TestsFlextDbtLdifCore
     from .test_dbt_client import TestsFlextDbtLdifClient
     from .test_dbt_models import TestsFlextDbtLdifDbtModels
@@ -21,31 +20,12 @@ if TYPE_CHECKING:
     from .test_services_and_api import TestsFlextDbtLdifServicesAndApi
     from .test_version import TestsFlextDbtLdifVersion
 __all__: tuple[str, ...] = (
-    "TestsFlextDbtLdifApiSurface",
-    "TestsFlextDbtLdifCli",
-    "TestsFlextDbtLdifClient",
-    "TestsFlextDbtLdifCore",
-    "TestsFlextDbtLdifDbtModels",
-    "TestsFlextDbtLdifServices",
-    "TestsFlextDbtLdifServicesAndApi",
-    "TestsFlextDbtLdifVersion",
-    "_services_parts",
-    "c",
-    "d",
-    "e",
-    "h",
-    "m",
-    "p",
-    "r",
-    "s",
-    "t",
-    "td",
-    "tf",
-    "tk",
-    "tm",
-    "tv",
-    "u",
-    "x",
+    "TestsFlextDbtLdifApiSurface", "TestsFlextDbtLdifClient", "TestsFlextDbtLdifCore", "TestsFlextDbtLdifDbtModels",
+    "TestsFlextDbtLdifServices", "TestsFlextDbtLdifServicesAndApi", "TestsFlextDbtLdifVersion", "_services_parts",
+    "c", "d", "e", "h",
+    "m", "p", "r", "s",
+    "t", "td", "tf", "tk",
+    "tm", "tv", "u", "x",
 )
 
 _LAZY_IMPORTS = MappingProxyType(
@@ -53,7 +33,6 @@ _LAZY_IMPORTS = MappingProxyType(
         MappingProxyType({
             "._services_parts": ("_services_parts",),
             ".test_api_surface": ("TestsFlextDbtLdifApiSurface",),
-            ".test_cli": ("TestsFlextDbtLdifCli",),
             ".test_core": ("TestsFlextDbtLdifCore",),
             ".test_dbt_client": ("TestsFlextDbtLdifClient",),
             ".test_dbt_models": ("TestsFlextDbtLdifDbtModels",),
@@ -61,22 +40,8 @@ _LAZY_IMPORTS = MappingProxyType(
             ".test_services_and_api": ("TestsFlextDbtLdifServicesAndApi",),
             ".test_version": ("TestsFlextDbtLdifVersion",),
             "flext_tests": (
-                "c",
-                "d",
-                "e",
-                "h",
-                "m",
-                "p",
-                "r",
-                "s",
-                "t",
-                "td",
-                "tf",
-                "tk",
-                "tm",
-                "tv",
-                "u",
-                "x",
+                "c", "d", "e", "h", "m", "p", "r", "s", "t", "td", "tf", "tk", "tm",
+                "tv", "u", "x",
             ),
         }),
         alias_groups=MappingProxyType({}),
