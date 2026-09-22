@@ -20,12 +20,16 @@ from .__version__ import (
 )
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from flext_cli import cli
     from flext_ldif import ldif
     from flext_meltano import main, meltano
     from pydantic_core import from_json, to_json, to_jsonable_python
 
     from flext_core import core, d, e, h, lazy_attribute, r, x
+=======
+    from flext_core import d, e, h, r, x
+>>>>>>> origin/0.12.0-dev
 
     from . import services
     from ._config import FlextDbtLdifConfig, config
@@ -94,11 +98,15 @@ _LAZY_IMPORTS = MappingProxyType(
             ".services": ("services",),
             ".typings": ("FlextDbtLdifTypes", "t"),
             ".utilities": ("FlextDbtLdifUtilities", "u"),
+<<<<<<< HEAD
             "flext_cli": ("cli",),
             "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
             "flext_ldif": ("ldif",),
             "flext_meltano": ("main", "meltano"),
             "pydantic_core": ("from_json", "to_json", "to_jsonable_python"),
+=======
+            "flext_core": ("d", "e", "h", "r", "x"),
+>>>>>>> origin/0.12.0-dev
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
