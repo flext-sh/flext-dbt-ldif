@@ -20,22 +20,19 @@ from .__version__ import (
 )
 
 if TYPE_CHECKING:
-    from flext_cli import cli
-    from flext_ldif import ldif
-    from flext_meltano import main, meltano
-
-    from flext_core import core, d, e, h, lazy_attribute, r, x
+    from flext_core import d, e, h, r, x
 
     from . import services
+    from .__version__ import FlextDbtLdifVersion
     from ._config import FlextDbtLdifConfig, config
     from ._settings import FlextDbtLdifSettings, settings
     from .api import FlextDbtLdif, dbt_ldif
     from .base import FlextDbtLdifServiceBase, FlextDbtLdifServiceBase as s
-    from .constants import FlextDbtLdifConstants, c
-    from .models import FlextDbtLdifModels, m
-    from .protocols import FlextDbtLdifProtocols, p
-    from .typings import FlextDbtLdifTypes, t
-    from .utilities import FlextDbtLdifUtilities, u
+    from .constants import FlextDbtLdifConstants, FlextDbtLdifConstants as c
+    from .models import FlextDbtLdifModels, FlextDbtLdifModels as m
+    from .protocols import FlextDbtLdifProtocols, FlextDbtLdifProtocols as p
+    from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
+    from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
 __all__: tuple[str, ...] = (
     "FlextDbtLdif",
     "FlextDbtLdifConfig",
@@ -46,6 +43,7 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
+    "FlextDbtLdifVersion",
     "__author__",
     "__author_email__",
     "__description__",
@@ -55,18 +53,12 @@ __all__: tuple[str, ...] = (
     "__version__",
     "__version_info__",
     "c",
-    "cli",
     "config",
-    "core",
     "d",
     "dbt_ldif",
     "e",
     "h",
-    "lazy_attribute",
-    "ldif",
     "m",
-    "main",
-    "meltano",
     "p",
     "r",
     "s",
@@ -80,6 +72,7 @@ __all__: tuple[str, ...] = (
 _LAZY_IMPORTS = MappingProxyType(
     build_lazy_import_map(
         MappingProxyType({
+            ".__version__": ("FlextDbtLdifVersion",),
             "._config": ("FlextDbtLdifConfig", "config"),
             "._settings": ("FlextDbtLdifSettings", "settings"),
             ".api": ("FlextDbtLdif", "dbt_ldif"),
@@ -90,10 +83,7 @@ _LAZY_IMPORTS = MappingProxyType(
             ".services": ("services",),
             ".typings": ("FlextDbtLdifTypes", "t"),
             ".utilities": ("FlextDbtLdifUtilities", "u"),
-            "flext_cli": ("cli",),
-            "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
-            "flext_ldif": ("ldif",),
-            "flext_meltano": ("main", "meltano"),
+            "flext_core": ("d", "e", "h", "r", "x"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
