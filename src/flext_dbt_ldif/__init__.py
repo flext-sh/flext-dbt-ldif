@@ -20,17 +20,11 @@ from .__version__ import (
 )
 
 if TYPE_CHECKING:
-    from flext_ldif import (
-        cli,
-        core,
-        from_json,
-        lazy_attribute,
-        ldif,
-        servers,
-        to_json,
-        to_jsonable_python,
-    )
-    from flext_meltano import d, e, h, meltano, r, x
+    from flext_cli import cli
+    from flext_ldif import ldif
+    from flext_meltano import meltano
+
+    from flext_core import core, d, e, h, lazy_attribute, r, x
 
     from . import services
     from ._config import FlextDbtLdifConfig, config
@@ -43,6 +37,8 @@ if TYPE_CHECKING:
     from .protocols import FlextDbtLdifProtocols, p
     from .typings import FlextDbtLdifTypes, t
     from .utilities import FlextDbtLdifUtilities, u
+
+
 __all__: tuple[str, ...] = (
     "FlextDbtLdif",
     "FlextDbtLdifConfig",
@@ -68,7 +64,6 @@ __all__: tuple[str, ...] = (
     "d",
     "dbt_ldif",
     "e",
-    "from_json",
     "h",
     "lazy_attribute",
     "ldif",
@@ -78,12 +73,9 @@ __all__: tuple[str, ...] = (
     "p",
     "r",
     "s",
-    "servers",
     "services",
     "settings",
     "t",
-    "to_json",
-    "to_jsonable_python",
     "u",
     "x",
 )
@@ -102,17 +94,10 @@ _LAZY_IMPORTS = MappingProxyType(
             ".services": ("services",),
             ".typings": ("FlextDbtLdifTypes", "t"),
             ".utilities": ("FlextDbtLdifUtilities", "u"),
-            "flext_ldif": (
-                "cli",
-                "core",
-                "from_json",
-                "lazy_attribute",
-                "ldif",
-                "servers",
-                "to_json",
-                "to_jsonable_python",
-            ),
-            "flext_meltano": ("d", "e", "h", "meltano", "r", "x"),
+            "flext_cli": ("cli",),
+            "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
+            "flext_ldif": ("ldif",),
+            "flext_meltano": ("meltano",),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
