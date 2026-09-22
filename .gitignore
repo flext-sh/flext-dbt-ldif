@@ -341,11 +341,6 @@ target/
 .flext-sync.lock
 .sync.lock
 .planning/
-
-# Installed dbt packages (third-party artifacts from `dbt deps`) — never
-# tracked: upstream code owned by its own projects, not by this repo
-# (ADR-0024 p.7 / fleet convention: installed artifacts are never tracked).
-dbt_packages/
 skill-create-output/
 .debug-journal.md
 .mcp.json
@@ -377,9 +372,6 @@ CLAUDE.local.md
 !.github/workflows/ci.yml
 !.github/workflows/docs.yml
 !.github/workflows/release.yml
-!.github/workflows/_fragments/
-!.github/workflows/_fragments/cross_repo_dependency_credential
-!.github/workflows/_fragments/testmon_cache
 !.qlty/
 !.qlty/qlty.toml
 !.vscode/settings.json
