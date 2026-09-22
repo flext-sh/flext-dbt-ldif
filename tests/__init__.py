@@ -9,29 +9,34 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_cli import cli
-    from flext_infra import docs_main, infra, main
-    from flext_ldif import ldif
+    from flext_ldif import ldif, servers
     from flext_meltano import meltano
     from flext_tests import (
-        active_rules,
         api,
+        cli,
         config,
-        discover_repository_root,
+        core,
+        d,
+        e,
+        from_json,
+        h,
         install_local_packages,
+        lazy_attribute,
         load_infra_report,
+        r,
+        services,
         settings,
-        split_csv,
         td,
         tf,
         tk,
         tm,
+        to_json,
+        to_jsonable_python,
         tv,
+        x,
     )
-    from pydantic_core import from_json, to_json, to_jsonable_python
 
-    from flext_core import core, d, e, h, lazy_attribute, r, x
-    from flext_dbt_ldif import dbt_ldif
+    from flext_dbt_ldif import dbt_ldif, main
 
     from . import unit
     from .base import TestsFlextDbtLdifServiceBase, s
@@ -49,7 +54,6 @@ __all__: tuple[str, ...] = (
     "TestsFlextDbtLdifSettings",
     "TestsFlextDbtLdifTypes",
     "TestsFlextDbtLdifUtilities",
-    "active_rules",
     "api",
     "c",
     "cli",
@@ -57,12 +61,9 @@ __all__: tuple[str, ...] = (
     "core",
     "d",
     "dbt_ldif",
-    "discover_repository_root",
-    "docs_main",
     "e",
     "from_json",
     "h",
-    "infra",
     "install_local_packages",
     "lazy_attribute",
     "ldif",
@@ -73,8 +74,9 @@ __all__: tuple[str, ...] = (
     "p",
     "r",
     "s",
+    "servers",
+    "services",
     "settings",
-    "split_csv",
     "t",
     "td",
     "tf",
@@ -99,28 +101,33 @@ _LAZY_IMPORTS = MappingProxyType(
             ".typings": ("TestsFlextDbtLdifTypes", "t"),
             ".unit": ("unit",),
             ".utilities": ("TestsFlextDbtLdifUtilities", "u"),
-            "flext_cli": ("cli",),
-            "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
-            "flext_dbt_ldif": ("dbt_ldif",),
-            "flext_infra": ("docs_main", "infra", "main"),
-            "flext_ldif": ("ldif",),
+            "flext_dbt_ldif": ("dbt_ldif", "main"),
+            "flext_ldif": ("ldif", "servers"),
             "flext_meltano": ("meltano",),
             "flext_tests": (
-                "active_rules",
                 "api",
+                "cli",
                 "config",
-                "discover_repository_root",
+                "core",
+                "d",
+                "e",
+                "from_json",
+                "h",
                 "install_local_packages",
+                "lazy_attribute",
                 "load_infra_report",
+                "r",
+                "services",
                 "settings",
-                "split_csv",
                 "td",
                 "tf",
                 "tk",
                 "tm",
+                "to_json",
+                "to_jsonable_python",
                 "tv",
+                "x",
             ),
-            "pydantic_core": ("from_json", "to_json", "to_jsonable_python"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,

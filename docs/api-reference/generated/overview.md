@@ -24,10 +24,10 @@
 - Alias exports: `c`, `d`, `e`, `h`, `m`, `p`, `r`, `s`, `t`, `u`, `x`
 - Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
   `FlextDbtLdifModels`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase`,
-  `FlextDbtLdifSettings`, `FlextDbtLdifTypes`, `FlextDbtLdifUtilities`, `config` (+2
+  `FlextDbtLdifSettings`, `FlextDbtLdifTypes`, `FlextDbtLdifUtilities`, `config` (+3
   more)
 - Exported module shortcuts: `services`
-- Generated module pages: `8`
+- Generated module pages: `9`
 
 ## Next Pages
 
