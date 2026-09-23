@@ -26,7 +26,7 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
     ] = "dbt-ldif"
 
     @classmethod
-    def _runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
+    def runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
         """Return runtime bootstrap options for DBT LDIF services."""
         return m.RuntimeBootstrapOptions(settings_type=FlextDbtLdifSettings)
 

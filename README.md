@@ -57,7 +57,7 @@ verification).
   classes listed under Module Map above.
 - Public extensions exposed by this project: `FlextDbtLdif`, `FlextDbtLdifConfig`,
   `FlextDbtLdifConstants`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
-  `FlextDbtLdifServiceBase` (+4 more).
+  `FlextDbtLdifServiceBase` (+3 more).
 - Library abstraction boundaries: see AGENTS.md §2.7.
 
 ## Quality Gates

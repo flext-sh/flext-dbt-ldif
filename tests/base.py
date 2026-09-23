@@ -13,12 +13,12 @@ class TestsFlextDbtLdifServiceBase(s):
     """DBT LDIF test service base with source and test settings namespaces."""
 
     # NOTE (multi-agent, bead mro-wfc8): fetch_settings is delivered by the flext_tests
-    # base via MRO (resolves TestsFlextDbtLdifSettings from _runtime_bootstrap_options).
+    # base via MRO (resolves TestsFlextDbtLdifSettings from runtime_bootstrap_options).
     # The prior override returned the FlextDbtLdifSettings production singleton — a
     # type mismatch (bad-return) and a settings atravessador.
     @classmethod
     @override
-    def _runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
+    def runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
         return m.RuntimeBootstrapOptions(settings_type=TestsFlextDbtLdifSettings)
 
 
