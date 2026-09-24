@@ -9,31 +9,7 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import build_lazy_import_map, install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_ldif import ldif, servers
-    from flext_meltano import meltano
-    from flext_tests import (
-        api,
-        cli,
-        config,
-        core,
-        d,
-        e,
-        h,
-        install_local_packages,
-        lazy_attribute,
-        load_infra_report,
-        r,
-        services,
-        settings,
-        td,
-        tf,
-        tk,
-        tm,
-        tv,
-        x,
-    )
-
-    from flext_dbt_ldif import dbt_ldif, main
+    from flext_tests import api, d, e, h, r, td, tf, tk, tm, tv, x
 
     from . import unit
     from .base import TestsFlextDbtLdifServiceBase, s
@@ -55,26 +31,13 @@ __all__: tuple[str, ...] = (
     "TestsFlextDbtLdifUtilities",
     "api",
     "c",
-    "cli",
-    "config",
-    "core",
     "d",
-    "dbt_ldif",
     "e",
     "h",
-    "install_local_packages",
-    "lazy_attribute",
-    "ldif",
-    "load_infra_report",
     "m",
-    "main",
-    "meltano",
     "p",
     "r",
     "s",
-    "servers",
-    "services",
-    "settings",
     "t",
     "td",
     "tf",
@@ -97,23 +60,12 @@ _LAZY_IMPORTS = MappingProxyType(
             ".typings": ("TestsFlextDbtLdifTypes", "t"),
             ".unit": ("unit",),
             ".utilities": ("TestsFlextDbtLdifUtilities", "u"),
-            "flext_dbt_ldif": ("dbt_ldif", "main"),
-            "flext_ldif": ("ldif", "servers"),
-            "flext_meltano": ("meltano",),
             "flext_tests": (
                 "api",
-                "cli",
-                "config",
-                "core",
                 "d",
                 "e",
                 "h",
-                "install_local_packages",
-                "lazy_attribute",
-                "load_infra_report",
                 "r",
-                "services",
-                "settings",
                 "td",
                 "tf",
                 "tk",
