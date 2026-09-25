@@ -20,11 +20,7 @@ from .__version__ import (
 )
 
 if TYPE_CHECKING:
-    from flext_cli import cli
-    from flext_ldif import ldif
-    from flext_meltano import meltano
-
-    from flext_core import core, d, e, h, lazy_attribute, r, x
+    from flext_meltano import d, e, h, r, x
 
     from . import services
     from ._config import FlextDbtLdifConfig, config
@@ -58,18 +54,13 @@ __all__: tuple[str, ...] = (
     "__version__",
     "__version_info__",
     "c",
-    "cli",
     "config",
-    "core",
     "d",
     "dbt_ldif",
     "e",
     "h",
-    "lazy_attribute",
-    "ldif",
     "m",
     "main",
-    "meltano",
     "p",
     "r",
     "s",
@@ -94,10 +85,7 @@ _LAZY_IMPORTS = MappingProxyType(
             ".services": ("services",),
             ".typings": ("FlextDbtLdifTypes", "t"),
             ".utilities": ("FlextDbtLdifUtilities", "u"),
-            "flext_cli": ("cli",),
-            "flext_core": ("core", "d", "e", "h", "lazy_attribute", "r", "x"),
-            "flext_ldif": ("ldif",),
-            "flext_meltano": ("meltano",),
+            "flext_meltano": ("d", "e", "h", "r", "x"),
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
