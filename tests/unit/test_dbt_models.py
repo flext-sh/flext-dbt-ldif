@@ -153,6 +153,3 @@ class TestsFlextDbtLdifDbtModels:
         with pytest.raises(c.ValidationError) as exc_info:
             self._make_model(**kwargs)
         tm.that(str(exc_info.value), has=field)
-
-
-__all__ = ["TestsFlextDbtLdifDbtModels"]

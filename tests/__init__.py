@@ -12,13 +12,13 @@ if TYPE_CHECKING:
     from flext_tests import api, d, e, h, r, td, tf, tk, tm, tv, x
 
     from . import unit
-    from .base import TestsFlextDbtLdifServiceBase, s
-    from .constants import TestsFlextDbtLdifConstants, c
-    from .models import TestsFlextDbtLdifModels, m
-    from .protocols import TestsFlextDbtLdifProtocols, p
+    from .base import TestsFlextDbtLdifServiceBase, TestsFlextDbtLdifServiceBase as s
+    from .constants import TestsFlextDbtLdifConstants, TestsFlextDbtLdifConstants as c
+    from .models import TestsFlextDbtLdifModels, TestsFlextDbtLdifModels as m
+    from .protocols import TestsFlextDbtLdifProtocols, TestsFlextDbtLdifProtocols as p
     from .settings import TestsFlextDbtLdifSettings
-    from .typings import TestsFlextDbtLdifTypes, t
-    from .utilities import TestsFlextDbtLdifUtilities, u
+    from .typings import TestsFlextDbtLdifTypes, TestsFlextDbtLdifTypes as t
+    from .utilities import TestsFlextDbtLdifUtilities, TestsFlextDbtLdifUtilities as u
 
 
 __all__: tuple[str, ...] = (

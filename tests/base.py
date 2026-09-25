@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import override
 
-from flext_tests import s
+from flext_tests import FlextTestsServiceBase
 
 from tests import TestsFlextDbtLdifSettings, m
 
 
-class TestsFlextDbtLdifServiceBase(s):
+class TestsFlextDbtLdifServiceBase(FlextTestsServiceBase):
     """DBT LDIF test service base with source and test settings namespaces."""
 
     # NOTE (multi-agent, bead mro-wfc8): fetch_settings is delivered by the flext_tests

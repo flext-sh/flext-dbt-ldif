@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from flext_ldif import m as _ldif_m
-from flext_meltano import m, u
+from flext_ldif import FlextLdifModels
+from flext_meltano import FlextMeltanoModels, u
 
 from flext_dbt_ldif import c, t
 
 
-class FlextDbtLdifModels(m, _ldif_m):
+class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtLdif:
         """DBT LDIF model namespace."""
 
-        class DbtModel(m.ArbitraryTypesModel):
+        class DbtModel(FlextMeltanoModels.ArbitraryTypesModel):
             """Single DBT model definition payload."""
 
             name: t.StrippedStr = u.Field(description="DBT model name.")
@@ -45,14 +45,14 @@ class FlextDbtLdifModels(m, _ldif_m):
             # t.StrippedStr (strip + reject blank at construction). Models are pure
             # pydantic-2-way (flext-law §2a): no methods.
 
-        class LdifValidationResult(m.ArbitraryTypesModel):
+        class LdifValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Validated LDIF quality metrics."""
 
             total_entries: int = u.Field(description="Total LDIF entries validated.")
             quality_score: float = u.Field(description="Aggregate LDIF quality score.")
             validation_status: str = u.Field(description="Validation lifecycle status.")
 
-        class DbtTransformationResult(m.ArbitraryTypesModel):
+        class DbtTransformationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """DBT transformation execution summary."""
 
             records: int = u.Field(description="Number of transformed records.")
@@ -62,7 +62,7 @@ class FlextDbtLdifModels(m, _ldif_m):
             )
             status: str = u.Field(description="Transformation lifecycle status.")
 
-        class ModelGenerationResult(m.ArbitraryTypesModel):
+        class ModelGenerationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Generated model metadata summary."""
 
             models_generated: int = u.Field(
@@ -72,14 +72,14 @@ class FlextDbtLdifModels(m, _ldif_m):
                 default_factory=tuple, description="Names of generated DBT models"
             )
 
-        class ParseValidationResult(m.ArbitraryTypesModel):
+        class ParseValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Combined parse and validation payload."""
 
             entry_count: int = u.Field(description="Number of parsed LDIF entries.")
             quality_score: float = u.Field(description="Validation quality score.")
             validation_status: str = u.Field(description="Validation lifecycle status.")
 
-        class WorkflowResult(m.ArbitraryTypesModel):
+        class WorkflowResult(FlextMeltanoModels.ArbitraryTypesModel):
             """End-to-end service workflow result."""
 
             ldif_file: str = u.Field(description="Input LDIF file path.")
@@ -95,7 +95,7 @@ class FlextDbtLdifModels(m, _ldif_m):
             )
             workflow_status: str = u.Field(description="Overall workflow status.")
 
-        class PipelineResult(m.ArbitraryTypesModel):
+        class PipelineResult(FlextMeltanoModels.ArbitraryTypesModel):
             """Client pipeline status payload."""
 
             parsed_entries: int = u.Field(description="Number of parsed LDIF entries.")
@@ -105,7 +105,7 @@ class FlextDbtLdifModels(m, _ldif_m):
             )
             pipeline_status: str = u.Field(description="Overall pipeline status.")
 
-        class DbtConnectionProfile(m.ArbitraryTypesModel):
+        class DbtConnectionProfile(FlextMeltanoModels.ArbitraryTypesModel):
             """Typed dbt connection profile for LDIF-backed workflows."""
 
             # NOTE (multi-agent): mro-rn88 ADR-006 thin-driver — typed connection_profile.

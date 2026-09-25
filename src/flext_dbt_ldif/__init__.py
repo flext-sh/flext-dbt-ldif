@@ -28,11 +28,11 @@ if TYPE_CHECKING:
     from .api import FlextDbtLdif, dbt_ldif
     from .base import FlextDbtLdifServiceBase, FlextDbtLdifServiceBase as s
     from .cli import main
-    from .constants import FlextDbtLdifConstants, c
-    from .models import FlextDbtLdifModels, m
-    from .protocols import FlextDbtLdifProtocols, p
-    from .typings import FlextDbtLdifTypes, t
-    from .utilities import FlextDbtLdifUtilities, u
+    from .constants import FlextDbtLdifConstants, FlextDbtLdifConstants as c
+    from .models import FlextDbtLdifModels, FlextDbtLdifModels as m
+    from .protocols import FlextDbtLdifProtocols, FlextDbtLdifProtocols as p
+    from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
+    from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
 
 
 __all__: tuple[str, ...] = (
