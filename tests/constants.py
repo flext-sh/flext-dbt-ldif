@@ -11,17 +11,17 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsConstants
 
-from flext_dbt_ldif import c
+from flext_dbt_ldif import FlextDbtLdifConstants
 
 
-class TestsFlextDbtLdifConstants(FlextTestsConstants, c):
+class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
     """Constants for flext-dbt-ldif tests.
 
     Inherits from FlextTestsConstants and c for
     full production constant access.
     """
 
-    class DbtLdif(c.DbtLdif):
+    class DbtLdif(FlextDbtLdifConstants.DbtLdif):
         """DbtLdif test constants namespace."""
 
         class Tests(FlextTestsConstants.Tests):

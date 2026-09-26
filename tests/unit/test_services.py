@@ -161,6 +161,3 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
         tm.ok(result)
         tm.that(result.unwrap().ldif_file, eq=str(target))
-
-
-__all__: list[str] = ["TestsFlextDbtLdifServices"]
