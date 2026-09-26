@@ -108,6 +108,3 @@ class TestsFlextDbtLdifCore:
             .unwrap()
         )
         tm.that(total, eq=1)
-
-
-__all__ = ["TestsFlextDbtLdifCore"]

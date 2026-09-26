@@ -136,6 +136,3 @@ class TestsFlextDbtLdifServicesAndApi:
         second = FlextDbtLdif.fetch_instance()
 
         assert first is second
-
-
-__all__: list[str] = ["TestsFlextDbtLdifServicesAndApi"]
