@@ -43,8 +43,8 @@ src/flext_dbt_ldif/
 ## Commands
 
 ```bash
-make check PROJECT=flext-dbt-ldif
-make test PROJECT=flext-dbt-ldif # tests/unit
+make check
+make test # tests/unit
 ```
 
 <!-- AIHUB-AGENTS-SCOPE-LOCAL-END -->
