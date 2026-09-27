@@ -35,6 +35,3 @@ class TestsFlextDbtLdifVersion:
         major = __version_info__[0]
         assert isinstance(major, int)
         assert major >= 0
-
-
-__all__ = ["TestsFlextDbtLdifVersion"]

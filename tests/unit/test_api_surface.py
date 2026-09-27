@@ -222,6 +222,3 @@ class TestsFlextDbtLdifApiSurface:
         payload = result.value.model_dump()
         tm.that(payload["entry_count"], eq=1)
         tm.that(payload["validation_status"], eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
-
-
-__all__: list[str] = ["TestsFlextDbtLdifApiSurface"]

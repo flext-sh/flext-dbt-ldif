@@ -165,6 +165,3 @@ class TestsFlextDbtLdifClient:
         tm.that(dumped["records"], eq=1)
         tm.that(list(dumped["models"]), eq=["only"])
         tm.that(dumped["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
-
-
-__all__: list[str] = ["TestsFlextDbtLdifClient"]

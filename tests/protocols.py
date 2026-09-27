@@ -11,13 +11,13 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsProtocols
 
-from flext_dbt_ldif import p
+from flext_dbt_ldif import FlextDbtLdifProtocols
 
 
-class TestsFlextDbtLdifProtocols(FlextTestsProtocols, p):
+class TestsFlextDbtLdifProtocols(FlextTestsProtocols, FlextDbtLdifProtocols):
     """Test protocols combining TestsFlextProtocols and p."""
 
-    class DbtLdif(p.DbtLdif):
+    class DbtLdif(FlextDbtLdifProtocols.DbtLdif):
         """DbtLdif test protocols namespace."""
 
         class Tests:

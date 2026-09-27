@@ -34,6 +34,3 @@ class TestsFlextDbtLdifServicesDataQuality:
         tm.that(data.entry_count, eq=1)
         tm.that(data.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
         tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
-
-
-__all__: list[str] = ["TestsFlextDbtLdifServicesDataQuality"]
