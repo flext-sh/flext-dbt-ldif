@@ -306,14 +306,10 @@ __pyrefly_virtual__/
 .dolt_dropped_databases/
 .doltcfg/
 .hypothesis/
-.mimosa/
 .mypy_cache/
 .omo/
 .pylance_cache/
 .pytest_cache/
-.testmondata
-.testmondata-wal
-.testmondata-shm
 .ropeproject/
 .ruff_cache/
 .scope/
