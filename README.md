@@ -56,8 +56,8 @@ verification).
   by `flext-*`. The FLEXT cascade is encoded in the inheritance lists of the facade
   classes listed under Module Map above.
 - Public extensions exposed by this project: `FlextDbtLdif`, `FlextDbtLdifConfig`,
-  `FlextDbtLdifConstants`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
-  `FlextDbtLdifServiceBase` (+3 more).
+  `FlextDbtLdifConstants`, `FlextDbtLdifConstantsBase`, `FlextDbtLdifModels`,
+  `FlextDbtLdifProtocols` (+4 more).
 - Library abstraction boundaries: see AGENTS.md §2.7.
 
 ## Quality Gates
