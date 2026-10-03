@@ -113,31 +113,6 @@ class TestsFlextDbtLdifClient:
         )
         tm.that(data.records, eq=0)
 
-    # ---- run_full_pipeline contract --------------------------------------
-
-    def test_pipeline_completes_and_aggregates_stage_statuses(
-        self, tmp_path: Path
-    ) -> None:
-        """A valid path drives parse+validate+transform to a completed result."""
-        result = FlextDbtLdifClient.Client().run_full_pipeline(
-            tmp_path / "f.ldif", ["m1"]
-        )
-        data = result.unwrap()
-
-        tm.that(data, is_=m.DbtLdif.PipelineResult)
-        tm.that(data.pipeline_status, eq=c.DbtLdif.WORKFLOW_STATUS_COMPLETED)
-        tm.that(data.parsed_entries, eq=1)
-        tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
-        tm.that(data.transformation_status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
-
-    def test_pipeline_propagates_parse_failure(self) -> None:
-        """A parse failure short-circuits the whole pipeline as a failure."""
-        client = FlextDbtLdifClient.Client(FlextDbtLdifSettings.fetch_global())
-        result = client.run_full_pipeline()
-
-        tm.fail(result)
-        tm.that((result.error or "").lower(), has="required")
-
     # ---- result composition contract -------------------------------------
 
     def test_parse_result_chains_into_validation_via_flat_map(

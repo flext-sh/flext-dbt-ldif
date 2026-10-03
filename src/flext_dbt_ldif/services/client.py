@@ -5,12 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 # NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-logger = u.fetch_logger(__name__)
 
 
 class FlextDbtLdifClient:
@@ -44,31 +42,6 @@ class FlextDbtLdifClient:
             return r[list[t.JsonMapping]].ok([
                 {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
             ])
-
-        def run_full_pipeline(
-            self,
-            file_path: Path | str | None = None,
-            model_names: t.StrSequence | None = None,
-        ) -> p.Result[m.DbtLdif.PipelineResult]:
-            """Run parse, validate, and transform pipeline."""
-            parse_result = self.parse_ldif_file(file_path)
-            if parse_result.failure:
-                return r[m.DbtLdif.PipelineResult].from_failure(parse_result)
-            validate_result = self.validate_ldif_data(parse_result.value)
-            if validate_result.failure:
-                return r[m.DbtLdif.PipelineResult].from_failure(validate_result)
-            transform_result = self.transform_with_dbt(parse_result.value, model_names)
-            if transform_result.failure:
-                return r[m.DbtLdif.PipelineResult].from_failure(transform_result)
-            logger.info("Completed LDIF to DBT pipeline")
-            return r[m.DbtLdif.PipelineResult].ok(
-                m.DbtLdif.PipelineResult(
-                    parsed_entries=len(parse_result.value),
-                    validation_status=validate_result.value.validation_status,
-                    transformation_status=transform_result.value.status,
-                    pipeline_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-                )
-            )
 
         def transform_with_dbt(
             self,
