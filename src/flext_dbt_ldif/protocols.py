@@ -10,7 +10,7 @@ from flext_meltano import FlextMeltanoProtocols
 from flext_dbt_ldif import t
 
 if TYPE_CHECKING:
-    from flext_dbt_ldif.models import m
+    from flext_dbt_ldif import m, t
 
 
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):

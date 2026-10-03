@@ -28,7 +28,11 @@ if TYPE_CHECKING:
     from .api import FlextDbtLdif, dbt_ldif
     from .base import FlextDbtLdifServiceBase, FlextDbtLdifServiceBase as s
     from .cli import main
-    from .constants import FlextDbtLdifConstants, FlextDbtLdifConstants as c
+    from .constants import (
+        FlextDbtLdifConstants,
+        FlextDbtLdifConstants as c,
+        FlextDbtLdifConstantsBase,
+    )
     from .models import FlextDbtLdifModels, FlextDbtLdifModels as m
     from .protocols import FlextDbtLdifProtocols, FlextDbtLdifProtocols as p
     from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
@@ -39,6 +43,7 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdif",
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
+    "FlextDbtLdifConstantsBase",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifServiceBase",
@@ -79,7 +84,7 @@ _LAZY_IMPORTS = MappingProxyType(
             ".api": ("FlextDbtLdif", "dbt_ldif"),
             ".base": ("FlextDbtLdifServiceBase", "s"),
             ".cli": ("main",),
-            ".constants": ("FlextDbtLdifConstants", "c"),
+            ".constants": ("FlextDbtLdifConstants", "FlextDbtLdifConstantsBase", "c"),
             ".models": ("FlextDbtLdifModels", "m"),
             ".protocols": ("FlextDbtLdifProtocols", "p"),
             ".services": ("services",),

@@ -9,7 +9,7 @@
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
 - Package: `flext_dbt_ldif`
-- Version: `0.12.0`
+- Version: `0.20.0`
 - Description: FLEXT dbt LDAP - dbt Models for LDIF Data Transformation
 - Doc summary: Flext Dbt Ldif package.
 - Classifiers: Development Status :: 3 - Alpha, Intended Audience :: Developers,
@@ -19,13 +19,13 @@
 - Project class: `integration`
 - Keywords: `data-transformation`, `dbt`, `enterprise`, `flext`, `sql`, `typed`
 - Main facades: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
-  `FlextDbtLdifModels`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase`,
-  `FlextDbtLdifSettings`, `FlextDbtLdifTypes` (+1 more)
+  `FlextDbtLdifConstantsBase`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
+  `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings` (+2 more)
 - Alias exports: `c`, `d`, `e`, `h`, `m`, `p`, `r`, `s`, `t`, `u`, `x`
 - Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
-  `FlextDbtLdifModels`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase`,
-  `FlextDbtLdifSettings`, `FlextDbtLdifTypes`, `FlextDbtLdifUtilities`, `config` (+3
-  more)
+  `FlextDbtLdifConstantsBase`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
+  `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings`, `FlextDbtLdifTypes`,
+  `FlextDbtLdifUtilities` (+4 more)
 - Exported module shortcuts: `services`
 - Generated module pages: `9`
 
