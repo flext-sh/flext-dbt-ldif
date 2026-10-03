@@ -4,10 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, settings, t, u
+# NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+logger = u.fetch_logger(__name__)
 
 
 class FlextDbtLdifClient:
@@ -34,7 +37,7 @@ class FlextDbtLdifClient:
             selected_path = (
                 str(file_path)
                 if file_path is not None
-                else settings.DbtLdif.ldif_file_path
+                else self.settings.DbtLdif.ldif_file_path
             )
             if not selected_path:
                 return r[list[t.JsonMapping]].fail("LDIF file path is required")
@@ -50,20 +53,14 @@ class FlextDbtLdifClient:
             """Run parse, validate, and transform pipeline."""
             parse_result = self.parse_ldif_file(file_path)
             if parse_result.failure:
-                return r[m.DbtLdif.PipelineResult].fail(
-                    parse_result.error or "Parse failed"
-                )
+                return r[m.DbtLdif.PipelineResult].from_failure(parse_result)
             validate_result = self.validate_ldif_data(parse_result.value)
             if validate_result.failure:
-                return r[m.DbtLdif.PipelineResult].fail(
-                    validate_result.error or "Validation failed"
-                )
+                return r[m.DbtLdif.PipelineResult].from_failure(validate_result)
             transform_result = self.transform_with_dbt(parse_result.value, model_names)
             if transform_result.failure:
-                return r[m.DbtLdif.PipelineResult].fail(
-                    transform_result.error or "Transform failed"
-                )
-            u.logger.info("Completed LDIF to DBT pipeline")
+                return r[m.DbtLdif.PipelineResult].from_failure(transform_result)
+            logger.info("Completed LDIF to DBT pipeline")
             return r[m.DbtLdif.PipelineResult].ok(
                 m.DbtLdif.PipelineResult(
                     parsed_entries=len(parse_result.value),
@@ -98,7 +95,10 @@ class FlextDbtLdifClient:
             total_entries = len(entries)
             if total_entries == 0:
                 return r[m.DbtLdif.LdifValidationResult].fail("No LDIF entries found")
-            if settings.DbtLdif.min_quality_threshold > c.DbtLdif.DEFAULT_QUALITY_SCORE:
+            if (
+                self.settings.DbtLdif.min_quality_threshold
+                > c.DbtLdif.DEFAULT_QUALITY_SCORE
+            ):
                 return r[m.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met"
                 )

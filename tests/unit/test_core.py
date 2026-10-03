@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+import operator
 from pathlib import Path
 
 import pytest
@@ -103,10 +104,7 @@ class TestsFlextDbtLdifCore:
         total = (
             analytics
             .analyze_entry_patterns(entries)
-            .map(lambda payload: payload["total_entries"])
+            .map(operator.itemgetter("total_entries"))
             .unwrap()
         )
         tm.that(total, eq=1)
-
-
-__all__ = ["TestsFlextDbtLdifCore"]

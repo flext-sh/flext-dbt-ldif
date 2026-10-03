@@ -1,0 +1,7 @@
+# Vendored third-party dbt dependencies, installed by `dbt deps` from
+# packages.yml (dbt-labs/codegen, dbt-labs/dbt_utils). Like node_modules, this
+# tree is owned and released upstream and is never hand-edited in this
+# repository, so its CI/workflow files cannot be remediated here. Excluding it
+# scopes the scanner to first-party code; upstream defects are fixed upstream,
+# not suppressed. Authorization: bead flext-p57t.8 / reval260921.
+dbt_packages/

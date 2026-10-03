@@ -10,21 +10,26 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated
 
-from flext_meltano import FlextMeltanoConfig
+from flext_meltano import FlextMeltanoConfig, m
 
 
-class _DbtLdifNamespace(BaseModel):
+class _DbtLdifNamespace(m.BaseModel):
     """Open, frozen namespace exposing every ``config/*.yaml`` domain model-less."""
 
-    model_config = ConfigDict(extra="allow", frozen=True)
+    model_config = m.ConfigDict(extra="allow", frozen=True)
 
 
 class FlextDbtLdifConfig(FlextMeltanoConfig):
     """DbtLdif config auto-loaded model-less from ``config/*.yaml``."""
 
-    DbtLdif: _DbtLdifNamespace = _DbtLdifNamespace()
+    DbtLdif: Annotated[
+        _DbtLdifNamespace,
+        m.Field(
+            description="Open namespace exposing ``config/*.yaml`` under ``DbtLdif``."
+        ),
+    ] = _DbtLdifNamespace()
 
 
 config: FlextDbtLdifConfig = FlextDbtLdifConfig.fetch_global()

@@ -6,17 +6,15 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from flext_tests import tm
 
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from tests import c, t
-from tests.unit._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
 
-if TYPE_CHECKING:
-    from pathlib import Path
+from ._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
 
 
 @pytest.fixture
@@ -55,7 +53,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         first = svc.parse_and_validate_ldif(target)
         second = svc.parse_and_validate_ldif(target)
 
-        assert first.success and second.success
+        assert first.success
+        assert second.success
         tm.that(first.unwrap().model_dump(), eq=second.unwrap().model_dump())
 
     def test_parse_and_validate_ldif_empty_path_fails(
@@ -78,7 +77,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         assessed = svc.run_data_quality_assessment(target)
         parsed = svc.parse_and_validate_ldif(target)
 
-        assert assessed.success and parsed.success
+        assert assessed.success
+        assert parsed.success
         tm.that(assessed.unwrap().model_dump(), eq=parsed.unwrap().model_dump())
 
     def test_generate_and_write_models_produces_staging_and_analytics(
@@ -130,6 +130,7 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         self,
         svc: FlextDbtLdifServiceMixin.Service,
         tmp_path: Path,
+        *,
         generate_models: bool,
         run_transformations: bool,
         expected_models: int,
@@ -160,6 +161,3 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
         tm.ok(result)
         tm.that(result.unwrap().ldif_file, eq=str(target))
-
-
-__all__: list[str] = ["TestsFlextDbtLdifServices"]

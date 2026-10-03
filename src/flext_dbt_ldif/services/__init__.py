@@ -1,6 +1,3 @@
-# AUTO-GENERATED FILE — Regenerate with: make gen
-"""Services package."""
+"""Flext DBT LDIF services."""
 
 from __future__ import annotations
-
-__all__: tuple[str, ...] = ()

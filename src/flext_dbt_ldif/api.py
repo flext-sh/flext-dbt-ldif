@@ -8,16 +8,15 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Self
+from pathlib import Path
+from typing import ClassVar, Self
 
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.core import FlextDbtLdifCore
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
-if TYPE_CHECKING:
-    from pathlib import Path
+from .services.client import FlextDbtLdifClient
+from .services.core import FlextDbtLdifCore
+from .services.service import FlextDbtLdifServiceMixin
+from .services.unified_service import FlextDbtLdifUnifiedService
 
 
 class FlextDbtLdif(
@@ -62,9 +61,7 @@ class FlextDbtLdif(
         """Generate DBT model metadata from LDIF input."""
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
-            return r[m.DbtLdif.ModelGenerationResult].fail(
-                parsed.error or "Parsing failed"
-            )
+            return r[m.DbtLdif.ModelGenerationResult].from_failure(parsed)
         entries_raw = parsed.value
         try:
             entries = t.json_mapping_sequence_adapter().validate_python(entries_raw)
@@ -95,6 +92,6 @@ class FlextDbtLdif(
         return self.service.run_data_quality_assessment(ldif_file)
 
 
-dbt_ldif = FlextDbtLdif
+dbt_ldif: FlextDbtLdif = FlextDbtLdif.fetch_instance()
 
 __all__: list[str] = ["FlextDbtLdif", "dbt_ldif"]

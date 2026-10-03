@@ -7,17 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
-from tests import c, m, p, t
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from tests import c, m, t
 
 
 class TestsFlextDbtLdifDbtModels:
@@ -28,23 +25,6 @@ class TestsFlextDbtLdifDbtModels:
         """Provide a service instance backed by global settings."""
         return FlextDbtLdifUnifiedService.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global()
-        )
-
-    @staticmethod
-    def _make_model(
-        *,
-        name: str = "test_model",
-        ldif_source: str = "ldif_entries",
-        sql_content: str = "select 1",
-    ) -> p.DbtLdif.DbtModel:
-        """Build a DbtModel via its public constructor."""
-        return m.DbtLdif.DbtModel(
-            name=name,
-            dbt_model_type="staging",
-            ldif_source=ldif_source,
-            sql_content=sql_content,
-            columns=[],
-            dependencies=[],
         )
 
     # -- service construction -------------------------------------------------
@@ -107,7 +87,14 @@ class TestsFlextDbtLdifDbtModels:
         self, service: FlextDbtLdifUnifiedService.UnifiedService
     ) -> None:
         """A staging model produces one analytics table model."""
-        staging_model = self._make_model(name="stg_ldif_entries")
+        staging_model = m.DbtLdif.DbtModel(
+            name="stg_ldif_entries",
+            dbt_model_type="staging",
+            ldif_source="ldif_entries",
+            sql_content="select 1",
+            columns=[],
+            dependencies=[],
+        )
         models = service.generate_analytics_models([staging_model]).unwrap()
         tm.that(len(models), eq=1)
         model = models[0]
@@ -127,7 +114,14 @@ class TestsFlextDbtLdifDbtModels:
 
     def test_dbt_model_defaults_exposed_via_public_api(self) -> None:
         """Optional fields default to their documented values."""
-        model = self._make_model()
+        model = m.DbtLdif.DbtModel(
+            name="test_model",
+            dbt_model_type="staging",
+            ldif_source="ldif_entries",
+            sql_content="select 1",
+            columns=[],
+            dependencies=[],
+        )
         tm.that(model.name, eq="test_model")
         tm.that(model.materialization, eq="view")
         tm.that(model.description, eq="")
@@ -136,7 +130,14 @@ class TestsFlextDbtLdifDbtModels:
 
     def test_complete_model_constructs_via_public_api(self) -> None:
         """A fully populated model constructs successfully through its public API."""
-        model = self._make_model()
+        model = m.DbtLdif.DbtModel(
+            name="test_model",
+            dbt_model_type="staging",
+            ldif_source="ldif_entries",
+            sql_content="select 1",
+            columns=[],
+            dependencies=[],
+        )
         tm.that(model.name, eq="test_model")
         tm.that(model.ldif_source, eq="ldif_entries")
         tm.that(model.sql_content, eq="select 1")
@@ -154,8 +155,13 @@ class TestsFlextDbtLdifDbtModels:
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:
-            self._make_model(**kwargs)
+            m.DbtLdif.DbtModel.model_validate({
+                "name": "test_model",
+                "dbt_model_type": "staging",
+                "ldif_source": "ldif_entries",
+                "sql_content": "select 1",
+                "columns": [],
+                "dependencies": [],
+                **kwargs,
+            })
         tm.that(str(exc_info.value), has=field)
-
-
-__all__ = ["TestsFlextDbtLdifDbtModels"]

@@ -1,4 +1,4 @@
-"""Test configuration and fixtures for flext-dbt-ldif.
+"""Test configuration and local-file fixtures for flext-dbt-ldif.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -7,17 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
-from flext_tests import tf, tk
+from flext_tests import tf
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from tests import u
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
 
 
 @pytest.fixture
@@ -36,12 +33,13 @@ def set_test_environment() -> Generator[None]:
 
 
 @pytest.fixture
-def settings() -> FlextDbtLdifSettings:
+def settings(tmp_path: Path) -> FlextDbtLdifSettings:
     """Provide a typed FlextDbtLdifSettings instance with a sample LDIF path."""
     FlextDbtLdifSettings.reset_for_testing()
-    return FlextDbtLdifSettings(
-        DbtLdif=FlextDbtLdifSettings._DbtLdif(ldif_file_path="/tmp/sample.ldif")
-    )
+    # Why: mro-4p0t — nested settings are typed models, not build_* wrappers.
+    return FlextDbtLdifSettings.model_validate({
+        "DbtLdif": {"ldif_file_path": str(tmp_path / "sample.ldif")}
+    })
 
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
@@ -58,24 +56,10 @@ def pytest_runtest_teardown(item: pytest.Item) -> None:
     FlextDbtLdifSettings.reset_for_testing()
 
 
-def pytest_sessionstart(session: pytest.Session) -> None:
-    """Ensure shared Docker container is started for the test session."""
-    _ = session
-    docker_control = tk.shared(
-        "flext-openldap-test", workspace_root=Path(__file__).resolve().parents[2]
-    )
-    result = docker_control.execute()
-    if result.failure:
-        pytest.skip(
-            f"Failed to start LDAP container: {result.error}", allow_module_level=True
-        )
-
-
 # NOTE (multi-agent, bead mro-d421): export pytest hooks and fixtures so pyright
 # sees the plugin surface as accessed.
 __all__: list[str] = [
     "pytest_runtest_setup",
     "pytest_runtest_teardown",
-    "pytest_sessionstart",
     "set_test_environment",
 ]

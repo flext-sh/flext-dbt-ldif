@@ -44,14 +44,10 @@ class FlextDbtLdifServiceMixin:
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
             if staging.failure:
-                return r[m.DbtLdif.ModelGenerationResult].fail(
-                    staging.error or "Staging model generation failed"
-                )
+                return r[m.DbtLdif.ModelGenerationResult].from_failure(staging)
             analytics = self.model_generator.generate_analytics_models(staging.value)
             if analytics.failure:
-                return r[m.DbtLdif.ModelGenerationResult].fail(
-                    analytics.error or "Analytics model generation failed"
-                )
+                return r[m.DbtLdif.ModelGenerationResult].from_failure(analytics)
             all_models = [*staging.value, *analytics.value]
             return r[m.DbtLdif.ModelGenerationResult].ok(
                 m.DbtLdif.ModelGenerationResult(
@@ -66,17 +62,13 @@ class FlextDbtLdifServiceMixin:
             """Parse and validate LDIF file in one operation."""
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
-                return r[m.DbtLdif.ParseValidationResult].fail(
-                    parse_result.error or "Parse failed"
-                )
+                return r[m.DbtLdif.ParseValidationResult].from_failure(parse_result)
             entries = t.json_mapping_sequence_adapter().validate_python(
                 parse_result.value
             )
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
-                return r[m.DbtLdif.ParseValidationResult].fail(
-                    validation.error or "Validation failed"
-                )
+                return r[m.DbtLdif.ParseValidationResult].from_failure(validation)
             return r[m.DbtLdif.ParseValidationResult].ok(
                 m.DbtLdif.ParseValidationResult(
                     entry_count=len(entries),
@@ -96,17 +88,13 @@ class FlextDbtLdifServiceMixin:
             """Execute complete LDIF to DBT workflow."""
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
-                return r[m.DbtLdif.WorkflowResult].fail(
-                    parse_result.error or "Parse failed"
-                )
+                return r[m.DbtLdif.WorkflowResult].from_failure(parse_result)
             entries = t.json_mapping_sequence_adapter().validate_python(
                 parse_result.value
             )
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
-                return r[m.DbtLdif.WorkflowResult].fail(
-                    validation.error or "Validation failed"
-                )
+                return r[m.DbtLdif.WorkflowResult].from_failure(validation)
             workflow_result = m.DbtLdif.WorkflowResult(
                 ldif_file=str(ldif_file),
                 entry_count=len(entries),
@@ -116,9 +104,7 @@ class FlextDbtLdifServiceMixin:
             if generate_models:
                 model_result = self.generate_and_write_models(entries)
                 if model_result.failure:
-                    return r[m.DbtLdif.WorkflowResult].fail(
-                        model_result.error or "Model generation workflow failed"
-                    )
+                    return r[m.DbtLdif.WorkflowResult].from_failure(model_result)
                 workflow_result.models_generated = model_result.value.models_generated
             if run_transformations:
                 transform_payload: t.SequenceOf[t.JsonMapping] = [
@@ -128,9 +114,7 @@ class FlextDbtLdifServiceMixin:
                     transform_payload, model_names
                 )
                 if transform.failure:
-                    return r[m.DbtLdif.WorkflowResult].fail(
-                        transform.error or "Transformation workflow failed"
-                    )
+                    return r[m.DbtLdif.WorkflowResult].from_failure(transform)
                 workflow_result.transformation_status = transform.value.status
             FlextDbtLdifServiceMixin.logger.info("Completed DBT LDIF workflow")
             return r[m.DbtLdif.WorkflowResult].ok(workflow_result)
