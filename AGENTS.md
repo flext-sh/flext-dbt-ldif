@@ -22,8 +22,9 @@ dbt models for LDIF data transformation. Thin driver over `flext-meltano` dbt ru
 ```text
 src/flext_dbt_ldif/
 ├── api.py            # FlextDbtLdif — generate_ldif_models / process_ldif_file
-├── base.py
-├── services/         # client.py, service.py, unified_service.py, core.py
+├── base.py           # FlextDbtLdifServiceBase (.connection_profile)
+├── cli.py            # console script → inherited dbt cli_main
+├── services/         # client.py, service.py, unified_service.py
 ├── constants.py typings.py protocols.py models.py utilities.py   # AUTO-GENERATED facets
 ```
 

@@ -14,14 +14,12 @@ from typing import ClassVar, Self
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
 
 from .services.client import FlextDbtLdifClient
-from .services.core import FlextDbtLdifCore
 from .services.service import FlextDbtLdifServiceMixin
 from .services.unified_service import FlextDbtLdifUnifiedService
 
 
 class FlextDbtLdif(
     FlextDbtLdifClient,
-    FlextDbtLdifCore,
     FlextDbtLdifServiceMixin,
     FlextDbtLdifUnifiedService,
 ):

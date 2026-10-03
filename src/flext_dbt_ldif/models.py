@@ -95,16 +95,6 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             )
             workflow_status: str = u.Field(description="Overall workflow status.")
 
-        class PipelineResult(FlextMeltanoModels.ArbitraryTypesModel):
-            """Client pipeline status payload."""
-
-            parsed_entries: int = u.Field(description="Number of parsed LDIF entries.")
-            validation_status: str = u.Field(description="Validation lifecycle status.")
-            transformation_status: str = u.Field(
-                description="Transformation lifecycle status."
-            )
-            pipeline_status: str = u.Field(description="Overall pipeline status.")
-
         class DbtConnectionProfile(FlextMeltanoModels.ArbitraryTypesModel):
             """Typed dbt connection profile for LDIF-backed workflows."""
 

@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from enum import StrEnum, unique
 from typing import Final
 
 
@@ -15,22 +14,6 @@ class FlextDbtLdifConstantsBase:
 
     class DbtLdif:
         """DBT LDIF domain constants namespace."""
-
-        DEFAULT_LDIF_FILE_PATH: Final[str] = ""
-        DEFAULT_QUALITY_THRESHOLD: Final[float] = 0.8
-
-        @unique
-        class ErrorCode(StrEnum):
-            """DBT LDIF error code identifiers."""
-
-            VALIDATION_ERROR = "DBT_LDIF_VALIDATION_ERROR"
-            CONFIGURATION_ERROR = "DBT_LDIF_CONFIGURATION_ERROR"
-            CONNECTION_ERROR = "DBT_LDIF_CONNECTION_ERROR"
-            PROCESSING_ERROR = "DBT_LDIF_PROCESSING_ERROR"
-            AUTHENTICATION_ERROR = "DBT_LDIF_AUTHENTICATION_ERROR"
-            TIMEOUT_ERROR = "DBT_LDIF_TIMEOUT_ERROR"
-            PARSE_ERROR = "DBT_LDIF_PARSE_ERROR"
-            TEST_ERROR = "DBT_LDIF_TEST_ERROR"
 
         STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
         STAGING_MODEL_DESCRIPTION: Final[str] = "Staging model for LDIF entries"

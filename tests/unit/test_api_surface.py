@@ -138,36 +138,6 @@ class TestsFlextDbtLdifApiSurface:
         tm.that(list(payload["models"]), eq=expected_models)
         tm.that(payload["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
-    def test_full_pipeline_composes_parse_validate_transform(
-        self, client: Client
-    ) -> None:
-        """The full pipeline aggregates each stage into a completed status."""
-        result = client.run_full_pipeline()
-
-        tm.ok(result)
-        tm.that(
-            result.value.model_dump(),
-            eq={
-                "parsed_entries": 1,
-                "validation_status": c.DbtLdif.VALIDATION_STATUS_PASSED,
-                "transformation_status": c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
-                "pipeline_status": c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-            },
-        )
-
-    def test_full_pipeline_propagates_parse_failure(self) -> None:
-        """A parse failure short-circuits the pipeline as a failure."""
-        client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings.model_validate({
-                "DbtLdif": {"ldif_file_path": "", "min_quality_threshold": 0.5}
-            })
-        )
-
-        result = client.run_full_pipeline()
-
-        tm.fail(result)
-        tm.that(result.error, eq="LDIF file path is required")
-
     def test_service_parse_and_validate_reports_entry_count(
         self, settings: Settings, tmp_path: Path
     ) -> None:
