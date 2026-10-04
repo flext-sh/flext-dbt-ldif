@@ -55,7 +55,10 @@ class FlextDbtLdif(
         return r[FlextDbtLdifSettings].ok(self._settings)
 
     def generate_ldif_models(
-        self, ldif_file: Path | str, *, overwrite: bool = False,
+        self,
+        ldif_file: Path | str,
+        *,
+        overwrite: bool = False,
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input.
 
@@ -93,7 +96,8 @@ class FlextDbtLdif(
         )
 
     def validate_ldif_quality(
-        self, ldif_file: Path | str,
+        self,
+        ldif_file: Path | str,
     ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow.
 

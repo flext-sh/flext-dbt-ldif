@@ -130,7 +130,8 @@ class TestsFlextDbtLdifClient:
     ) -> None:
         """A valid path drives parse+validate+transform to a completed result."""
         result = FlextDbtLdifClient.Client().run_full_pipeline(
-            tmp_path / "f.ldif", ["m1"],
+            tmp_path / "f.ldif",
+            ["m1"],
         )
         data = result.unwrap()
 

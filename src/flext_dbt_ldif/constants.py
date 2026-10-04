@@ -14,7 +14,9 @@ from flext_dbt_ldif._constants.base import FlextDbtLdifConstantsBase
 
 
 class FlextDbtLdifConstants(
-    FlextMeltanoConstants, FlextLdifConstants, FlextDbtLdifConstantsBase,
+    FlextMeltanoConstants,
+    FlextLdifConstants,
+    FlextDbtLdifConstantsBase,
 ):
     """Typed constants used by DBT LDIF modules."""
 

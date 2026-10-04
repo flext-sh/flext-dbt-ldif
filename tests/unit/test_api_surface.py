@@ -118,7 +118,8 @@ class TestsFlextDbtLdifApiSurface:
         """
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                ldif_file_path=str(tmp_path / "sample.ldif"), min_quality_threshold=1.0,
+                ldif_file_path=str(tmp_path / "sample.ldif"),
+                min_quality_threshold=1.0,
             ),
         )
 
@@ -137,7 +138,9 @@ class TestsFlextDbtLdifApiSurface:
         ],
     )
     def test_transform_reports_records_and_selected_models(
-        client: Client, model_names: list[str] | None, expected_models: list[str],
+        client: Client,
+        model_names: list[str] | None,
+        expected_models: list[str],
     ) -> None:
         """Transform echoes record count and the selected model names."""
         entries = [{"dn": "cn=a"}, {"dn": "cn=b"}]
@@ -184,7 +187,8 @@ class TestsFlextDbtLdifApiSurface:
 
     @staticmethod
     def test_service_parse_and_validate_reports_entry_count(
-        settings: Settings, tmp_path: Path,
+        settings: Settings,
+        tmp_path: Path,
     ) -> None:
         """The service one-shot parse+validate reports counts and status."""
         service = FlextDbtLdifServiceMixin.Service(settings)
@@ -213,7 +217,8 @@ class TestsFlextDbtLdifApiSurface:
 
     @staticmethod
     def test_facade_service_is_bound_workflow_service(
-        settings: Settings, tmp_path: Path,
+        settings: Settings,
+        tmp_path: Path,
     ) -> None:
         """The facade exposes a usable bound Service via its public property."""
         facade = FlextDbtLdif(settings)
@@ -230,7 +235,8 @@ class TestsFlextDbtLdifApiSurface:
 
     @staticmethod
     def test_process_ldif_file_runs_end_to_end_workflow(
-        settings: Settings, tmp_path: Path,
+        settings: Settings,
+        tmp_path: Path,
     ) -> None:
         """Processing a file drives the end-to-end workflow to a result."""
         facade = FlextDbtLdif(settings)

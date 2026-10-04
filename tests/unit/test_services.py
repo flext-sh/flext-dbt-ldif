@@ -41,7 +41,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
     @staticmethod
     def test_parse_and_validate_ldif_returns_quality_metrics(
-        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """A valid LDIF path yields a passed validation with a quality score."""
         result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
@@ -54,7 +55,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
     @staticmethod
     def test_parse_and_validate_ldif_is_idempotent(
-        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """Repeated calls with the same input return equal public state."""
         target = tmp_path / "f.ldif"
@@ -80,7 +82,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
     @staticmethod
     def test_run_data_quality_assessment_equals_parse_and_validate(
-        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """Quality assessment exposes the same contract as parse+validate."""
         target = tmp_path / "f.ldif"
@@ -120,11 +123,14 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
     @staticmethod
     def test_run_complete_workflow_all_stages_completes(
-        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """The full workflow reports completion with model and transform state."""
         result = svc.run_complete_workflow(
-            tmp_path / "f.ldif", generate_models=True, run_transformations=True,
+            tmp_path / "f.ldif",
+            generate_models=True,
+            run_transformations=True,
         )
 
         tm.ok(result)
@@ -166,7 +172,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
 
     @staticmethod
     def test_run_complete_workflow_records_source_file(
-        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """The workflow result echoes the LDIF source path it processed."""
         target = tmp_path / "source.ldif"

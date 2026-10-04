@@ -36,7 +36,8 @@ class FlextDbtLdifClient:
             return self._settings
 
         def parse_ldif_file(
-            self, file_path: Path | str | None = None,
+            self,
+            file_path: Path | str | None = None,
         ) -> p.Result[list[t.JsonMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
@@ -98,7 +99,8 @@ class FlextDbtLdifClient:
             )
 
         def validate_ldif_data(
-            self, entries: t.SequenceOf[t.JsonMapping],
+            self,
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score.
 

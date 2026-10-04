@@ -36,11 +36,15 @@ class FlextDbtLdifServiceMixin:
             )
             self.client = FlextDbtLdifClient.Client(effective_settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                settings=effective_settings, project_dir=self.project_dir,
+                settings=effective_settings,
+                project_dir=self.project_dir,
             )
 
         def generate_and_write_models(
-            self, entries: t.SequenceOf[t.JsonMapping], *, overwrite: bool = False,
+            self,
+            entries: t.SequenceOf[t.JsonMapping],
+            *,
+            overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
             """Generate staging and analytics models for entries.
 
@@ -66,7 +70,8 @@ class FlextDbtLdifServiceMixin:
             )
 
         def parse_and_validate_ldif(
-            self, ldif_file: Path | str,
+            self,
+            ldif_file: Path | str,
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Parse and validate LDIF file in one operation.
 
@@ -128,7 +133,8 @@ class FlextDbtLdifServiceMixin:
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(
-                    transform_payload, model_names,
+                    transform_payload,
+                    model_names,
                 )
                 if transform.failure:
                     return r[m.DbtLdif.WorkflowResult].from_failure(transform)
@@ -137,7 +143,8 @@ class FlextDbtLdifServiceMixin:
             return r[m.DbtLdif.WorkflowResult].ok(workflow_result)
 
         def run_data_quality_assessment(
-            self, ldif_file: Path | str,
+            self,
+            ldif_file: Path | str,
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Run quality assessment focused workflow.
 

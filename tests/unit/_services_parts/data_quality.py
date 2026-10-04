@@ -24,12 +24,14 @@ class TestsFlextDbtLdifServicesDataQuality:
 
     @staticmethod
     def test_run_data_quality_assessment(
-        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """Data quality assessment parses, validates, and reports entry metrics."""
         target = tmp_path / "f.ldif"
         target.write_text(
-            "dn: cn=test,dc=example,dc=org\nobjectClass: top\n\n", encoding="utf-8",
+            "dn: cn=test,dc=example,dc=org\nobjectClass: top\n\n",
+            encoding="utf-8",
         )
 
         result = svc.run_data_quality_assessment(target)

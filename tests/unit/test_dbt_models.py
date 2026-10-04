@@ -40,7 +40,8 @@ class TestsFlextDbtLdifDbtModels:
     ) -> None:
         """Constructor arguments surface through public fields."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(), project_dir=tmp_path,
+            settings=FlextDbtLdifSettings.fetch_global(),
+            project_dir=tmp_path,
         )
         tm.that(gen.project_dir, eq=tmp_path)
         tm.that(gen.name, eq="ldif_generator")
@@ -62,7 +63,8 @@ class TestsFlextDbtLdifDbtModels:
     def test_execute_metadata_reflects_project_dir(tmp_path: Path) -> None:
         """Execute payload echoes the configured project directory."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(), project_dir=tmp_path,
+            settings=FlextDbtLdifSettings.fetch_global(),
+            project_dir=tmp_path,
         )
         data = gen.execute().unwrap()
         tm.that(data["project_dir"], eq=str(tmp_path))
@@ -166,7 +168,8 @@ class TestsFlextDbtLdifDbtModels:
         ],
     )
     def test_blank_required_field_rejected_at_construction(
-        field: str, kwargs: dict[str, str],
+        field: str,
+        kwargs: dict[str, str],
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:
