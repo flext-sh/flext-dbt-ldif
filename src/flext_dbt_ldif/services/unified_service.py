@@ -1,4 +1,9 @@
-"""UnifiedService mixin for dbt-ldif utilities."""
+"""UnifiedService mixin for dbt-ldif utilities.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/services/unified_service
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -41,7 +46,11 @@ class FlextDbtLdifUnifiedService:
 
         @override
         def execute(self) -> p.Result[t.JsonMapping]:
-            """Execute service and return metadata payload."""
+            """Execute service and return metadata payload.
+
+            Returns:
+                The resulting ``p.Result[t.JsonMapping]``.
+            """
             payload: t.JsonMapping = {
                 "name": self.name,
                 "project_dir": str(self.project_dir),
@@ -49,10 +58,15 @@ class FlextDbtLdifUnifiedService:
             }
             return r[t.JsonMapping].ok(payload)
 
+        @staticmethod
         def generate_analytics_models(
-            self, staging_models: t.SequenceOf[m.DbtLdif.DbtModel]
+            staging_models: t.SequenceOf[m.DbtLdif.DbtModel],
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
-            """Generate one analytics model derived from staging set."""
+            """Generate one analytics model derived from staging set.
+
+            Returns:
+                The resulting ``p.Result[list[m.DbtLdif.DbtModel]]``.
+            """
             if not staging_models:
                 return r[list[m.DbtLdif.DbtModel]].ok([])
             analytics = m.DbtLdif.DbtModel(
@@ -67,10 +81,15 @@ class FlextDbtLdifUnifiedService:
             )
             return r[list[m.DbtLdif.DbtModel]].ok([analytics])
 
+        @staticmethod
         def generate_staging_models(
-            self, entries: t.SequenceOf[t.JsonMapping]
+            entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
-            """Generate simple staging models for provided LDIF entries."""
+            """Generate simple staging models for provided LDIF entries.
+
+            Returns:
+                The resulting ``p.Result[list[m.DbtLdif.DbtModel]]``.
+            """
             if not entries:
                 return r[list[m.DbtLdif.DbtModel]].ok([])
             model = m.DbtLdif.DbtModel(

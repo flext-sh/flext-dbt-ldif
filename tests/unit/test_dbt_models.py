@@ -20,29 +20,37 @@ from tests import c, m, t
 class TestsFlextDbtLdifDbtModels:
     """Public-contract tests for FlextDbtLdifUnifiedService and DbtModel."""
 
+    @staticmethod
     @pytest.fixture
-    def service(self) -> FlextDbtLdifUnifiedService.UnifiedService:
-        """Provide a service instance backed by global settings."""
+    def service() -> FlextDbtLdifUnifiedService.UnifiedService:
+        """Provide a service instance backed by global settings.
+
+        Returns:
+            The resulting ``FlextDbtLdifUnifiedService.UnifiedService``.
+        """
         return FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global()
+            settings=FlextDbtLdifSettings.fetch_global(),
         )
 
     # -- service construction -------------------------------------------------
 
+    @staticmethod
     def test_service_exposes_configured_project_dir_and_default_name(
-        self, tmp_path: Path
+        tmp_path: Path,
     ) -> None:
         """Constructor arguments surface through public fields."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(), project_dir=tmp_path
+            settings=FlextDbtLdifSettings.fetch_global(),
+            project_dir=tmp_path,
         )
         tm.that(gen.project_dir, eq=tmp_path)
         tm.that(gen.name, eq="ldif_generator")
 
     # -- execute --------------------------------------------------------------
 
+    @staticmethod
     def test_execute_returns_ready_metadata_payload(
-        self, service: FlextDbtLdifUnifiedService.UnifiedService
+        service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """Execute succeeds and reports the ready status contract."""
         result = service.execute()
@@ -51,18 +59,21 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(data["name"], eq="ldif_generator")
         tm.that(data["status"], eq="ready")
 
-    def test_execute_metadata_reflects_project_dir(self, tmp_path: Path) -> None:
+    @staticmethod
+    def test_execute_metadata_reflects_project_dir(tmp_path: Path) -> None:
         """Execute payload echoes the configured project directory."""
         gen = FlextDbtLdifUnifiedService.UnifiedService(
-            settings=FlextDbtLdifSettings.fetch_global(), project_dir=tmp_path
+            settings=FlextDbtLdifSettings.fetch_global(),
+            project_dir=tmp_path,
         )
         data = gen.execute().unwrap()
         tm.that(data["project_dir"], eq=str(tmp_path))
 
     # -- staging generation ---------------------------------------------------
 
+    @staticmethod
     def test_generate_staging_models_emits_view_model_for_entries(
-        self, service: FlextDbtLdifUnifiedService.UnifiedService
+        service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """Non-empty entries yield exactly one staging view model."""
         entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
@@ -73,8 +84,9 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.dbt_model_type, eq="staging")
         tm.that(model.materialization, eq="view")
 
+    @staticmethod
     def test_generate_staging_models_returns_empty_without_entries(
-        self, service: FlextDbtLdifUnifiedService.UnifiedService
+        service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """Empty entries yield an empty, successful result."""
         result = service.generate_staging_models([])
@@ -83,8 +95,9 @@ class TestsFlextDbtLdifDbtModels:
 
     # -- analytics generation -------------------------------------------------
 
+    @staticmethod
     def test_generate_analytics_models_emits_table_model_from_staging(
-        self, service: FlextDbtLdifUnifiedService.UnifiedService
+        service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """A staging model produces one analytics table model."""
         staging_model = m.DbtLdif.DbtModel(
@@ -102,8 +115,9 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.dbt_model_type, eq="analytics")
         tm.that(model.materialization, eq="table")
 
+    @staticmethod
     def test_generate_analytics_models_returns_empty_without_staging(
-        self, service: FlextDbtLdifUnifiedService.UnifiedService
+        service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """No staging models yields an empty, successful result."""
         result = service.generate_analytics_models([])
@@ -112,7 +126,8 @@ class TestsFlextDbtLdifDbtModels:
 
     # -- model contract -------------------------------------------------------
 
-    def test_dbt_model_defaults_exposed_via_public_api(self) -> None:
+    @staticmethod
+    def test_dbt_model_defaults_exposed_via_public_api() -> None:
         """Optional fields default to their documented values."""
         model = m.DbtLdif.DbtModel(
             name="test_model",
@@ -128,7 +143,8 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(list(model.columns), eq=[])
         tm.that(list(model.dependencies), eq=[])
 
-    def test_complete_model_constructs_via_public_api(self) -> None:
+    @staticmethod
+    def test_complete_model_constructs_via_public_api() -> None:
         """A fully populated model constructs successfully through its public API."""
         model = m.DbtLdif.DbtModel(
             name="test_model",
@@ -142,6 +158,7 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.ldif_source, eq="ldif_entries")
         tm.that(model.sql_content, eq="select 1")
 
+    @staticmethod
     @pytest.mark.parametrize(
         ("field", "kwargs"),
         [
@@ -151,7 +168,8 @@ class TestsFlextDbtLdifDbtModels:
         ],
     )
     def test_blank_required_field_rejected_at_construction(
-        self, field: str, kwargs: dict[str, str]
+        field: str,
+        kwargs: dict[str, str],
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:

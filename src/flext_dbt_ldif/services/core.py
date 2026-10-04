@@ -1,4 +1,9 @@
-"""Core mixin for dbt-ldif utilities."""
+"""Core mixin for dbt-ldif utilities.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/services/core
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -20,31 +25,46 @@ class FlextDbtLdifCore:
                 """Initialize model generator."""
                 self.project_dir = project_dir or Path.cwd()
 
-            def generate_analytics_models(self) -> t.SequenceOf[t.StrMapping]:
-                """Generate default analytics model metadata."""
+            @staticmethod
+            def generate_analytics_models() -> t.SequenceOf[t.StrMapping]:
+                """Generate default analytics model metadata.
+
+                Returns:
+                    The resulting ``t.SequenceOf[t.StrMapping]``.
+                """
                 return [
                     {
                         "name": c.DbtLdif.ANALYTICS_MODEL_NAME,
                         "description": c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION,
-                    }
+                    },
                 ]
 
-            def generate_staging_models(self) -> t.SequenceOf[t.StrMapping]:
-                """Generate default staging model metadata."""
+            @staticmethod
+            def generate_staging_models() -> t.SequenceOf[t.StrMapping]:
+                """Generate default staging model metadata.
+
+                Returns:
+                    The resulting ``t.SequenceOf[t.StrMapping]``.
+                """
                 return [
                     {
                         "name": c.DbtLdif.STAGING_MODEL_NAME,
                         "description": c.DbtLdif.STAGING_MODEL_DESCRIPTION,
-                    }
+                    },
                 ]
 
         class Analytics:
             """Compute basic analysis metrics for LDIF-like payloads."""
 
+            @staticmethod
             def analyze_entry_patterns(
-                self, entries: t.SequenceOf[t.StrMapping]
+                entries: t.SequenceOf[t.StrMapping],
             ) -> p.Result[t.JsonMapping]:
-                """Analyze input entries and return summary payload."""
+                """Analyze input entries and return summary payload.
+
+                Returns:
+                    The resulting ``p.Result[t.JsonMapping]``.
+                """
                 return r[t.JsonMapping].ok({
                     "total_entries": len(entries),
                     "unique_dns": len({entry.get("dn", "") for entry in entries}),

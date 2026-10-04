@@ -29,17 +29,24 @@ type Client = FlextDbtLdifClient.Client
 class TestsFlextDbtLdifApiSurface:
     """Behavior contract for the public DBT LDIF API surface."""
 
+    @staticmethod
     @pytest.fixture
-    def client(self, settings: Settings) -> Client:
-        """Client bound to the test settings."""
+    def client(settings: Settings) -> Client:
+        """Client bound to the test settings.
+
+        Returns:
+            The resulting ``Client``.
+        """
         return FlextDbtLdifClient.Client(settings)
 
-    def test_version_is_nonempty_string(self) -> None:
+    @staticmethod
+    def test_version_is_nonempty_string() -> None:
         """The package advertises a non-empty version string."""
         tm.that(__version__, is_=str)
         assert __version__
 
-    def test_parse_uses_configured_path_when_none_given(self, client: Client) -> None:
+    @staticmethod
+    def test_parse_uses_configured_path_when_none_given(client: Client) -> None:
         """Parsing with no argument falls back to the configured LDIF path."""
         result = client.parse_ldif_file()
 
@@ -51,14 +58,15 @@ class TestsFlextDbtLdifApiSurface:
                 {
                     "dn": c.DbtLdif.SAMPLE_LDIF_DN,
                     "source": client.settings.DbtLdif.ldif_file_path,
-                }
+                },
             ],
         )
 
-    def test_parse_prefers_explicit_path_over_settings(self) -> None:
+    @staticmethod
+    def test_parse_prefers_explicit_path_over_settings() -> None:
         """An explicit path overrides the configured default."""
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings.model_validate({"DbtLdif": {"ldif_file_path": ""}})
+            FlextDbtLdifSettings.model_validate({"DbtLdif": {"ldif_file_path": ""}}),
         )
         result = client.parse_ldif_file("/data/other.ldif")
 
@@ -70,12 +78,13 @@ class TestsFlextDbtLdifApiSurface:
         tm.fail(result)
         tm.that(result.error, eq="LDIF file path is required")
 
+    @staticmethod
     def test_validate_reports_quality_for_populated_entries(
-        self, client: Client
+        client: Client,
     ) -> None:
         """Validation of one entry passes with the default quality score."""
         result = client.validate_ldif_data([
-            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": "x"}
+            {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": "x"},
         ])
 
         tm.ok(result)
@@ -88,15 +97,17 @@ class TestsFlextDbtLdifApiSurface:
             },
         )
 
-    def test_validate_fails_on_empty_entries(self, client: Client) -> None:
+    @staticmethod
+    def test_validate_fails_on_empty_entries(client: Client) -> None:
         """Validation of an empty payload is a failure, not an empty success."""
         result = client.validate_ldif_data([])
 
         tm.fail(result)
         tm.that(result.error, eq="No LDIF entries found")
 
+    @staticmethod
     def test_validate_passes_at_maximum_threshold_boundary(
-        self, tmp_path: Path
+        tmp_path: Path,
     ) -> None:
         """Threshold equal to the achievable score is the passing boundary.
 
@@ -107,8 +118,9 @@ class TestsFlextDbtLdifApiSurface:
         """
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings(
-                ldif_file_path=str(tmp_path / "sample.ldif"), min_quality_threshold=1.0
-            )
+                ldif_file_path=str(tmp_path / "sample.ldif"),
+                min_quality_threshold=1.0,
+            ),
         )
 
         result = client.validate_ldif_data([{"dn": "cn=a"}])
@@ -116,6 +128,7 @@ class TestsFlextDbtLdifApiSurface:
         tm.ok(result)
         tm.that(result.value.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
 
+    @staticmethod
     @pytest.mark.parametrize(
         ("model_names", "expected_models"),
         [
@@ -125,7 +138,9 @@ class TestsFlextDbtLdifApiSurface:
         ],
     )
     def test_transform_reports_records_and_selected_models(
-        self, client: Client, model_names: list[str] | None, expected_models: list[str]
+        client: Client,
+        model_names: list[str] | None,
+        expected_models: list[str],
     ) -> None:
         """Transform echoes record count and the selected model names."""
         entries = [{"dn": "cn=a"}, {"dn": "cn=b"}]
@@ -138,8 +153,9 @@ class TestsFlextDbtLdifApiSurface:
         tm.that(list(payload["models"]), eq=expected_models)
         tm.that(payload["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
+    @staticmethod
     def test_full_pipeline_composes_parse_validate_transform(
-        self, client: Client
+        client: Client,
     ) -> None:
         """The full pipeline aggregates each stage into a completed status."""
         result = client.run_full_pipeline()
@@ -155,12 +171,13 @@ class TestsFlextDbtLdifApiSurface:
             },
         )
 
-    def test_full_pipeline_propagates_parse_failure(self) -> None:
+    @staticmethod
+    def test_full_pipeline_propagates_parse_failure() -> None:
         """A parse failure short-circuits the pipeline as a failure."""
         client = FlextDbtLdifClient.Client(
             FlextDbtLdifSettings.model_validate({
-                "DbtLdif": {"ldif_file_path": "", "min_quality_threshold": 0.5}
-            })
+                "DbtLdif": {"ldif_file_path": "", "min_quality_threshold": 0.5},
+            }),
         )
 
         result = client.run_full_pipeline()
@@ -168,8 +185,10 @@ class TestsFlextDbtLdifApiSurface:
         tm.fail(result)
         tm.that(result.error, eq="LDIF file path is required")
 
+    @staticmethod
     def test_service_parse_and_validate_reports_entry_count(
-        self, settings: Settings, tmp_path: Path
+        settings: Settings,
+        tmp_path: Path,
     ) -> None:
         """The service one-shot parse+validate reports counts and status."""
         service = FlextDbtLdifServiceMixin.Service(settings)
@@ -186,7 +205,8 @@ class TestsFlextDbtLdifApiSurface:
             },
         )
 
-    def test_facade_execute_returns_settings(self, settings: Settings) -> None:
+    @staticmethod
+    def test_facade_execute_returns_settings(settings: Settings) -> None:
         """The facade ``execute`` yields a successful settings result."""
         facade = FlextDbtLdif(settings)
 
@@ -195,8 +215,10 @@ class TestsFlextDbtLdifApiSurface:
         tm.ok(result)
         tm.that(result.value, is_=FlextDbtLdifSettings)
 
+    @staticmethod
     def test_facade_service_is_bound_workflow_service(
-        self, settings: Settings, tmp_path: Path
+        settings: Settings,
+        tmp_path: Path,
     ) -> None:
         """The facade exposes a usable bound Service via its public property."""
         facade = FlextDbtLdif(settings)
@@ -206,12 +228,15 @@ class TestsFlextDbtLdifApiSurface:
         tm.ok(result)
         tm.that(result.value.entry_count, eq=1)
 
-    def test_fetch_instance_is_shared_singleton(self) -> None:
+    @staticmethod
+    def test_fetch_instance_is_shared_singleton() -> None:
         """``fetch_instance`` returns the same shared facade each call."""
         assert FlextDbtLdif.fetch_instance() is FlextDbtLdif.fetch_instance()
 
+    @staticmethod
     def test_process_ldif_file_runs_end_to_end_workflow(
-        self, settings: Settings, tmp_path: Path
+        settings: Settings,
+        tmp_path: Path,
     ) -> None:
         """Processing a file drives the end-to-end workflow to a result."""
         facade = FlextDbtLdif(settings)

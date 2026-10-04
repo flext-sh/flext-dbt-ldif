@@ -1,4 +1,9 @@
-"""Runtime settings for flext-dbt-ldif tests."""
+"""Runtime settings for flext-dbt-ldif tests.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+tests/settings
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 

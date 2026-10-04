@@ -1,4 +1,9 @@
-"""Domain models for DBT LDIF transformations."""
+"""Domain models for DBT LDIF transformations.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/models
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -26,7 +31,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
                 validate_default=True,
             )
             sql_content: t.StrippedStr = u.Field(
-                description="Rendered SQL for the DBT model."
+                description="Rendered SQL for the DBT model.",
             )
             description: str = u.Field(
                 "",
@@ -34,10 +39,12 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
                 validate_default=True,
             )
             columns: t.SequenceOf[t.JsonMapping] = u.Field(
-                default_factory=tuple, description="Column metadata for the DBT model"
+                default_factory=tuple,
+                description="Column metadata for the DBT model",
             )
             dependencies: t.StrSequence = u.Field(
-                default_factory=tuple, description="Upstream model dependencies"
+                default_factory=tuple,
+                description="Upstream model dependencies",
             )
 
             # NOTE (multi-agent, bead mro-wfc8): validate_business_rules() removed — the
@@ -66,10 +73,11 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             """Generated model metadata summary."""
 
             models_generated: int = u.Field(
-                description="Number of generated DBT models."
+                description="Number of generated DBT models.",
             )
             model_names: t.StrSequence = u.Field(
-                default_factory=tuple, description="Names of generated DBT models"
+                default_factory=tuple,
+                description="Names of generated DBT models",
             )
 
         class ParseValidationResult(FlextMeltanoModels.ArbitraryTypesModel):
@@ -86,7 +94,9 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             entry_count: int = u.Field(description="Processed LDIF entry count.")
             validation_status: str = u.Field(description="Validation lifecycle status.")
             models_generated: int = u.Field(
-                0, description="Number of generated DBT models.", validate_default=True
+                0,
+                description="Number of generated DBT models.",
+                validate_default=True,
             )
             transformation_status: str = u.Field(
                 "",
@@ -101,7 +111,7 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             parsed_entries: int = u.Field(description="Number of parsed LDIF entries.")
             validation_status: str = u.Field(description="Validation lifecycle status.")
             transformation_status: str = u.Field(
-                description="Transformation lifecycle status."
+                description="Transformation lifecycle status.",
             )
             pipeline_status: str = u.Field(description="Overall pipeline status.")
 
@@ -114,6 +124,6 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
             project: str = u.Field(description="dbt project name")
 
 
-__all__: list[str] = ["FlextDbtLdifModels", "m"]
-
 m = FlextDbtLdifModels
+
+__all__: list[str] = ["FlextDbtLdifModels", "m"]
