@@ -1,4 +1,9 @@
-"""Project type aliases for flext-dbt-ldif."""
+"""Project type aliases for flext-dbt-ldif.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/typings
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 

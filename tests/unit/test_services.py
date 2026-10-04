@@ -13,27 +13,35 @@ from flext_tests import tm
 
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from tests import c, t
-
-from ._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
+from tests.unit._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
 
 
 @pytest.fixture
 def svc(tmp_path: Path) -> FlextDbtLdifServiceMixin.Service:
-    """Create a service backed by a real project directory."""
+    """Create a service backed by a real project directory.
+
+    Returns:
+        The resulting ``FlextDbtLdifServiceMixin.Service``.
+    """
     return FlextDbtLdifServiceMixin.Service(project_dir=tmp_path)
 
 
 @pytest.fixture
 def entries() -> t.SequenceOf[t.JsonMapping]:
-    """Provide a minimal LDIF entry payload accepted by the public API."""
+    """Provide a minimal LDIF entry payload accepted by the public API.
+
+    Returns:
+        The resulting ``t.SequenceOf[t.JsonMapping]``.
+    """
     return [{"dn": "cn=test,dc=example,dc=org"}]
 
 
 class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
     """Behavior contract for FlextDbtLdifServiceMixin.Service workflows."""
 
+    @staticmethod
     def test_parse_and_validate_ldif_returns_quality_metrics(
-        self, svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path
+        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
     ) -> None:
         """A valid LDIF path yields a passed validation with a quality score."""
         result = svc.parse_and_validate_ldif(tmp_path / "f.ldif")
@@ -44,8 +52,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         tm.that(data.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
         tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
 
+    @staticmethod
     def test_parse_and_validate_ldif_is_idempotent(
-        self, svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path
+        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
     ) -> None:
         """Repeated calls with the same input return equal public state."""
         target = tmp_path / "f.ldif"
@@ -57,8 +66,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         assert second.success
         tm.that(first.unwrap().model_dump(), eq=second.unwrap().model_dump())
 
+    @staticmethod
     def test_parse_and_validate_ldif_empty_path_fails(
-        self, svc: FlextDbtLdifServiceMixin.Service
+        svc: FlextDbtLdifServiceMixin.Service,
     ) -> None:
         """An empty path surfaces a required-path failure via the result channel."""
         result = svc.parse_and_validate_ldif("")
@@ -68,8 +78,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         assert error is not None
         tm.that(error.lower(), has="required")
 
+    @staticmethod
     def test_run_data_quality_assessment_equals_parse_and_validate(
-        self, svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path
+        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
     ) -> None:
         """Quality assessment exposes the same contract as parse+validate."""
         target = tmp_path / "f.ldif"
@@ -81,8 +92,8 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         assert parsed.success
         tm.that(assessed.unwrap().model_dump(), eq=parsed.unwrap().model_dump())
 
+    @staticmethod
     def test_generate_and_write_models_produces_staging_and_analytics(
-        self,
         svc: FlextDbtLdifServiceMixin.Service,
         entries: t.SequenceOf[t.JsonMapping],
     ) -> None:
@@ -95,8 +106,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         tm.that(data.model_names, has=c.DbtLdif.STAGING_MODEL_NAME)
         tm.that(data.model_names, has=c.DbtLdif.ANALYTICS_MODEL_NAME)
 
+    @staticmethod
     def test_generate_and_write_models_empty_entries_yields_no_models(
-        self, svc: FlextDbtLdifServiceMixin.Service
+        svc: FlextDbtLdifServiceMixin.Service,
     ) -> None:
         """No entries produce an empty, well-formed generation result."""
         result = svc.generate_and_write_models([])
@@ -106,12 +118,13 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         tm.that(data.models_generated, eq=0)
         tm.that(data.model_names, eq=[])
 
+    @staticmethod
     def test_run_complete_workflow_all_stages_completes(
-        self, svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path
+        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
     ) -> None:
         """The full workflow reports completion with model and transform state."""
         result = svc.run_complete_workflow(
-            tmp_path / "f.ldif", generate_models=True, run_transformations=True
+            tmp_path / "f.ldif", generate_models=True, run_transformations=True,
         )
 
         tm.ok(result)
@@ -122,12 +135,12 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         tm.that(data.models_generated, eq=2)
         tm.that(data.transformation_status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
+    @staticmethod
     @pytest.mark.parametrize(
         ("generate_models", "run_transformations", "expected_models"),
         [(True, False, 2), (False, True, 0), (False, False, 0)],
     )
     def test_run_complete_workflow_honors_stage_flags(
-        self,
         svc: FlextDbtLdifServiceMixin.Service,
         tmp_path: Path,
         *,
@@ -151,8 +164,9 @@ class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
         )
         tm.that(data.transformation_status, eq=expected_status)
 
+    @staticmethod
     def test_run_complete_workflow_records_source_file(
-        self, svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path
+        svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path,
     ) -> None:
         """The workflow result echoes the LDIF source path it processed."""
         target = tmp_path / "source.ldif"

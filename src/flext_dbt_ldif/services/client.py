@@ -1,4 +1,9 @@
-"""Client mixin for dbt-ldif utilities."""
+"""Client mixin for dbt-ldif utilities.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/services/client
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -31,7 +36,7 @@ class FlextDbtLdifClient:
             return self._settings
 
         def parse_ldif_file(
-            self, file_path: Path | str | None = None
+            self, file_path: Path | str | None = None,
         ) -> p.Result[list[t.JsonMapping]]:
             """Return minimal parsed LDIF entries payload."""
             selected_path = (
@@ -42,7 +47,7 @@ class FlextDbtLdifClient:
             if not selected_path:
                 return r[list[t.JsonMapping]].fail("LDIF file path is required")
             return r[list[t.JsonMapping]].ok([
-                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path}
+                {"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": selected_path},
             ])
 
         def run_full_pipeline(
@@ -50,7 +55,11 @@ class FlextDbtLdifClient:
             file_path: Path | str | None = None,
             model_names: t.StrSequence | None = None,
         ) -> p.Result[m.DbtLdif.PipelineResult]:
-            """Run parse, validate, and transform pipeline."""
+            """Run parse, validate, and transform pipeline.
+
+            Returns:
+                The resulting ``p.Result[m.DbtLdif.PipelineResult]``.
+            """
             parse_result = self.parse_ldif_file(file_path)
             if parse_result.failure:
                 return r[m.DbtLdif.PipelineResult].from_failure(parse_result)
@@ -67,11 +76,11 @@ class FlextDbtLdifClient:
                     validation_status=validate_result.value.validation_status,
                     transformation_status=transform_result.value.status,
                     pipeline_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-                )
+                ),
             )
 
+        @staticmethod
         def transform_with_dbt(
-            self,
             entries: t.SequenceOf[t.JsonMapping],
             model_names: t.StrSequence | None = None,
         ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
@@ -85,13 +94,17 @@ class FlextDbtLdifClient:
                     records=len(entries),
                     models=selected_models,
                     status=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS,
-                )
+                ),
             )
 
         def validate_ldif_data(
-            self, entries: t.SequenceOf[t.JsonMapping]
+            self, entries: t.SequenceOf[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
-            """Validate parsed LDIF payload and compute quality score."""
+            """Validate parsed LDIF payload and compute quality score.
+
+            Returns:
+                The resulting ``p.Result[m.DbtLdif.LdifValidationResult]``.
+            """
             total_entries = len(entries)
             if total_entries == 0:
                 return r[m.DbtLdif.LdifValidationResult].fail("No LDIF entries found")
@@ -100,12 +113,12 @@ class FlextDbtLdifClient:
                 > c.DbtLdif.DEFAULT_QUALITY_SCORE
             ):
                 return r[m.DbtLdif.LdifValidationResult].fail(
-                    "Quality threshold not met"
+                    "Quality threshold not met",
                 )
             return r[m.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
                     total_entries=total_entries,
                     quality_score=c.DbtLdif.DEFAULT_QUALITY_SCORE,
                     validation_status=c.DbtLdif.VALIDATION_STATUS_PASSED,
-                )
+                ),
             )

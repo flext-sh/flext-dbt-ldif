@@ -27,7 +27,7 @@ class FlextDbtLdifConfig(FlextMeltanoConfig):
     DbtLdif: Annotated[
         _DbtLdifNamespace,
         m.Field(
-            description="Open namespace exposing ``config/*.yaml`` under ``DbtLdif``."
+            description="Open namespace exposing ``config/*.yaml`` under ``DbtLdif``.",
         ),
     ] = _DbtLdifNamespace()
 

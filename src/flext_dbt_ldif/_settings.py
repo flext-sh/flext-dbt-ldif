@@ -1,4 +1,9 @@
-"""Settings for DBT LDIF package."""
+"""Settings for DBT LDIF package.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/_settings
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -11,14 +16,14 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
     """Runtime settings for DBT LDIF transformations."""
 
     model_config = m.SettingsConfigDict(
-        env_prefix="FLEXT_DBT_LDIF_", env_nested_delimiter="__", extra="ignore"
+        env_prefix="FLEXT_DBT_LDIF_", env_nested_delimiter="__", extra="ignore",
     )
 
     class _DbtLdif(m.BaseModel):
         """Namespaced dbt-LDIF transformation settings."""
 
         ldif_file_path: Annotated[
-            str, m.Field(default="", description="Path to LDIF file for processing")
+            str, m.Field(default="", description="Path to LDIF file for processing"),
         ]
         min_quality_threshold: Annotated[
             float,
@@ -36,7 +41,7 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
         DbtLdif: _DbtLdif
     else:
         DbtLdif: _DbtLdif = m.Field(
-            default_factory=_DbtLdif, description="Namespaced dbt-LDIF settings."
+            default_factory=_DbtLdif, description="Namespaced dbt-LDIF settings.",
         )
 
 
