@@ -1,4 +1,9 @@
-"""Protocols for DBT LDIF integration points."""
+"""Protocols for DBT LDIF integration points.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/protocols
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -12,7 +17,6 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
     class DbtLdif:
         """DBT LDIF protocol namespace."""
 
+p = FlextDbtLdifProtocols
 
 __all__: list[str] = ["FlextDbtLdifProtocols", "p"]
-
-p = FlextDbtLdifProtocols

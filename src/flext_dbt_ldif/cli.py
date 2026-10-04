@@ -1,4 +1,9 @@
-"""CLI entrypoint for flext-dbt-ldif — dispatches through the meltano dbt base."""
+"""CLI entrypoint for flext-dbt-ldif — dispatches through the meltano dbt base.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/cli
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 

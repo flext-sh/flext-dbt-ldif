@@ -18,7 +18,8 @@ from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 class TestsFlextDbtLdifServicesAndApi:
     """Observable behavior of the FlextDbtLdif facade public methods."""
 
-    def test_process_ldif_file_returns_completed_workflow(self, tmp_path: Path) -> None:
+    @staticmethod
+    def test_process_ldif_file_returns_completed_workflow(tmp_path: Path) -> None:
         """process_ldif_file yields a completed, validated workflow result."""
         api = FlextDbtLdif()
 
@@ -31,6 +32,7 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(workflow.entry_count, eq=1)
         tm.that(workflow.ldif_file, eq=str(tmp_path / "f.ldif"))
 
+    @staticmethod
     @pytest.mark.parametrize(
         (
             "generate_models",
@@ -46,7 +48,6 @@ class TestsFlextDbtLdifServicesAndApi:
         ],
     )
     def test_process_ldif_file_honors_generation_and_transformation_flags(
-        self,
         tmp_path: Path,
         *,
         generate_models: bool,
@@ -68,8 +69,9 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(workflow.models_generated, eq=expected_models)
         tm.that(workflow.transformation_status, eq=expected_status)
 
+    @staticmethod
     def test_validate_ldif_quality_reports_passing_metrics(
-        self, tmp_path: Path
+        tmp_path: Path,
     ) -> None:
         """validate_ldif_quality returns the parse/validation quality contract."""
         api = FlextDbtLdif()
@@ -82,8 +84,9 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(report.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
         tm.that(report.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
 
+    @staticmethod
     def test_generate_ldif_models_produces_staging_and_analytics(
-        self, tmp_path: Path
+        tmp_path: Path,
     ) -> None:
         """generate_ldif_models emits the staging and analytics model names."""
         api = FlextDbtLdif()
@@ -98,8 +101,9 @@ class TestsFlextDbtLdifServicesAndApi:
             eq=[c.DbtLdif.STAGING_MODEL_NAME, c.DbtLdif.ANALYTICS_MODEL_NAME],
         )
 
+    @staticmethod
     def test_generate_ldif_models_dump_exposes_public_state(
-        self, tmp_path: Path
+        tmp_path: Path,
     ) -> None:
         """The generation result serializes its public fields via model_dump."""
         api = FlextDbtLdif()
@@ -109,12 +113,13 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(dumped["models_generated"], eq=2)
         tm.that(dumped["model_names"], has=c.DbtLdif.STAGING_MODEL_NAME)
 
-    def test_execute_returns_configured_settings(self) -> None:
+    @staticmethod
+    def test_execute_returns_configured_settings() -> None:
         """Execute surfaces the settings the facade was constructed with."""
         # NOTE (multi-agent, bead mro-d421): DbtLdif is the typed nested model, not a raw
         # dict (U18: config/settings values are validated models, no model-less payload).
         settings = FlextDbtLdifSettings.model_validate({
-            "DbtLdif": {"min_quality_threshold": 0.5}
+            "DbtLdif": {"min_quality_threshold": 0.5},
         })
         api = FlextDbtLdif(settings=settings)
 
@@ -124,13 +129,15 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(result.value, is_=FlextDbtLdifSettings)
         tm.that(result.value.DbtLdif.min_quality_threshold, eq=pytest.approx(0.5))
 
-    def test_service_property_exposes_workflow_service(self) -> None:
+    @staticmethod
+    def test_service_property_exposes_workflow_service() -> None:
         """The service property exposes the bound workflow Service."""
         api = FlextDbtLdif()
 
         tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
 
-    def test_fetch_instance_returns_shared_singleton(self) -> None:
+    @staticmethod
+    def test_fetch_instance_returns_shared_singleton() -> None:
         """fetch_instance returns the same facade instance on repeated calls."""
         first = FlextDbtLdif.fetch_instance()
         second = FlextDbtLdif.fetch_instance()

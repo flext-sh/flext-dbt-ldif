@@ -9,7 +9,7 @@
 <!-- AUTO-GENERATED — DO NOT EDIT MANUALLY -->
 
 - Package: `flext_dbt_ldif`
-- Version: `0.20.0`
+- Version: `0.12.0`
 - Description: FLEXT dbt LDAP - dbt Models for LDIF Data Transformation
 - Doc summary: Flext Dbt Ldif package.
 - Classifiers: Development Status :: 3 - Alpha, Intended Audience :: Developers,
@@ -27,7 +27,7 @@
   `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings`, `FlextDbtLdifTypes`,
   `FlextDbtLdifUtilities` (+4 more)
 - Exported module shortcuts: `services`
-- Generated module pages: `9`
+- Generated module pages: `8`
 
 ## Next Pages
 

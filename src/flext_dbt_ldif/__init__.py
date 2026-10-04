@@ -1,42 +1,45 @@
 # AUTO-GENERATED FILE — Regenerate with: make gen
-"""Flext Dbt Ldif package."""
+"""Flext Dbt Ldif package.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import build_lazy_import_map, install_lazy_exports
-
-from .__version__ import (
-    __author__ as __author__,
-    __author_email__ as __author_email__,
-    __description__ as __description__,
-    __license__ as __license__,
-    __title__ as __title__,
-    __url__ as __url__,
-    __version__ as __version__,
-    __version_info__ as __version_info__,
+from flext_core import build_lazy_import_map, install_lazy_exports
+from flext_dbt_ldif.__version__ import (
+    __author__,
+    __author_email__,
+    __description__,
+    __license__,
+    __title__,
+    __url__,
+    __version__,
+    __version_info__,
 )
 
 if TYPE_CHECKING:
     from flext_meltano import d, e, h, r, x
 
-    from . import services
-    from ._config import FlextDbtLdifConfig, config
-    from ._settings import FlextDbtLdifSettings, settings
-    from .api import FlextDbtLdif, dbt_ldif
-    from .base import FlextDbtLdifServiceBase, FlextDbtLdifServiceBase as s
-    from .cli import main
-    from .constants import (
+    from flext_dbt_ldif import services
+    from flext_dbt_ldif._config import FlextDbtLdifConfig, config
+    from flext_dbt_ldif._settings import FlextDbtLdifSettings, settings
+    from flext_dbt_ldif.api import FlextDbtLdif, dbt_ldif
+    from flext_dbt_ldif.base import FlextDbtLdifServiceBase, s
+    from flext_dbt_ldif.cli import main
+    from flext_dbt_ldif.constants import (
         FlextDbtLdifConstants,
-        FlextDbtLdifConstants as c,
         FlextDbtLdifConstantsBase,
+        c,
     )
-    from .models import FlextDbtLdifModels, FlextDbtLdifModels as m
-    from .protocols import FlextDbtLdifProtocols, FlextDbtLdifProtocols as p
-    from .typings import FlextDbtLdifTypes, FlextDbtLdifTypes as t
-    from .utilities import FlextDbtLdifUtilities, FlextDbtLdifUtilities as u
+    from flext_dbt_ldif.models import FlextDbtLdifModels, m
+    from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
+    from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
+    from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
 
 
 __all__: tuple[str, ...] = (
@@ -94,7 +97,7 @@ _LAZY_IMPORTS = MappingProxyType(
         }),
         alias_groups=MappingProxyType({}),
         sort_keys=False,
-    )
+    ),
 )
 
 install_lazy_exports(__name__, globals(), _LAZY_IMPORTS, public_exports=__all__)

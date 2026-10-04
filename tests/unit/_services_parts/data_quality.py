@@ -1,4 +1,9 @@
-"""Data quality service test mixin."""
+"""Data quality service test mixin.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+tests/unit/_services_parts/data_quality
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -17,13 +22,16 @@ if TYPE_CHECKING:
 class TestsFlextDbtLdifServicesDataQuality:
     """Data quality service behavior."""
 
+    @staticmethod
     def test_run_data_quality_assessment(
-        self, svc: FlextDbtLdifServiceMixin.Service, tmp_path: Path
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
     ) -> None:
         """Data quality assessment parses, validates, and reports entry metrics."""
         target = tmp_path / "f.ldif"
         target.write_text(
-            "dn: cn=test,dc=example,dc=org\nobjectClass: top\n\n", encoding="utf-8"
+            "dn: cn=test,dc=example,dc=org\nobjectClass: top\n\n",
+            encoding="utf-8",
         )
 
         result = svc.run_data_quality_assessment(target)

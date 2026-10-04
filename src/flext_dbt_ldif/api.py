@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import ClassVar, Self
 
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
-
 from .services.client import FlextDbtLdifClient
 from .services.service import FlextDbtLdifServiceMixin
 from .services.unified_service import FlextDbtLdifUnifiedService
@@ -54,9 +53,16 @@ class FlextDbtLdif(
         return r[FlextDbtLdifSettings].ok(self._settings)
 
     def generate_ldif_models(
-        self, ldif_file: Path | str, *, overwrite: bool = False
+        self,
+        ldif_file: Path | str,
+        *,
+        overwrite: bool = False,
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
-        """Generate DBT model metadata from LDIF input."""
+        """Generate DBT model metadata from LDIF input.
+
+        Returns:
+            The resulting ``p.Result[m.DbtLdif.ModelGenerationResult]``.
+        """
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
             return r[m.DbtLdif.ModelGenerationResult].from_failure(parsed)
@@ -65,7 +71,7 @@ class FlextDbtLdif(
             entries = t.json_mapping_sequence_adapter().validate_python(entries_raw)
         except c.ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
-                "Invalid parsed entries payload"
+                "Invalid parsed entries payload",
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
 
@@ -76,7 +82,11 @@ class FlextDbtLdif(
         generate_models: bool = True,
         run_transformations: bool = False,
     ) -> p.Result[m.DbtLdif.WorkflowResult]:
-        """Execute end-to-end LDIF workflow."""
+        """Execute end-to-end LDIF workflow.
+
+        Returns:
+            The resulting ``p.Result[m.DbtLdif.WorkflowResult]``.
+        """
         return self.service.run_complete_workflow(
             ldif_file=ldif_file,
             generate_models=generate_models,
@@ -84,9 +94,14 @@ class FlextDbtLdif(
         )
 
     def validate_ldif_quality(
-        self, ldif_file: Path | str
+        self,
+        ldif_file: Path | str,
     ) -> p.Result[m.DbtLdif.ParseValidationResult]:
-        """Run quality-focused workflow."""
+        """Run quality-focused workflow.
+
+        Returns:
+            The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
+        """
         return self.service.run_data_quality_assessment(ldif_file)
 
 

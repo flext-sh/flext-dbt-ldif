@@ -1,4 +1,9 @@
-"""Service mixin for dbt-ldif utilities."""
+"""Service mixin for dbt-ldif utilities.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+src/flext_dbt_ldif/services/service
+SPDX-License-Identifier: MIT
+"""
 
 from __future__ import annotations
 
@@ -27,17 +32,25 @@ class FlextDbtLdifServiceMixin:
             # or global) and inject the SAME instance into client + generator.
             effective_settings = settings or FlextDbtLdifSettings.fetch_global()
             self.project_dir = project_dir or Path(
-                effective_settings.DbtLdif.ldif_file_path or "."
+                effective_settings.DbtLdif.ldif_file_path or ".",
             )
             self.client = FlextDbtLdifClient.Client(effective_settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                settings=effective_settings, project_dir=self.project_dir
+                settings=effective_settings,
+                project_dir=self.project_dir,
             )
 
         def generate_and_write_models(
-            self, entries: t.SequenceOf[t.JsonMapping], *, overwrite: bool = False
+            self,
+            entries: t.SequenceOf[t.JsonMapping],
+            *,
+            overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
-            """Generate staging and analytics models for entries."""
+            """Generate staging and analytics models for entries.
+
+            Returns:
+                The resulting ``p.Result[m.DbtLdif.ModelGenerationResult]``.
+            """
             _ = overwrite
             staging_payload: t.SequenceOf[t.JsonMapping] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
@@ -53,18 +66,23 @@ class FlextDbtLdifServiceMixin:
                 m.DbtLdif.ModelGenerationResult(
                     models_generated=len(all_models),
                     model_names=[model.name for model in all_models],
-                )
+                ),
             )
 
         def parse_and_validate_ldif(
-            self, ldif_file: Path | str
+            self,
+            ldif_file: Path | str,
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
-            """Parse and validate LDIF file in one operation."""
+            """Parse and validate LDIF file in one operation.
+
+            Returns:
+                The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
+            """
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
                 return r[m.DbtLdif.ParseValidationResult].from_failure(parse_result)
             entries = t.json_mapping_sequence_adapter().validate_python(
-                parse_result.value
+                parse_result.value,
             )
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
@@ -74,7 +92,7 @@ class FlextDbtLdifServiceMixin:
                     entry_count=len(entries),
                     quality_score=validation.value.quality_score,
                     validation_status=validation.value.validation_status,
-                )
+                ),
             )
 
         def run_complete_workflow(
@@ -85,12 +103,16 @@ class FlextDbtLdifServiceMixin:
             run_transformations: bool = True,
             model_names: t.StrSequence | None = None,
         ) -> p.Result[m.DbtLdif.WorkflowResult]:
-            """Execute complete LDIF to DBT workflow."""
+            """Execute complete LDIF to DBT workflow.
+
+            Returns:
+                The resulting ``p.Result[m.DbtLdif.WorkflowResult]``.
+            """
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
                 return r[m.DbtLdif.WorkflowResult].from_failure(parse_result)
             entries = t.json_mapping_sequence_adapter().validate_python(
-                parse_result.value
+                parse_result.value,
             )
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
@@ -111,7 +133,8 @@ class FlextDbtLdifServiceMixin:
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(
-                    transform_payload, model_names
+                    transform_payload,
+                    model_names,
                 )
                 if transform.failure:
                     return r[m.DbtLdif.WorkflowResult].from_failure(transform)
@@ -120,7 +143,12 @@ class FlextDbtLdifServiceMixin:
             return r[m.DbtLdif.WorkflowResult].ok(workflow_result)
 
         def run_data_quality_assessment(
-            self, ldif_file: Path | str
+            self,
+            ldif_file: Path | str,
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
-            """Run quality assessment focused workflow."""
+            """Run quality assessment focused workflow.
+
+            Returns:
+                The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
+            """
             return self.parse_and_validate_ldif(ldif_file)
