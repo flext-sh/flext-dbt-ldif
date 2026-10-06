@@ -8,9 +8,9 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_ldif import FlextLdifModels
-from flext_meltano import FlextMeltanoModels, u
+from flext_meltano import FlextMeltanoModels
 
-from flext_dbt_ldif import c, t
+from flext_dbt_ldif import c, t, u
 
 
 class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):

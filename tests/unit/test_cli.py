@@ -15,7 +15,8 @@ from flext_dbt_ldif import main
 class TestsFlextDbtLdifCli:
     """The console script dispatches through the inherited dbt ``cli_main``."""
 
-    def test_unknown_subcommand_exits_with_failure(self) -> None:
+    @staticmethod
+    def test_unknown_subcommand_exits_with_failure() -> None:
         """An unsupported dbt subcommand propagates the base failure exit."""
         with pytest.raises(SystemExit) as exit_info:
             main(["not-a-dbt-command"])
