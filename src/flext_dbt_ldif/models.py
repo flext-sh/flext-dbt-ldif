@@ -8,9 +8,9 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_ldif import FlextLdifModels
-from flext_meltano import FlextMeltanoModels, u
+from flext_meltano import FlextMeltanoModels
 
-from flext_dbt_ldif import c, t
+from flext_dbt_ldif import c, t, u
 
 
 class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
@@ -108,7 +108,8 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextLdifModels):
         class DbtConnectionProfile(FlextMeltanoModels.ArbitraryTypesModel):
             """Typed dbt connection profile for LDIF-backed workflows."""
 
-            # NOTE (multi-agent): mro-rn88 ADR-006 thin-driver — typed connection_profile.
+            # NOTE (multi-agent): mro-rn88 ADR-006 thin-driver —
+            # typed connection_profile.
             type: str = u.Field(default="ldif", description="dbt adapter type")
             path: str = u.Field(description="LDIF source file path")
             project: str = u.Field(description="dbt project name")

@@ -11,7 +11,11 @@ from flext_dbt_ldif import FlextDbtLdifServiceBase, t
 
 
 def main(args: t.StrSequence | None = None) -> int:
-    """Console-script entry point delegating to the inherited dbt ``cli_main``."""
+    """Console-script entry point delegating to the inherited dbt ``cli_main``.
+
+    Returns:
+        The resulting ``int``.
+    """
     return FlextDbtLdifServiceBase().cli_main(args)
 
 
