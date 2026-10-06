@@ -132,6 +132,7 @@ override PYTEST_PARALLEL_WORKERS := 1
 override PYTEST_PARALLEL_WORKER_MEMORY_GB := 2
 override PYTEST_PARALLEL_DISTRIBUTION := load
 override PYTEST_PARALLEL_SCHEDULE_CHUNK := 1
+override PYTEST_PARALLEL_SCHEDULE_CHUNK := 1
 override PYTEST_PROFILE_SORT := cumulative
 override PYTEST_PROFILE_LIMIT := 50
 override PROCESS_TIMEOUT_COMMAND := timeout
@@ -224,6 +225,7 @@ override export MISE_CEILING_PATHS := $(abspath $(RUNTIME_ROOT)/..)
 # The physical runtime owns both its environment and frozen tool identities.
 # Attached members retain their own lock inputs for standalone consumption.
 # The pin is `make upg` output: a generated header, then its release line.
+# The pin is `make upg` output: a generated header, then its release line.
 override MISE_VERSION_PIN := $(RUNTIME_ROOT)/mise.version
 # The pin is read by the bootstrap recipe after any interrupted lock journal
 # has been recovered. Parsing it here would freeze a torn pre-recovery value.
@@ -287,6 +289,7 @@ override VIRTUAL_ENV := $(RUNTIME_VENV)
 override PATH := $(RUNTIME_BIN):$(SANITIZED_CALLER_PATH)
 unexport UV
 export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
+export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
 
 # Resolve native tools through the same isolated lock reader used by setup.
 # Execute the caller's command with that PATH without reloading host Mise tools.
@@ -313,6 +316,23 @@ caller_mise_github_token="$${MISE_GITHUB_TOKEN:-}"; \
 caller_mise_http_timeout="$${MISE_HTTP_TIMEOUT:-}"; \
 caller_flext_mypy_profile_output="$${FLEXT_MYPY_PROFILE_OUTPUT:-}"; \
 caller_mise_version="$${MISE_VERSION:-}"; \
+mise_pin_file="$(MISE_VERSION_PIN)"; \
+	mise_pin=; \
+	if [ -f "$$mise_pin_file" ]; then \
+		mise_pin=$$(awk '!/^[[:space:]]*(#|$$)/ { lines++; release = $$0 } END { if (lines == 1) print release }' "$$mise_pin_file"); \
+		if ! printf '%s\n' "$$mise_pin" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
+			printf 'ERROR: %s records no resolved Mise release; only make upg writes it (delete a hand-edited pin first)\n' "$$mise_pin_file" >&2; \
+			exit 2; \
+		fi; \
+	elif [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ]; then \
+		printf 'ERROR: missing %s; make upg resolves and records the Mise release\n' "$$mise_pin_file" >&2; \
+		exit 2; \
+	fi; \
+	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ] && [ -n "$$caller_mise_version" ] && [ "$${caller_mise_version#v}" != "$$mise_pin" ]; then \
+		printf 'ERROR: MISE_VERSION=%s conflicts with %s=%s\n' "$$caller_mise_version" "$$mise_pin_file" "$$mise_pin" >&2; \
+		exit 2; \
+	fi; \
+	caller_mise_version="$$mise_pin"; \
 mise_pin_file="$(MISE_VERSION_PIN)"; \
 	mise_pin=; \
 	if [ -f "$$mise_pin_file" ]; then \
@@ -540,8 +560,11 @@ override PROJECT_TOOL_EXEC = $(SHELL) -c '$(subst ','"'"',$(PROJECT_TOOL_RUNTIME
 # One bootstrap serves `setup` (frozen) and `upg` (resolving); the public verb
 # selects its lifecycle, Mise release resolution and tool locking through
 # target-specific variables.
+# selects its lifecycle, Mise release resolution and tool locking through
+# target-specific variables.
 TOOL_BOOTSTRAP_LIFECYCLE := _setup_lifecycle
 TOOL_BOOTSTRAP_RESOLVE :=
+TOOL_BOOTSTRAP_LOCK :=
 TOOL_BOOTSTRAP_LOCK :=
 .PHONY: _bootstrap_setup_tools
 
@@ -574,6 +597,23 @@ caller_mise_github_token="$${MISE_GITHUB_TOKEN:-}"; \
 caller_mise_http_timeout="$${MISE_HTTP_TIMEOUT:-}"; \
 caller_flext_mypy_profile_output="$${FLEXT_MYPY_PROFILE_OUTPUT:-}"; \
 caller_mise_version="$${MISE_VERSION:-}"; \
+mise_pin_file="$(MISE_VERSION_PIN)"; \
+	mise_pin=; \
+	if [ -f "$$mise_pin_file" ]; then \
+		mise_pin=$$(awk '!/^[[:space:]]*(#|$$)/ { lines++; release = $$0 } END { if (lines == 1) print release }' "$$mise_pin_file"); \
+		if ! printf '%s\n' "$$mise_pin" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
+			printf 'ERROR: %s records no resolved Mise release; only make upg writes it (delete a hand-edited pin first)\n' "$$mise_pin_file" >&2; \
+			exit 2; \
+		fi; \
+	elif [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ]; then \
+		printf 'ERROR: missing %s; make upg resolves and records the Mise release\n' "$$mise_pin_file" >&2; \
+		exit 2; \
+	fi; \
+	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ] && [ -n "$$caller_mise_version" ] && [ "$${caller_mise_version#v}" != "$$mise_pin" ]; then \
+		printf 'ERROR: MISE_VERSION=%s conflicts with %s=%s\n' "$$caller_mise_version" "$$mise_pin_file" "$$mise_pin" >&2; \
+		exit 2; \
+	fi; \
+	caller_mise_version="$$mise_pin"; \
 mise_pin_file="$(MISE_VERSION_PIN)"; \
 	mise_pin=; \
 	if [ -f "$$mise_pin_file" ]; then \
@@ -2116,12 +2156,20 @@ endif
 # it, and conforms dependency floors. The floors land in the codegen SSOT, so
 # `gen` projects them into every pyproject and renders the managed tool
 # manifests (.mise.toml) of the upgraded generator.
+# `upg` is the only recipe that resolves. Its first half provisions the
+# generator: the bootstrap above resolves the Mise release and locks the tools
+# the committed manifest declares, then this lifecycle upgrades every uv.lock
+# (which carries the generator itself), provisions the environment frozen from
+# it, and conforms dependency floors. The floors land in the codegen SSOT, so
+# `gen` projects them into every pyproject and renders the managed tool
+# manifests (.mise.toml) of the upgraded generator.
 # Branch-tracked git dependencies are moving sources by declaration
 # (workspace.yaml owns the branch): --refresh re-reads their metadata so a
 # stale cached requires-dist can never block or skew the resolution.
 # Like `setup`, it runs the declared pre-/post-upg lifecycle
 # hooks, post-upg inside the activated environment.
 .PHONY: _upg_lifecycle
+_upg_lifecycle: _builtin_setup_submodules
 _upg_lifecycle: _builtin_setup_submodules
 	@set -eu; \
 	case " $(CUSTOM_DECLARED_TARGETS) " in \
@@ -2188,7 +2236,9 @@ _upg_activated:
 # in every profile: a workspace root evaluates itself exactly as CI does.
 _builtin_build_artifacts:
 
+
 	@$(UV) build --project "$(PROJECT_ROOT)"
+
 
 
 # Check is read-only: it runs the gates without --apply, so the tree is left
@@ -2446,6 +2496,7 @@ _builtin_clean_generated:
 
 
 	@set -eu; \
+	for target in "$(PROJECT_ROOT)/.coverage" "$(PROJECT_ROOT)/flext-infra-codegen-transaction-journal.json.lock"; do \
 	for target in "$(PROJECT_ROOT)/.coverage" "$(PROJECT_ROOT)/flext-infra-codegen-transaction-journal.json.lock"; do \
 		if [ -e "$$target" ]; then rm -- "$$target"; \
 		elif [ -L "$$target" ]; then rm -- "$$target"; fi; \

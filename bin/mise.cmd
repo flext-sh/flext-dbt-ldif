@@ -53,10 +53,13 @@ if exist "%MISE_INSTALL_PATH%" goto :run
 set "release=https://github.com/jdx/mise/releases/download/v%resolved_version%"
 if "%arch%"=="arm64" (set "expected=%sum_arm64%") else (set "expected=%sum_x64%")
 if not "%resolved_version%"=="%pinned_version%" set "expected="
+if "%arch%"=="arm64" (set "expected=%sum_arm64%") else (set "expected=%sum_x64%")
+if not "%resolved_version%"=="%pinned_version%" set "expected="
 
 rem A label rather than `if not defined expected (...)`: `sums` is assigned and then read in the
 rem same block, which is the one thing plain expansion cannot do. Delayed expansion is the usual
 rem answer and is exactly what this script must not turn on -- see the top.
+if defined expected goto :have_checksum
 if defined expected goto :have_checksum
 set "sums=%TEMP%\mise-shasums-%RANDOM%%RANDOM%.txt"
 curl -fsSL -o "%sums%" "%release%/SHASUMS256.txt" || goto :fail_download
