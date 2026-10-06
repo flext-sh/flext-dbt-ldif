@@ -47,8 +47,8 @@ endif
 # Capture the selected approval mode before any project-owned include.
 ifeq ($(strip $(CI)),Y)
 override APPROVAL_CONTEXT := Y
-ifneq ($(filter upg _upg% dep propagate gen _gen%,$(MAKECMDGOALS)),)
-$(error Resolution, generation and member propagation are forbidden in CI)
+ifneq ($(filter upg _upg% dep propagate,$(MAKECMDGOALS)),)
+$(error Resolution and member propagation are forbidden in CI)
 endif
 endif
 
@@ -132,7 +132,6 @@ override PYTEST_PARALLEL_WORKERS := 1
 override PYTEST_PARALLEL_WORKER_MEMORY_GB := 2
 override PYTEST_PARALLEL_DISTRIBUTION := load
 override PYTEST_PARALLEL_SCHEDULE_CHUNK := 1
-override PYTEST_PARALLEL_SCHEDULE_CHUNK := 1
 override PYTEST_PROFILE_SORT := cumulative
 override PYTEST_PROFILE_LIMIT := 50
 override PROCESS_TIMEOUT_COMMAND := timeout
@@ -191,13 +190,47 @@ CUSTOM_DECLARED_TARGETS := $(shell awk '/^[a-z_][a-z0-9_-]*:/ { target=$$1; sub(
 ifneq ($(.SHELLSTATUS),0)
 $(error Failed to inspect custom Make targets in $(CUSTOM_MAKEFILE))
 endif
-ifneq ($(filter pre-commit _custom-pre-commit,$(CUSTOM_DECLARED_TARGETS)),)
+ifneq ($(filter pre-commit,$(CUSTOM_DECLARED_TARGETS)),)
 $(error Mandatory approval cannot be replaced by custom targets)
 endif
 ifeq ($(APPROVAL_CONTEXT),Y)
-ifneq ($(filter setup audit check test _custom-setup _custom-audit _custom-check _custom-test,$(CUSTOM_DECLARED_TARGETS)),)
+ifneq ($(filter setup audit check test,$(CUSTOM_DECLARED_TARGETS)),)
 $(error Approval stages cannot be replaced by custom targets)
 endif
+# Wrapper parity: a custom approval-stage hook is legitimate only while it
+# chains the canonical builtin inside its recipe (the host-service harness
+# pattern). A declared hook without the builtin reference is a replacement
+# and stays forbidden.
+ifneq ($(filter _custom-pre-commit,$(CUSTOM_DECLARED_TARGETS)),)
+ifeq ($(shell grep -c "_builtin-pre-commit" $(CUSTOM_MAKEFILE) || true),0)
+$(error Approval stage _custom-pre-commit must chain _builtin-pre-commit (wrapper parity; replacements are forbidden))
+endif
+endif
+
+ifneq ($(filter _custom-setup,$(CUSTOM_DECLARED_TARGETS)),)
+ifeq ($(shell grep -c "_builtin-setup" $(CUSTOM_MAKEFILE) || true),0)
+$(error Approval stage _custom-setup must chain _builtin-setup (wrapper parity; replacements are forbidden))
+endif
+endif
+
+ifneq ($(filter _custom-audit,$(CUSTOM_DECLARED_TARGETS)),)
+ifeq ($(shell grep -c "_builtin-audit" $(CUSTOM_MAKEFILE) || true),0)
+$(error Approval stage _custom-audit must chain _builtin-audit (wrapper parity; replacements are forbidden))
+endif
+endif
+
+ifneq ($(filter _custom-check,$(CUSTOM_DECLARED_TARGETS)),)
+ifeq ($(shell grep -c "_builtin-check" $(CUSTOM_MAKEFILE) || true),0)
+$(error Approval stage _custom-check must chain _builtin-check (wrapper parity; replacements are forbidden))
+endif
+endif
+
+ifneq ($(filter _custom-test,$(CUSTOM_DECLARED_TARGETS)),)
+ifeq ($(shell grep -c "_builtin-test" $(CUSTOM_MAKEFILE) || true),0)
+$(error Approval stage _custom-test must chain _builtin-test (wrapper parity; replacements are forbidden))
+endif
+endif
+
 endif
 endif
 DOCS_ACTIONS := generate fix fmt validate audit
@@ -224,7 +257,6 @@ override export GIT_CEILING_DIRECTORIES := $(abspath $(RUNTIME_ROOT)/..)
 override export MISE_CEILING_PATHS := $(abspath $(RUNTIME_ROOT)/..)
 # The physical runtime owns both its environment and frozen tool identities.
 # Attached members retain their own lock inputs for standalone consumption.
-# The pin is `make upg` output: a generated header, then its release line.
 # The pin is `make upg` output: a generated header, then its release line.
 override MISE_VERSION_PIN := $(RUNTIME_ROOT)/mise.version
 # The pin is read by the bootstrap recipe after any interrupted lock journal
@@ -289,7 +321,6 @@ override VIRTUAL_ENV := $(RUNTIME_VENV)
 override PATH := $(RUNTIME_BIN):$(SANITIZED_CALLER_PATH)
 unexport UV
 export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
-export FLEXT_INFRA_PYTHON UV_PROJECT UV_PROJECT_ENVIRONMENT VIRTUAL_ENV PATH RUNTIME_ROOT
 
 # Resolve native tools through the same isolated lock reader used by setup.
 # Execute the caller's command with that PATH without reloading host Mise tools.
@@ -316,23 +347,6 @@ caller_mise_github_token="$${MISE_GITHUB_TOKEN:-}"; \
 caller_mise_http_timeout="$${MISE_HTTP_TIMEOUT:-}"; \
 caller_flext_mypy_profile_output="$${FLEXT_MYPY_PROFILE_OUTPUT:-}"; \
 caller_mise_version="$${MISE_VERSION:-}"; \
-mise_pin_file="$(MISE_VERSION_PIN)"; \
-	mise_pin=; \
-	if [ -f "$$mise_pin_file" ]; then \
-		mise_pin=$$(awk '!/^[[:space:]]*(#|$$)/ { lines++; release = $$0 } END { if (lines == 1) print release }' "$$mise_pin_file"); \
-		if ! printf '%s\n' "$$mise_pin" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
-			printf 'ERROR: %s records no resolved Mise release; only make upg writes it (delete a hand-edited pin first)\n' "$$mise_pin_file" >&2; \
-			exit 2; \
-		fi; \
-	elif [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ]; then \
-		printf 'ERROR: missing %s; make upg resolves and records the Mise release\n' "$$mise_pin_file" >&2; \
-		exit 2; \
-	fi; \
-	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ] && [ -n "$$caller_mise_version" ] && [ "$${caller_mise_version#v}" != "$$mise_pin" ]; then \
-		printf 'ERROR: MISE_VERSION=%s conflicts with %s=%s\n' "$$caller_mise_version" "$$mise_pin_file" "$$mise_pin" >&2; \
-		exit 2; \
-	fi; \
-	caller_mise_version="$$mise_pin"; \
 mise_pin_file="$(MISE_VERSION_PIN)"; \
 	mise_pin=; \
 	if [ -f "$$mise_pin_file" ]; then \
@@ -408,6 +422,7 @@ mise_pin_file="$(MISE_VERSION_PIN)"; \
 	if [ -z "$$scratch" ] || [ ! -d "$$scratch" ]; then \
 		printf 'ERROR: mise bootstrap scratch creation failed (template: %s/.%s.mise-bootstrap.XXXXXX)\n' "$$project_parent" "$${project_root##*/}" >&2; exit 2; \
 	fi; \
+	readonly scratch; \
 	lock_stage=; \
 	trap 'bootstrap_status=$$?; trap - EXIT; \
 		lock_cleanup_status=0; scratch_cleanup_status=0; diagnostic_status=0; scratch_present=0; \
@@ -560,11 +575,8 @@ override PROJECT_TOOL_EXEC = $(SHELL) -c '$(subst ','"'"',$(PROJECT_TOOL_RUNTIME
 # One bootstrap serves `setup` (frozen) and `upg` (resolving); the public verb
 # selects its lifecycle, Mise release resolution and tool locking through
 # target-specific variables.
-# selects its lifecycle, Mise release resolution and tool locking through
-# target-specific variables.
 TOOL_BOOTSTRAP_LIFECYCLE := _setup_lifecycle
 TOOL_BOOTSTRAP_RESOLVE :=
-TOOL_BOOTSTRAP_LOCK :=
 TOOL_BOOTSTRAP_LOCK :=
 .PHONY: _bootstrap_setup_tools
 
@@ -597,23 +609,6 @@ caller_mise_github_token="$${MISE_GITHUB_TOKEN:-}"; \
 caller_mise_http_timeout="$${MISE_HTTP_TIMEOUT:-}"; \
 caller_flext_mypy_profile_output="$${FLEXT_MYPY_PROFILE_OUTPUT:-}"; \
 caller_mise_version="$${MISE_VERSION:-}"; \
-mise_pin_file="$(MISE_VERSION_PIN)"; \
-	mise_pin=; \
-	if [ -f "$$mise_pin_file" ]; then \
-		mise_pin=$$(awk '!/^[[:space:]]*(#|$$)/ { lines++; release = $$0 } END { if (lines == 1) print release }' "$$mise_pin_file"); \
-		if ! printf '%s\n' "$$mise_pin" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
-			printf 'ERROR: %s records no resolved Mise release; only make upg writes it (delete a hand-edited pin first)\n' "$$mise_pin_file" >&2; \
-			exit 2; \
-		fi; \
-	elif [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ]; then \
-		printf 'ERROR: missing %s; make upg resolves and records the Mise release\n' "$$mise_pin_file" >&2; \
-		exit 2; \
-	fi; \
-	if [ "$(TOOL_BOOTSTRAP_RESOLVE)" != "1" ] && [ -n "$$caller_mise_version" ] && [ "$${caller_mise_version#v}" != "$$mise_pin" ]; then \
-		printf 'ERROR: MISE_VERSION=%s conflicts with %s=%s\n' "$$caller_mise_version" "$$mise_pin_file" "$$mise_pin" >&2; \
-		exit 2; \
-	fi; \
-	caller_mise_version="$$mise_pin"; \
 mise_pin_file="$(MISE_VERSION_PIN)"; \
 	mise_pin=; \
 	if [ -f "$$mise_pin_file" ]; then \
@@ -689,6 +684,7 @@ mise_pin_file="$(MISE_VERSION_PIN)"; \
 	if [ -z "$$scratch" ] || [ ! -d "$$scratch" ]; then \
 		printf 'ERROR: mise bootstrap scratch creation failed (template: %s/.%s.mise-bootstrap.XXXXXX)\n' "$$project_parent" "$${project_root##*/}" >&2; exit 2; \
 	fi; \
+	readonly scratch; \
 	lock_stage=; \
 	trap 'bootstrap_status=$$?; trap - EXIT; \
 		lock_cleanup_status=0; scratch_cleanup_status=0; diagnostic_status=0; scratch_present=0; \
@@ -814,13 +810,7 @@ $${mise_config_argument:+"$$mise_config_argument"} \
 		mise_offline_mode="$$1"; shift; \
 		mise_exec "$$mise_offline_mode" env 'MISE_OFFLINE=true' "$$@"; \
 	}; \
-
-	# The only tolerated Mise warning: ephemeral CI runners ship pre-seeded \
-	# shims (python3, make) and `mise install` always announces it declines to \
-	# replace them while every real install still succeeds (cosmos-main PR 346 \
-	# CI run 37348896444, bead on cosmos-l2wc2). Every OTHER mise WARN stays \
-	# fatal: red-means-red is untouched. \
-	mise_has_blocking_warning() { \
+mise_has_blocking_warning() { \
 		grep -F 'mise WARN' "$$1" | grep -Fv 'not replacing unmanaged file in shims directory' | grep -q .; \
 	}; \
 	mise_checked() { \
@@ -852,12 +842,7 @@ $${mise_config_argument:+"$$mise_config_argument"} \
 			receipt_release=$${receipt_output%% *}; \
 		fi; \
 		if ! printf '%s\n' "$$receipt_release" | grep -Eq '^[0-9]+(\.[0-9]+){2}$$'; then \
-			printf 'ERROR: Mise receipt returned invalid version: %s\n' "$$receipt_output" >&2; \
-			printf 'ERROR: Mise receipt stderr: ' >&2; \
-			if cat "$$mise_receipt_log.stderr" >&2; then :; \
-			else printf 'ERROR: cannot read Mise receipt diagnostics: %s\n' "$$mise_receipt_log.stderr" >&2; return 2; fi; \
-			printf 'ERROR: Mise receipt executable: %s; scratch: %s\n' "$$1" "$$scratch" >&2; \
-			return 2; \
+			printf 'ERROR: Mise receipt returned invalid version: %s\n' "$$receipt_output" >&2; return 2; \
 		fi; \
 	}; \
 	pinned_mise="$$mise"; \
@@ -2156,20 +2141,12 @@ endif
 # it, and conforms dependency floors. The floors land in the codegen SSOT, so
 # `gen` projects them into every pyproject and renders the managed tool
 # manifests (.mise.toml) of the upgraded generator.
-# `upg` is the only recipe that resolves. Its first half provisions the
-# generator: the bootstrap above resolves the Mise release and locks the tools
-# the committed manifest declares, then this lifecycle upgrades every uv.lock
-# (which carries the generator itself), provisions the environment frozen from
-# it, and conforms dependency floors. The floors land in the codegen SSOT, so
-# `gen` projects them into every pyproject and renders the managed tool
-# manifests (.mise.toml) of the upgraded generator.
 # Branch-tracked git dependencies are moving sources by declaration
 # (workspace.yaml owns the branch): --refresh re-reads their metadata so a
 # stale cached requires-dist can never block or skew the resolution.
 # Like `setup`, it runs the declared pre-/post-upg lifecycle
 # hooks, post-upg inside the activated environment.
 .PHONY: _upg_lifecycle
-_upg_lifecycle: _builtin_setup_submodules
 _upg_lifecycle: _builtin_setup_submodules
 	@set -eu; \
 	case " $(CUSTOM_DECLARED_TARGETS) " in \
@@ -2236,9 +2213,7 @@ _upg_activated:
 # in every profile: a workspace root evaluates itself exactly as CI does.
 _builtin_build_artifacts:
 
-
 	@$(UV) build --project "$(PROJECT_ROOT)"
-
 
 
 # Check is read-only: it runs the gates without --apply, so the tree is left
@@ -2496,7 +2471,6 @@ _builtin_clean_generated:
 
 
 	@set -eu; \
-	for target in "$(PROJECT_ROOT)/.coverage" "$(PROJECT_ROOT)/flext-infra-codegen-transaction-journal.json.lock"; do \
 	for target in "$(PROJECT_ROOT)/.coverage" "$(PROJECT_ROOT)/flext-infra-codegen-transaction-journal.json.lock"; do \
 		if [ -e "$$target" ]; then rm -- "$$target"; \
 		elif [ -L "$$target" ]; then rm -- "$$target"; fi; \

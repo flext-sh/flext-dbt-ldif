@@ -20,9 +20,9 @@ rem delete something it never created.
 set "download_path="
 set "sums="
 
-set "pinned_version=2026.10.0"
-set "sum_x64=d09c099e6d5fb580fb42590a995a9432d448d63d66dc7521e90f28785bf86ad2"
-set "sum_arm64=706382738e1dcc87c4206c12dde355ff30abb9b17c959ff7e3d944680a7e8011"
+set "pinned_version=2026.9.16"
+set "sum_x64=b724be30f9596e5abea693556640e4b5076efebe4fd8d8a8011f98d294b83576"
+set "sum_arm64=a3e8a5e9850cb48dc0ec493820bcd6ab38ad5d431a304ee10b9e9c998977bcd8"
 
 rem MISE_VERSION itself is never written to. Everything here runs inside `setlocal`, so assigning
 rem a fallback to it would hand the launched mise an env var the bash branch does not set.
@@ -53,13 +53,10 @@ if exist "%MISE_INSTALL_PATH%" goto :run
 set "release=https://github.com/jdx/mise/releases/download/v%resolved_version%"
 if "%arch%"=="arm64" (set "expected=%sum_arm64%") else (set "expected=%sum_x64%")
 if not "%resolved_version%"=="%pinned_version%" set "expected="
-if "%arch%"=="arm64" (set "expected=%sum_arm64%") else (set "expected=%sum_x64%")
-if not "%resolved_version%"=="%pinned_version%" set "expected="
 
 rem A label rather than `if not defined expected (...)`: `sums` is assigned and then read in the
 rem same block, which is the one thing plain expansion cannot do. Delayed expansion is the usual
 rem answer and is exactly what this script must not turn on -- see the top.
-if defined expected goto :have_checksum
 if defined expected goto :have_checksum
 set "sums=%TEMP%\mise-shasums-%RANDOM%%RANDOM%.txt"
 curl -fsSL -o "%sums%" "%release%/SHASUMS256.txt" || goto :fail_download
@@ -91,7 +88,6 @@ if /i not "%actual%"=="%expected%" (
 
 rem The parent of MISE_INSTALL_PATH, not install_dir: a caller-supplied MISE_INSTALL_PATH can
 rem name a file anywhere, and creating install_dir instead would leave the move below with no
-rem destination directory. install.sh does the same -- `mkdir -p "$(dirname "$install_path")"` --
 rem destination directory. install.sh does the same -- `mkdir -p "$(dirname "$install_path")"` --
 rem and the default path lives under install_dir, so this covers that case too.
 for %%i in ("%MISE_INSTALL_PATH%") do set "install_parent=%%~dpi"
