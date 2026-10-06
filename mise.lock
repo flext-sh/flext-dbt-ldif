@@ -140,9 +140,9 @@ url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/5955129
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.linux-x64"]
-checksum = "sha256:0a1f298a7e010d439be0b21fb8271cf92fca10f9b10fa8eb111320f3d129b62c"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.3.3/jscpd-linux-x64-gnu.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/595512981"
+checksum = "sha256:4c2819a5663e5418fe5dcf0faceca7f05c1f080d3c87fd57cc4ccf99ce857194"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-linux-x64-gnu.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533640"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.linux-x64-musl"]
@@ -152,25 +152,25 @@ url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/5955130
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.macos-arm64"]
-checksum = "sha256:a90634a456876a8985abd4c4e6674355f4d76f2166fec10d0f295ee5e17c5d6c"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.3.3/jscpd-darwin-arm64.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/595512987"
+checksum = "sha256:75022b94cd6c05523a7a1639c3fff769d9a97f8c7ef3f6a614c6bee53b7e3bdd"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533635"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.macos-x64"]
-checksum = "sha256:d107a9c8fddfd718bfc4d98252d1123ea70ee942b7d0ae3324968de7df53e5b9"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.3.3/jscpd-darwin-x64.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/595512991"
+checksum = "sha256:866676d440854f2e6083c4a88f754856fb91ccdc16f59e49a64574cd35d3f48d"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-darwin-x64.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533634"
 provenance = "github-attestations"
 
 [tools."github:kucherenko/jscpd"."platforms.windows-x64"]
-checksum = "sha256:75152cab799db1b894b4c8ba57934291d90174459f2db394bd1243a389c78071"
-url = "https://github.com/kucherenko/jscpd/releases/download/v5.3.3/jscpd-windows-x64-msvc.tar.gz"
-url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/595513031"
+checksum = "sha256:fb23edc10657bf93a66f6f2be53f10335f1be1da9456c97107f98a9d0e21ce13"
+url = "https://github.com/kucherenko/jscpd/releases/download/v5.4.0/jscpd-windows-x64-msvc.tar.gz"
+url_api = "https://api.github.com/repos/kucherenko/jscpd/releases/assets/601533667"
 provenance = "github-attestations"
 
 [[tools."github:microsoft/waza"]]
-version = "0.38.7"
+version = "0.38.8"
 backend = "github:microsoft/waza"
 specifiers = ["latest"]
 
@@ -178,34 +178,34 @@ specifiers = ["latest"]
 version_prefix = "v"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64"]
-checksum = "sha256:142ea836bbc8324154f52d3278cb7c9a9fa4e1be7480b44d3841309b56f7b039"
-url = "https://github.com/microsoft/waza/releases/download/v0.38.7/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/520984886"
+checksum = "sha256:2721267b59dbca682e754e0e4ad392473e7341dbdbd64578ef1bee9b52daa31b"
+url = "https://github.com/microsoft/waza/releases/download/v0.38.8/waza-linux-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/599032509"
 
 [tools."github:microsoft/waza"."platforms.linux-x64"]
-checksum = "sha256:e227cd884173de796bc28c6cb1828498f250297e0e606a4e4504d14465ff879f"
-url = "https://github.com/microsoft/waza/releases/download/v0.38.7/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/520984881"
+checksum = "sha256:1bc9886cf2254e50cfab22bc1bcc7acd9715e69e0c2057c04079c95b8f68132e"
+url = "https://github.com/microsoft/waza/releases/download/v0.38.8/waza-linux-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/599032506"
 
 [tools."github:microsoft/waza"."platforms.linux-x64-musl"]
-checksum = "sha256:e227cd884173de796bc28c6cb1828498f250297e0e606a4e4504d14465ff879f"
-url = "https://github.com/microsoft/waza/releases/download/v0.38.7/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/520984881"
+checksum = "sha256:1bc9886cf2254e50cfab22bc1bcc7acd9715e69e0c2057c04079c95b8f68132e"
+url = "https://github.com/microsoft/waza/releases/download/v0.38.8/waza-linux-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/599032506"
 
 [tools."github:microsoft/waza"."platforms.macos-arm64"]
-checksum = "sha256:82a4f44c7d95b13e54607ab0bb9da618bb134c51c94a64be73bedbf7bcd4e778"
-url = "https://github.com/microsoft/waza/releases/download/v0.38.7/waza-darwin-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/520984880"
+checksum = "sha256:f4f36fbdfdd60b6d7c1bd555b25a6c6d33485e57fdf8e67c1c65a82400622601"
+url = "https://github.com/microsoft/waza/releases/download/v0.38.8/waza-darwin-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/599032505"
 
 [tools."github:microsoft/waza"."platforms.macos-x64"]
-checksum = "sha256:e282ae6cc2f819125e8e5aaf2351caf8e066c74a853c7cdf1591cd4fb4657a1a"
-url = "https://github.com/microsoft/waza/releases/download/v0.38.7/waza-darwin-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/520984885"
+checksum = "sha256:7533f4a025e7cbe7dc6adbb48acf04cc8778f21e57b9a9e716300264ff040920"
+url = "https://github.com/microsoft/waza/releases/download/v0.38.8/waza-darwin-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/599032510"
 
 [tools."github:microsoft/waza"."platforms.windows-x64"]
-checksum = "sha256:451d05c510341019e71c8e94d2ff4ed9f809f8f198bcf5fc31ab31038c5076c9"
-url = "https://github.com/microsoft/waza/releases/download/v0.38.7/waza-windows-amd64.exe"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/520984898"
+checksum = "sha256:b52763feedf789025399a79269d001dd27ad54a2588442f831a1072be5b7ce4f"
+url = "https://github.com/microsoft/waza/releases/download/v0.38.8/waza-windows-amd64.exe"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/599032529"
 
 [[tools."github:qltysh/qlty"]]
 version = "0.649.0"
@@ -541,38 +541,38 @@ backend = "npm:prettier"
 specifiers = ["3.5.3"]
 
 [[tools.python]]
-version = "3.13.15"
+version = "3.13.16"
 backend = "core:python"
 specifiers = ["3.13"]
 
 [tools.python."platforms.linux-arm64"]
-checksum = "sha256:3807936bef22d3e347454df4f8774c786f98c7caa5e7328425e7b40766a9cff8"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.13.15+20260929-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
+checksum = "sha256:f94c8f69f3e68b026b916b3aa32b9b3bfff63fd7c95b2affa8272b1601d668fa"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.13.16+20261001-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-x64"]
-checksum = "sha256:c552deaf9ed0e678dee4ccc760d6dcd7cab33f1bd43e8037123b4a4db8508e14"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.13.15+20260929-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
+checksum = "sha256:ffcb50e716789d1a6e1db5e745d4d194ac8ed9b015ccf5eabcaccb179a25e4a8"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.13.16+20261001-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-x64-musl"]
-checksum = "sha256:aa99d72003c65d2e9d4281152fac51afb78c8aba063004713c5d5ecc19f55d9c"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.13.15+20260929-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
+checksum = "sha256:31b1f560c68313c00bab4faa2452bc0a87e3e9f9ddf16b94d2265bd9d99afc2e"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.13.16+20261001-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.macos-arm64"]
-checksum = "sha256:d66c67f16148c7454b1509c32747175f7669c8b8e105b97b92a0000d66af6e6e"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.13.15+20260929-aarch64-apple-darwin-install_only_stripped.tar.gz"
+checksum = "sha256:d00669acb53c1b014f1fcf5eaea740d8e45c3aff4b1e0244dc0f8697fb211a82"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.13.16+20261001-aarch64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.macos-x64"]
-checksum = "sha256:73b503a2d3f47f0601265d7936744b77dc4ee75d2a3e88a470594a014dcf6822"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.13.15+20260929-x86_64-apple-darwin-install_only_stripped.tar.gz"
+checksum = "sha256:a88bef59d9dd61ba4210772cce57a4b4cb963aa745ab956f7cc79ba60f9e2523"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.13.16+20261001-x86_64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.windows-x64"]
-checksum = "sha256:d11d0d4b4fefa5df09e925dbd37600457f5488a9712a82f3f0dd1ff9431c2ccf"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.13.15+20260929-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
+checksum = "sha256:c402eb9a35aba90de319bbc87d23e6d887eca1551a05cfa80775f92dcf3ebc08"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261001/cpython-3.13.16+20261001-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [[tools.taplo]]
