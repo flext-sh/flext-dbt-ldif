@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+"""AI Hub governance hook projection: gemini-precompress."""
 import json
 import sys
 

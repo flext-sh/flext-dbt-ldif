@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+"""AI Hub governance hook projection: cursor-subagentstart."""
 import json
 import sys
 
