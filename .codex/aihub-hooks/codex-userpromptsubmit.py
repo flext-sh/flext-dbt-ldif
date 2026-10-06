@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-"""AI Hub governance hook projection: codex-userpromptsubmit."""
+"""AI Hub governance hook projection: codex-userpromptsubmit.
+
+Copyright (c) 2026 FLEXT Team. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 import json
 import sys
 
