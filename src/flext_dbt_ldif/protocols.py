@@ -17,6 +17,7 @@ class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
     class DbtLdif:
         """DBT LDIF protocol namespace."""
 
+
 p = FlextDbtLdifProtocols
 
 __all__: list[str] = ["FlextDbtLdifProtocols", "p"]
