@@ -50,7 +50,7 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
 
 
 settings: FlextDbtLdifSettings = FlextDbtLdifSettings.fetch_global()
-"""Pre-instantiated project settings singleton — ``from flext_dbt_ldif import settings``."""
+"""Pre-instantiated settings singleton — ``from flext_dbt_ldif import settings``."""
 
 
 __all__: list[str] = ["FlextDbtLdifSettings", "settings"]

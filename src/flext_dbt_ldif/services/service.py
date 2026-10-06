@@ -28,8 +28,9 @@ class FlextDbtLdifServiceMixin:
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service dependencies with optional injected settings."""
-            # NOTE (multi-agent): mro-rn88 — resolve effective settings (injected override
-            # or global) and inject the SAME instance into client + generator.
+            # NOTE (multi-agent): mro-rn88 — resolve effective settings
+            # (injected override or global) and inject the SAME instance into
+            # client + generator.
             effective_settings = settings or FlextDbtLdifSettings.fetch_global()
             self.project_dir = project_dir or Path(
                 effective_settings.DbtLdif.ldif_file_path or ".",
