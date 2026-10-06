@@ -439,6 +439,7 @@ notice-rgx = "Copyright \\(c\\) \\d{4} \\S[^\\n]*\\. All rights reserved\\."
 [tool.ruff.lint.flake8-type-checking]
 runtime-evaluated-base-classes = [
   "flext_dbt_ldif.FlextDbtLdifSettings",
+  "flext_dbt_ldif.m.BaseModel",
   "flext_dbt_ldif.s",
   "flext_meltano.FlextMeltanoConfig",
   "flext_meltano.FlextMeltanoDbtServiceBase",
