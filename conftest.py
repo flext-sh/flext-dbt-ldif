@@ -1,4 +1,4 @@
-"""AI Hub governance hook projection: conftest.
+"""Pytest bootstrap for flext-dbt-ldif local package resolution.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
