@@ -14,9 +14,6 @@ from flext_meltano import FlextMeltanoProtocols
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
     """Namespace for DBT LDIF protocol contracts."""
 
-    class DbtLdif:
-        """DBT LDIF protocol namespace."""
-
 
 p = FlextDbtLdifProtocols
 

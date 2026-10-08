@@ -119,10 +119,12 @@ class TestsFlextDbtLdifApiSurface:
         must still pass.
         """
         client = FlextDbtLdifClient.Client(
-            FlextDbtLdifSettings(
-                ldif_file_path=str(tmp_path / "sample.ldif"),
-                min_quality_threshold=1.0,
-            ),
+            FlextDbtLdifSettings.model_validate({
+                "DbtLdif": {
+                    "ldif_file_path": str(tmp_path / "sample.ldif"),
+                    "min_quality_threshold": 1.0,
+                },
+            }),
         )
 
         result = client.validate_ldif_data([{"dn": "cn=a"}])
