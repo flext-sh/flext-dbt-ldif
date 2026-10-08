@@ -109,5 +109,6 @@ class FlextDbtLdif(
 
 
 dbt_ldif: FlextDbtLdif = FlextDbtLdif.fetch_instance()
+"""Shared ``FlextDbtLdif`` facade instance for DBT LDIF workflows."""
 
 __all__: list[str] = ["FlextDbtLdif", "dbt_ldif"]
