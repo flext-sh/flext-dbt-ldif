@@ -14,7 +14,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t
+from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, u
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
@@ -71,7 +71,7 @@ class FlextDbtLdif(
             return r[m.DbtLdif.ModelGenerationResult].from_failure(parsed)
         entries_raw = parsed.value
         try:
-            entries = t.json_mapping_sequence_adapter().validate_python(entries_raw)
+            entries = u.json_mapping_sequence_adapter().validate_python(entries_raw)
         except c.ValidationError:
             return r[m.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload",
