@@ -4,9 +4,6 @@ Model-less: business rules live in ``config/*.yaml`` under the ``DbtLdif:`` key 
 are exposed through the open ``config.DbtLdif`` namespace (``extra="allow"``), with
 no per-domain model. Access is ``config.DbtLdif.<domain>[<key>...]``.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """

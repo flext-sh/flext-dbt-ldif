@@ -5,9 +5,6 @@ validate / transform results, ``r[T]`` success and failure outcomes, and
 public model state via ``model_dump``. No private attributes, no internal
 collaborator spying.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
