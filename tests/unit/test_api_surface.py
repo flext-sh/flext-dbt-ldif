@@ -198,9 +198,9 @@ class TestsFlextDbtLdifApiSurface:
         tm.that(result.value.entry_count, eq=1)
 
     @staticmethod
-    def test_fetch_instance_is_shared_singleton() -> None:
-        """``fetch_instance`` returns the same shared facade each call."""
-        assert FlextDbtLdif.fetch_instance() is FlextDbtLdif.fetch_instance()
+    def test_fetch_global_is_shared_singleton() -> None:
+        """``fetch_global`` returns the same shared facade each call."""
+        assert FlextDbtLdif.fetch_global() is FlextDbtLdif.fetch_global()
 
     @staticmethod
     def test_process_ldif_file_runs_end_to_end_workflow(

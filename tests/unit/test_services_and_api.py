@@ -138,9 +138,9 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
 
     @staticmethod
-    def test_fetch_instance_returns_shared_singleton() -> None:
-        """fetch_instance returns the same facade instance on repeated calls."""
-        first = FlextDbtLdif.fetch_instance()
-        second = FlextDbtLdif.fetch_instance()
+    def test_fetch_global_returns_shared_singleton() -> None:
+        """fetch_global returns the same facade instance on repeated calls."""
+        first = FlextDbtLdif.fetch_global()
+        second = FlextDbtLdif.fetch_global()
 
         assert first is second

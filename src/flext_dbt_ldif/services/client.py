@@ -28,11 +28,14 @@ class FlextDbtLdifClient:
         # resolve the concrete snapshot (injected override or global singleton).
         def __init__(self, settings: p.Settings | None = None) -> None:
             """Wire the client with optional injected settings."""
-            self._settings = (
-                FlextDbtLdifSettings.model_validate(settings.model_dump())
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
+            if settings is None:
+                self._settings = FlextDbtLdifSettings.fetch_global()
+            elif isinstance(settings, FlextDbtLdifSettings):
+                self._settings = settings
+            else:
+                self._settings = FlextDbtLdifSettings.model_validate(
+                    settings.model_dump(),
+                )
 
         @property
         def settings(self) -> FlextDbtLdifSettings:

@@ -10,6 +10,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import override
 
+from flext_meltano import FlextMeltanoDbtServiceBase
+
 from flext_dbt_ldif import c, m, p, r, s, t, u
 
 
@@ -38,7 +40,7 @@ class FlextDbtLdifUnifiedService:
             """Initialize service with optional injected settings + project context."""
             # NOTE (multi-agent): mro-rn88 — forward the canonical settings contract
             # to the ServiceBase runtime so the injected snapshot is honored.
-            super().__init__(settings=settings)
+            FlextMeltanoDbtServiceBase.__init__(self, settings=settings)
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
 
