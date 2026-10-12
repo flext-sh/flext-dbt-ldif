@@ -16,6 +16,11 @@ if TYPE_CHECKING:
     from flext_tests import api, d, e, h, r, td, tf, tk, tm, x
 
     from tests.base import TestsFlextDbtLdifServiceBase, s
+    from tests.conftest import (
+        pytest_runtest_setup,
+        pytest_runtest_teardown,
+        set_test_environment,
+    )
     from tests.constants import TestsFlextDbtLdifConstants, c
     from tests.models import TestsFlextDbtLdifModels, m
     from tests.protocols import TestsFlextDbtLdifProtocols, p
@@ -39,8 +44,11 @@ __all__: tuple[str, ...] = (
     "h",
     "m",
     "p",
+    "pytest_runtest_setup",
+    "pytest_runtest_teardown",
     "r",
     "s",
+    "set_test_environment",
     "t",
     "td",
     "tf",
@@ -68,15 +76,17 @@ install_lazy_exports(
         "h": "flext_tests",
         "m": ".models",
         "p": ".protocols",
+        "pytest_runtest_setup": ".conftest",
+        "pytest_runtest_teardown": ".conftest",
         "r": "flext_tests",
         "s": ".base",
+        "set_test_environment": ".conftest",
         "t": ".typings",
         "td": "flext_tests",
         "tf": "flext_tests",
         "tk": "flext_tests",
         "tm": "flext_tests",
         "u": ".utilities",
-        "unit": ".unit",
         "x": "flext_tests",
     }),
     public_exports=__all__,
