@@ -37,8 +37,8 @@ class FlextDbtLdif(
         self._service = self.Service()
 
     @classmethod
-    def fetch_instance(cls) -> Self:
-        """Return the shared facade instance, creating it on first call."""
+    def fetch_global(cls) -> Self:
+        """Return the shared facade singleton, creating it on first call."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
@@ -105,7 +105,7 @@ class FlextDbtLdif(
         return self.service.run_data_quality_assessment(ldif_file)
 
 
-dbt_ldif: FlextDbtLdif = FlextDbtLdif.fetch_instance()
+dbt_ldif: FlextDbtLdif = FlextDbtLdif.fetch_global()
 """Shared ``FlextDbtLdif`` facade instance for DBT LDIF workflows."""
 
 __all__: list[str] = ["FlextDbtLdif", "dbt_ldif"]

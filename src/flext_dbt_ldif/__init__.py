@@ -16,7 +16,7 @@ from flext_dbt_ldif.__version__ import __version__
 if TYPE_CHECKING:
     from flext_meltano import d, e, h, r, x
 
-    from flext_dbt_ldif import _constants, services
+    from flext_dbt_ldif import _constants, _models, services
     from flext_dbt_ldif.__version__ import (
         FlextDbtLdifVersion,
         __author__,
@@ -64,6 +64,7 @@ __all__: tuple[str, ...] = (
     "__version__",
     "__version_info__",
     "_constants",
+    "_models",
     "c",
     "config",
     "d",
@@ -105,6 +106,7 @@ install_lazy_exports(
         "__url__": ".__version__",
         "__version_info__": ".__version__",
         "_constants": "._constants",
+        "_models": "._models",
         "c": ".constants",
         "config": "._config",
         "d": "flext_meltano",

@@ -24,20 +24,24 @@ class FlextDbtLdifServiceMixin:
 
         def __init__(
             self,
-            settings: FlextDbtLdifSettings | None = None,
+            settings: p.Settings | None = None,
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service dependencies with optional injected settings."""
-            # NOTE (multi-agent): mro-rn88 — resolve effective settings
+            # NOTE (multi-agent): mro-rn88 — resolve the concrete settings snapshot
             # (injected override or global) and inject the SAME instance into
             # client + generator.
-            effective_settings = settings or FlextDbtLdifSettings.fetch_global()
-            self.project_dir = project_dir or Path(
-                effective_settings.DbtLdif.ldif_file_path or ".",
+            resolved_settings = (
+                FlextDbtLdifSettings.model_validate(settings.model_dump())
+                if settings is not None
+                else FlextDbtLdifSettings.fetch_global()
             )
-            self.client = FlextDbtLdifClient.Client(effective_settings)
+            self.project_dir = project_dir or Path(
+                resolved_settings.DbtLdif.ldif_file_path or ".",
+            )
+            self.client = FlextDbtLdifClient.Client(resolved_settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                settings=effective_settings,
+                settings=resolved_settings,
                 project_dir=self.project_dir,
             )
 

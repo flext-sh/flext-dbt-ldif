@@ -10,9 +10,9 @@ from pathlib import Path
 
 import pytest
 
-from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, c
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests import tm
+from tests import c, tm
 
 
 class TestsFlextDbtLdifServicesAndApi:

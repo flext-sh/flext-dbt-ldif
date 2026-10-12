@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from packaging.version import Version
 
-from flext_dbt_ldif import __version__, __version__ as version, __version_info__
+from flext_dbt_ldif import __version__, __version_info__
 from tests import tm
 
 
@@ -21,11 +21,6 @@ class TestsFlextDbtLdifVersion:
         """`__version__` is exposed as a non-empty string."""
         tm.that(__version__, is_=str)
         assert __version__
-
-    @staticmethod
-    def test_version_alias_matches_canonical() -> None:
-        """The `version` alias export is identical to `__version__`."""
-        tm.that(version, eq=__version__)
 
     @staticmethod
     def test_version_info_is_release_triple() -> None:

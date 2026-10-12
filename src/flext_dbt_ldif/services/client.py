@@ -22,11 +22,17 @@ class FlextDbtLdifClient:
     class Client:
         """Client with typed parse, validate, and transform operations."""
 
-        # NOTE (multi-agent): mro-rn88 — plain class holding the effective settings
-        # (injected override or global singleton); exposed via the `settings` property.
-        def __init__(self, settings: FlextDbtLdifSettings | None = None) -> None:
+        _settings: FlextDbtLdifSettings
+
+        # NOTE (multi-agent): mro-rn88 — inject the canonical settings contract and
+        # resolve the concrete snapshot (injected override or global singleton).
+        def __init__(self, settings: p.Settings | None = None) -> None:
             """Wire the client with optional injected settings."""
-            self._settings = settings or FlextDbtLdifSettings.fetch_global()
+            self._settings = (
+                FlextDbtLdifSettings.model_validate(settings.model_dump())
+                if settings is not None
+                else FlextDbtLdifSettings.fetch_global()
+            )
 
         @property
         def settings(self) -> FlextDbtLdifSettings:

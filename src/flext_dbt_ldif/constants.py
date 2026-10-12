@@ -10,7 +10,7 @@ from __future__ import annotations
 from flext_ldif import FlextLdifConstants
 from flext_meltano import FlextMeltanoConstants
 
-from flext_dbt_ldif._constants.base import FlextDbtLdifConstantsBase
+from flext_dbt_ldif._constants import FlextDbtLdifConstantsBase
 
 
 class FlextDbtLdifConstants(

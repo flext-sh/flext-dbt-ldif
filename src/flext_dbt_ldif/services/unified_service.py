@@ -10,7 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t, u
+from flext_dbt_ldif import c, m, p, r, s, t, u
 
 
 class FlextDbtLdifUnifiedService:
@@ -31,17 +31,14 @@ class FlextDbtLdifUnifiedService:
 
         def __init__(
             self,
-            settings: FlextDbtLdifSettings | None = None,
+            settings: p.Settings | None = None,
             name: str = "ldif_generator",
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service with optional injected settings + project context."""
-            # NOTE (multi-agent): mro-rn88 — accept injected settings and pass
-            # them to the ServiceBase runtime so settings resolves the injected
-            # instance.
-            super().__init__()
-            if settings is not None:
-                self.runtime_settings = settings
+            # NOTE (multi-agent): mro-rn88 — forward the canonical settings contract
+            # to the ServiceBase runtime so the injected snapshot is honored.
+            super().__init__(settings=settings)
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
 

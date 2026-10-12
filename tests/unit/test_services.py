@@ -12,7 +12,6 @@ import pytest
 
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
 from tests import c, t, tm
-from tests.unit._services_parts.data_quality import TestsFlextDbtLdifServicesDataQuality
 
 
 @pytest.fixture
@@ -35,8 +34,29 @@ def entries() -> t.SequenceOf[t.JsonMapping]:
     return [{"dn": "cn=test,dc=example,dc=org"}]
 
 
-class TestsFlextDbtLdifServices(TestsFlextDbtLdifServicesDataQuality):
+class TestsFlextDbtLdifServices:
     """Behavior contract for FlextDbtLdifServiceMixin.Service workflows."""
+
+    @staticmethod
+    def test_run_data_quality_assessment(
+        svc: FlextDbtLdifServiceMixin.Service,
+        tmp_path: Path,
+    ) -> None:
+        """Data quality assessment parses, validates, and reports entry metrics."""
+        target = tmp_path / "f.ldif"
+        target.write_text(
+            "dn: cn=test,dc=example,dc=org\nobjectClass: top\n\n",
+            encoding="utf-8",
+        )
+
+        result = svc.run_data_quality_assessment(target)
+
+        tm.ok(result)
+        data = result.unwrap()
+        tm.that(data, none=False)
+        tm.that(data.entry_count, eq=1)
+        tm.that(data.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
+        tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
 
     @staticmethod
     def test_parse_and_validate_ldif_returns_quality_metrics(
