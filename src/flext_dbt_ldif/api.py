@@ -60,8 +60,17 @@ class FlextDbtLdif(
     ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input.
 
+        Parses the LDIF file and produces staging and analytics model
+        definitions for the parsed entries.
+
+        Args:
+            ldif_file: Path to the LDIF file to process.
+            overwrite: Whether to overwrite existing generated artifacts.
+
         Returns:
-            The resulting ``p.Result[m.DbtLdif.ModelGenerationResult]``.
+            Result wrapping the generation summary, or a failure when
+            parsing or generation fails.
+
         """
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
@@ -84,8 +93,18 @@ class FlextDbtLdif(
     ) -> p.Result[m.DbtLdif.WorkflowResult]:
         """Execute end-to-end LDIF workflow.
 
+        Runs parsing, validation, and optionally model generation and
+        transformations according to the given flags.
+
+        Args:
+            ldif_file: Path to the LDIF file to process.
+            generate_models: Whether to generate DBT models.
+            run_transformations: Whether to run DBT transformations.
+
         Returns:
-            The resulting ``p.Result[m.DbtLdif.WorkflowResult]``.
+            Result wrapping the workflow summary, or a failure when any
+            stage fails.
+
         """
         return self.service.run_complete_workflow(
             ldif_file=ldif_file,
@@ -99,8 +118,16 @@ class FlextDbtLdif(
     ) -> p.Result[m.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow.
 
+        Parses and validates the LDIF file and reports the resulting
+        quality metrics.
+
+        Args:
+            ldif_file: Path to the LDIF file to assess.
+
         Returns:
-            The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
+            Result wrapping the parse and validation summary, or a
+            failure when parsing or validation fails.
+
         """
         return self.service.run_data_quality_assessment(ldif_file)
 
