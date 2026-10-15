@@ -125,3 +125,6 @@ class FlextDbtLdifUnifiedService:
                 dependencies=[],
             )
             return r[list[m.DbtLdif.DbtModel]].ok([model])
+
+
+__all__: list[str] = ["FlextDbtLdifUnifiedService"]

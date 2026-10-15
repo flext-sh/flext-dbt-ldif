@@ -135,3 +135,6 @@ class FlextDbtLdifClient:
                     validation_status=c.DbtLdif.VALIDATION_STATUS_PASSED,
                 ),
             )
+
+
+__all__: list[str] = ["FlextDbtLdifClient"]

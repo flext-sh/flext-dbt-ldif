@@ -190,3 +190,6 @@ class FlextDbtLdifServiceMixin:
 
             """
             return self.parse_and_validate_ldif(ldif_file)
+
+
+__all__: list[str] = ["FlextDbtLdifServiceMixin"]
