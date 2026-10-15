@@ -24,20 +24,32 @@ class FlextDbtLdifServiceMixin:
 
         def __init__(
             self,
-            settings: FlextDbtLdifSettings | None = None,
+            settings: p.Settings | None = None,
             project_dir: Path | None = None,
         ) -> None:
-            """Initialize service dependencies with optional injected settings."""
-            # NOTE (multi-agent): mro-rn88 — resolve effective settings
+            """Initialize service dependencies with optional injected settings.
+
+            Args:
+                settings: Settings contract to honor; the global settings
+                    singleton is used when omitted.
+                project_dir: Project directory for generated artifacts;
+                    derived from the configured LDIF path when omitted.
+
+            """
+            # NOTE (multi-agent): mro-rn88 — resolve the concrete settings snapshot
             # (injected override or global) and inject the SAME instance into
             # client + generator.
-            effective_settings = settings or FlextDbtLdifSettings.fetch_global()
-            self.project_dir = project_dir or Path(
-                effective_settings.DbtLdif.ldif_file_path or ".",
+            resolved_settings = (
+                FlextDbtLdifSettings.model_validate(settings.model_dump())
+                if settings is not None
+                else FlextDbtLdifSettings.fetch_global()
             )
-            self.client = FlextDbtLdifClient.Client(effective_settings)
+            self.project_dir = project_dir or Path(
+                resolved_settings.DbtLdif.ldif_file_path or ".",
+            )
+            self.client = FlextDbtLdifClient.Client(resolved_settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
-                settings=effective_settings,
+                settings=resolved_settings,
                 project_dir=self.project_dir,
             )
 
@@ -49,8 +61,14 @@ class FlextDbtLdifServiceMixin:
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
             """Generate staging and analytics models for entries.
 
+            Args:
+                entries: Parsed LDIF entries to derive models from.
+                overwrite: Whether to overwrite existing artifacts.
+
             Returns:
-                The resulting ``p.Result[m.DbtLdif.ModelGenerationResult]``.
+                Result wrapping the generation summary, or a failure when
+                staging or analytics generation fails.
+
             """
             _ = overwrite
             staging_payload: t.SequenceOf[t.JsonMapping] = [
@@ -76,13 +94,18 @@ class FlextDbtLdifServiceMixin:
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Parse and validate LDIF file in one operation.
 
+            Args:
+                ldif_file: Path to the LDIF file to process.
+
             Returns:
-                The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
+                Result wrapping the parse and validation summary, or a
+                failure when parsing or validation fails.
+
             """
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
                 return r[m.DbtLdif.ParseValidationResult].from_failure(parse_result)
-            entries = t.json_mapping_sequence_adapter().validate_python(
+            entries = u.json_mapping_sequence_adapter().validate_python(
                 parse_result.value,
             )
             validation = self.client.validate_ldif_data(entries)
@@ -106,13 +129,22 @@ class FlextDbtLdifServiceMixin:
         ) -> p.Result[m.DbtLdif.WorkflowResult]:
             """Execute complete LDIF to DBT workflow.
 
+            Args:
+                ldif_file: Path to the LDIF file to process.
+                generate_models: Whether to generate DBT models.
+                run_transformations: Whether to run DBT transformations.
+                model_names: Model names for the transformation step;
+                    defaults to the canonical models when omitted.
+
             Returns:
-                The resulting ``p.Result[m.DbtLdif.WorkflowResult]``.
+                Result wrapping the workflow summary, or a failure when
+                any stage fails.
+
             """
             parse_result = self.client.parse_ldif_file(ldif_file)
             if parse_result.failure:
                 return r[m.DbtLdif.WorkflowResult].from_failure(parse_result)
-            entries = t.json_mapping_sequence_adapter().validate_python(
+            entries = u.json_mapping_sequence_adapter().validate_python(
                 parse_result.value,
             )
             validation = self.client.validate_ldif_data(entries)
@@ -149,7 +181,12 @@ class FlextDbtLdifServiceMixin:
         ) -> p.Result[m.DbtLdif.ParseValidationResult]:
             """Run quality assessment focused workflow.
 
+            Args:
+                ldif_file: Path to the LDIF file to assess.
+
             Returns:
-                The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
+                Result wrapping the parse and validation summary, or a
+                failure when parsing or validation fails.
+
             """
             return self.parse_and_validate_ldif(ldif_file)

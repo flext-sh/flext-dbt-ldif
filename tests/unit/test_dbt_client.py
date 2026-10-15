@@ -1,8 +1,5 @@
 """Behavioral tests for the FlextDbtLdifClient public contract.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
@@ -12,11 +9,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings, settings
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from tests import c, m, t
+from tests import c, m, t, tm
 
 
 class TestsFlextDbtLdifClient:

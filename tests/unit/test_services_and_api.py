@@ -1,8 +1,5 @@
 """Behavior contract for FlextDbtLdif public API delegation.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
@@ -12,10 +9,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
-from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, c
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings
 from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from tests import c, tm
 
 
 class TestsFlextDbtLdifServicesAndApi:
@@ -141,9 +138,9 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
 
     @staticmethod
-    def test_fetch_instance_returns_shared_singleton() -> None:
-        """fetch_instance returns the same facade instance on repeated calls."""
-        first = FlextDbtLdif.fetch_instance()
-        second = FlextDbtLdif.fetch_instance()
+    def test_fetch_global_returns_shared_singleton() -> None:
+        """fetch_global returns the same facade instance on repeated calls."""
+        first = FlextDbtLdif.fetch_global()
+        second = FlextDbtLdif.fetch_global()
 
         assert first is second

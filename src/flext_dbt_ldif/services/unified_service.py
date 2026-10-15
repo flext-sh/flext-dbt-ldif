@@ -10,7 +10,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import override
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, s, t, u
+from flext_meltano import FlextMeltanoDbtServiceBase
+
+from flext_dbt_ldif import c, m, p, r, s, t, u
 
 
 class FlextDbtLdifUnifiedService:
@@ -31,17 +33,23 @@ class FlextDbtLdifUnifiedService:
 
         def __init__(
             self,
-            settings: FlextDbtLdifSettings | None = None,
+            settings: p.Settings | None = None,
             name: str = "ldif_generator",
             project_dir: Path | None = None,
         ) -> None:
-            """Initialize service with optional injected settings + project context."""
-            # NOTE (multi-agent): mro-rn88 — accept injected settings and pass
-            # them to the ServiceBase runtime so settings resolves the injected
-            # instance.
-            super().__init__()
-            if settings is not None:
-                self.runtime_settings = settings
+            """Initialize service with optional injected settings + project context.
+
+            Args:
+                settings: Settings contract forwarded to the service base
+                    runtime; the global singleton is used when omitted.
+                name: Service name recorded in generated metadata payloads.
+                project_dir: Directory for generated artifacts; defaults
+                    to the current working directory when omitted.
+
+            """
+            # NOTE (multi-agent): mro-rn88 — forward the canonical settings contract
+            # to the ServiceBase runtime so the injected snapshot is honored.
+            FlextMeltanoDbtServiceBase.__init__(self, settings=settings)
             self.name = name
             self.project_dir = Path(project_dir or Path.cwd())
 
@@ -50,7 +58,8 @@ class FlextDbtLdifUnifiedService:
             """Execute service and return metadata payload.
 
             Returns:
-                The resulting ``p.Result[t.JsonMapping]``.
+                Result wrapping the readiness metadata for this service.
+
             """
             payload: t.JsonMapping = {
                 "name": self.name,
@@ -65,8 +74,14 @@ class FlextDbtLdifUnifiedService:
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set.
 
+            Args:
+                staging_models: Staging models the analytics model
+                    depends on.
+
             Returns:
-                The resulting ``p.Result[list[m.DbtLdif.DbtModel]]``.
+                Result wrapping the analytics model, or an empty list
+                when no staging models are provided.
+
             """
             if not staging_models:
                 return r[list[m.DbtLdif.DbtModel]].ok([])
@@ -88,8 +103,14 @@ class FlextDbtLdifUnifiedService:
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries.
 
+            Args:
+                entries: Parsed LDIF entries to derive the staging model
+                    from.
+
             Returns:
-                The resulting ``p.Result[list[m.DbtLdif.DbtModel]]``.
+                Result wrapping the staging model, or an empty list when
+                no entries are provided.
+
             """
             if not entries:
                 return r[list[m.DbtLdif.DbtModel]].ok([])

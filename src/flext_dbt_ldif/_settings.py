@@ -25,18 +25,16 @@ class FlextDbtLdifSettings(FlextMeltanoSettings):
         """Namespaced dbt-LDIF transformation settings."""
 
         ldif_file_path: Annotated[
-            str,
-            m.Field(default="", description="Path to LDIF file for processing"),
-        ]
+            str, m.Field(description="Path to LDIF file for processing")
+        ] = ""
         min_quality_threshold: Annotated[
             float,
             m.Field(
-                default=0.8,
                 ge=0.0,
                 le=1.0,
                 description="Minimum data quality score threshold",
             ),
-        ]
+        ] = 0.8
 
     # Why: mro-4p0t — nested namespace uses default_factory only; no build_* wrapper.
 
