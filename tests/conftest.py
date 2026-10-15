@@ -10,10 +10,9 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from flext_tests import tf
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from tests import u
+from tests import tf, u
 
 
 @pytest.fixture

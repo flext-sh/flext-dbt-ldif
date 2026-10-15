@@ -153,3 +153,6 @@ class FlextDbtLdifServiceMixin:
                 The resulting ``p.Result[m.DbtLdif.ParseValidationResult]``.
             """
             return self.parse_and_validate_ldif(ldif_file)
+
+
+__all__: list[str] = ["FlextDbtLdifServiceMixin"]
