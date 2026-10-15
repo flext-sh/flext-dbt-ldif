@@ -20,6 +20,7 @@ def svc(tmp_path: Path) -> FlextDbtLdifServiceMixin.Service:
 
     Returns:
         The resulting ``FlextDbtLdifServiceMixin.Service``.
+
     """
     return FlextDbtLdifServiceMixin.Service(project_dir=tmp_path)
 
@@ -30,6 +31,7 @@ def entries() -> t.SequenceOf[t.JsonMapping]:
 
     Returns:
         The resulting ``t.SequenceOf[t.JsonMapping]``.
+
     """
     return [{"dn": "cn=test,dc=example,dc=org"}]
 

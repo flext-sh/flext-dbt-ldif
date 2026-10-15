@@ -33,6 +33,7 @@ class TestsFlextDbtLdifApiSurface:
 
         Returns:
             The resulting ``Client``.
+
         """
         return FlextDbtLdifClient.Client(settings)
 

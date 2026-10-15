@@ -36,6 +36,7 @@ def settings(tmp_path: Path) -> FlextDbtLdifSettings:
 
     Returns:
         The resulting ``FlextDbtLdifSettings``.
+
     """
     FlextDbtLdifSettings.reset_for_testing()
     # Why: mro-4p0t — nested settings are typed models, not build_* wrappers.

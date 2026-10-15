@@ -25,6 +25,7 @@ class TestsFlextDbtLdifDbtModels:
 
         Returns:
             The resulting ``FlextDbtLdifUnifiedService.UnifiedService``.
+
         """
         return FlextDbtLdifUnifiedService.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
