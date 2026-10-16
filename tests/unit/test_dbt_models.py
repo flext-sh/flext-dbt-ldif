@@ -1,8 +1,5 @@
 """Behavioral tests for FLEXT DBT LDIF unified service and model contract.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
@@ -12,11 +9,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from flext_tests import tm
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
-from tests import c, m, t
+from tests import c, m, t, tm
 
 
 class TestsFlextDbtLdifDbtModels:
@@ -29,6 +25,7 @@ class TestsFlextDbtLdifDbtModels:
 
         Returns:
             The resulting ``FlextDbtLdifUnifiedService.UnifiedService``.
+
         """
         return FlextDbtLdifUnifiedService.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
@@ -129,8 +126,8 @@ class TestsFlextDbtLdifDbtModels:
     # -- model contract -------------------------------------------------------
 
     @staticmethod
-    def test_dbt_model_defaults_exposed_via_public_api() -> None:
-        """Optional fields default to their documented values."""
+    def test_dbt_model_defaults_and_public_fields() -> None:
+        """Optional fields default and required fields echo through the public API."""
         model = m.DbtLdif.DbtModel(
             name="test_model",
             dbt_model_type="staging",
@@ -144,19 +141,6 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.description, eq="")
         tm.that(list(model.columns), eq=[])
         tm.that(list(model.dependencies), eq=[])
-
-    @staticmethod
-    def test_complete_model_constructs_via_public_api() -> None:
-        """A fully populated model constructs successfully through its public API."""
-        model = m.DbtLdif.DbtModel(
-            name="test_model",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
-            sql_content="select 1",
-            columns=[],
-            dependencies=[],
-        )
-        tm.that(model.name, eq="test_model")
         tm.that(model.ldif_source, eq="ldif_entries")
         tm.that(model.sql_content, eq="select 1")
 
@@ -171,7 +155,7 @@ class TestsFlextDbtLdifDbtModels:
     )
     def test_blank_required_field_rejected_at_construction(
         field: str,
-        kwargs: dict[str, str],
+        kwargs: t.StrMapping,
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:

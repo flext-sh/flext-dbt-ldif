@@ -1,8 +1,5 @@
 """Test configuration and local-file fixtures for flext-dbt-ldif.
 
-Copyright (c) 2025 FLEXT Team. All rights reserved.
-SPDX-License-Identifier: MIT
-
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
@@ -13,10 +10,9 @@ from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from flext_tests import tf
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from tests import u
+from tests import tf, u
 
 
 @pytest.fixture
@@ -40,6 +36,7 @@ def settings(tmp_path: Path) -> FlextDbtLdifSettings:
 
     Returns:
         The resulting ``FlextDbtLdifSettings``.
+
     """
     FlextDbtLdifSettings.reset_for_testing()
     # Why: mro-4p0t — nested settings are typed models, not build_* wrappers.

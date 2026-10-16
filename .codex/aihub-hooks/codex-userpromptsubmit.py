@@ -5,6 +5,7 @@
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
 """
+
 import json
 import sys
 
@@ -13,170 +14,171 @@ if not isinstance(payload, dict):
     msg = "hook input must be a JSON object"
     raise TypeError(msg)
 response = json.loads(
-    ('{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","addit'
-         'ionalContext":"<!-- AIHUB-GOVERNANCE-CAPSULE v1 sha256:e1b7a9ae0'
-         '88643bf660b78ff1aea55d49076ec46518707976d77c78ed23db5db -->\\n# '
-         'Generated session governance capsule\\n\\nThis projection is der'
-         'ived by `agentsctl sync`; edit canonical `AGENTS.md`, `rules/`, '
-         '`skills/`, or `commands/`, never this output. The operator\'s ne'
-         'west request has precedence. Provider hooks are delivery mechani'
-         'sms, not policy owners.\\n\\n## Rule `architecture/engineering-c'
-         'ore`\\n\\n# Engineering core\\n\\nFor every implementation:\\n\\'
-         'n1. Research repository owners, dependencies, and canonical docu'
-         'mentation.\\n2. Remove scope without a current requirement or co'
-         'nsumer (YAGNI).\\n3. Elect one writable authority; every other c'
-         'opy is a generated projection\\n   (SSOT).\\n4. Apply SOLID only'
-         ' to a responsibility or dependency boundary under change.\\n5. I'
-         'mplement through the owner and simplify without weakening behavi'
-         'or.\\n6. Remove duplication and god components; recheck YAGNI, S'
-         'SOT, SOLID.\\n7. Exercise runtime behavior, run every applicable'
-         ' native gate, and complete\\n   the approved landing cycle befor'
-         'e changing phase.\\n\\nAt a cross-boundary failure, prove the pr'
-         'oducer contract and output. Fix its\\nowner when invalid or the '
-         'receiver when it conforms. Never alter a correct\\nadjacent owne'
-         'r for an invalid consumer; symptom workarounds are defects.\\n\\'
-         'nHardcodes, normalized failure, failover, retry, fallback, compa'
-         'tibility,\\npartial execution, keyring, and unevidenced success '
-         'are defects. Typed owners\\nkeep defaults. The first exception e'
-         'scapes its CLI with traceback and cause.\\n\\nGit, runtime, buil'
-         'd, and tests are baseline. Auxiliary tracking is a capability.\\'
-         'nAuxiliary capabilities apply only when authorized and selected;'
-         ' installation\\nnever selects. Do not load, probe, or gate dorma'
-         'nt capabilities. Invalid\\nselected authorization, configuration'
-         ', readiness, or result fails without\\nfallback. Require only no'
-         'n-derivable values.\\n\\nAn external token validation without it'
-         's token is not executed and is recorded\\nas `NOT EXECUTED`, nev'
-         'er green; it does not block offline gates, landing, or\\npost-me'
-         'rge proof. Direct invocation selects it: the token becomes requi'
-         'red and\\nany failure escapes without skip, catch, fallback, or '
-         'normalization.\\n\\nCompose with generalized ownership,\\nstrict'
-         ' execution,\\nruntime evidence,\\nstorage isolation,\\nsecurity '
-         'closure.\\n\\n## Rule `coordination/fix-forward-collaboration`\\'
-         'n\\n# Adopt the current state and collaborate by fix-forward\\n\\'
-         'nTreat every current authorized-repository change as owned input'
-         ' regardless of\\nprovenance or age. Re-read shared files, attrib'
-         'ute overlapping intent, preserve\\ncompatible contributions, and'
-         ' adopt them through the integration lane. The\\ncombined result '
-         'is the target; provenance never exempts a defect from fix-forwar'
-         'd.\\n\\nPreserve unmanifested provider output, generated destina'
-         'tions, external files,\\nand ambiguous objects without promoting'
-         ' them to canonical input. Bulk adoption\\nor replacement require'
-         's divergent-object adjudication.\\n\\nNever stash, reset, restor'
-         'e, revert, rebase, force-push, roll back code/history,\\nor repl'
-         'ace shared files to remove work. Fix the canonical owner forward'
-         '.\\nTransaction rollback may undo only its failing invocation\'s'
-         ' effects.\\n\\nA severe conflict exists only when two current in'
-         'tentions require incompatible\\nbehavior or when preserving both'
-         ' would violate a higher authority. Stop before\\nthe conflicting'
-         ' effect, present both intentions and their evidence, and ask the'
-         '\\noperator one precise question. Ordinary overlap, divergence, '
-         'a red gate, or\\nintegration work is not severe: reconcile, vali'
-         'date, and continue forward.\\nUnexpected state requires fresh pr'
-         'eflight; it proves no actor or intention and\\nnever authorizes '
-         'an unchanged retry.\\n\\nCompose this invariant with shared-file'
-         ' coordination,\\noperator precedence,\\nplan adoption, and\\nthe'
-         ' destructive Git guard.\\n\\n## Rule `coordination/operator-prec'
-         'edence`\\n\\n# Newest operator instruction wins; adjust artifact'
-         's to it\\n\\nAuthority order: operator request > declared orches'
-         'tration contract > canonical\\ntracker > ADRs > skills > docs, a'
-         'nd newest supersedes oldest. On conflict,\\nadjust the lower or '
-         'older artifact to match; never override the operator to\\nsatisf'
-         'y stale guidance.\\n\\nWhile orchestration and tracker runtimes '
-         'are suspended, do not invoke them.\\nCreate no substitute tracke'
-         'r or ledger, preserve implementation evidence only\\nin separate'
-         'ly authorized Git/PR/CI, and leave phase closure open.\\n\\nExac'
-         't operator authorization naming targets, disposition, recovery, '
-         'and\\nvalidation survives interruption, divergence, and red gate'
-         's; re-preflight and\\ncontinue. Ask only when the effect expands'
-         ' beyond it or two evidenced current\\nintentions conflict. State'
-         ' alone proves no intention, actor, or process.\\n\\n## Rule `coo'
-         'rdination/session-governance`\\n\\n# Rehydrate governance at eve'
-         'ry agent context boundary\\n\\nStatic provider instructions own '
-         'the complete standing contract. Provider hooks\\nrefresh a compa'
-         'ct governance capsule at every native equivalent of session\\nst'
-         'art, prompt submission, context compaction, and subagent start. '
-         'A hook is a\\ndelivery mechanism generated by optionless `agents'
-         'ctl sync`; it is never a\\npolicy owner, public command, fallbac'
-         'k, daemon, or second runtime path.\\n\\nAt session start, load t'
-         'he current operator and repository instructions before\\nwork. A'
-         't each prompt, apply the newest operator intent and route only t'
-         'he skills\\nmaterial to that request. After compaction, restore '
-         'the active goal, evidence,\\nscope, exclusions, accepted concurr'
-         'ent work, first red gate, and next action.\\nEvery subagent inhe'
-         'rits the current authority, fix-forward contract, and a\\nbounde'
-         'd assignment; it may not discard, stash, roll back, or overwrite'
-         ' another\\nactor\'s work.\\n\\nProvider capability is explicit i'
-         'n `config/projections.json`. An exact native\\nevent is used whe'
-         'n available. A documented per-turn or pre-model equivalent is\\n'
-         'used when it is the provider\'s only delivery point, and observa'
-         'tional events\\nremain observational. Never claim an exact lifec'
-         'ycle semantic that the provider\\ndoes not expose. Declarative i'
-         'nstructions and projected skills/rules remain the\\nstanding gua'
-         'rantee when a hook can only observe or advise.\\n\\nCompose with'
-         ' operator precedence,\\nfix-forward collaboration,\\nstrict exec'
-         'ution, and\\nruntime evidence.\\n\\n## Rule `ethics/professional'
-         '-integrity`\\n\\n# Professional integrity is absolute\\n\\nNever'
-         ' lie, fabricate evidence, hide a blocker, bypass a gate, or patc'
-         'h a symptom\\nonly to make a check pass. Fix the generalized roo'
-         't cause with full context and\\nreport exact command, working di'
-         'rectory, exit code and decisive output.\\n\\n## Rule `runtime/st'
-         'rict-execution`\\n\\n# Strict execution is universal and non-opt'
-         'ional\\n\\nEvery project and projected agent applies all of thes'
-         'e policies together:\\n\\n- fail loud;\\n- no fallback;\\n- pref'
-         'light before effects;\\n- required environment;\\n- atomic effec'
-         'ts;\\n- causal subprocess propagation;\\n- no keyring;\\n- zero '
-         'residue.\\n\\nThe policies are cumulative. A project rule may ma'
-         'ke them narrower or reject\\nmore inputs; it cannot relax, catch'
-         ', normalize, skip, defer, or route around any\\nof them. Existin'
-         'g opposing behavior is a blocking violation to exterminate at\\n'
-         'its owner, never grandfathered compatibility.\\n\\nResolve gate '
-         'applicability before invocation. A dormant external-token gate i'
-         's\\nnot executed; selecting or invoking it applies every policy '
-         'above.\\n\\n## Rule `workflow/canonical-commands`\\n\\n# Run age'
-         'nt functions only through the optionless CLI\\n\\n`agentsctl` is'
-         ' the sole agent-runtime facade: `help`, `doctor`, `check`, `sync'
-         '`,\\n`evaluate`, `secure`, `clean`, and `live`. Each invocation '
-         'has exactly one verb\\nand no option, argument, mode, selector, '
-         'alias, or compatibility syntax.\\n\\nMake is development support'
-         ' and gate composition. A Make target that needs\\nruntime behavi'
-         'or invokes one public `agentsctl` verb; it never imports a priva'
-         'te\\nruntime function, reconstructs orchestration, or creates a '
-         'second API.\\n\\nAd hoc shell, inline Python, diagnostics, and t'
-         'est helpers used as operational\\nsubstitutes never import or ex'
-         'ecute private agent runtime. Repository and GitHub\\nwork uses i'
-         'ts declared `make`, `git`, and `gh` owner, never an executable\\'
-         'nlower-level substitute.\\n\\nA broken or out-of-pattern command'
-         ' is a defect to fix at its owner and rerun\\nthrough the same su'
-         'rface. Bypasses are blocking violations, not warnings.\\n\\n## R'
-         'ule `workflow/runtime-is-reality`\\n\\n# Reality is the running '
-         'system; tests are checks, not the SSOT\\n\\nValidate against the'
-         ' real declared runtime (CLI, daemon, config, or public API)\\nan'
-         'd exercise the actual feature—type and lint green are necessary,'
-         ' not\\nsufficient.\\n\\n- A test that only passes by keeping rem'
-         'oved or legacy artifacts is wrong: fix or\\n  delete the test; n'
-         'ever restore legacy just to make it pass.\\n- A config/settings '
-         'test that breaks when a valid SSOT value changes is defective.\\'
-         'n  Test contracts and derivations across arbitrary valid inputs;'
-         ' goldens may lock\\n  generated structure, never mutable config-'
-         'owned values.\\n- A missing facade constant fails only at runtim'
-         'e — import and run the real path.\\n- Before concluding root cau'
-         'se, prove the running or installed artifact matches\\n  the decl'
-         'ared authoritative revision or release. An editable checkout, lo'
-         'cal\\n  cache, generated copy, or stale environment is not evide'
-         'nce of remote/runtime\\n  behavior until identity is verified.\\'
-         'n- Use the newest released version of every required tool. Every'
-         ' diagnostic it\\n  emits is blocking. A cap, downgrade, substitu'
-         'tion, suppression, compatibility\\n  classification, or false-po'
-         'sitive classification requires prior operator\\n  discussion, re'
-         'producible evidence, and explicit authorization; without all\\n '
-         ' three, correct the owner and rerun that released version.\\n\\n'
-         '## Capability indexes\\n\\nSkills: caveman, context-canary, fix-'
-         'forward-collaboration, governance-audit, operator-correction-lea'
-         'rning, plan-focus-recovery, sprint-closure, strategic-compact, v'
-         'erification-loop\\nCommands: add-language-rules, database-migrat'
-         'ion, feature-development, ghi-list, pr-list, ralph-loop, securit'
-         'y-triage, synthesize-governance\\n"}}'),
-
+    (
+        '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","addit'
+        'ionalContext":"<!-- AIHUB-GOVERNANCE-CAPSULE v1 sha256:e1b7a9ae0'
+        "88643bf660b78ff1aea55d49076ec46518707976d77c78ed23db5db -->\\n# "
+        "Generated session governance capsule\\n\\nThis projection is der"
+        "ived by `agentsctl sync`; edit canonical `AGENTS.md`, `rules/`, "
+        "`skills/`, or `commands/`, never this output. The operator's ne"
+        "west request has precedence. Provider hooks are delivery mechani"
+        "sms, not policy owners.\\n\\n## Rule `architecture/engineering-c"
+        "ore`\\n\\n# Engineering core\\n\\nFor every implementation:\\n\\"
+        "n1. Research repository owners, dependencies, and canonical docu"
+        "mentation.\\n2. Remove scope without a current requirement or co"
+        "nsumer (YAGNI).\\n3. Elect one writable authority; every other c"
+        "opy is a generated projection\\n   (SSOT).\\n4. Apply SOLID only"
+        " to a responsibility or dependency boundary under change.\\n5. I"
+        "mplement through the owner and simplify without weakening behavi"
+        "or.\\n6. Remove duplication and god components; recheck YAGNI, S"
+        "SOT, SOLID.\\n7. Exercise runtime behavior, run every applicable"
+        " native gate, and complete\\n   the approved landing cycle befor"
+        "e changing phase.\\n\\nAt a cross-boundary failure, prove the pr"
+        "oducer contract and output. Fix its\\nowner when invalid or the "
+        "receiver when it conforms. Never alter a correct\\nadjacent owne"
+        "r for an invalid consumer; symptom workarounds are defects.\\n\\"
+        "nHardcodes, normalized failure, failover, retry, fallback, compa"
+        "tibility,\\npartial execution, keyring, and unevidenced success "
+        "are defects. Typed owners\\nkeep defaults. The first exception e"
+        "scapes its CLI with traceback and cause.\\n\\nGit, runtime, buil"
+        "d, and tests are baseline. Auxiliary tracking is a capability.\\"
+        "nAuxiliary capabilities apply only when authorized and selected;"
+        " installation\\nnever selects. Do not load, probe, or gate dorma"
+        "nt capabilities. Invalid\\nselected authorization, configuration"
+        ", readiness, or result fails without\\nfallback. Require only no"
+        "n-derivable values.\\n\\nAn external token validation without it"
+        "s token is not executed and is recorded\\nas `NOT EXECUTED`, nev"
+        "er green; it does not block offline gates, landing, or\\npost-me"
+        "rge proof. Direct invocation selects it: the token becomes requi"
+        "red and\\nany failure escapes without skip, catch, fallback, or "
+        "normalization.\\n\\nCompose with generalized ownership,\\nstrict"
+        " execution,\\nruntime evidence,\\nstorage isolation,\\nsecurity "
+        "closure.\\n\\n## Rule `coordination/fix-forward-collaboration`\\"
+        "n\\n# Adopt the current state and collaborate by fix-forward\\n\\"
+        "nTreat every current authorized-repository change as owned input"
+        " regardless of\\nprovenance or age. Re-read shared files, attrib"
+        "ute overlapping intent, preserve\\ncompatible contributions, and"
+        " adopt them through the integration lane. The\\ncombined result "
+        "is the target; provenance never exempts a defect from fix-forwar"
+        "d.\\n\\nPreserve unmanifested provider output, generated destina"
+        "tions, external files,\\nand ambiguous objects without promoting"
+        " them to canonical input. Bulk adoption\\nor replacement require"
+        "s divergent-object adjudication.\\n\\nNever stash, reset, restor"
+        "e, revert, rebase, force-push, roll back code/history,\\nor repl"
+        "ace shared files to remove work. Fix the canonical owner forward"
+        ".\\nTransaction rollback may undo only its failing invocation's"
+        " effects.\\n\\nA severe conflict exists only when two current in"
+        "tentions require incompatible\\nbehavior or when preserving both"
+        " would violate a higher authority. Stop before\\nthe conflicting"
+        " effect, present both intentions and their evidence, and ask the"
+        "\\noperator one precise question. Ordinary overlap, divergence, "
+        "a red gate, or\\nintegration work is not severe: reconcile, vali"
+        "date, and continue forward.\\nUnexpected state requires fresh pr"
+        "eflight; it proves no actor or intention and\\nnever authorizes "
+        "an unchanged retry.\\n\\nCompose this invariant with shared-file"
+        " coordination,\\noperator precedence,\\nplan adoption, and\\nthe"
+        " destructive Git guard.\\n\\n## Rule `coordination/operator-prec"
+        "edence`\\n\\n# Newest operator instruction wins; adjust artifact"
+        "s to it\\n\\nAuthority order: operator request > declared orches"
+        "tration contract > canonical\\ntracker > ADRs > skills > docs, a"
+        "nd newest supersedes oldest. On conflict,\\nadjust the lower or "
+        "older artifact to match; never override the operator to\\nsatisf"
+        "y stale guidance.\\n\\nWhile orchestration and tracker runtimes "
+        "are suspended, do not invoke them.\\nCreate no substitute tracke"
+        "r or ledger, preserve implementation evidence only\\nin separate"
+        "ly authorized Git/PR/CI, and leave phase closure open.\\n\\nExac"
+        "t operator authorization naming targets, disposition, recovery, "
+        "and\\nvalidation survives interruption, divergence, and red gate"
+        "s; re-preflight and\\ncontinue. Ask only when the effect expands"
+        " beyond it or two evidenced current\\nintentions conflict. State"
+        " alone proves no intention, actor, or process.\\n\\n## Rule `coo"
+        "rdination/session-governance`\\n\\n# Rehydrate governance at eve"
+        "ry agent context boundary\\n\\nStatic provider instructions own "
+        "the complete standing contract. Provider hooks\\nrefresh a compa"
+        "ct governance capsule at every native equivalent of session\\nst"
+        "art, prompt submission, context compaction, and subagent start. "
+        "A hook is a\\ndelivery mechanism generated by optionless `agents"
+        "ctl sync`; it is never a\\npolicy owner, public command, fallbac"
+        "k, daemon, or second runtime path.\\n\\nAt session start, load t"
+        "he current operator and repository instructions before\\nwork. A"
+        "t each prompt, apply the newest operator intent and route only t"
+        "he skills\\nmaterial to that request. After compaction, restore "
+        "the active goal, evidence,\\nscope, exclusions, accepted concurr"
+        "ent work, first red gate, and next action.\\nEvery subagent inhe"
+        "rits the current authority, fix-forward contract, and a\\nbounde"
+        "d assignment; it may not discard, stash, roll back, or overwrite"
+        " another\\nactor's work.\\n\\nProvider capability is explicit i"
+        "n `config/projections.json`. An exact native\\nevent is used whe"
+        "n available. A documented per-turn or pre-model equivalent is\\n"
+        "used when it is the provider's only delivery point, and observa"
+        "tional events\\nremain observational. Never claim an exact lifec"
+        "ycle semantic that the provider\\ndoes not expose. Declarative i"
+        "nstructions and projected skills/rules remain the\\nstanding gua"
+        "rantee when a hook can only observe or advise.\\n\\nCompose with"
+        " operator precedence,\\nfix-forward collaboration,\\nstrict exec"
+        "ution, and\\nruntime evidence.\\n\\n## Rule `ethics/professional"
+        "-integrity`\\n\\n# Professional integrity is absolute\\n\\nNever"
+        " lie, fabricate evidence, hide a blocker, bypass a gate, or patc"
+        "h a symptom\\nonly to make a check pass. Fix the generalized roo"
+        "t cause with full context and\\nreport exact command, working di"
+        "rectory, exit code and decisive output.\\n\\n## Rule `runtime/st"
+        "rict-execution`\\n\\n# Strict execution is universal and non-opt"
+        "ional\\n\\nEvery project and projected agent applies all of thes"
+        "e policies together:\\n\\n- fail loud;\\n- no fallback;\\n- pref"
+        "light before effects;\\n- required environment;\\n- atomic effec"
+        "ts;\\n- causal subprocess propagation;\\n- no keyring;\\n- zero "
+        "residue.\\n\\nThe policies are cumulative. A project rule may ma"
+        "ke them narrower or reject\\nmore inputs; it cannot relax, catch"
+        ", normalize, skip, defer, or route around any\\nof them. Existin"
+        "g opposing behavior is a blocking violation to exterminate at\\n"
+        "its owner, never grandfathered compatibility.\\n\\nResolve gate "
+        "applicability before invocation. A dormant external-token gate i"
+        "s\\nnot executed; selecting or invoking it applies every policy "
+        "above.\\n\\n## Rule `workflow/canonical-commands`\\n\\n# Run age"
+        "nt functions only through the optionless CLI\\n\\n`agentsctl` is"
+        " the sole agent-runtime facade: `help`, `doctor`, `check`, `sync"
+        "`,\\n`evaluate`, `secure`, `clean`, and `live`. Each invocation "
+        "has exactly one verb\\nand no option, argument, mode, selector, "
+        "alias, or compatibility syntax.\\n\\nMake is development support"
+        " and gate composition. A Make target that needs\\nruntime behavi"
+        "or invokes one public `agentsctl` verb; it never imports a priva"
+        "te\\nruntime function, reconstructs orchestration, or creates a "
+        "second API.\\n\\nAd hoc shell, inline Python, diagnostics, and t"
+        "est helpers used as operational\\nsubstitutes never import or ex"
+        "ecute private agent runtime. Repository and GitHub\\nwork uses i"
+        "ts declared `make`, `git`, and `gh` owner, never an executable\\"
+        "nlower-level substitute.\\n\\nA broken or out-of-pattern command"
+        " is a defect to fix at its owner and rerun\\nthrough the same su"
+        "rface. Bypasses are blocking violations, not warnings.\\n\\n## R"
+        "ule `workflow/runtime-is-reality`\\n\\n# Reality is the running "
+        "system; tests are checks, not the SSOT\\n\\nValidate against the"
+        " real declared runtime (CLI, daemon, config, or public API)\\nan"
+        "d exercise the actual feature—type and lint green are necessary,"
+        " not\\nsufficient.\\n\\n- A test that only passes by keeping rem"
+        "oved or legacy artifacts is wrong: fix or\\n  delete the test; n"
+        "ever restore legacy just to make it pass.\\n- A config/settings "
+        "test that breaks when a valid SSOT value changes is defective.\\"
+        "n  Test contracts and derivations across arbitrary valid inputs;"
+        " goldens may lock\\n  generated structure, never mutable config-"
+        "owned values.\\n- A missing facade constant fails only at runtim"
+        "e — import and run the real path.\\n- Before concluding root cau"
+        "se, prove the running or installed artifact matches\\n  the decl"
+        "ared authoritative revision or release. An editable checkout, lo"
+        "cal\\n  cache, generated copy, or stale environment is not evide"
+        "nce of remote/runtime\\n  behavior until identity is verified.\\"
+        "n- Use the newest released version of every required tool. Every"
+        " diagnostic it\\n  emits is blocking. A cap, downgrade, substitu"
+        "tion, suppression, compatibility\\n  classification, or false-po"
+        "sitive classification requires prior operator\\n  discussion, re"
+        "producible evidence, and explicit authorization; without all\\n "
+        " three, correct the owner and rerun that released version.\\n\\n"
+        "## Capability indexes\\n\\nSkills: caveman, context-canary, fix-"
+        "forward-collaboration, governance-audit, operator-correction-lea"
+        "rning, plan-focus-recovery, sprint-closure, strategic-compact, v"
+        "erification-loop\\nCommands: add-language-rules, database-migrat"
+        "ion, feature-development, ghi-list, pr-list, ralph-loop, securit"
+        'y-triage, synthesize-governance\\n"}}'
+    ),
 )
 json.dump(response, sys.stdout, ensure_ascii=False, separators=(",", ":"))
 sys.stdout.write("\n")
