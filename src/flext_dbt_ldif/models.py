@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Domain models for DBT LDIF transformations.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
@@ -8,8 +9,7 @@ from __future__ import annotations
 
 from flext_meltano import FlextMeltanoModels
 
-from flext_dbt_ldif._models.base import FlextDbtLdifModelsBase
-from flext_dbt_ldif._models.dbt import FlextDbtLdifModelsDbt
+from flext_dbt_ldif._models import FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt
 
 
 class FlextDbtLdifModels(FlextMeltanoModels, FlextDbtLdifModelsBase):
