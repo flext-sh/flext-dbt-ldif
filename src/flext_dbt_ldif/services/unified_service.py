@@ -12,7 +12,7 @@ from typing import override
 
 from flext_meltano import FlextMeltanoDbtServiceBase
 
-from flext_dbt_ldif import c, m, p, r, s, t, u
+from flext_dbt_ldif import c, m, p, r, s, t
 
 
 class FlextDbtLdifUnifiedService:
@@ -21,12 +21,12 @@ class FlextDbtLdifUnifiedService:
     class UnifiedService(s):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
-        name: str = u.Field(
+        name: str = m.Field(
             "ldif_generator",
             description="Service name used in generated metadata payloads.",
             validate_default=True,
         )
-        project_dir: Path = u.Field(
+        project_dir: Path = m.Field(
             default_factory=Path.cwd,
             description="Project directory used to emit generated artifacts.",
         )
