@@ -98,7 +98,7 @@ class TestsFlextDbtLdifServices:
 
         tm.fail(result)
         error = result.error
-        assert error is not None
+        tm.not_none(error)
         tm.that(error.lower(), has="required")
 
     @staticmethod
