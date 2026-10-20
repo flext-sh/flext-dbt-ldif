@@ -106,7 +106,7 @@ class TestsFlextDbtLdifClient:
         )
 
         tm.that(data.records, eq=1)
-        tm.that(list(data.models), eq=["m1", "m2"])
+        assert list(data.models) == ["m1", "m2"]
         tm.that(data.status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
     @staticmethod
