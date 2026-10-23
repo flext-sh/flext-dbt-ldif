@@ -16,15 +16,16 @@ class TestsFlextDbtLdifConnectionProfile:
     @staticmethod
     def test_connection_profile_returns_typed_ldif_wire_shape() -> None:
         """The service base exposes a typed LDIF connection profile."""
-        profile = FlextDbtLdifServiceBase().connection_profile
+        service = FlextDbtLdifServiceBase()
+        profile = service.connection_profile
 
-        assert isinstance(profile, m.DbtLdif.DbtConnectionProfile)
-        assert isinstance(profile, p.Meltano.DbtConnectionProfile)
+        tm.that(profile, is_=m.DbtLdif.DbtConnectionProfile)
+        tm.that(profile, is_=p.Meltano.DbtConnectionProfile)
         tm.that(
             profile.model_dump(),
             eq={
                 "type": "ldif",
-                "path": profile.path,
-                "project": "dbt-ldif",
+                "path": service.settings.DbtLdif.ldif_file_path,
+                "project": service.dbt_project_name,
             },
         )

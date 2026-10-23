@@ -85,8 +85,8 @@ class TestsFlextDbtLdifServices:
         first = svc.parse_and_validate_ldif(target)
         second = svc.parse_and_validate_ldif(target)
 
-        assert first.success
-        assert second.success
+        tm.ok(first)
+        tm.ok(second)
         tm.that(first.unwrap().model_dump(), eq=second.unwrap().model_dump())
 
     @staticmethod
@@ -110,8 +110,8 @@ class TestsFlextDbtLdifServices:
         assessed = svc.run_data_quality_assessment(target)
         parsed = svc.parse_and_validate_ldif(target)
 
-        assert assessed.success
-        assert parsed.success
+        tm.ok(assessed)
+        tm.ok(parsed)
         tm.that(assessed.unwrap().model_dump(), eq=parsed.unwrap().model_dump())
 
     @staticmethod
