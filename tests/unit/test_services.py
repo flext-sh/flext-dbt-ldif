@@ -96,9 +96,7 @@ class TestsFlextDbtLdifServices:
         """An empty path surfaces a required-path failure via the result channel."""
         result = svc.parse_and_validate_ldif("")
 
-        tm.fail(result)
-        error = result.error
-        tm.not_none(error)
+        error = tm.fail(result)
         tm.that(error.lower(), has="required")
 
     @staticmethod
