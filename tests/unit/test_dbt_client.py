@@ -30,7 +30,7 @@ class TestsFlextDbtLdifClient:
     def test_explicit_settings_are_the_ones_used() -> None:
         """Explicit settings are the settings the client operates on."""
         client = FlextDbtLdifClient.Client(settings)
-        assert client.settings is settings
+        tm.that(client.settings is settings)
 
     # ---- parse_ldif_file contract ----------------------------------------
 

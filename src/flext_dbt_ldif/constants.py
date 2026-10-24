@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Constants for DBT LDIF workflows.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
@@ -14,9 +15,9 @@ from flext_dbt_ldif._constants import FlextDbtLdifConstantsBase
 
 
 class FlextDbtLdifConstants(
+    FlextDbtLdifConstantsBase,
     FlextMeltanoConstants,
     FlextLdifConstants,
-    FlextDbtLdifConstantsBase,
 ):
     """Typed constants used by DBT LDIF modules."""
 

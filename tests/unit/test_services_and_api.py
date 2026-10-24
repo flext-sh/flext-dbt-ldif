@@ -143,4 +143,4 @@ class TestsFlextDbtLdifServicesAndApi:
         first = FlextDbtLdif.fetch_global()
         second = FlextDbtLdif.fetch_global()
 
-        assert first is second
+        tm.that(first is second)

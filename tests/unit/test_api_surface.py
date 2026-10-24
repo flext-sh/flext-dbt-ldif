@@ -41,7 +41,7 @@ class TestsFlextDbtLdifApiSurface:
     def test_version_is_nonempty_string() -> None:
         """The package advertises a non-empty version string."""
         tm.that(__version__, is_=str)
-        assert __version__
+        tm.that(__version__, truth=True)
 
     @staticmethod
     def test_parse_uses_configured_path_when_none_given(
@@ -201,7 +201,7 @@ class TestsFlextDbtLdifApiSurface:
     @staticmethod
     def test_fetch_global_is_shared_singleton() -> None:
         """``fetch_global`` returns the same shared facade each call."""
-        assert FlextDbtLdif.fetch_global() is FlextDbtLdif.fetch_global()
+        tm.that(FlextDbtLdif.fetch_global() is FlextDbtLdif.fetch_global())
 
     @staticmethod
     def test_process_ldif_file_runs_end_to_end_workflow(
