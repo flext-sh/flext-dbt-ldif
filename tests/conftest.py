@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from tests import tf, u
+from tests import c, tf, u
 
 
 @pytest.fixture
