@@ -24,7 +24,7 @@ def set_test_environment() -> Generator[None]:
             "FLEXT_ENV": "test",
             "FLEXT_LOG_LEVEL": "DEBUG",
             "DBT_PROFILES_DIR": temp_dir,
-            "LDIF_TEST_MODE": "true",
+            "LDIF_TEST_MODE": c.ParserBooleanToken.TRUE,
         }),
     ):
         yield
