@@ -23,5 +23,4 @@ class FlextDbtLdifConstants(
 
 
 c = FlextDbtLdifConstants
-
 __all__: list[str] = ["FlextDbtLdifConstants", "FlextDbtLdifConstantsBase", "c"]

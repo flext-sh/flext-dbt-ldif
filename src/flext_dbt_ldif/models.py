@@ -20,5 +20,4 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextDbtLdifModelsBase):
 
 
 m = FlextDbtLdifModels
-
 __all__: list[str] = ["FlextDbtLdifModels", "m"]
