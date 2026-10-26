@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_ldif import c, c as flext_ldif_c
+from flext_ldif import c as flext_ldif_c
 from flext_meltano import c as flext_meltano_c
 
 from flext_dbt_ldif._constants import FlextDbtLdifConstantsBase
