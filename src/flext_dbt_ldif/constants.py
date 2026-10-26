@@ -8,16 +8,16 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_ldif import FlextLdifConstants
-from flext_meltano import FlextMeltanoConstants
+from flext_ldif import c
+from flext_meltano import c as flext_meltano_c
 
 from flext_dbt_ldif._constants import FlextDbtLdifConstantsBase
 
 
 class FlextDbtLdifConstants(
     FlextDbtLdifConstantsBase,
-    FlextMeltanoConstants,
-    FlextLdifConstants,
+    flext_meltano_c,
+    c,
 ):
     """Typed constants used by DBT LDIF modules."""
 

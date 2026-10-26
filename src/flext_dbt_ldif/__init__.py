@@ -13,7 +13,8 @@ from typing import TYPE_CHECKING
 from flext_core.lazy import install_lazy_exports
 
 if TYPE_CHECKING:
-    from flext_meltano import d, e, h, r, x
+    from flext_ldif import ldif
+    from flext_meltano import d, e, h, meltano, r, x
 
     from flext_dbt_ldif.__version__ import (
         FlextDbtLdifVersion,
@@ -68,8 +69,10 @@ __all__: tuple[str, ...] = (
     "dbt_ldif",
     "e",
     "h",
+    "ldif",
     "m",
     "main",
+    "meltano",
     "p",
     "r",
     "s",
@@ -107,8 +110,10 @@ install_lazy_exports(
         "dbt_ldif": ".api",
         "e": "flext_meltano",
         "h": "flext_meltano",
+        "ldif": "flext_ldif",
         "m": ".models",
         "main": ".cli",
+        "meltano": "flext_meltano",
         "p": ".protocols",
         "r": "flext_meltano",
         "s": ".base",

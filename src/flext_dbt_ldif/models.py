@@ -7,12 +7,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_meltano import FlextMeltanoModels
+from flext_meltano import m
 
 from flext_dbt_ldif._models import FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt
 
 
-class FlextDbtLdifModels(FlextMeltanoModels, FlextDbtLdifModelsBase):
+class FlextDbtLdifModels(m, FlextDbtLdifModelsBase):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtLdif(FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt):
