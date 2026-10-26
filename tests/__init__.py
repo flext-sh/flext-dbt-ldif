@@ -29,7 +29,7 @@ if TYPE_CHECKING:
         x,
     )
 
-    from flext_dbt_ldif import dbt_ldif, ldif, main, meltano
+    from flext_dbt_ldif import cli, dbt_ldif, ldif, main, meltano
     from tests.base import TestsFlextDbtLdifServiceBase, s
     from tests.conftest import (
         pytest_runtest_setup,
@@ -54,6 +54,7 @@ __all__: tuple[str, ...] = (
     "TestsFlextDbtLdifUtilities",
     "api",
     "c",
+    "cli",
     "config",
     "d",
     "dbt_ldif",
@@ -93,6 +94,7 @@ install_lazy_exports(
         "TestsFlextDbtLdifUtilities": ".utilities",
         "api": "flext_tests",
         "c": ".constants",
+        "cli": "flext_dbt_ldif",
         "config": "flext_tests",
         "d": "flext_tests",
         "dbt_ldif": "flext_dbt_ldif",
