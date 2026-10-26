@@ -15,11 +15,13 @@ from flext_core.lazy import install_lazy_exports
 if TYPE_CHECKING:
     from flext_tests import (
         api,
+        cli,
         config,
         d,
         e,
         h,
         install_local_packages,
+        main,
         r,
         settings,
         td,
@@ -29,7 +31,7 @@ if TYPE_CHECKING:
         x,
     )
 
-    from flext_dbt_ldif import cli, dbt_ldif, ldif, main, meltano
+    from flext_dbt_ldif import dbt_ldif, ldif, meltano
     from tests.base import TestsFlextDbtLdifServiceBase, s
     from tests.conftest import (
         pytest_runtest_setup,
@@ -94,7 +96,7 @@ install_lazy_exports(
         "TestsFlextDbtLdifUtilities": ".utilities",
         "api": "flext_tests",
         "c": ".constants",
-        "cli": "flext_dbt_ldif",
+        "cli": "flext_tests",
         "config": "flext_tests",
         "d": "flext_tests",
         "dbt_ldif": "flext_dbt_ldif",
@@ -103,7 +105,7 @@ install_lazy_exports(
         "install_local_packages": "flext_tests",
         "ldif": "flext_dbt_ldif",
         "m": ".models",
-        "main": "flext_dbt_ldif",
+        "main": "flext_tests",
         "meltano": "flext_dbt_ldif",
         "p": ".protocols",
         "pytest_runtest_setup": ".conftest",
