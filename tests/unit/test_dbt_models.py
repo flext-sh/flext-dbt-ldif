@@ -19,7 +19,6 @@ class TestsFlextDbtLdifDbtModels:
     """Public-contract tests for FlextDbtLdifUnifiedService and DbtModel."""
 
     @pytest.fixture
-    @staticmethod
     def service() -> FlextDbtLdifUnifiedService.UnifiedService:
         """Provide a service instance backed by global settings.
 

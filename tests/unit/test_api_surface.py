@@ -25,9 +25,8 @@ class TestsFlextDbtLdifApiSurface:
     """Behavior contract for the public DBT LDIF API surface."""
 
     @pytest.fixture
-    @staticmethod
     def client(
-        settings: FlextDbtLdifSettings,
+        self: FlextDbtLdifSettings,
     ) -> FlextDbtLdifClient.Client:
         """Client bound to the test settings.
 
@@ -35,7 +34,7 @@ class TestsFlextDbtLdifApiSurface:
             The resulting ``Client``.
 
         """
-        return FlextDbtLdifClient.Client(settings)
+        return FlextDbtLdifClient.Client(self)
 
     @staticmethod
     def test_version_is_nonempty_string() -> None:
