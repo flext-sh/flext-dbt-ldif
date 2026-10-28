@@ -7,11 +7,11 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 from flext_dbt_ldif import c, m, p, r, t, u
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifUnifiedService
 
 
 class FlextDbtLdifService:
@@ -52,7 +52,7 @@ class FlextDbtLdifService:
 
         def generate_and_write_models(
             self,
-            entries: t.SequenceOf[t.JsonMapping],
+            entries: Sequence[t.JsonMapping],
             *,
             overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
@@ -68,7 +68,7 @@ class FlextDbtLdifService:
 
             """
             _ = overwrite
-            staging_payload: t.SequenceOf[t.JsonMapping] = [
+            staging_payload: Sequence[t.JsonMapping] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
@@ -122,7 +122,7 @@ class FlextDbtLdifService:
             *,
             generate_models: bool = True,
             run_transformations: bool = True,
-            model_names: t.StrSequence | None = None,
+            model_names: Sequence[str] | None = None,
         ) -> p.Result[m.DbtLdif.WorkflowResult]:
             """Execute complete LDIF to DBT workflow.
 
@@ -155,7 +155,7 @@ class FlextDbtLdifService:
                     return r[m.DbtLdif.WorkflowResult].from_failure(model_result)
                 models_generated = model_result.value.models_generated
             if run_transformations:
-                transform_payload: t.SequenceOf[t.JsonMapping] = [
+                transform_payload: Sequence[t.JsonMapping] = [
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(

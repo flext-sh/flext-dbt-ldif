@@ -5,20 +5,6 @@
 
 config_version = "0"
 
-exclude_patterns = [
-  "**/protos/**",
-  "**/conftest.py",
-  "**/src/flext_dbt_ldif/__init__.py",
-  "**/src/flext_dbt_ldif/__version__.py",
-  "**/src/flext_dbt_ldif/_constants/__init__.py",
-  "**/src/flext_dbt_ldif/_models/__init__.py",
-  "**/src/flext_dbt_ldif/constants.py",
-  "**/src/flext_dbt_ldif/models.py",
-  "**/src/flext_dbt_ldif/services/__init__.py",
-  "**/tests/__init__.py",
-  "**/tests/unit/__init__.py",
-]
-
 [smells]
 mode = "block"
 

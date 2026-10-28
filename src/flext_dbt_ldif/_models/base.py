@@ -7,16 +7,10 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from flext_ldif import FlextLdifModels
-from flext_meltano import m
 
 
 class FlextModelsDbtLdifBase(FlextLdifModels):
     """MRO facade composing the LDIF model namespace for DBT LDIF."""
-
-    class ConfigNamespace(m.BaseModel):
-        """Open, frozen namespace exposing every ``config/*.yaml`` domain."""
-
-        model_config = m.ConfigDict(extra="allow", frozen=True)
 
 
 __all__: list[str] = ["FlextModelsDbtLdifBase"]

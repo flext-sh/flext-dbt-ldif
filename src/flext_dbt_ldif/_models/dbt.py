@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Annotated
 
 from flext_meltano import m
@@ -47,11 +48,11 @@ class FlextModelsDbtLdifDbt:
             ),
         ] = ""
         columns: Annotated[
-            t.SequenceOf[t.JsonMapping],
+            Sequence[t.JsonMapping],
             m.Field(description="Column metadata for the DBT model"),
         ] = ()
         dependencies: Annotated[
-            t.StrSequence,
+            Sequence[str],
             m.Field(description="Upstream model dependencies"),
         ] = ()
 
@@ -76,7 +77,7 @@ class FlextModelsDbtLdifDbt:
 
         records: Annotated[int, m.Field(description="Number of transformed records.")]
         models: Annotated[
-            t.StrSequence,
+            Sequence[str],
             m.Field(description="Names of models produced by the transformation"),
         ] = ()
         status: Annotated[str, m.Field(description="Transformation lifecycle status.")]
@@ -89,7 +90,7 @@ class FlextModelsDbtLdifDbt:
             m.Field(description="Number of generated DBT models."),
         ]
         model_names: Annotated[
-            t.StrSequence,
+            Sequence[str],
             m.Field(description="Names of generated DBT models"),
         ] = ()
 

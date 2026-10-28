@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 # NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
@@ -78,8 +79,8 @@ class FlextDbtLdifClient:
 
         @staticmethod
         def transform_with_dbt(
-            entries: t.SequenceOf[t.JsonMapping],
-            model_names: t.StrSequence | None = None,
+            entries: Sequence[t.JsonMapping],
+            model_names: Sequence[str] | None = None,
         ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
             """Return synthetic DBT transformation metadata.
 
@@ -106,7 +107,7 @@ class FlextDbtLdifClient:
 
         def validate_ldif_data(
             self,
-            entries: t.SequenceOf[t.JsonMapping],
+            entries: Sequence[t.JsonMapping],
         ) -> p.Result[m.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score.
 

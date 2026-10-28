@@ -16,8 +16,7 @@ from pathlib import Path
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.service import FlextDbtLdifService
+from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifService
 from tests import c, tm
 
 

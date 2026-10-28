@@ -6,12 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings, settings
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
+from flext_dbt_ldif.services import FlextDbtLdifClient
 from tests import c, m, t, tm
 
 
@@ -73,7 +74,7 @@ class TestsFlextDbtLdifClient:
         entry_count: int,
     ) -> None:
         """Non-empty entries validate as passed with matching totals."""
-        entries: t.SequenceOf[t.JsonMapping] = [
+        entries: Sequence[t.JsonMapping] = [
             {"dn": f"cn=n{i},dc=example,dc=org", "source": "in.ldif"}
             for i in range(entry_count)
         ]
@@ -97,7 +98,7 @@ class TestsFlextDbtLdifClient:
     @staticmethod
     def test_transform_reports_record_count_and_requested_models() -> None:
         """Transform metadata reflects inputs and reports success."""
-        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
+        entries: Sequence[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
         data = (
             FlextDbtLdifClient
             .Client()

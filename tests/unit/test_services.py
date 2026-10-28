@@ -6,11 +6,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
 
-from flext_dbt_ldif.services.service import FlextDbtLdifService
+from flext_dbt_ldif.services import FlextDbtLdifService
 from tests import c, t, tm
 
 
@@ -26,11 +27,11 @@ def svc(tmp_path: Path) -> FlextDbtLdifService.Service:
 
 
 @pytest.fixture
-def entries() -> t.SequenceOf[t.JsonMapping]:
+def entries() -> Sequence[t.JsonMapping]:
     """Provide a minimal LDIF entry payload accepted by the public API.
 
     Returns:
-        The resulting ``t.SequenceOf[t.JsonMapping]``.
+        The resulting ``Sequence[t.JsonMapping]``.
 
     """
     return [{"dn": "cn=test,dc=example,dc=org"}]
@@ -117,7 +118,7 @@ class TestsFlextDbtLdifServices:
     @staticmethod
     def test_generate_and_write_models_produces_staging_and_analytics(
         svc: FlextDbtLdifService.Service,
-        entries: t.SequenceOf[t.JsonMapping],
+        entries: Sequence[t.JsonMapping],
     ) -> None:
         """Model generation yields one staging and one analytics model."""
         result = svc.generate_and_write_models(entries)

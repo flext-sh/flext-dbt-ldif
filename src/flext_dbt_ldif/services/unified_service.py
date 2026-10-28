@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Annotated, override
 
@@ -72,7 +73,7 @@ class FlextDbtLdifUnifiedService:
 
         @staticmethod
         def generate_analytics_models(
-            staging_models: t.SequenceOf[m.DbtLdif.DbtModel],
+            staging_models: Sequence[m.DbtLdif.DbtModel],
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set.
 
@@ -101,7 +102,7 @@ class FlextDbtLdifUnifiedService:
 
         @staticmethod
         def generate_staging_models(
-            entries: t.SequenceOf[t.JsonMapping],
+            entries: Sequence[t.JsonMapping],
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries.
 

@@ -6,12 +6,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_dbt_ldif.services import FlextDbtLdifUnifiedService
 from tests import c, m, t, tm
 
 
@@ -74,7 +75,7 @@ class TestsFlextDbtLdifDbtModels:
         service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """Non-empty entries yield exactly one staging view model."""
-        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
+        entries: Sequence[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
         models = service.generate_staging_models(entries).unwrap()
         tm.that(len(models), eq=1)
         model = models[0]
@@ -157,7 +158,7 @@ class TestsFlextDbtLdifDbtModels:
     )
     def test_blank_required_field_rejected_at_construction(
         field: str,
-        kwargs: t.StrMapping,
+        kwargs: Mapping[str, str],
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:
