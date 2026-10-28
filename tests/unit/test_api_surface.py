@@ -24,17 +24,16 @@ from tests import c, tm
 class TestsFlextDbtLdifApiSurface:
     """Behavior contract for the public DBT LDIF API surface."""
 
+    @staticmethod
     @pytest.fixture
-    def client(
-        self: FlextDbtLdifSettings,
-    ) -> FlextDbtLdifClient.Client:
-        """Client bound to the test settings.
+    def client() -> FlextDbtLdifClient.Client:
+        """Client bound to the canonical settings singleton.
 
         Returns:
             The resulting ``Client``.
 
         """
-        return FlextDbtLdifClient.Client(self)
+        return FlextDbtLdifClient.Client(FlextDbtLdifSettings())
 
     @staticmethod
     def test_version_is_nonempty_string() -> None:
