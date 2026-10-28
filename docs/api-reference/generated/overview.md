@@ -19,11 +19,11 @@
 - Project class: `integration`
 - Keywords: `data-transformation`, `dbt`, `enterprise`, `flext`, `sql`, `typed`
 - Main facades: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
-  `FlextDbtLdifConstantsBase`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
+  `FlextDbtLdifConstantsBase`, `FlextModelsDbtLdif`, `FlextDbtLdifProtocols`,
   `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings` (+3 more)
 - Alias exports: `c`, `d`, `e`, `h`, `m`, `p`, `r`, `s`, `t`, `u`, `x`
 - Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
-  `FlextDbtLdifConstantsBase`, `FlextDbtLdifModels`, `FlextDbtLdifProtocols`,
+  `FlextDbtLdifConstantsBase`, `FlextModelsDbtLdif`, `FlextDbtLdifProtocols`,
   `FlextDbtLdifServiceBase`, `FlextDbtLdifSettings`, `FlextDbtLdifTypes`,
   `FlextDbtLdifUtilities` (+5 more)
 - Exported module shortcuts: _none_

@@ -37,7 +37,7 @@ if TYPE_CHECKING:
         FlextDbtLdifConstantsBase,
         c,
     )
-    from flext_dbt_ldif.models import FlextDbtLdifModels, m
+    from flext_dbt_ldif.models import FlextModelsDbtLdif, m
     from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
     from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
@@ -48,13 +48,13 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
     "FlextDbtLdifConstantsBase",
-    "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifServiceBase",
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
     "FlextDbtLdifVersion",
+    "FlextModelsDbtLdif",
     "__author__",
     "__author_email__",
     "__description__",
@@ -91,7 +91,7 @@ install_lazy_exports(
         "FlextDbtLdifConfig": "._config",
         "FlextDbtLdifConstants": ".constants",
         "FlextDbtLdifConstantsBase": ".constants",
-        "FlextDbtLdifModels": ".models",
+        "FlextModelsDbtLdif": ".models",
         "FlextDbtLdifProtocols": ".protocols",
         "FlextDbtLdifServiceBase": ".base",
         "FlextDbtLdifSettings": "._settings",

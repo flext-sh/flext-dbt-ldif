@@ -10,7 +10,7 @@ from flext_ldif import FlextLdifModels
 from flext_meltano import m
 
 
-class FlextDbtLdifModelsBase(FlextLdifModels):
+class FlextModelsDbtLdifBase(FlextLdifModels):
     """MRO facade composing the LDIF model namespace for DBT LDIF."""
 
     class ConfigNamespace(m.BaseModel):
@@ -19,4 +19,4 @@ class FlextDbtLdifModelsBase(FlextLdifModels):
         model_config = m.ConfigDict(extra="allow", frozen=True)
 
 
-__all__: list[str] = ["FlextDbtLdifModelsBase"]
+__all__: list[str] = ["FlextModelsDbtLdifBase"]

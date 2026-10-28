@@ -9,15 +9,15 @@ from __future__ import annotations
 
 from flext_meltano import m as flext_meltano_m
 
-from flext_dbt_ldif._models import FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt
+from flext_dbt_ldif._models import FlextModelsDbtLdifBase, FlextModelsDbtLdifDbt
 
 
-class FlextDbtLdifModels(flext_meltano_m, FlextDbtLdifModelsBase):
+class FlextModelsDbtLdif(flext_meltano_m, FlextModelsDbtLdifBase):
     """Model namespace for DBT LDIF metadata objects."""
 
-    class DbtLdif(FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt):
+    class DbtLdif(FlextModelsDbtLdifBase, FlextModelsDbtLdifDbt):
         """DBT LDIF model namespace."""
 
 
-m = FlextDbtLdifModels
-__all__: list[str] = ["FlextDbtLdifModels", "m"]
+m = FlextModelsDbtLdif
+__all__: list[str] = ["FlextModelsDbtLdif", "m"]

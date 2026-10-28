@@ -13,13 +13,13 @@ from typing import ClassVar, Self
 
 from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, u
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_dbt_ldif.services.service import FlextDbtLdifService
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
 
 class FlextDbtLdif(
     FlextDbtLdifClient,
-    FlextDbtLdifServiceMixin,
+    FlextDbtLdifService,
     FlextDbtLdifUnifiedService,
 ):
     """MRO facade for all DBT LDIF operations.
@@ -44,7 +44,7 @@ class FlextDbtLdif(
         return cls._instance
 
     @property
-    def service(self) -> FlextDbtLdifServiceMixin.Service:
+    def service(self) -> FlextDbtLdifService.Service:
         """The bound workflow service."""
         return self._service
 

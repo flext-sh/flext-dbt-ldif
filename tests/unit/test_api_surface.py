@@ -17,7 +17,7 @@ import pytest
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
 from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_dbt_ldif.services.service import FlextDbtLdifService
 from tests import c, tm
 
 
@@ -159,7 +159,7 @@ class TestsFlextDbtLdifApiSurface:
         tmp_path: Path,
     ) -> None:
         """The service one-shot parse+validate reports counts and status."""
-        service = FlextDbtLdifServiceMixin.Service(settings)
+        service = FlextDbtLdifService.Service(settings)
 
         result = service.parse_and_validate_ldif(tmp_path / "sample.ldif")
 

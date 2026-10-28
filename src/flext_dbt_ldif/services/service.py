@@ -14,7 +14,7 @@ from flext_dbt_ldif.services.client import FlextDbtLdifClient
 from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
 
 
-class FlextDbtLdifServiceMixin:
+class FlextDbtLdifService:
     """Mixin providing Service for dbt-ldif utilities."""
 
     logger = u.fetch_logger(__name__)
@@ -165,7 +165,7 @@ class FlextDbtLdifServiceMixin:
                 if transform.failure:
                     return r[m.DbtLdif.WorkflowResult].from_failure(transform)
                 transformation_status = transform.value.status
-            FlextDbtLdifServiceMixin.logger.info("Completed DBT LDIF workflow")
+            FlextDbtLdifService.logger.info("Completed DBT LDIF workflow")
             return r[m.DbtLdif.WorkflowResult].ok(
                 m.DbtLdif.WorkflowResult(
                     ldif_file=str(ldif_file),
@@ -194,4 +194,4 @@ class FlextDbtLdifServiceMixin:
             return self.parse_and_validate_ldif(ldif_file)
 
 
-__all__: list[str] = ["FlextDbtLdifServiceMixin"]
+__all__: list[str] = ["FlextDbtLdifService"]
