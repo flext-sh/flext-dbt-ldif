@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_dbt_ldif.services import FlextDbtLdifService
 from tests import c, tm
 
 
@@ -135,7 +135,7 @@ class TestsFlextDbtLdifServicesAndApi:
         """The service property exposes the bound workflow Service."""
         api = FlextDbtLdif()
 
-        tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
+        tm.that(api.service, is_=FlextDbtLdifService.Service)
 
     @staticmethod
     def test_fetch_global_returns_shared_singleton() -> None:
@@ -143,4 +143,4 @@ class TestsFlextDbtLdifServicesAndApi:
         first = FlextDbtLdif.fetch_global()
         second = FlextDbtLdif.fetch_global()
 
-        assert first is second
+        tm.that(first is second)

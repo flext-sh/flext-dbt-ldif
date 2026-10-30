@@ -9,6 +9,7 @@ from __future__ import annotations
 import pytest
 
 from flext_dbt_ldif import main
+from tests import tm
 
 
 class TestsFlextDbtLdifCli:
@@ -20,4 +21,4 @@ class TestsFlextDbtLdifCli:
         with pytest.raises(SystemExit) as exit_info:
             main(["not-a-dbt-command"])
 
-        assert exit_info.value.code == 1
+        tm.that(exit_info.value.code, eq=1)

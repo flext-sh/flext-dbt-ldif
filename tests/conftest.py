@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from tests import tf, u
+from tests import c, tf, u
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def set_test_environment() -> Generator[None]:
             "FLEXT_ENV": "test",
             "FLEXT_LOG_LEVEL": "DEBUG",
             "DBT_PROFILES_DIR": temp_dir,
-            "LDIF_TEST_MODE": "true",
+            "LDIF_TEST_MODE": c.ParserBooleanToken.TRUE,
         }),
     ):
         yield

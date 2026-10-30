@@ -14,7 +14,7 @@ from typing import Annotated, override
 
 from flext_meltano import FlextMeltanoDbtServiceBase
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t, u
+from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t
 
 
 class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
@@ -22,7 +22,7 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
 
     dbt_project_name: Annotated[
         t.NonEmptyStr,
-        u.Field(description="Canonical dbt project name for DBT LDIF services"),
+        m.Field(description="Canonical dbt project name for DBT LDIF services"),
     ] = "dbt-ldif"
 
     @classmethod

@@ -7,14 +7,14 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, t, u
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_dbt_ldif import c, m, p, r, t, u
+from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifUnifiedService
 
 
-class FlextDbtLdifServiceMixin:
+class FlextDbtLdifService:
     """Mixin providing Service for dbt-ldif utilities."""
 
     logger = u.fetch_logger(__name__)
@@ -29,6 +29,10 @@ class FlextDbtLdifServiceMixin:
         ) -> None:
             """Initialize service dependencies with optional injected settings.
 
+            The client owns the canonical settings resolution (injected
+            override, foreign payload revalidation, or the global singleton);
+            the resolved instance is shared with the model generator.
+
             Args:
                 settings: Settings contract to honor; the global settings
                     singleton is used when omitted.
@@ -36,18 +40,11 @@ class FlextDbtLdifServiceMixin:
                     derived from the configured LDIF path when omitted.
 
             """
-            # NOTE (multi-agent): mro-rn88 — resolve the concrete settings snapshot
-            # (injected override or global) and inject the SAME instance into
-            # client + generator.
-            resolved_settings = (
-                FlextDbtLdifSettings.model_validate(settings.model_dump())
-                if settings is not None
-                else FlextDbtLdifSettings.fetch_global()
-            )
+            self.client = FlextDbtLdifClient.Client(settings)
+            resolved_settings = self.client.settings
             self.project_dir = project_dir or Path(
                 resolved_settings.DbtLdif.ldif_file_path or ".",
             )
-            self.client = FlextDbtLdifClient.Client(resolved_settings)
             self.model_generator = FlextDbtLdifUnifiedService.UnifiedService(
                 settings=resolved_settings,
                 project_dir=self.project_dir,
@@ -55,7 +52,7 @@ class FlextDbtLdifServiceMixin:
 
         def generate_and_write_models(
             self,
-            entries: t.SequenceOf[t.JsonMapping],
+            entries: Sequence[t.JsonMapping],
             *,
             overwrite: bool = False,
         ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
@@ -71,7 +68,7 @@ class FlextDbtLdifServiceMixin:
 
             """
             _ = overwrite
-            staging_payload: t.SequenceOf[t.JsonMapping] = [
+            staging_payload: Sequence[t.JsonMapping] = [
                 {"dn": str(entry.get("dn", ""))} for entry in entries
             ]
             staging = self.model_generator.generate_staging_models(staging_payload)
@@ -125,7 +122,7 @@ class FlextDbtLdifServiceMixin:
             *,
             generate_models: bool = True,
             run_transformations: bool = True,
-            model_names: t.StrSequence | None = None,
+            model_names: Sequence[str] | None = None,
         ) -> p.Result[m.DbtLdif.WorkflowResult]:
             """Execute complete LDIF to DBT workflow.
 
@@ -150,19 +147,15 @@ class FlextDbtLdifServiceMixin:
             validation = self.client.validate_ldif_data(entries)
             if validation.failure:
                 return r[m.DbtLdif.WorkflowResult].from_failure(validation)
-            workflow_result = m.DbtLdif.WorkflowResult(
-                ldif_file=str(ldif_file),
-                entry_count=len(entries),
-                validation_status=validation.value.validation_status,
-                workflow_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
-            )
+            models_generated = 0
+            transformation_status = ""
             if generate_models:
                 model_result = self.generate_and_write_models(entries)
                 if model_result.failure:
                     return r[m.DbtLdif.WorkflowResult].from_failure(model_result)
-                workflow_result.models_generated = model_result.value.models_generated
+                models_generated = model_result.value.models_generated
             if run_transformations:
-                transform_payload: t.SequenceOf[t.JsonMapping] = [
+                transform_payload: Sequence[t.JsonMapping] = [
                     {"dn": str(entry.get("dn", ""))} for entry in entries
                 ]
                 transform = self.client.transform_with_dbt(
@@ -171,9 +164,18 @@ class FlextDbtLdifServiceMixin:
                 )
                 if transform.failure:
                     return r[m.DbtLdif.WorkflowResult].from_failure(transform)
-                workflow_result.transformation_status = transform.value.status
-            FlextDbtLdifServiceMixin.logger.info("Completed DBT LDIF workflow")
-            return r[m.DbtLdif.WorkflowResult].ok(workflow_result)
+                transformation_status = transform.value.status
+            FlextDbtLdifService.logger.info("Completed DBT LDIF workflow")
+            return r[m.DbtLdif.WorkflowResult].ok(
+                m.DbtLdif.WorkflowResult(
+                    ldif_file=str(ldif_file),
+                    entry_count=len(entries),
+                    validation_status=validation.value.validation_status,
+                    models_generated=models_generated,
+                    transformation_status=transformation_status,
+                    workflow_status=c.DbtLdif.WORKFLOW_STATUS_COMPLETED,
+                ),
+            )
 
         def run_data_quality_assessment(
             self,
@@ -192,4 +194,4 @@ class FlextDbtLdifServiceMixin:
             return self.parse_and_validate_ldif(ldif_file)
 
 
-__all__: list[str] = ["FlextDbtLdifServiceMixin"]
+__all__: list[str] = ["FlextDbtLdifService"]

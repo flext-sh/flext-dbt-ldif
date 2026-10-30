@@ -6,19 +6,19 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_dbt_ldif.services import FlextDbtLdifUnifiedService
 from tests import c, m, t, tm
 
 
 class TestsFlextDbtLdifDbtModels:
     """Public-contract tests for FlextDbtLdifUnifiedService and DbtModel."""
 
-    @staticmethod
     @pytest.fixture
     def service() -> FlextDbtLdifUnifiedService.UnifiedService:
         """Provide a service instance backed by global settings.
@@ -43,7 +43,7 @@ class TestsFlextDbtLdifDbtModels:
             project_dir=tmp_path,
         )
         tm.that(gen.project_dir, eq=tmp_path)
-        tm.that(gen.name, eq="ldif_generator")
+        tm.that(gen.name, eq=c.DbtLdif.GENERATOR_SERVICE_NAME)
 
     # -- execute --------------------------------------------------------------
 
@@ -55,8 +55,8 @@ class TestsFlextDbtLdifDbtModels:
         result = service.execute()
         tm.ok(result)
         data: t.JsonMapping = result.unwrap()
-        tm.that(data["name"], eq="ldif_generator")
-        tm.that(data["status"], eq="ready")
+        tm.that(data["name"], eq=c.DbtLdif.GENERATOR_SERVICE_NAME)
+        tm.that(data["status"], eq=c.DbtLdif.WORKFLOW_STATUS_READY)
 
     @staticmethod
     def test_execute_metadata_reflects_project_dir(tmp_path: Path) -> None:
@@ -75,13 +75,14 @@ class TestsFlextDbtLdifDbtModels:
         service: FlextDbtLdifUnifiedService.UnifiedService,
     ) -> None:
         """Non-empty entries yield exactly one staging view model."""
-        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
+        entries: Sequence[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
         models = service.generate_staging_models(entries).unwrap()
         tm.that(len(models), eq=1)
         model = models[0]
-        tm.that(model.name, eq="stg_ldif_entries")
-        tm.that(model.dbt_model_type, eq="staging")
-        tm.that(model.materialization, eq="view")
+        tm.that(model.name, eq=c.DbtLdif.STAGING_MODEL_NAME)
+        tm.that(model.dbt_model_type, eq=c.DbtLdif.DBT_MODEL_TYPE_STAGING)
+        tm.that(model.materialization, eq=c.DbtLdif.DBT_MATERIALIZATION_VIEW)
+        tm.that(model.description, eq=c.DbtLdif.STAGING_MODEL_DESCRIPTION)
 
     @staticmethod
     def test_generate_staging_models_returns_empty_without_entries(
@@ -100,19 +101,23 @@ class TestsFlextDbtLdifDbtModels:
     ) -> None:
         """A staging model produces one analytics table model."""
         staging_model = m.DbtLdif.DbtModel(
-            name="stg_ldif_entries",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
+            name=c.DbtLdif.STAGING_MODEL_NAME,
+            dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
+            ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
+            materialization=c.DbtLdif.DBT_MATERIALIZATION_VIEW,
             sql_content="select 1",
+            description=c.DbtLdif.STAGING_MODEL_DESCRIPTION,
             columns=[],
             dependencies=[],
         )
         models = service.generate_analytics_models([staging_model]).unwrap()
         tm.that(len(models), eq=1)
         model = models[0]
-        tm.that(model.name, eq="analytics_ldif_insights")
-        tm.that(model.dbt_model_type, eq="analytics")
-        tm.that(model.materialization, eq="table")
+        tm.that(model.name, eq=c.DbtLdif.ANALYTICS_MODEL_NAME)
+        tm.that(model.dbt_model_type, eq=c.DbtLdif.DBT_MODEL_TYPE_ANALYTICS)
+        tm.that(model.materialization, eq=c.DbtLdif.DBT_MATERIALIZATION_TABLE)
+        tm.that(model.description, eq=c.DbtLdif.ANALYTICS_MODEL_DESCRIPTION)
+        tm.that(model.dependencies, has=c.DbtLdif.STAGING_MODEL_NAME)
 
     @staticmethod
     def test_generate_analytics_models_returns_empty_without_staging(
@@ -130,18 +135,16 @@ class TestsFlextDbtLdifDbtModels:
         """Optional fields default and required fields echo through the public API."""
         model = m.DbtLdif.DbtModel(
             name="test_model",
-            dbt_model_type="staging",
-            ldif_source="ldif_entries",
+            dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
+            ldif_source=c.DbtLdif.LDIF_SOURCE_NAME,
             sql_content="select 1",
-            columns=[],
-            dependencies=[],
         )
         tm.that(model.name, eq="test_model")
-        tm.that(model.materialization, eq="view")
+        tm.that(model.materialization, eq=c.DbtLdif.DBT_MATERIALIZATION_VIEW)
         tm.that(model.description, eq="")
         tm.that(list(model.columns), eq=[])
         tm.that(list(model.dependencies), eq=[])
-        tm.that(model.ldif_source, eq="ldif_entries")
+        tm.that(model.ldif_source, eq=c.DbtLdif.LDIF_SOURCE_NAME)
         tm.that(model.sql_content, eq="select 1")
 
     @staticmethod
@@ -155,17 +158,15 @@ class TestsFlextDbtLdifDbtModels:
     )
     def test_blank_required_field_rejected_at_construction(
         field: str,
-        kwargs: t.StrMapping,
+        kwargs: Mapping[str, str],
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
         with pytest.raises(c.ValidationError) as exc_info:
             m.DbtLdif.DbtModel.model_validate({
                 "name": "test_model",
-                "dbt_model_type": "staging",
-                "ldif_source": "ldif_entries",
+                "dbt_model_type": c.DbtLdif.DBT_MODEL_TYPE_STAGING,
+                "ldif_source": c.DbtLdif.LDIF_SOURCE_NAME,
                 "sql_content": "select 1",
-                "columns": [],
-                "dependencies": [],
                 **kwargs,
             })
         tm.that(str(exc_info.value), has=field)

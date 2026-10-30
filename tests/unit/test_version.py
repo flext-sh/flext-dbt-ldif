@@ -20,14 +20,14 @@ class TestsFlextDbtLdifVersion:
     def test_version_is_non_empty_string() -> None:
         """`__version__` is exposed as a non-empty string."""
         tm.that(__version__, is_=str)
-        assert __version__
+        tm.that(__version__, truth=True)
 
     @staticmethod
     def test_version_info_is_release_triple() -> None:
         """`__version_info__` is exposed as a three-integer release tuple."""
         tm.that(__version_info__, is_=tuple)
         tm.that(len(__version_info__), eq=3)
-        assert all(isinstance(component, int) for component in __version_info__)
+        tm.that(all(isinstance(component, int) for component in __version_info__))
 
     @staticmethod
     def test_version_info_derives_from_version_string() -> None:
@@ -38,5 +38,5 @@ class TestsFlextDbtLdifVersion:
     def test_version_info_leading_component_is_numeric() -> None:
         """The leading version component is a non-negative integer (major)."""
         major = __version_info__[0]
-        assert isinstance(major, int)
-        assert major >= 0
+        tm.that(major, is_=int)
+        tm.that(major, gte=0)

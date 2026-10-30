@@ -7,12 +7,13 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import override
+from typing import Annotated, override
 
 from flext_meltano import FlextMeltanoDbtServiceBase
 
-from flext_dbt_ldif import c, m, p, r, s, t, u
+from flext_dbt_ldif import c, m, p, r, s, t
 
 
 class FlextDbtLdifUnifiedService:
@@ -21,20 +22,22 @@ class FlextDbtLdifUnifiedService:
     class UnifiedService(s):
         """Service that generates lightweight DBT model artifacts from LDIF entries."""
 
-        name: str = u.Field(
-            "ldif_generator",
-            description="Service name used in generated metadata payloads.",
-            validate_default=True,
-        )
-        project_dir: Path = u.Field(
-            default_factory=Path.cwd,
-            description="Project directory used to emit generated artifacts.",
-        )
+        name: Annotated[
+            str,
+            m.Field(
+                description="Service name used in generated metadata payloads.",
+                validate_default=True,
+            ),
+        ] = c.DbtLdif.GENERATOR_SERVICE_NAME
+        project_dir: Annotated[
+            Path,
+            m.Field(description="Project directory used to emit generated artifacts."),
+        ] = m.Field(default_factory=Path.cwd)
 
         def __init__(
             self,
             settings: p.Settings | None = None,
-            name: str = "ldif_generator",
+            name: str = c.DbtLdif.GENERATOR_SERVICE_NAME,
             project_dir: Path | None = None,
         ) -> None:
             """Initialize service with optional injected settings + project context.
@@ -70,7 +73,7 @@ class FlextDbtLdifUnifiedService:
 
         @staticmethod
         def generate_analytics_models(
-            staging_models: t.SequenceOf[m.DbtLdif.DbtModel],
+            staging_models: Sequence[m.DbtLdif.DbtModel],
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set.
 
@@ -99,7 +102,7 @@ class FlextDbtLdifUnifiedService:
 
         @staticmethod
         def generate_staging_models(
-            entries: t.SequenceOf[t.JsonMapping],
+            entries: Sequence[t.JsonMapping],
         ) -> p.Result[list[m.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries.
 

@@ -39,7 +39,7 @@ src/flext_dbt_ldif/
 
 - Model generation emits typed `m.DbtLdif.DbtModel` instances for staging and analytics
   artifacts (no dict roundtrip).
-- Config/settings canonical pattern: ADR-012.
+- Config/settings canonical pattern: ADR-005 (SSOT) and ADR-024 (DI config contract).
 - Codemod governance (ast-grep + make mod): ADR-014.
 
 ## Commands

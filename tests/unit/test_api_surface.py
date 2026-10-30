@@ -16,8 +16,7 @@ from pathlib import Path
 import pytest
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
+from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifService
 from tests import c, tm
 
 
@@ -26,22 +25,20 @@ class TestsFlextDbtLdifApiSurface:
 
     @staticmethod
     @pytest.fixture
-    def client(
-        settings: FlextDbtLdifSettings,
-    ) -> FlextDbtLdifClient.Client:
-        """Client bound to the test settings.
+    def client() -> FlextDbtLdifClient.Client:
+        """Client bound to the canonical settings singleton.
 
         Returns:
             The resulting ``Client``.
 
         """
-        return FlextDbtLdifClient.Client(settings)
+        return FlextDbtLdifClient.Client(FlextDbtLdifSettings())
 
     @staticmethod
     def test_version_is_nonempty_string() -> None:
         """The package advertises a non-empty version string."""
         tm.that(__version__, is_=str)
-        assert __version__
+        tm.that(__version__, truth=True)
 
     @staticmethod
     def test_parse_uses_configured_path_when_none_given(
@@ -161,7 +158,7 @@ class TestsFlextDbtLdifApiSurface:
         tmp_path: Path,
     ) -> None:
         """The service one-shot parse+validate reports counts and status."""
-        service = FlextDbtLdifServiceMixin.Service(settings)
+        service = FlextDbtLdifService.Service(settings)
 
         result = service.parse_and_validate_ldif(tmp_path / "sample.ldif")
 
@@ -201,7 +198,7 @@ class TestsFlextDbtLdifApiSurface:
     @staticmethod
     def test_fetch_global_is_shared_singleton() -> None:
         """``fetch_global`` returns the same shared facade each call."""
-        assert FlextDbtLdif.fetch_global() is FlextDbtLdif.fetch_global()
+        tm.that(FlextDbtLdif.fetch_global() is FlextDbtLdif.fetch_global())
 
     @staticmethod
     def test_process_ldif_file_runs_end_to_end_workflow(
