@@ -23,8 +23,8 @@ from tests import c, tm
 class TestsFlextDbtLdifApiSurface:
     """Behavior contract for the public DBT LDIF API surface."""
 
-    @staticmethod
     @pytest.fixture
+    @staticmethod
     def client() -> FlextDbtLdifClient.Client:
         """Client bound to the canonical settings singleton.
 
