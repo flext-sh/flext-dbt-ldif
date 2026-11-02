@@ -23,7 +23,7 @@ class TestsFlextDbtLdifServiceBase(FlextTestsServiceBase):
     # type mismatch (bad-return) and a settings atravessador.
     @classmethod
     @override
-    def runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
+    def runtime_bootstrap_options(cls) -> p.RuntimeBootstrapOptions:
         return m.RuntimeBootstrapOptions(settings_type=TestsFlextDbtLdifSettings)
 
 

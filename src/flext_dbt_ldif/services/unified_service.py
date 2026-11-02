@@ -73,8 +73,8 @@ class FlextDbtLdifUnifiedService:
 
         @staticmethod
         def generate_analytics_models(
-            staging_models: Sequence[m.DbtLdif.DbtModel],
-        ) -> p.Result[list[m.DbtLdif.DbtModel]]:
+            staging_models: Sequence[p.DbtLdif.DbtModel],
+        ) -> p.Result[list[p.DbtLdif.DbtModel]]:
             """Generate one analytics model derived from staging set.
 
             Args:
@@ -87,7 +87,7 @@ class FlextDbtLdifUnifiedService:
 
             """
             if not staging_models:
-                return r[list[m.DbtLdif.DbtModel]].ok([])
+                return r[list[p.DbtLdif.DbtModel]].ok([])
             analytics = m.DbtLdif.DbtModel(
                 name=c.DbtLdif.ANALYTICS_MODEL_NAME,
                 dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_ANALYTICS,
@@ -98,12 +98,12 @@ class FlextDbtLdifUnifiedService:
                 columns=[],
                 dependencies=[c.DbtLdif.STAGING_MODEL_NAME],
             )
-            return r[list[m.DbtLdif.DbtModel]].ok([analytics])
+            return r[list[p.DbtLdif.DbtModel]].ok([analytics])
 
         @staticmethod
         def generate_staging_models(
             entries: Sequence[t.JsonMapping],
-        ) -> p.Result[list[m.DbtLdif.DbtModel]]:
+        ) -> p.Result[list[p.DbtLdif.DbtModel]]:
             """Generate simple staging models for provided LDIF entries.
 
             Args:
@@ -116,7 +116,7 @@ class FlextDbtLdifUnifiedService:
 
             """
             if not entries:
-                return r[list[m.DbtLdif.DbtModel]].ok([])
+                return r[list[p.DbtLdif.DbtModel]].ok([])
             model = m.DbtLdif.DbtModel(
                 name=c.DbtLdif.STAGING_MODEL_NAME,
                 dbt_model_type=c.DbtLdif.DBT_MODEL_TYPE_STAGING,
@@ -127,7 +127,7 @@ class FlextDbtLdifUnifiedService:
                 columns=[],
                 dependencies=[],
             )
-            return r[list[m.DbtLdif.DbtModel]].ok([model])
+            return r[list[p.DbtLdif.DbtModel]].ok([model])
 
 
 __all__: list[str] = ["FlextDbtLdifUnifiedService"]
