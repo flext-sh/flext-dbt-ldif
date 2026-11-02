@@ -11,7 +11,7 @@ from typing import override
 
 from flext_tests import FlextTestsServiceBase
 
-from tests import TestsFlextDbtLdifSettings, m
+from tests import TestsFlextDbtLdifSettings, m, p
 
 
 class TestsFlextDbtLdifServiceBase(FlextTestsServiceBase):
