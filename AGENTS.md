@@ -1,12 +1,13 @@
 # AGENTS.md — flext-dbt-ldif
 
-> **Parent workspace law** lives in [`../AGENTS.md`](../AGENTS.md) — read it first.
-> Universal engineering core: `~/.agents/UNIVERSAL_CORE.md`. Composition: global
-> skills + parent/root `AGENTS.md` + this scope delta. Do not re-embed universal law.
->
-> **Standalone / independent mode:** when `../AGENTS.md` does not resolve, pin the
-> parent raw `AGENTS.md` URL to the same branch/release as this package (never
-> `main`): <https://raw.githubusercontent.com/flext-sh/flext/0.12.0-dev/AGENTS.md>
+Read the branch-matched [FLEXT root](../AGENTS.md) and its local flext-law through
+that root's authority entry point. In standalone mode resolve the same branch or
+release; a coincidental parent instruction file does not establish FLEXT authority.
+This file adds only this package's domain delta. Command routing, architecture
+and universal execution stay with their parent owners.
+
+Embedded AI Hub or Beads generated blocks are retired delivery material, not
+active local rules. Their withdrawal remains the publisher's responsibility.
 
 <!-- AIHUB-AGENTS-SCOPE-LOCAL-BEGIN -->
 
@@ -17,37 +18,10 @@
 dbt models for LDIF data transformation. Thin driver over `flext-meltano` dbt runner
 (ADR-006).
 
-## Structure
-
-```text
-src/flext_dbt_ldif/
-├── api.py            # FlextDbtLdif — generate_ldif_models / process_ldif_file
-├── base.py           # FlextDbtLdifServiceBase (.connection_profile)
-├── cli.py            # console script → inherited dbt cli_main
-├── services/         # client.py, service.py, unified_service.py
-├── constants.py typings.py protocols.py models.py utilities.py   # AUTO-GENERATED facets
-```
-
-## Code Map
-
-| Symbol           | Kind  | Location                      | Role                                                   |
-| ---------------- | ----- | ----------------------------- | ------------------------------------------------------ |
-| `FlextDbtLdif`   | class | `api.py`                      | facade: `generate_ldif_models`, `process_ldif_file`    |
-| `UnifiedService` | class | `services/unified_service.py` | `generate_staging_models`, `generate_analytics_models` |
-
 ## Conventions (specific to this package)
 
 - Model generation emits typed `m.DbtLdif.DbtModel` instances for staging and analytics
   artifacts (no dict roundtrip).
-- Config/settings canonical pattern: ADR-012.
-- Codemod governance (ast-grep + make mod): ADR-014.
-
-## Commands
-
-```bash
-make check
-make test # tests/unit
-```
 
 <!-- AIHUB-AGENTS-SCOPE-LOCAL-END -->
 
