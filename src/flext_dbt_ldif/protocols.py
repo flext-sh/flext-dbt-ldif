@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Protocols for DBT LDIF integration points.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
@@ -10,9 +11,14 @@ from __future__ import annotations
 from flext_ldif import FlextLdifProtocols
 from flext_meltano import FlextMeltanoProtocols
 
+from flext_dbt_ldif._protocols.dbt import FlextDbtLdifProtocolsDbt
+
 
 class FlextDbtLdifProtocols(FlextMeltanoProtocols, FlextLdifProtocols):
     """Namespace for DBT LDIF protocol contracts."""
+
+    class DbtLdif(FlextDbtLdifProtocolsDbt):
+        """DBT LDIF protocol namespace."""
 
 
 p = FlextDbtLdifProtocols

@@ -14,7 +14,7 @@ from flext_meltano import m
 from flext_dbt_ldif import c, t
 
 
-class FlextModelsDbtLdifDbt:
+class FlextDbtLdifModelsDbt:
     """DBT LDIF domain models namespace."""
 
     class DbtModel(m.ArbitraryTypesModel):
@@ -142,4 +142,4 @@ class FlextModelsDbtLdifDbt:
         project: Annotated[str, m.Field(description="dbt project name")]
 
 
-__all__: list[str] = ["FlextModelsDbtLdifDbt"]
+__all__: list[str] = ["FlextDbtLdifModelsDbt"]

@@ -28,7 +28,7 @@ This section is generated from public exports and real docstrings.
 ## Surface Summary
 
 - Primary facades: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
-  `FlextDbtLdifConstantsBase`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase` (+4
+  `FlextDbtLdifConstantsBase`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase` (+5
   more)
 - Generated module pages: `8`
 

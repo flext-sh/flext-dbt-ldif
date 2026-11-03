@@ -20,7 +20,7 @@
 - Keywords: `data-transformation`, `dbt`, `enterprise`, `flext`, `sql`, `typed`
 - Main facades: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
   `FlextDbtLdifConstantsBase`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase`,
-  `FlextDbtLdifSettings`, `FlextDbtLdifTypes` (+2 more)
+  `FlextDbtLdifSettings`, `FlextDbtLdifTypes` (+3 more)
 - Alias exports: `c`, `d`, `e`, `h`, `m`, `p`, `r`, `s`, `t`, `u`, `x`
 - Public symbol exports: `FlextDbtLdif`, `FlextDbtLdifConfig`, `FlextDbtLdifConstants`,
   `FlextDbtLdifConstantsBase`, `FlextDbtLdifProtocols`, `FlextDbtLdifServiceBase`,

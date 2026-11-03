@@ -9,8 +9,8 @@ from __future__ import annotations
 from flext_ldif import FlextLdifModels
 
 
-class FlextModelsDbtLdifBase(FlextLdifModels):
+class FlextDbtLdifModelsBase(FlextLdifModels):
     """MRO facade composing the LDIF model namespace for DBT LDIF."""
 
 
-__all__: list[str] = ["FlextModelsDbtLdifBase"]
+__all__: list[str] = ["FlextDbtLdifModelsBase"]
