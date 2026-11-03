@@ -7,7 +7,6 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from types import MappingProxyType
 from typing import TYPE_CHECKING
 
 from flext_core.lazy import install_lazy_exports
@@ -36,7 +35,7 @@ if TYPE_CHECKING:
         FlextDbtLdifConstantsBase,
         c,
     )
-    from flext_dbt_ldif.models import FlextModelsDbtLdif, m
+    from flext_dbt_ldif.models import FlextDbtLdifModels, m
     from flext_dbt_ldif.protocols import FlextDbtLdifProtocols, p
     from flext_dbt_ldif.typings import FlextDbtLdifTypes, t
     from flext_dbt_ldif.utilities import FlextDbtLdifUtilities, u
@@ -47,13 +46,13 @@ __all__: tuple[str, ...] = (
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
     "FlextDbtLdifConstantsBase",
+    "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
     "FlextDbtLdifServiceBase",
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
     "FlextDbtLdifUtilities",
     "FlextDbtLdifVersion",
-    "FlextModelsDbtLdif",
     "__author__",
     "__author_email__",
     "__description__",
@@ -82,18 +81,18 @@ __all__: tuple[str, ...] = (
 install_lazy_exports(
     __name__,
     globals(),
-    MappingProxyType({
+    {
         "FlextDbtLdif": ".api",
         "FlextDbtLdifConfig": "._config",
         "FlextDbtLdifConstants": ".constants",
         "FlextDbtLdifConstantsBase": ".constants",
+        "FlextDbtLdifModels": ".models",
         "FlextDbtLdifProtocols": ".protocols",
         "FlextDbtLdifServiceBase": ".base",
         "FlextDbtLdifSettings": "._settings",
         "FlextDbtLdifTypes": ".typings",
         "FlextDbtLdifUtilities": ".utilities",
         "FlextDbtLdifVersion": ".__version__",
-        "FlextModelsDbtLdif": ".models",
         "__author__": ".__version__",
         "__author_email__": ".__version__",
         "__description__": ".__version__",
@@ -116,7 +115,7 @@ install_lazy_exports(
         "t": ".typings",
         "u": ".utilities",
         "x": "flext_meltano",
-    }),
+    },
     public_exports=__all__,
 )
 
