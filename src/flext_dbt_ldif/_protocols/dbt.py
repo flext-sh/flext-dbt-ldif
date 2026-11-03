@@ -9,183 +9,79 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from flext_meltano import FlextMeltanoProtocols
 
-from flext_dbt_ldif import t
+if TYPE_CHECKING:
+    from flext_dbt_ldif import t
 
 
 class FlextDbtLdifProtocolsDbt:
     """Own the structural contracts declared by its model source."""
 
     @runtime_checkable
-    class DbtModel(FlextMeltanoProtocols.Model, Protocol):
+    class DbtModel(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def name(self) -> t.StrippedStr:
-            """DBT model name."""
-            ...
-
-        @property
-        def dbt_model_type(self) -> str:
-            """DBT model category."""
-            ...
-
-        @property
-        def ldif_source(self) -> t.StrippedStr:
-            """LDIF source identifier."""
-            ...
-
-        @property
-        def materialization(self) -> str:
-            """DBT materialization strategy."""
-            ...
-
-        @property
-        def sql_content(self) -> t.StrippedStr:
-            """Rendered SQL for the DBT model."""
-            ...
-
-        @property
-        def description(self) -> str:
-            """Human-readable model description."""
-            ...
-
-        @property
-        def columns(self) -> Sequence[t.JsonMapping]:
-            """Column metadata for the DBT model."""
-            ...
-
-        @property
-        def dependencies(self) -> Sequence[str]:
-            """Upstream model dependencies."""
-            ...
+        name: t.StrippedStr
+        dbt_model_type: str
+        ldif_source: t.StrippedStr
+        materialization: str
+        sql_content: t.StrippedStr
+        description: str
+        columns: Sequence[t.JsonMapping]
+        dependencies: Sequence[str]
 
     @runtime_checkable
-    class LdifValidationResult(FlextMeltanoProtocols.Model, Protocol):
+    class LdifValidationResult(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def total_entries(self) -> int:
-            """Total LDIF entries validated."""
-            ...
-
-        @property
-        def quality_score(self) -> float:
-            """Aggregate LDIF quality score."""
-            ...
-
-        @property
-        def validation_status(self) -> str:
-            """Validation lifecycle status."""
-            ...
+        total_entries: int
+        quality_score: float
+        validation_status: str
 
     @runtime_checkable
-    class DbtTransformationResult(FlextMeltanoProtocols.Model, Protocol):
+    class DbtTransformationResult(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def records(self) -> int:
-            """Number of transformed records."""
-            ...
-
-        @property
-        def models(self) -> Sequence[str]:
-            """Names of models produced by the transformation."""
-            ...
-
-        @property
-        def status(self) -> str:
-            """Transformation lifecycle status."""
-            ...
+        records: int
+        models: Sequence[str]
+        status: str
 
     @runtime_checkable
-    class ModelGenerationResult(FlextMeltanoProtocols.Model, Protocol):
+    class ModelGenerationResult(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def models_generated(self) -> int:
-            """Number of generated DBT models."""
-            ...
-
-        @property
-        def model_names(self) -> Sequence[str]:
-            """Names of generated DBT models."""
-            ...
+        models_generated: int
+        model_names: Sequence[str]
 
     @runtime_checkable
-    class ParseValidationResult(FlextMeltanoProtocols.Model, Protocol):
+    class ParseValidationResult(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def entry_count(self) -> int:
-            """Number of parsed LDIF entries."""
-            ...
-
-        @property
-        def quality_score(self) -> float:
-            """Validation quality score."""
-            ...
-
-        @property
-        def validation_status(self) -> str:
-            """Validation lifecycle status."""
-            ...
+        entry_count: int
+        quality_score: float
+        validation_status: str
 
     @runtime_checkable
-    class WorkflowResult(FlextMeltanoProtocols.Model, Protocol):
+    class WorkflowResult(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def ldif_file(self) -> str:
-            """Input LDIF file path."""
-            ...
-
-        @property
-        def entry_count(self) -> int:
-            """Processed LDIF entry count."""
-            ...
-
-        @property
-        def validation_status(self) -> str:
-            """Validation lifecycle status."""
-            ...
-
-        @property
-        def models_generated(self) -> int:
-            """Number of generated DBT models."""
-            ...
-
-        @property
-        def transformation_status(self) -> str:
-            """Transformation lifecycle status."""
-            ...
-
-        @property
-        def workflow_status(self) -> str:
-            """Overall workflow status."""
-            ...
+        ldif_file: str
+        entry_count: int
+        validation_status: str
+        models_generated: int
+        transformation_status: str
+        workflow_status: str
 
     @runtime_checkable
-    class DbtConnectionProfile(FlextMeltanoProtocols.Model, Protocol):
+    class DbtConnectionProfile(FlextMeltanoProtocols.BaseModel, Protocol):
         """Structural data contract projected from the owning model."""
 
-        @property
-        def type(self) -> str:
-            """Dbt adapter type."""
-            ...
-
-        @property
-        def path(self) -> str:
-            """LDIF source file path."""
-            ...
-
-        @property
-        def project(self) -> str:
-            """Dbt project name."""
-            ...
+        type: str
+        path: str
+        project: str
 
 
 __all__: list[str] = [
