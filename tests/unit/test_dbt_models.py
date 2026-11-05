@@ -13,7 +13,7 @@ import pytest
 
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services import FlextDbtLdifUnifiedService
-from tests import c, m, t, tm
+from tests import c, m, t, tm, u
 
 
 class TestsFlextDbtLdifDbtModels:
@@ -161,7 +161,7 @@ class TestsFlextDbtLdifDbtModels:
         kwargs: Mapping[str, str],
     ) -> None:
         """Blank required fields (t.StrippedStr) fail validation naming the field."""
-        with pytest.raises(c.ValidationError) as exc_info:
+        with u.Tests.raises(c.ValidationError) as exc_info:
             m.DbtLdif.DbtModel.model_validate({
                 "name": "test_model",
                 "dbt_model_type": c.DbtLdif.DBT_MODEL_TYPE_STAGING,

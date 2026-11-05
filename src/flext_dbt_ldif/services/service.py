@@ -10,8 +10,13 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_dbt_ldif import c, m, p, r, t, u
+from flext_dbt_ldif.constants import c
+from flext_dbt_ldif.models import m
+from flext_dbt_ldif.protocols import p
+from flext_dbt_ldif.result import r
 from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifUnifiedService
+from flext_dbt_ldif.typings import t
+from flext_dbt_ldif.utilities import u
 
 
 class FlextDbtLdifService:
