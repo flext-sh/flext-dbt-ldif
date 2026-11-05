@@ -9,8 +9,6 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-import pytest
-
 from flext_dbt_ldif import FlextDbtLdifSettings
 from flext_dbt_ldif.services import FlextDbtLdifUnifiedService
 from tests import c, m, t, tm, u
@@ -19,7 +17,7 @@ from tests import c, m, t, tm, u
 class TestsFlextDbtLdifDbtModels:
     """Public-contract tests for FlextDbtLdifUnifiedService and DbtModel."""
 
-    @pytest.fixture
+    @u.Tests.fixture
     def service() -> FlextDbtLdifUnifiedService.UnifiedService:
         """Provide a service instance backed by global settings.
 
@@ -148,7 +146,7 @@ class TestsFlextDbtLdifDbtModels:
         tm.that(model.sql_content, eq="select 1")
 
     @staticmethod
-    @pytest.mark.parametrize(
+    @c.Tests.MARK.parametrize(
         ("field", "kwargs"),
         [
             ("name", {"name": "  "}),

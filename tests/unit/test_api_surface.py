@@ -13,17 +13,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
 from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifService
-from tests import c, tm
+from tests import c, tm, u
 
 
 class TestsFlextDbtLdifApiSurface:
     """Behavior contract for the public DBT LDIF API surface."""
 
-    @pytest.fixture
+    @u.Tests.fixture
     @staticmethod
     def client() -> FlextDbtLdifClient.Client:
         """Client bound to the canonical settings singleton.
@@ -128,7 +126,7 @@ class TestsFlextDbtLdifApiSurface:
         tm.that(result.value.quality_score, eq=c.DbtLdif.DEFAULT_QUALITY_SCORE)
 
     @staticmethod
-    @pytest.mark.parametrize(
+    @c.Tests.MARK.parametrize(
         ("model_names", "expected_models"),
         [
             (None, ["stg_ldif_entries", "analytics_ldif_insights"]),

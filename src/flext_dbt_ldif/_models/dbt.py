@@ -11,8 +11,7 @@ from typing import Annotated
 
 from flext_meltano import m
 
-from flext_dbt_ldif.constants import c
-from flext_dbt_ldif.typings import t
+from flext_dbt_ldif import c, t
 
 
 class FlextDbtLdifModelsDbt:
