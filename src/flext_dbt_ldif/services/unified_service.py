@@ -13,12 +13,7 @@ from typing import Annotated, override
 
 from flext_meltano import FlextMeltanoDbtServiceBase
 
-from flext_dbt_ldif.constants import c
-from flext_dbt_ldif.models import m
-from flext_dbt_ldif.protocols import p
-from flext_dbt_ldif.result import r
-from flext_dbt_ldif.service import s
-from flext_dbt_ldif.typings import t
+from flext_dbt_ldif import c, m, p, r, s, t
 
 
 class FlextDbtLdifUnifiedService:

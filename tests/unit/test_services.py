@@ -9,13 +9,11 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-import pytest
-
 from flext_dbt_ldif.services import FlextDbtLdifService
-from tests import c, t, tm
+from tests import c, t, tm, u
 
 
-@pytest.fixture
+@u.Tests.fixture
 def svc(tmp_path: Path) -> FlextDbtLdifService.Service:
     """Create a service backed by a real project directory.
 
@@ -26,7 +24,7 @@ def svc(tmp_path: Path) -> FlextDbtLdifService.Service:
     return FlextDbtLdifService.Service(project_dir=tmp_path)
 
 
-@pytest.fixture
+@u.Tests.fixture
 def entries() -> Sequence[t.JsonMapping]:
     """Provide a minimal LDIF entry payload accepted by the public API.
 
@@ -162,7 +160,7 @@ class TestsFlextDbtLdifServices:
         tm.that(data.transformation_status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
     @staticmethod
-    @pytest.mark.parametrize(
+    @c.Tests.MARK.parametrize(
         ("generate_models", "run_transformations", "expected_models"),
         [(True, False, 2), (False, True, 0), (False, False, 0)],
     )
