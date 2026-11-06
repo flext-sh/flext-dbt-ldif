@@ -143,8 +143,6 @@ class TestsFlextDbtLdifClient:
             .transform_with_dbt([{"dn": "cn=a"}], ["only"])
             .unwrap()
         )
-        dumped = data.model_dump()
-
-        tm.that(dumped["records"], eq=1)
-        tm.that(list(dumped["models"]), eq=["only"])
-        tm.that(dumped["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
+        tm.that(data.records, eq=1)
+        tm.that(list(data.models), eq=["only"])
+        tm.that(data.status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
