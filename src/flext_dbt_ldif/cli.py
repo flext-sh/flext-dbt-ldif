@@ -7,10 +7,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_dbt_ldif import FlextDbtLdifServiceBase, t
+from collections.abc import Sequence
+
+from flext_dbt_ldif import FlextDbtLdifServiceBase
 
 
-def main(args: t.StrSequence | None = None) -> int:
+def main(args: Sequence[str] | None = None) -> int:
     """Run the flext-dbt-ldif console-script entry point.
 
     Delegates to the inherited dbt ``cli_main`` dispatcher.

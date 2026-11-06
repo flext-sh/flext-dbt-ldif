@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 # NOTE (multi-agent): mro-rn88 — import settings singleton (same family as base.py fix).
@@ -78,9 +79,9 @@ class FlextDbtLdifClient:
 
         @staticmethod
         def transform_with_dbt(
-            entries: t.SequenceOf[t.JsonMapping],
-            model_names: t.StrSequence | None = None,
-        ) -> p.Result[m.DbtLdif.DbtTransformationResult]:
+            entries: Sequence[t.JsonMapping],
+            model_names: Sequence[str] | None = None,
+        ) -> p.Result[p.DbtLdif.DbtTransformationResult]:
             """Return synthetic DBT transformation metadata.
 
             Args:
@@ -96,7 +97,7 @@ class FlextDbtLdifClient:
                 c.DbtLdif.STAGING_MODEL_NAME,
                 c.DbtLdif.ANALYTICS_MODEL_NAME,
             ]
-            return r[m.DbtLdif.DbtTransformationResult].ok(
+            return r[p.DbtLdif.DbtTransformationResult].ok(
                 m.DbtLdif.DbtTransformationResult(
                     records=len(entries),
                     models=selected_models,
@@ -106,8 +107,8 @@ class FlextDbtLdifClient:
 
         def validate_ldif_data(
             self,
-            entries: t.SequenceOf[t.JsonMapping],
-        ) -> p.Result[m.DbtLdif.LdifValidationResult]:
+            entries: Sequence[t.JsonMapping],
+        ) -> p.Result[p.DbtLdif.LdifValidationResult]:
             """Validate parsed LDIF payload and compute quality score.
 
             Args:
@@ -120,15 +121,15 @@ class FlextDbtLdifClient:
             """
             total_entries = len(entries)
             if total_entries == 0:
-                return r[m.DbtLdif.LdifValidationResult].fail("No LDIF entries found")
+                return r[p.DbtLdif.LdifValidationResult].fail("No LDIF entries found")
             if (
                 self.settings.DbtLdif.min_quality_threshold
                 > c.DbtLdif.DEFAULT_QUALITY_SCORE
             ):
-                return r[m.DbtLdif.LdifValidationResult].fail(
+                return r[p.DbtLdif.LdifValidationResult].fail(
                     "Quality threshold not met",
                 )
-            return r[m.DbtLdif.LdifValidationResult].ok(
+            return r[p.DbtLdif.LdifValidationResult].ok(
                 m.DbtLdif.LdifValidationResult(
                     total_entries=total_entries,
                     quality_score=c.DbtLdif.DEFAULT_QUALITY_SCORE,

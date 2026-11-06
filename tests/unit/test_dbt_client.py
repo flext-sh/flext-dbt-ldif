@@ -6,13 +6,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
-import pytest
-
 from flext_dbt_ldif import FlextDbtLdifSettings, settings
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from tests import c, m, t, tm
+from flext_dbt_ldif.services import FlextDbtLdifClient
+from tests import c, m, t, tm, u
 
 
 class TestsFlextDbtLdifClient:
@@ -30,7 +29,7 @@ class TestsFlextDbtLdifClient:
     def test_explicit_settings_are_the_ones_used() -> None:
         """Explicit settings are the settings the client operates on."""
         client = FlextDbtLdifClient.Client(settings)
-        assert client.settings is settings
+        tm.that(client.settings is settings)
 
     # ---- parse_ldif_file contract ----------------------------------------
 
@@ -68,12 +67,12 @@ class TestsFlextDbtLdifClient:
     # ---- validate_ldif_data contract -------------------------------------
 
     @staticmethod
-    @pytest.mark.parametrize("entry_count", [1, 3, 10])
+    @c.Tests.MARK.parametrize("entry_count", [1, 3, 10])
     def test_validation_reports_entry_count_and_passing_status(
         entry_count: int,
     ) -> None:
         """Non-empty entries validate as passed with matching totals."""
-        entries: t.SequenceOf[t.JsonMapping] = [
+        entries: Sequence[t.JsonMapping] = [
             {"dn": f"cn=n{i},dc=example,dc=org", "source": "in.ldif"}
             for i in range(entry_count)
         ]
@@ -82,7 +81,7 @@ class TestsFlextDbtLdifClient:
         tm.that(data, is_=m.DbtLdif.LdifValidationResult)
         tm.that(data.total_entries, eq=entry_count)
         tm.that(data.validation_status, eq=c.DbtLdif.VALIDATION_STATUS_PASSED)
-        tm.that(data.quality_score, eq=pytest.approx(c.DbtLdif.DEFAULT_QUALITY_SCORE))
+        tm.that(data.quality_score, eq=u.Tests.approx(c.DbtLdif.DEFAULT_QUALITY_SCORE))
 
     @staticmethod
     def test_validation_of_empty_entries_fails_with_reason() -> None:
@@ -97,7 +96,7 @@ class TestsFlextDbtLdifClient:
     @staticmethod
     def test_transform_reports_record_count_and_requested_models() -> None:
         """Transform metadata reflects inputs and reports success."""
-        entries: t.SequenceOf[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
+        entries: Sequence[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
         data = (
             FlextDbtLdifClient
             .Client()

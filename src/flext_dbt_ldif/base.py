@@ -14,7 +14,7 @@ from typing import Annotated, override
 
 from flext_meltano import FlextMeltanoDbtServiceBase
 
-from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t, u
+from flext_dbt_ldif import FlextDbtLdifSettings, m, p, settings, t
 
 
 class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
@@ -22,11 +22,11 @@ class FlextDbtLdifServiceBase(FlextMeltanoDbtServiceBase):
 
     dbt_project_name: Annotated[
         t.NonEmptyStr,
-        u.Field(description="Canonical dbt project name for DBT LDIF services"),
+        m.Field(description="Canonical dbt project name for DBT LDIF services"),
     ] = "dbt-ldif"
 
     @classmethod
-    def runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
+    def runtime_bootstrap_options(cls) -> p.RuntimeBootstrapOptions:
         """Return runtime bootstrap options for DBT LDIF services."""
         return m.RuntimeBootstrapOptions(settings_type=FlextDbtLdifSettings)
 

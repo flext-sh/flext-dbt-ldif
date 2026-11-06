@@ -1,3 +1,4 @@
+# AUTO-GENERATED FILE — Regenerate with: make gen
 """Domain models for DBT LDIF transformations.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
@@ -6,13 +7,12 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from flext_meltano import FlextMeltanoModels
+from flext_meltano import m as flext_meltano_m
 
-from flext_dbt_ldif._models.base import FlextDbtLdifModelsBase
-from flext_dbt_ldif._models.dbt import FlextDbtLdifModelsDbt
+from flext_dbt_ldif._models import FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt
 
 
-class FlextDbtLdifModels(FlextMeltanoModels, FlextDbtLdifModelsBase):
+class FlextDbtLdifModels(flext_meltano_m, FlextDbtLdifModelsBase):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtLdif(FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt):
@@ -20,5 +20,4 @@ class FlextDbtLdifModels(FlextMeltanoModels, FlextDbtLdifModelsBase):
 
 
 m = FlextDbtLdifModels
-
 __all__: list[str] = ["FlextDbtLdifModels", "m"]

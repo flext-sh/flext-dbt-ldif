@@ -15,6 +15,7 @@ class FlextDbtLdifConstantsBase:
     class DbtLdif:
         """DBT LDIF domain constants namespace."""
 
+        GENERATOR_SERVICE_NAME: Final[str] = "ldif_generator"
         STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
         STAGING_MODEL_DESCRIPTION: Final[str] = "Staging model for LDIF entries"
         ANALYTICS_MODEL_NAME: Final[str] = "analytics_ldif_insights"

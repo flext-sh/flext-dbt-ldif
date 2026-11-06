@@ -8,11 +8,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from tests import c, tm
+from flext_dbt_ldif.services import FlextDbtLdifService
+from tests import c, tm, u
 
 
 class TestsFlextDbtLdifServicesAndApi:
@@ -33,7 +31,7 @@ class TestsFlextDbtLdifServicesAndApi:
         tm.that(workflow.ldif_file, eq=str(tmp_path / "f.ldif"))
 
     @staticmethod
-    @pytest.mark.parametrize(
+    @c.Tests.MARK.parametrize(
         (
             "generate_models",
             "run_transformations",
@@ -128,14 +126,14 @@ class TestsFlextDbtLdifServicesAndApi:
 
         tm.ok(result)
         tm.that(result.value, is_=FlextDbtLdifSettings)
-        tm.that(result.value.DbtLdif.min_quality_threshold, eq=pytest.approx(0.5))
+        tm.that(result.value.DbtLdif.min_quality_threshold, eq=u.Tests.approx(0.5))
 
     @staticmethod
     def test_service_property_exposes_workflow_service() -> None:
         """The service property exposes the bound workflow Service."""
         api = FlextDbtLdif()
 
-        tm.that(api.service, is_=FlextDbtLdifServiceMixin.Service)
+        tm.that(api.service, is_=FlextDbtLdifService.Service)
 
     @staticmethod
     def test_fetch_global_returns_shared_singleton() -> None:
@@ -143,4 +141,4 @@ class TestsFlextDbtLdifServicesAndApi:
         first = FlextDbtLdif.fetch_global()
         second = FlextDbtLdif.fetch_global()
 
-        assert first is second
+        tm.that(first is second)

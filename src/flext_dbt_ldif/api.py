@@ -11,15 +11,17 @@ from __future__ import annotations
 from pathlib import Path
 from typing import ClassVar, Self
 
-from flext_dbt_ldif import FlextDbtLdifSettings, c, m, p, r, u
-from flext_dbt_ldif.services.client import FlextDbtLdifClient
-from flext_dbt_ldif.services.service import FlextDbtLdifServiceMixin
-from flext_dbt_ldif.services.unified_service import FlextDbtLdifUnifiedService
+from flext_dbt_ldif import FlextDbtLdifSettings, c, p, r, u
+from flext_dbt_ldif.services import (
+    FlextDbtLdifClient,
+    FlextDbtLdifService,
+    FlextDbtLdifUnifiedService,
+)
 
 
 class FlextDbtLdif(
     FlextDbtLdifClient,
-    FlextDbtLdifServiceMixin,
+    FlextDbtLdifService,
     FlextDbtLdifUnifiedService,
 ):
     """MRO facade for all DBT LDIF operations.
@@ -44,7 +46,7 @@ class FlextDbtLdif(
         return cls._instance
 
     @property
-    def service(self) -> FlextDbtLdifServiceMixin.Service:
+    def service(self) -> FlextDbtLdifService.Service:
         """The bound workflow service."""
         return self._service
 
@@ -57,7 +59,7 @@ class FlextDbtLdif(
         ldif_file: Path | str,
         *,
         overwrite: bool = False,
-    ) -> p.Result[m.DbtLdif.ModelGenerationResult]:
+    ) -> p.Result[p.DbtLdif.ModelGenerationResult]:
         """Generate DBT model metadata from LDIF input.
 
         Parses the LDIF file and produces staging and analytics model
@@ -74,12 +76,12 @@ class FlextDbtLdif(
         """
         parsed = self.service.client.parse_ldif_file(ldif_file)
         if parsed.failure:
-            return r[m.DbtLdif.ModelGenerationResult].from_failure(parsed)
+            return r[p.DbtLdif.ModelGenerationResult].from_failure(parsed)
         entries_raw = parsed.value
         try:
             entries = u.json_mapping_sequence_adapter().validate_python(entries_raw)
         except c.ValidationError:
-            return r[m.DbtLdif.ModelGenerationResult].fail(
+            return r[p.DbtLdif.ModelGenerationResult].fail(
                 "Invalid parsed entries payload",
             )
         return self.service.generate_and_write_models(entries, overwrite=overwrite)
@@ -90,7 +92,7 @@ class FlextDbtLdif(
         *,
         generate_models: bool = True,
         run_transformations: bool = False,
-    ) -> p.Result[m.DbtLdif.WorkflowResult]:
+    ) -> p.Result[p.DbtLdif.WorkflowResult]:
         """Execute end-to-end LDIF workflow.
 
         Runs parsing, validation, and optionally model generation and
@@ -115,7 +117,7 @@ class FlextDbtLdif(
     def validate_ldif_quality(
         self,
         ldif_file: Path | str,
-    ) -> p.Result[m.DbtLdif.ParseValidationResult]:
+    ) -> p.Result[p.DbtLdif.ParseValidationResult]:
         """Run quality-focused workflow.
 
         Parses and validates the LDIF file and reports the resulting

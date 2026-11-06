@@ -14,18 +14,16 @@ from typing import Annotated
 
 from flext_meltano import FlextMeltanoConfig, m
 
-from flext_dbt_ldif._models.base import FlextDbtLdifModelsBase
-
 
 class FlextDbtLdifConfig(FlextMeltanoConfig):
     """DbtLdif config auto-loaded model-less from ``config/*.yaml``."""
 
     DbtLdif: Annotated[
-        FlextDbtLdifModelsBase.ConfigNamespace,
+        m.Meltano.MeltanoNamespace,
         m.Field(
             description="Open namespace exposing ``config/*.yaml`` under ``DbtLdif``.",
         ),
-    ] = FlextDbtLdifModelsBase.ConfigNamespace()
+    ] = m.Meltano.MeltanoNamespace()
 
 
 config: FlextDbtLdifConfig = FlextDbtLdifConfig.fetch_global()

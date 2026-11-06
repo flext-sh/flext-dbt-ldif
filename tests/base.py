@@ -11,7 +11,7 @@ from typing import override
 
 from flext_tests import FlextTestsServiceBase
 
-from tests import TestsFlextDbtLdifSettings, m
+from tests import TestsFlextDbtLdifSettings, m, p
 
 
 class TestsFlextDbtLdifServiceBase(FlextTestsServiceBase):
@@ -23,7 +23,7 @@ class TestsFlextDbtLdifServiceBase(FlextTestsServiceBase):
     # type mismatch (bad-return) and a settings atravessador.
     @classmethod
     @override
-    def runtime_bootstrap_options(cls) -> m.RuntimeBootstrapOptions:
+    def runtime_bootstrap_options(cls) -> p.RuntimeBootstrapOptions:
         return m.RuntimeBootstrapOptions(settings_type=TestsFlextDbtLdifSettings)
 
 
