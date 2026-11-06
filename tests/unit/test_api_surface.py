@@ -145,10 +145,10 @@ class TestsFlextDbtLdifApiSurface:
         result = client.transform_with_dbt(entries, model_names)
 
         tm.ok(result)
-        payload = result.value.model_dump()
-        tm.that(payload["records"], eq=len(entries))
-        tm.that(list(payload["models"]), eq=expected_models)
-        tm.that(payload["status"], eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
+        payload = result.value
+        tm.that(payload.records, eq=len(entries))
+        tm.that(list(payload.models), eq=expected_models)
+        tm.that(payload.status, eq=c.DbtLdif.TRANSFORMATION_STATUS_SUCCESS)
 
     @staticmethod
     def test_service_parse_and_validate_reports_entry_count(
