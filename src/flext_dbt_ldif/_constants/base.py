@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-from typing import Final
+from typing import ClassVar
 
 
 class FlextDbtLdifConstantsBase:
@@ -15,22 +15,22 @@ class FlextDbtLdifConstantsBase:
     class DbtLdif:
         """DBT LDIF domain constants namespace."""
 
-        GENERATOR_SERVICE_NAME: Final[str] = "ldif_generator"
-        STAGING_MODEL_NAME: Final[str] = "stg_ldif_entries"
-        STAGING_MODEL_DESCRIPTION: Final[str] = "Staging model for LDIF entries"
-        ANALYTICS_MODEL_NAME: Final[str] = "analytics_ldif_insights"
-        ANALYTICS_MODEL_DESCRIPTION: Final[str] = "Analytics model for LDIF insights"
-        DBT_MODEL_TYPE_STAGING: Final[str] = "staging"
-        DBT_MODEL_TYPE_ANALYTICS: Final[str] = "analytics"
-        DBT_MATERIALIZATION_VIEW: Final[str] = "view"
-        DBT_MATERIALIZATION_TABLE: Final[str] = "table"
-        LDIF_SOURCE_NAME: Final[str] = "ldif_entries"
-        SAMPLE_LDIF_DN: Final[str] = "cn=sample,dc=example,dc=org"
-        DEFAULT_QUALITY_SCORE: Final[float] = 1.0
-        VALIDATION_STATUS_PASSED: Final[str] = "passed"
-        TRANSFORMATION_STATUS_SUCCESS: Final[str] = "success"
-        WORKFLOW_STATUS_COMPLETED: Final[str] = "completed"
-        WORKFLOW_STATUS_READY: Final[str] = "ready"
+        GENERATOR_SERVICE_NAME: ClassVar[str] = "ldif_generator"
+        STAGING_MODEL_NAME: ClassVar[str] = "stg_ldif_entries"
+        STAGING_MODEL_DESCRIPTION: ClassVar[str] = "Staging model for LDIF entries"
+        ANALYTICS_MODEL_NAME: ClassVar[str] = "analytics_ldif_insights"
+        ANALYTICS_MODEL_DESCRIPTION: ClassVar[str] = "Analytics model for LDIF insights"
+        DBT_MODEL_TYPE_STAGING: ClassVar[str] = "staging"
+        DBT_MODEL_TYPE_ANALYTICS: ClassVar[str] = "analytics"
+        DBT_MATERIALIZATION_VIEW: ClassVar[str] = "view"
+        DBT_MATERIALIZATION_TABLE: ClassVar[str] = "table"
+        LDIF_SOURCE_NAME: ClassVar[str] = "ldif_entries"
+        SAMPLE_LDIF_DN: ClassVar[str] = "cn=sample,dc=example,dc=org"
+        DEFAULT_QUALITY_SCORE: ClassVar[float] = 1.0
+        VALIDATION_STATUS_PASSED: ClassVar[str] = "passed"
+        TRANSFORMATION_STATUS_SUCCESS: ClassVar[str] = "success"
+        WORKFLOW_STATUS_COMPLETED: ClassVar[str] = "completed"
+        WORKFLOW_STATUS_READY: ClassVar[str] = "ready"
 
 
 __all__: list[str] = ["FlextDbtLdifConstantsBase"]
