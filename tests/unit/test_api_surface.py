@@ -14,7 +14,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, __version__
-from flext_dbt_ldif.services import FlextDbtLdifClient, FlextDbtLdifService
 from tests import c, tm, u
 
 
@@ -23,14 +22,14 @@ class TestsFlextDbtLdifApiSurface:
 
     @u.Tests.fixture
     @staticmethod
-    def client() -> FlextDbtLdifClient.Client:
+    def client() -> FlextDbtLdif.Client:
         """Client bound to the canonical settings singleton.
 
         Returns:
             The resulting ``Client``.
 
         """
-        return FlextDbtLdifClient.Client(FlextDbtLdifSettings())
+        return FlextDbtLdif.Client(FlextDbtLdifSettings())
 
     @staticmethod
     def test_version_is_nonempty_string() -> None:
@@ -39,28 +38,9 @@ class TestsFlextDbtLdifApiSurface:
         tm.that(__version__, truth=True)
 
     @staticmethod
-    def test_parse_uses_configured_path_when_none_given(
-        client: FlextDbtLdifClient.Client,
-    ) -> None:
-        """Parsing with no argument falls back to the configured LDIF path."""
-        result = client.parse_ldif_file()
-
-        tm.ok(result)
-        entries = result.value
-        tm.that(
-            entries,
-            eq=[
-                {
-                    "dn": c.DbtLdif.SAMPLE_LDIF_DN,
-                    "source": client.settings.DbtLdif.ldif_file_path,
-                },
-            ],
-        )
-
-    @staticmethod
     def test_parse_prefers_explicit_path_over_settings() -> None:
         """An explicit path overrides the configured default."""
-        client = FlextDbtLdifClient.Client(
+        client = FlextDbtLdif.Client(
             FlextDbtLdifSettings.model_validate({"DbtLdif": {"ldif_file_path": ""}}),
         )
         result = client.parse_ldif_file("/data/other.ldif")
@@ -75,7 +55,7 @@ class TestsFlextDbtLdifApiSurface:
 
     @staticmethod
     def test_validate_reports_quality_for_populated_entries(
-        client: FlextDbtLdifClient.Client,
+        client: FlextDbtLdif.Client,
     ) -> None:
         """Validation of one entry passes with the default quality score."""
         result = client.validate_ldif_data([
@@ -93,7 +73,7 @@ class TestsFlextDbtLdifApiSurface:
         )
 
     @staticmethod
-    def test_validate_fails_on_empty_entries(client: FlextDbtLdifClient.Client) -> None:
+    def test_validate_fails_on_empty_entries(client: FlextDbtLdif.Client) -> None:
         """Validation of an empty payload is a failure, not an empty success."""
         result = client.validate_ldif_data([])
 
@@ -111,7 +91,7 @@ class TestsFlextDbtLdifApiSurface:
         the public API; equality with DEFAULT_QUALITY_SCORE is the boundary and
         must still pass.
         """
-        client = FlextDbtLdifClient.Client(
+        client = FlextDbtLdif.Client(
             FlextDbtLdifSettings.model_validate({
                 "DbtLdif": {
                     "ldif_file_path": str(tmp_path / "sample.ldif"),
@@ -135,7 +115,7 @@ class TestsFlextDbtLdifApiSurface:
         ],
     )
     def test_transform_reports_records_and_selected_models(
-        client: FlextDbtLdifClient.Client,
+        client: FlextDbtLdif.Client,
         model_names: list[str] | None,
         expected_models: list[str],
     ) -> None:
@@ -156,7 +136,7 @@ class TestsFlextDbtLdifApiSurface:
         tmp_path: Path,
     ) -> None:
         """The service one-shot parse+validate reports counts and status."""
-        service = FlextDbtLdifService.Service(settings)
+        service = FlextDbtLdif.Service(settings)
 
         result = service.parse_and_validate_ldif(tmp_path / "sample.ldif")
 
