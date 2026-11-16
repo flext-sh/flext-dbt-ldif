@@ -9,24 +9,23 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings
-from flext_dbt_ldif.services import FlextDbtLdifUnifiedService
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings
 from tests import c, m, t, tm, u
 
 
 class TestsFlextDbtLdifDbtModels:
-    """Public-contract tests for FlextDbtLdifUnifiedService and DbtModel."""
+    """Public-contract tests for FlextDbtLdif and DbtModel."""
 
     @u.Tests.fixture
     @staticmethod
-    def service() -> FlextDbtLdifUnifiedService.UnifiedService:
+    def service() -> FlextDbtLdif.UnifiedService:
         """Provide a service instance backed by global settings.
 
         Returns:
-            The resulting ``FlextDbtLdifUnifiedService.UnifiedService``.
+            The resulting ``FlextDbtLdif.UnifiedService``.
 
         """
-        return FlextDbtLdifUnifiedService.UnifiedService(
+        return FlextDbtLdif.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
         )
 
@@ -37,7 +36,7 @@ class TestsFlextDbtLdifDbtModels:
         tmp_path: Path,
     ) -> None:
         """Constructor arguments surface through public fields."""
-        gen = FlextDbtLdifUnifiedService.UnifiedService(
+        gen = FlextDbtLdif.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
             project_dir=tmp_path,
         )
@@ -48,7 +47,7 @@ class TestsFlextDbtLdifDbtModels:
 
     @staticmethod
     def test_execute_returns_ready_metadata_payload(
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        service: FlextDbtLdif.UnifiedService,
     ) -> None:
         """Execute succeeds and reports the ready status contract."""
         result = service.execute()
@@ -60,7 +59,7 @@ class TestsFlextDbtLdifDbtModels:
     @staticmethod
     def test_execute_metadata_reflects_project_dir(tmp_path: Path) -> None:
         """Execute payload echoes the configured project directory."""
-        gen = FlextDbtLdifUnifiedService.UnifiedService(
+        gen = FlextDbtLdif.UnifiedService(
             settings=FlextDbtLdifSettings.fetch_global(),
             project_dir=tmp_path,
         )
@@ -71,7 +70,7 @@ class TestsFlextDbtLdifDbtModels:
 
     @staticmethod
     def test_generate_staging_models_emits_view_model_for_entries(
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        service: FlextDbtLdif.UnifiedService,
     ) -> None:
         """Non-empty entries yield exactly one staging view model."""
         entries: Sequence[t.JsonMapping] = [{"dn": "cn=test,dc=example,dc=org"}]
@@ -85,7 +84,7 @@ class TestsFlextDbtLdifDbtModels:
 
     @staticmethod
     def test_generate_staging_models_returns_empty_without_entries(
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        service: FlextDbtLdif.UnifiedService,
     ) -> None:
         """Empty entries yield an empty, successful result."""
         result = service.generate_staging_models([])
@@ -96,7 +95,7 @@ class TestsFlextDbtLdifDbtModels:
 
     @staticmethod
     def test_generate_analytics_models_emits_table_model_from_staging(
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        service: FlextDbtLdif.UnifiedService,
     ) -> None:
         """A staging model produces one analytics table model."""
         staging_model = m.DbtLdif.DbtModel(
@@ -120,7 +119,7 @@ class TestsFlextDbtLdifDbtModels:
 
     @staticmethod
     def test_generate_analytics_models_returns_empty_without_staging(
-        service: FlextDbtLdifUnifiedService.UnifiedService,
+        service: FlextDbtLdif.UnifiedService,
     ) -> None:
         """No staging models yields an empty, successful result."""
         result = service.generate_analytics_models([])

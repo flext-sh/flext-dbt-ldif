@@ -1,4 +1,4 @@
-"""Behavior contract for FlextDbtLdifService services — public API only.
+"""Behavior contract for FlextDbtLdif services — public API only.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,19 +9,19 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_dbt_ldif.services import FlextDbtLdifService
+from flext_dbt_ldif import FlextDbtLdif
 from tests import c, t, tm, u
 
 
 @u.Tests.fixture
-def svc(tmp_path: Path) -> FlextDbtLdifService.Service:
+def svc(tmp_path: Path) -> FlextDbtLdif.Service:
     """Create a service backed by a real project directory.
 
     Returns:
-        The resulting ``FlextDbtLdifService.Service``.
+        The resulting ``FlextDbtLdif.Service``.
 
     """
-    return FlextDbtLdifService.Service(project_dir=tmp_path)
+    return FlextDbtLdif.Service(project_dir=tmp_path)
 
 
 @u.Tests.fixture
@@ -35,12 +35,12 @@ def entries() -> Sequence[t.JsonMapping]:
     return [{"dn": "cn=test,dc=example,dc=org"}]
 
 
-class TestsFlextDbtLdifServices:
-    """Behavior contract for FlextDbtLdifService.Service workflows."""
+class TestsFlextDbtLdifs:
+    """Behavior contract for FlextDbtLdif.Service workflows."""
 
     @staticmethod
     def test_run_data_quality_assessment(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
     ) -> None:
         """Data quality assessment parses, validates, and reports entry metrics."""
@@ -61,7 +61,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_parse_and_validate_ldif_returns_quality_metrics(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
     ) -> None:
         """A valid LDIF path yields a passed validation with a quality score."""
@@ -75,7 +75,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_parse_and_validate_ldif_is_idempotent(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
     ) -> None:
         """Repeated calls with the same input return equal public state."""
@@ -90,7 +90,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_parse_and_validate_ldif_empty_path_fails(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
     ) -> None:
         """An empty path surfaces a required-path failure via the result channel."""
         result = svc.parse_and_validate_ldif("")
@@ -100,7 +100,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_run_data_quality_assessment_equals_parse_and_validate(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
     ) -> None:
         """Quality assessment exposes the same contract as parse+validate."""
@@ -115,7 +115,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_generate_and_write_models_produces_staging_and_analytics(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         entries: Sequence[t.JsonMapping],
     ) -> None:
         """Model generation yields one staging and one analytics model."""
@@ -129,7 +129,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_generate_and_write_models_empty_entries_yields_no_models(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
     ) -> None:
         """No entries produce an empty, well-formed generation result."""
         result = svc.generate_and_write_models([])
@@ -141,7 +141,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_run_complete_workflow_all_stages_completes(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
     ) -> None:
         """The full workflow reports completion with model and transform state."""
@@ -165,7 +165,7 @@ class TestsFlextDbtLdifServices:
         [(True, False, 2), (False, True, 0), (False, False, 0)],
     )
     def test_run_complete_workflow_honors_stage_flags(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
         *,
         generate_models: bool,
@@ -190,7 +190,7 @@ class TestsFlextDbtLdifServices:
 
     @staticmethod
     def test_run_complete_workflow_records_source_file(
-        svc: FlextDbtLdifService.Service,
+        svc: FlextDbtLdif.Service,
         tmp_path: Path,
     ) -> None:
         """The workflow result echoes the LDIF source path it processed."""
