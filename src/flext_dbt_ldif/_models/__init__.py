@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from flext_core.lazy import install_lazy_exports
+from flext_core.lazy import defer_lazy_bases, install_lazy_exports
 
 if TYPE_CHECKING:
     from flext_dbt_ldif._models.base import FlextDbtLdifModelsBase
@@ -23,4 +23,23 @@ install_lazy_exports(
     globals(),
     {"FlextDbtLdifModelsBase": ".base", "FlextDbtLdifModelsDbt": ".dbt"},
     public_exports=__all__,
+    deferred_members={
+        "FlextDbtLdifModelsBase": (),
+        "FlextDbtLdifModelsDbt": (
+            "DbtModel",
+            "LdifValidationResult",
+            "DbtTransformationResult",
+            "ModelGenerationResult",
+            "ParseValidationResult",
+            "WorkflowResult",
+            "DbtConnectionProfile",
+        ),
+    },
+)
+
+defer_lazy_bases(
+    __name__,
+    {
+        "FlextDbtLdifModelsBase": (("flext_ldif", "FlextLdifModels"),),
+    },
 )
