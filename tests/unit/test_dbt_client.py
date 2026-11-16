@@ -1,4 +1,4 @@
-"""Behavioral tests for the FlextDbtLdifClient public contract.
+"""Behavioral tests for the FlextDbtLdif public contract.
 
 Copyright (c) 2026 FLEXT Team. All rights reserved.
 SPDX-License-Identifier: MIT
@@ -9,26 +9,25 @@ from __future__ import annotations
 from collections.abc import Sequence
 from pathlib import Path
 
-from flext_dbt_ldif import FlextDbtLdifSettings, settings
-from flext_dbt_ldif.services import FlextDbtLdifClient
+from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings, settings
 from tests import c, m, t, tm, u
 
 
-class TestsFlextDbtLdifClient:
-    """Behavioral contract of FlextDbtLdifClient.Client public operations."""
+class TestsFlextDbtLdif:
+    """Behavioral contract of FlextDbtLdif.Client public operations."""
 
     # ---- construction contract -------------------------------------------
 
     @staticmethod
     def test_default_construction_yields_usable_global_settings() -> None:
         """A client built without settings exposes usable global settings."""
-        client = FlextDbtLdifClient.Client()
+        client = FlextDbtLdif.Client()
         tm.that(client.settings, is_=FlextDbtLdifSettings)
 
     @staticmethod
     def test_explicit_settings_are_the_ones_used() -> None:
         """Explicit settings are the settings the client operates on."""
-        client = FlextDbtLdifClient.Client(settings)
+        client = FlextDbtLdif.Client(settings)
         tm.that(client.settings is settings)
 
     # ---- parse_ldif_file contract ----------------------------------------
@@ -39,7 +38,7 @@ class TestsFlextDbtLdifClient:
     ) -> None:
         """Parsing echoes the requested path as the entry source."""
         path = tmp_path / "dummy.ldif"
-        result = FlextDbtLdifClient.Client().parse_ldif_file(path)
+        result = FlextDbtLdif.Client().parse_ldif_file(path)
 
         entries = result.unwrap()
         tm.that(entries, eq=[{"dn": c.DbtLdif.SAMPLE_LDIF_DN, "source": str(path)}])
@@ -47,7 +46,7 @@ class TestsFlextDbtLdifClient:
     @staticmethod
     def test_parse_is_idempotent_for_same_path(tmp_path: Path) -> None:
         """Parsing the same path twice yields equal payloads."""
-        client = FlextDbtLdifClient.Client()
+        client = FlextDbtLdif.Client()
         path = tmp_path / "same.ldif"
 
         tm.that(
@@ -58,7 +57,7 @@ class TestsFlextDbtLdifClient:
     @staticmethod
     def test_parse_without_path_and_empty_settings_fails_with_reason() -> None:
         """Absent path plus empty settings path is a required-input failure."""
-        client = FlextDbtLdifClient.Client(FlextDbtLdifSettings.fetch_global())
+        client = FlextDbtLdif.Client(FlextDbtLdifSettings.fetch_global())
         result = client.parse_ldif_file()
 
         tm.fail(result)
@@ -76,7 +75,7 @@ class TestsFlextDbtLdifClient:
             {"dn": f"cn=n{i},dc=example,dc=org", "source": "in.ldif"}
             for i in range(entry_count)
         ]
-        data = FlextDbtLdifClient.Client().validate_ldif_data(entries).unwrap()
+        data = FlextDbtLdif.Client().validate_ldif_data(entries).unwrap()
 
         tm.that(data, is_=m.DbtLdif.LdifValidationResult)
         tm.that(data.total_entries, eq=entry_count)
@@ -86,7 +85,7 @@ class TestsFlextDbtLdifClient:
     @staticmethod
     def test_validation_of_empty_entries_fails_with_reason() -> None:
         """Empty entries cannot validate and explain why."""
-        result = FlextDbtLdifClient.Client().validate_ldif_data([])
+        result = FlextDbtLdif.Client().validate_ldif_data([])
 
         tm.fail(result)
         tm.that((result.error or "").lower(), has="no ldif entries")
@@ -97,12 +96,7 @@ class TestsFlextDbtLdifClient:
     def test_transform_reports_record_count_and_requested_models() -> None:
         """Transform metadata reflects inputs and reports success."""
         entries: Sequence[t.JsonMapping] = [{"dn": "cn=t,dc=example,dc=org"}]
-        data = (
-            FlextDbtLdifClient
-            .Client()
-            .transform_with_dbt(entries, ["m1", "m2"])
-            .unwrap()
-        )
+        data = FlextDbtLdif.Client().transform_with_dbt(entries, ["m1", "m2"]).unwrap()
 
         tm.that(data.records, eq=1)
         tm.that(list(data.models), eq=["m1", "m2"])
@@ -111,7 +105,7 @@ class TestsFlextDbtLdifClient:
     @staticmethod
     def test_transform_without_models_uses_default_staging_and_analytics() -> None:
         """Omitting model names falls back to the default model set."""
-        data = FlextDbtLdifClient.Client().transform_with_dbt([], None).unwrap()
+        data = FlextDbtLdif.Client().transform_with_dbt([], None).unwrap()
 
         tm.that(
             list(data.models),
@@ -126,7 +120,7 @@ class TestsFlextDbtLdifClient:
         tmp_path: Path,
     ) -> None:
         """Parse -> validate composes as monadic r[T] without manual unwrap."""
-        client = FlextDbtLdifClient.Client()
+        client = FlextDbtLdif.Client()
         chained = client.parse_ldif_file(tmp_path / "c.ldif").flat_map(
             client.validate_ldif_data,
         )
@@ -138,7 +132,7 @@ class TestsFlextDbtLdifClient:
     def test_transform_result_serializes_public_state_via_model_dump() -> None:
         """Public model state is exposed through model_dump for consumers."""
         data = (
-            FlextDbtLdifClient
+            FlextDbtLdif
             .Client()
             .transform_with_dbt([{"dn": "cn=a"}], ["only"])
             .unwrap()

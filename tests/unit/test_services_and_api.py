@@ -9,11 +9,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from flext_dbt_ldif import FlextDbtLdif, FlextDbtLdifSettings
-from flext_dbt_ldif.services import FlextDbtLdifService
 from tests import c, tm, u
 
 
-class TestsFlextDbtLdifServicesAndApi:
+class TestsFlextDbtLdifsAndApi:
     """Observable behavior of the FlextDbtLdif facade public methods."""
 
     @staticmethod
@@ -133,7 +132,7 @@ class TestsFlextDbtLdifServicesAndApi:
         """The service property exposes the bound workflow Service."""
         api = FlextDbtLdif()
 
-        tm.that(api.service, is_=FlextDbtLdifService.Service)
+        tm.that(api.service, is_=FlextDbtLdif.Service)
 
     @staticmethod
     def test_fetch_global_returns_shared_singleton() -> None:
