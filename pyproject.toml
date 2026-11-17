@@ -47,6 +47,7 @@ Homepage = "https://github.com/flext-sh/flext"
 [dependency-groups]
 dev = [
   "properdocs>=1.6.7",                                # flext: derived member environment
+  "properdocs>=1.6.7",                                # flext: derived member environment
   "types-networkx",
   "mkdocstrings-python>=2.0.9",
   "actionlint-py>=1.7.12.24",
@@ -688,5 +689,3 @@ file = "src/**"
 
 [tool.uv.exclude-newer-package]
 soupsieve = false
-
-[tool.uv.sources]
