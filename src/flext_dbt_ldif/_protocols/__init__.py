@@ -22,4 +22,15 @@ install_lazy_exports(
     globals(),
     {"FlextDbtLdifProtocolsDbt": ".dbt"},
     public_exports=__all__,
+    deferred_members={
+        "FlextDbtLdifProtocolsDbt": (
+            "DbtModel",
+            "LdifValidationResult",
+            "DbtTransformationResult",
+            "ModelGenerationResult",
+            "ParseValidationResult",
+            "WorkflowResult",
+            "DbtConnectionProfile",
+        ),
+    },
 )
