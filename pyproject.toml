@@ -17,7 +17,7 @@ classifiers = [
   "Topic :: Database",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
-]
+] 
 dependencies = ["flext-core", "flext-ldif", "flext-meltano"]
 description = "FLEXT dbt LDAP - dbt Models for LDIF Data Transformation"
 keywords = ["data-transformation", "dbt", "enterprise", "flext", "sql", "typed"]
@@ -47,13 +47,14 @@ Homepage = "https://github.com/flext-sh/flext"
 [dependency-groups]
 dev = [
   "properdocs>=1.6.7",                                # flext: derived member environment
-  "properdocs>=1.6.7",                                # flext: derived member environment
   "types-networkx",
+  "flext-infra",
   "mkdocstrings-python>=2.0.9",
   "actionlint-py>=1.7.12.24",
   "bandit>=1.9.4",
   "deptry",
   "editables>=0.6",
+  "flext-tests",
   "hypothesis",
   "mkdocs-autorefs",
   "mkdocs-exclude>=1.0.2",
@@ -105,7 +106,7 @@ dev = [
   "vulture>=2.16",
   "yamlfix>=1.19.1",
 ]
-codegen = []
+codegen = ["flext-infra"]
 
 [tool.flext.docs]
 package_name = "flext_dbt_ldif"
