@@ -23,4 +23,8 @@ install_lazy_exports(
     globals(),
     {"FlextDbtLdifModelsBase": ".base", "FlextDbtLdifModelsDbt": ".dbt"},
     public_exports=__all__,
+    deferred_members=(
+        "FlextDbtLdifModelsBase",
+        "FlextDbtLdifModelsDbt",
+    ),
 )
