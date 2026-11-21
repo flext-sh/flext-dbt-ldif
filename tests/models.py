@@ -11,17 +11,14 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsModels
 
-from flext_dbt_ldif import FlextDbtLdifModels
+from tests import FlextDbtLdifModels
 
 
 class TestsFlextDbtLdifModels(FlextTestsModels, FlextDbtLdifModels):
     """Test models combining TestsFlextModels with flext-dbt-ldif models."""
 
-    class DbtLdif(FlextDbtLdifModels.DbtLdif):
-        """DbtLdif test models namespace."""
-
-        class Tests:
-            """Project-specific test models."""
+    class Tests(FlextTestsModels.Tests):
+        """Project-specific test models."""
 
 
 m = TestsFlextDbtLdifModels

@@ -11,17 +11,14 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsTypes
 
-from flext_dbt_ldif import FlextDbtLdifTypes
+from tests import FlextDbtLdifTypes
 
 
 class TestsFlextDbtLdifTypes(FlextTestsTypes, FlextDbtLdifTypes):
     """Test types combining FlextTestsTypes with flext-dbt-ldif types."""
 
-    class DbtLdif(FlextDbtLdifTypes.DbtLdif):
-        """DbtLdif test types namespace."""
-
-        class Tests:
-            """Test-specific type aliases."""
+    class Tests(FlextTestsTypes.Tests):
+        """Test-specific type aliases."""
 
 
 t = TestsFlextDbtLdifTypes
