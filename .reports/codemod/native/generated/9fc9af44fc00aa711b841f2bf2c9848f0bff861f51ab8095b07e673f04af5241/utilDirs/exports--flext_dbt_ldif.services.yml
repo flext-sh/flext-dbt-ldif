@@ -1,0 +1,1 @@
+{"id":"exports--flext_dbt_ldif.services","language":"Python","rule":{"regex":"^(?:FlextDbtLdifClient|FlextDbtLdifService|FlextDbtLdifUnifiedService)$"}}

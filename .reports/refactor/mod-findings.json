@@ -1,0 +1,96 @@
+{
+  "entries": [],
+  "schema_version": 5,
+  "inputs": {
+    "states": []
+  },
+  "native_artifacts": [
+    {
+      "path": "/home/marlonsc/flext/worktrees/flext-ejwc0.1/flext-dbt-ldif/.reports/refactor/native/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parent_device": 68,
+      "parent_inode": 1416846910,
+      "mode": 420,
+      "device": 68,
+      "inode": 1416848200,
+      "link_count": 1,
+      "file_attributes": null,
+      "reparse_tag": null,
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "version_key": [
+        68,
+        1416848200,
+        33188,
+        1,
+        1000,
+        1000,
+        0,
+        1795142073509528046,
+        1795142073724528038,
+        0,
+        0
+      ]
+    }
+  ],
+  "command": "scan",
+  "root": "/home/marlonsc/flext/worktrees/flext-ejwc0.1/flext-dbt-ldif",
+  "scope": [
+    "conftest.py",
+    "src/flext_dbt_ldif/__init__.py",
+    "src/flext_dbt_ldif/__version__.py",
+    "src/flext_dbt_ldif/_config.py",
+    "src/flext_dbt_ldif/_constants/__init__.py",
+    "src/flext_dbt_ldif/_constants/base.py",
+    "src/flext_dbt_ldif/_models/__init__.py",
+    "src/flext_dbt_ldif/_models/base.py",
+    "src/flext_dbt_ldif/_models/dbt.py",
+    "src/flext_dbt_ldif/_protocols/__init__.py",
+    "src/flext_dbt_ldif/_protocols/dbt.py",
+    "src/flext_dbt_ldif/_settings.py",
+    "src/flext_dbt_ldif/api.py",
+    "src/flext_dbt_ldif/base.py",
+    "src/flext_dbt_ldif/cli.py",
+    "src/flext_dbt_ldif/constants.py",
+    "src/flext_dbt_ldif/models.py",
+    "src/flext_dbt_ldif/protocols.py",
+    "src/flext_dbt_ldif/services/__init__.py",
+    "src/flext_dbt_ldif/services/client.py",
+    "src/flext_dbt_ldif/services/service.py",
+    "src/flext_dbt_ldif/services/unified_service.py",
+    "src/flext_dbt_ldif/typings.py",
+    "src/flext_dbt_ldif/utilities.py",
+    "tests/__init__.py",
+    "tests/base.py",
+    "tests/conftest.py",
+    "tests/constants.py",
+    "tests/models.py",
+    "tests/protocols.py",
+    "tests/settings.py",
+    "tests/typings.py",
+    "tests/unit/__init__.py",
+    "tests/unit/test_api_surface.py",
+    "tests/unit/test_cli.py",
+    "tests/unit/test_connection_profile.py",
+    "tests/unit/test_dbt_client.py",
+    "tests/unit/test_dbt_models.py",
+    "tests/unit/test_services.py",
+    "tests/unit/test_services_and_api.py",
+    "tests/unit/test_version.py",
+    "tests/utilities.py"
+  ],
+  "totals_by_class": {
+    "actionable": 0,
+    "detection_only": 0,
+    "non_actionable_with_fix": 0,
+    "deferred_source_drift": 0
+  },
+  "totals_by_repository": {
+    "flext-dbt-ldif": 0
+  },
+  "totals_by_rule": {
+    "ban-core-tests-namespace-declaration": 0,
+    "ban-core-tests-namespace-declaration-bare": 0,
+    "ban-core-tests-namespace-declaration-mixed": 0,
+    "ban-core-tests-namespace-reference": 0
+  }
+}

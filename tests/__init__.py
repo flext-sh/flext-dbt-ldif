@@ -31,6 +31,11 @@ if TYPE_CHECKING:
         main,
         settings,
     )
+    from flext_dbt_ldif.services import (
+        FlextDbtLdifClient,
+        FlextDbtLdifService,
+        FlextDbtLdifUnifiedService,
+    )
     from tests.base import TestsFlextDbtLdifServiceBase, s
     from tests.conftest import (
         pytest_runtest_setup,
@@ -47,14 +52,17 @@ if TYPE_CHECKING:
 
 __all__: tuple[str, ...] = (
     "FlextDbtLdif",
+    "FlextDbtLdifClient",
     "FlextDbtLdifConfig",
     "FlextDbtLdifConstants",
     "FlextDbtLdifConstantsBase",
     "FlextDbtLdifModels",
     "FlextDbtLdifProtocols",
+    "FlextDbtLdifService",
     "FlextDbtLdifServiceBase",
     "FlextDbtLdifSettings",
     "FlextDbtLdifTypes",
+    "FlextDbtLdifUnifiedService",
     "FlextDbtLdifUtilities",
     "FlextDbtLdifVersion",
     "TestsFlextDbtLdifConstants",
@@ -94,14 +102,17 @@ install_lazy_exports(
     globals(),
     {
         "FlextDbtLdif": "flext_dbt_ldif",
+        "FlextDbtLdifClient": "flext_dbt_ldif.services",
         "FlextDbtLdifConfig": "flext_dbt_ldif",
         "FlextDbtLdifConstants": "flext_dbt_ldif",
         "FlextDbtLdifConstantsBase": "flext_dbt_ldif",
         "FlextDbtLdifModels": "flext_dbt_ldif",
         "FlextDbtLdifProtocols": "flext_dbt_ldif",
+        "FlextDbtLdifService": "flext_dbt_ldif.services",
         "FlextDbtLdifServiceBase": "flext_dbt_ldif",
         "FlextDbtLdifSettings": "flext_dbt_ldif",
         "FlextDbtLdifTypes": "flext_dbt_ldif",
+        "FlextDbtLdifUnifiedService": "flext_dbt_ldif.services",
         "FlextDbtLdifUtilities": "flext_dbt_ldif",
         "FlextDbtLdifVersion": "flext_dbt_ldif",
         "TestsFlextDbtLdifConstants": ".constants",

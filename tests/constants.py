@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from flext_tests import FlextTestsConstants
 
-from flext_dbt_ldif import FlextDbtLdifConstants
+from tests import FlextDbtLdifConstants
 
 
 class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
@@ -21,11 +21,8 @@ class TestsFlextDbtLdifConstants(FlextTestsConstants, FlextDbtLdifConstants):
     full production constant access.
     """
 
-    class DbtLdif(FlextDbtLdifConstants.DbtLdif):
-        """DbtLdif test constants namespace."""
-
-        class Tests(FlextTestsConstants.Tests):
-            """Project-specific test constants."""
+    class Tests(FlextTestsConstants.Tests):
+        """Project-specific test constants."""
 
 
 c = TestsFlextDbtLdifConstants
