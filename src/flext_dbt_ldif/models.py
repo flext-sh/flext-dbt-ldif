@@ -12,7 +12,7 @@ from flext_meltano import FlextMeltanoModels
 from flext_dbt_ldif._models import FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt
 
 
-class FlextDbtLdifModels(FlextMeltanoModels, FlextDbtLdifModelsBase):
+class FlextDbtLdifModels(FlextMeltanoModels):
     """Model namespace for DBT LDIF metadata objects."""
 
     class DbtLdif(FlextDbtLdifModelsBase, FlextDbtLdifModelsDbt):

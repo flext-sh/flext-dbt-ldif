@@ -17,9 +17,11 @@ from flext_dbt_ldif._constants import FlextDbtLdifConstantsBase
 class FlextDbtLdifConstants(
     FlextMeltanoConstants,
     FlextLdifConstants,
-    FlextDbtLdifConstantsBase,
 ):
     """Typed constants used by DBT LDIF modules."""
+
+    class DbtLdif(FlextDbtLdifConstantsBase.DbtLdif):
+        """Domain namespace of the package parts."""
 
 
 c = FlextDbtLdifConstants
